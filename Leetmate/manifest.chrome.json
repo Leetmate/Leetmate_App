@@ -16,6 +16,5 @@
     "service_worker": "background.js"
   },
   "options_page": "options.html",
-  "permissions": ["storage", "notifications", "alarms"],
-  "host_permissions": ["<all_urls>"]
+  "permissions": ["storage", "notifications", "alarms"]
 }
