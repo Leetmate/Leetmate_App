@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate – Sign up</title>
+    <link rel="stylesheet" href="../styles/popup.css" />
+    <link rel="stylesheet" href="signup.css" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="signup-card">
+          <button type="button" class="signup-back-btn" id="signup-back-btn">
+            ◀ Back
+          </button>
+          <h1 class="signup-title-main">Sign Up</h1>
+
+          <form class="signup-form">
+            <label class="signup-label" for="signup-email">Email</label>
+            <input
+              id="signup-email"
+              name="email"
+              type="email"
+              class="signup-input"
+              autocomplete="email"
+            />
+
+            <label class="signup-label" for="signup-password">Password</label>
+            <input
+              id="signup-password"
+              name="password"
+              type="password"
+              class="signup-input"
+              autocomplete="new-password"
+            />
+
+            <label class="signup-label" for="signup-confirm-password"
+              >Confirm Password</label
+            >
+            <input
+              id="signup-confirm-password"
+              name="confirmPassword"
+              type="password"
+              class="signup-input"
+              autocomplete="new-password"
+            />
+
+            <div class="signup-terms-row">
+              <input
+                id="signup-accept"
+                name="accept"
+                type="checkbox"
+                class="signup-checkbox"
+              />
+              <label for="signup-accept" class="signup-terms-label">
+                I accept the
+                <span class="signup-terms-link">Terms</span>
+              </label>
+            </div>
+
+            <button type="submit" class="signup-btn-primary">Sign Up</button>
+
+            <button type="button" class="signup-btn-google">
+              <img
+                src="../signin/google-logo.png"
+                alt="Google"
+                class="signup-google-icon"
+              />
+              <span>Continue with Google</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="signup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate – Sign in</title>
+    <link rel="stylesheet" href="../styles/popup.css" />
+    <link rel="stylesheet" href="signin.css" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="signin-card">
+          <button type="button" class="signin-back-btn" id="signin-back-btn">
+            ◀ Back
+          </button>
+          <h1 class="signin-title-main">Sign In</h1>
+
+          <form class="signin-form">
+            <label class="signin-label" for="signin-email">Email</label>
+            <input
+              id="signin-email"
+              name="email"
+              type="email"
+              class="signin-input"
+              autocomplete="email"
+            />
+
+            <label class="signin-label" for="signin-password">Password</label>
+            <input
+              id="signin-password"
+              name="password"
+              type="password"
+              class="signin-input"
+              autocomplete="current-password"
+            />
+
+            <div class="signin-remember-row">
+              <input
+                id="signin-remember"
+                name="remember"
+                type="checkbox"
+                class="signin-checkbox"
+              />
+              <label for="signin-remember" class="signin-remember-label"
+                >Remember me</label
+              >
+            </div>
+
+            <button type="submit" class="signin-btn-primary">Sign In</button>
+
+            <button type="button" class="signin-btn-google">
+              <img src="./google-logo.png" alt="" class="signin-google-icon" />
+              <span>Continue with Google</span>
+            </button>
+          </form>
+
+          <button
+            type="button"
+            class="signin-link-signup"
+            id="signin-signup-link"
+          >
+            Sign Up
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="signin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leetmate – Options</title>
+  <link rel="stylesheet" href="styles/options.css">
+</head>
+<body>
+  <div class="options-page">
+    <header class="options-header">
+      <h1>Leetmate Options</h1>
+      <p class="subtitle">Configure reminders and preferences</p>
+    </header>
+
+    <main class="options-main">
+      <!-- Reminder time: when to show "do LeetCode" notification -->
+      <section class="option-group">
+        <label for="reminderTime">Daily reminder time</label>
+        <input type="time" id="reminderTime" />
+        <p class="hint">When to remind you to do LeetCode (browser must be open).</p>
+      </section>
+
+      <!-- Save / feedback -->
+      <div class="options-actions">
+        <button type="button" id="btnSave">Save</button>
+        <p id="status" class="status" aria-live="polite"></p>
+      </div>
+
+      <!-- Later: account link, theme, etc. -->
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

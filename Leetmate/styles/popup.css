@@ -1,0 +1,161 @@
+/* popup.css – Styles for the extension popup (toolbar popup). */
+
+:root {
+  --popup-width: 380px;
+  --bg: #f4e0c6;
+  --surface: #f0d5ae;
+  --accent: #d0b27a;
+  --text: #3b2b1a;
+  --muted: #7a6a55;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: var(--popup-width);
+  min-height: auto;
+  margin: 0;
+  padding: 16px 16px 24px;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.popup-header {
+  padding: 0 0 8px;
+}
+
+.popup-header h1 {
+  margin: 0 0 4px; /* title to subtitle: 4 + 12 from subtitle margin = 16 */
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #000;
+  text-align: center;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.popup-header .subtitle {
+  margin: 12px 0 0; /* 16px gap from title total */
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.popup-main {
+  padding: 8px 8px 0;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 0; /* ~24px from title to dome when including padding */
+  position: relative;
+}
+
+.hero-egg {
+  width: 216px; /* ~10% smaller than before */
+  height: 153px; /* keep proportions */
+  border-radius: 108px 108px 0 0; /* dome shape */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  background-color: #d9c6a2;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-pet {
+  width: 188px; /* increased size */
+  height: 141px;
+  background-image: url("../assets/Animals - Outline/CubicJaguatirica.png");
+  background-repeat: no-repeat;
+  background-size: 752px 141px; /* 4 frames * 188px */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  position: absolute;
+  bottom: -12px; /* nudge down so it sits on base */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  animation: hero-idle 0.8s steps(1) infinite;
+}
+
+@keyframes hero-idle {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: -376px 0; /* 2 * 188px */
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.hero-base {
+  width: 188px; /* slightly wider, still ~80–85% of dome */
+  height: 23px; /* a bit thicker */
+  background: #bfa77a;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -18px; /* more overlap with dome */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18); /* subtle soft shadow */
+}
+
+.hero-caption {
+  margin: 16px 0 24px; /* 16px below hero, 24px above buttons */
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  font-style: italic;
+}
+
+.start-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 0;
+}
+
+.start-btn {
+  min-width: 140px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 2px solid #3b2b1a;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.start-btn--primary {
+  background: #d0b27a;
+  color: #3b2b1a;
+}
+
+.start-btn--secondary {
+  background: #fffdf8;
+  color: #3b2b1a;
+}
+
+.start-btn:hover {
+  filter: brightness(1.15);
+}

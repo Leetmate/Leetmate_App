@@ -1,0 +1,27 @@
+html,
+body,
+#root,
+.popup-layout {
+  width: 380px;
+  height: 520px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+.popup-layout {
+  overflow: hidden;
+}
+
+.popup-content {
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+

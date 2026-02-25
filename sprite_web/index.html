@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cubic Animals – Animation Showcase</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="script.js"></script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <img src="leetmate_logo.png" alt="LeetMate logo" class="site-logo" />
+        <h1>Cubic Animals</h1>
+        <p>
+          Every animal from <strong>Animals - Outline</strong>. Idle (0+2), Walk
+          (0+1), Jump (1), Crouch (2), Hit/Defeated (3).
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="anim-section">
+        <h2>All animals – animations</h2>
+        <div id="animalsList" class="animals-list"></div>
+      </section>
+
+      <section class="logo-download-section">
+        <h2>LeetMate logo – scaled version</h2>
+        <p class="logo-download-desc">
+          The logo image is very small. Use the preview below and download a
+          scaled version for use in presentations or documents.
+        </p>
+        <div class="logo-preview-wrap">
+          <img
+            id="logoPreview"
+            src="leetmate_logo.png"
+            alt="LeetMate logo preview"
+            class="logo-preview-img"
+          />
+        </div>
+        <div class="logo-download-buttons">
+          <button type="button" class="btn-download-scale" data-scale="2">
+            Download 2× scaled
+          </button>
+          <button type="button" class="btn-download-scale" data-scale="3">
+            Download 3× scaled
+          </button>
+          <button type="button" class="btn-download-scale" data-scale="4">
+            Download 4× scaled
+          </button>
+        </div>
+      </section>
+
+      <p class="credit">
+        Asset pack by PIXL VOID. Personal and commercial use. Do not sell or
+        redistribute.
+      </p>
+    </main>
+    <script>
+      (function () {
+        var logoUrl = "leetmate_logo.png";
+        var img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = function () {
+          document.querySelectorAll(".btn-download-scale").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              var scale = parseInt(this.getAttribute("data-scale"), 10);
+              var w = img.naturalWidth * scale;
+              var h = img.naturalHeight * scale;
+              var canvas = document.createElement("canvas");
+              canvas.width = w;
+              canvas.height = h;
+              var ctx = canvas.getContext("2d");
+              ctx.imageSmoothingEnabled = false;
+              ctx.drawImage(img, 0, 0, w, h);
+              var a = document.createElement("a");
+              a.download = "leetmate_logo_" + scale + "x.png";
+              a.href = canvas.toDataURL("image/png");
+              a.click();
+            });
+          });
+        };
+        img.src = logoUrl;
+      })();
+    </script>
+  </body>
+</html>
