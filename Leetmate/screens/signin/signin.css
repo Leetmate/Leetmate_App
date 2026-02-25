@@ -1,0 +1,176 @@
+@import url("../../styles/layout.css");
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+  font-size: 14px;
+  background: #5a5a5a; /* dark gray backdrop */
+  color: #000;
+}
+
+.popup-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-content {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-card {
+  width: 90% !important;
+  min-width: 330px;
+  max-width: none !important;
+  margin: 0 auto;
+  background: #d9d9d9; /* light gray card */
+  border: 4px solid #000;
+  border-radius: 28px;
+  padding: 14px 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.signin-back-btn {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 4px solid #000;
+  background: #d9d9d9;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.signin-back-btn:focus-visible,
+.signin-btn-primary:focus-visible,
+.signin-btn-google:focus-visible,
+.signin-link-signup:focus-visible,
+.signin-input:focus-visible,
+.signin-checkbox:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.signin-title-main {
+  margin: 2px 0 6px;
+  text-align: center;
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signin-label {
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.signin-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 4px solid #000;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+.signin-input:focus {
+  outline: none;
+}
+
+.signin-remember-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.signin-checkbox {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 3px solid #000;
+  appearance: none;
+  background: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signin-checkbox:checked {
+  background: #5c7bd9;
+}
+
+.signin-checkbox:checked::after {
+  content: "✓";
+  font-size: 10px;
+  color: #ffffff;
+}
+
+.signin-remember-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.signin-btn-primary,
+.signin-btn-google {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 4px solid #000;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.signin-btn-primary {
+  margin-top: 4px;
+  background: #5c7bd9; /* medium blue */
+  color: #ffffff;
+}
+
+.signin-btn-google {
+  margin-top: 4px;
+  background: #f6ecd9; /* cream */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.signin-google-icon {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.signin-link-signup {
+  margin-top: 6px;
+  align-self: center;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
