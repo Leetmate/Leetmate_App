@@ -1,0 +1,415 @@
+/* Cubic Animals – Animation showcase
+   Sprite layout: 4 frames × 21×16px each (84×16 total)
+   frame 0 + 2 = Idle | frame 0 + 1 = Walk | frame 1 = Jump | frame 2 = Crouch | frame 3 = Hit/Defeated
+*/
+
+:root {
+  --frame-w: 21px;
+  --frame-h: 16px;
+  --sprite-w: 84px;
+  --sprite-h: 16px;
+  --scale: 4;
+  --display-w: calc(var(--frame-w) * var(--scale));
+  --display-h: calc(var(--frame-h) * var(--scale));
+  --bg: #1a1a2e;
+  --card: #16213e;
+  --accent: #e94560;
+  --text: #eaeaea;
+  --muted: #a0a0a0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(180deg, var(--card) 0%, transparent 100%);
+  border-bottom: 2px solid var(--accent);
+}
+
+.site-logo {
+  display: block;
+  margin: 0 auto 1rem;
+  max-height: 56px;
+  width: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba(233, 69, 96, 0.3);
+}
+
+.controls a,
+.controls button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.controls a:hover,
+.controls button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+}
+
+.btn-html {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-gif {
+  background: #0f3460;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-png {
+  background: #2d2d44;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.anim-section {
+  margin-bottom: 3rem;
+}
+
+.anim-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.animals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.animal-row {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.animal-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.animal-name {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.animal-file {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.animal-downloads {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.anim-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.anim-select {
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.btn-small {
+  padding: 0.4rem 0.9rem !important;
+  font-size: 0.8rem !important;
+}
+
+.anim-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 700px) {
+  .anim-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+.anim-card {
+  background: rgba(13, 13, 26, 0.6);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.anim-card:hover {
+  border-color: rgba(233, 69, 96, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.anim-card h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sprite-stage {
+  width: var(--display-w);
+  height: var(--display-h);
+  margin: 0 auto;
+  background: #0d0d1a;
+  border-radius: 6px;
+  overflow: hidden;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite {
+  width: var(--sprite-w);
+  height: var(--sprite-h);
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  transform: scale(var(--scale));
+  transform-origin: 0 0;
+}
+
+/* Idle: frame 0 + 2 */
+.sprite-idle {
+  animation: idle 0.8s steps(1) infinite;
+}
+
+@keyframes idle {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: calc(-2 * var(--frame-w)) 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Walk: frame 0 + 1 */
+.sprite-walk {
+  animation: walk 0.4s steps(1) infinite;
+}
+
+@keyframes walk {
+  0%,
+  50% {
+    background-position: 0 0;
+  }
+  25%,
+  75% {
+    background-position: calc(-1 * var(--frame-w)) 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Jump: frame 1 only */
+.sprite-jump {
+  background-position: calc(-1 * var(--frame-w)) 0;
+}
+
+/* Crouch: frame 2 only */
+.sprite-crouch {
+  background-position: calc(-2 * var(--frame-w)) 0;
+}
+
+/* Hit / Defeated: frame 3 only */
+.sprite-hit {
+  background-position: calc(-3 * var(--frame-w)) 0;
+}
+
+.example-gif-wrap {
+  text-align: center;
+  padding: 2rem;
+  background: var(--card);
+  border-radius: 12px;
+  margin-top: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.example-gif-wrap h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+
+.example-gif-wrap img {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.example-gif-wrap .download-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.example-gif-wrap .download-link:hover {
+  text-decoration: underline;
+}
+
+/* Logo download section – scaled version */
+.logo-download-section {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  margin: 2rem 0;
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo-download-section h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.logo-download-desc {
+  margin: 0 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  max-width: 36em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.logo-preview-wrap {
+  margin-bottom: 1.25rem;
+}
+
+.logo-preview-img {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  max-width: 200px;
+  width: auto;
+  height: auto;
+}
+
+.logo-download-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.btn-download-scale {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: white;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-download-scale:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+}
+
+.credit {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.credit a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.hidden {
+  display: none;
+}
