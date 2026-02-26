@@ -35,7 +35,7 @@
     var email = user.email || '';
     var displayName = user.displayName || email.split('@')[0] || 'User';
     return ensureUserDoc(user.uid, email, displayName).then(function () {
-      window.location.href = '../leetcode/index.html';
+      window.location.href = '../leetcode/index.html?from=signin';
     });
   }
 

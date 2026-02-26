@@ -35,9 +35,12 @@
   function onAuthSuccess(user, username) {
     var email = user.email || '';
     var displayName = user.displayName || '';
-    var nameToUse = username && username.trim() ? username.trim() : (displayName || email.split('@')[0] || 'User');
+    var nameToUse =
+      username && username.trim()
+        ? username.trim()
+        : displayName || email.split('@')[0] || 'User';
     return ensureUserDoc(user.uid, email, nameToUse).then(function () {
-      window.location.href = '../leetcode/index.html';
+      window.location.href = '../leetcode/index.html?from=signup';
     });
   }
 

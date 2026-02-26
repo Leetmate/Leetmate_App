@@ -1,0 +1,72 @@
+.home-card {
+  width: 90%;
+  max-width: 342px;
+  min-height: 360px;
+  margin: 0 auto;
+  padding: 22px 18px;
+  background: #f6f4ef;
+  border-radius: 26px;
+  border: 3px solid #111;
+  box-shadow: 4px 4px 0 #111;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.home-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 4px 0 12px;
+  text-align: center;
+}
+
+.home-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.home-hero {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.home-hero-pet {
+  width: 188px;
+  height: 141px;
+  background-image: url("../../assets/Animals - Outline/CubicJaguatirica.png");
+  background-repeat: no-repeat;
+  background-size: 752px 141px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  animation: home-pet-idle 0.8s steps(1) infinite;
+}
+
+@keyframes home-pet-idle {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: -376px 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.home-caption {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  max-width: 260px;
+}
+

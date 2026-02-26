@@ -26,6 +26,18 @@
   var STORAGE_STARTED_AT_KEY = 'leetcodeStartedAt';
   var isWaiting = false;
 
+  // Determine how the user arrived at this screen (signup vs signin)
+  var fromParam = null;
+  var isFromSignup = false;
+  try {
+    if (typeof URLSearchParams !== 'undefined') {
+      fromParam = new URLSearchParams(window.location.search).get('from');
+      isFromSignup = fromParam === 'signup';
+    }
+  } catch (e) {
+    isFromSignup = false;
+  }
+
   function setState(next) {
     Object.keys(stateEls).forEach(function (key) {
       var el = stateEls[key];
@@ -291,11 +303,21 @@
     }
 
     if (choosePetBtn) {
-      choosePetBtn.addEventListener('click', function () {
-        // Placeholder navigation to starter pet selection screen.
-        // Wire this up once the starter pet screen exists.
-        window.location.href = '../signup/index.html';
-      });
+      if (isFromSignup) {
+        // New users coming from sign-up: keep "Choose your starter Pet" CTA.
+        choosePetBtn.textContent = 'Choose your starter Pet';
+        choosePetBtn.addEventListener('click', function () {
+          // Placeholder navigation to starter pet selection screen.
+          // Wire this up once the starter pet screen exists.
+          window.location.href = '../signup/index.html';
+        });
+      } else {
+        // Existing users signing in: send them to the pet home screen.
+        choosePetBtn.textContent = 'Go to Home';
+        choosePetBtn.addEventListener('click', function () {
+          window.location.href = '../home/index.html';
+        });
+      }
     }
   });
 })();
