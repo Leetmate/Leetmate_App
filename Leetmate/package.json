@@ -1,0 +1,16 @@
+{
+  "name": "leetmate-extension",
+  "private": true,
+  "scripts": {
+    "build:config": "node scripts/inject-firebase-config.js",
+    "build:firebase": "node scripts/build-firebase-bundle.js",
+    "build": "npm run build:config && npm run build:firebase",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "firebase": "^12.9.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.3"
+  }
+}

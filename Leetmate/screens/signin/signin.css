@@ -55,7 +55,6 @@ body {
 
 .signin-back-btn:focus-visible,
 .signin-btn-primary:focus-visible,
-.signin-btn-google:focus-visible,
 .signin-link-signup:focus-visible,
 .signin-input:focus-visible,
 .signin-checkbox:focus-visible {
@@ -131,8 +130,21 @@ body {
   font-weight: 600;
 }
 
-.signin-btn-primary,
-.signin-btn-google {
+.signin-message {
+  font-size: 13px;
+  margin: 4px 0 0;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #e8f4e8;
+  color: #1a4d1a;
+}
+
+.signin-message--error {
+  background: #fce8e8;
+  color: #8b2020;
+}
+
+.signin-btn-primary {
   width: 100%;
   padding: 12px;
   border-radius: 14px;
@@ -146,23 +158,6 @@ body {
   margin-top: 4px;
   background: #5c7bd9; /* medium blue */
   color: #ffffff;
-}
-
-.signin-btn-google {
-  margin-top: 4px;
-  background: #f6ecd9; /* cream */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.signin-google-icon {
-  width: 34px;
-  height: 34px;
-  display: inline-flex;
-  flex-shrink: 0;
-  object-fit: contain;
 }
 
 .signin-link-signup {
