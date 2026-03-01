@@ -1,0 +1,10 @@
+rules_version = '2';
+// Copy to Firebase Console → Firestore → Rules (or deploy via Firebase CLI if you add it later).
+// This allows authenticated users to read/write only their own document in the users collection.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

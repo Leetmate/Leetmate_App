@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leetmate – Sign up</title>
-    <link rel="stylesheet" href="../styles/popup.css" />
+    <link rel="stylesheet" href="../../styles/popup.css" />
     <link rel="stylesheet" href="signup.css" />
   </head>
   <body>
@@ -46,6 +46,16 @@
               autocomplete="new-password"
             />
 
+            <label class="signup-label" for="signup-username">Username</label>
+            <input
+              id="signup-username"
+              name="username"
+              type="text"
+              class="signup-input"
+              autocomplete="username"
+              placeholder="Display name"
+            />
+
             <div class="signup-terms-row">
               <input
                 id="signup-accept"
@@ -55,24 +65,30 @@
               />
               <label for="signup-accept" class="signup-terms-label">
                 I accept the
-                <span class="signup-terms-link">Terms</span>
+                <button
+                  type="button"
+                  class="signup-terms-link"
+                  id="signup-terms-link"
+                >
+                  Terms
+                </button>
               </label>
             </div>
 
+            <p
+              id="signup-message"
+              class="signup-message"
+              aria-live="polite"
+              hidden
+            ></p>
             <button type="submit" class="signup-btn-primary">Sign Up</button>
-
-            <button type="button" class="signup-btn-google">
-              <img
-                src="../signin/google-logo.png"
-                alt="Google"
-                class="signup-google-icon"
-              />
-              <span>Continue with Google</span>
-            </button>
           </form>
         </div>
       </div>
     </div>
+    <script src="../../firebase-bundle.js"></script>
+    <script src="../../firebase-config.js"></script>
+    <script src="user-doc-defaults.js"></script>
     <script src="signup.js"></script>
   </body>
 </html>

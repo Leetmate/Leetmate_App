@@ -55,7 +55,6 @@ body {
 
 .signup-back-btn:focus-visible,
 .signup-btn-primary:focus-visible,
-.signup-btn-google:focus-visible,
 .signup-input:focus-visible,
 .signup-checkbox:focus-visible {
   outline: 2px solid #000;
@@ -131,13 +130,19 @@ body {
 }
 
 .signup-terms-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  display: inline;
   color: #1a4fd0;
   text-decoration: underline;
   font-weight: 700;
 }
 
-.signup-btn-primary,
-.signup-btn-google {
+.signup-btn-primary {
   width: 100%;
   padding: 12px;
   border-radius: 14px;
@@ -147,25 +152,32 @@ body {
   cursor: pointer;
 }
 
+.signup-message {
+  font-size: 13px;
+  margin: 4px 0 0;
+  padding: 6px 0;
+}
+.signup-message--error {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.signup-message {
+  font-size: 13px;
+  margin: 4px 0 0;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #e8f4e8;
+  color: #1a4d1a;
+}
+
+.signup-message--error {
+  background: #fce8e8;
+  color: #8b2020;
+}
+
 .signup-btn-primary {
   margin-top: 3px;
   background: #5c7bd9; /* medium blue */
   color: #ffffff;
-}
-
-.signup-btn-google {
-  margin-top: 3px;
-  background: #f6ecd9; /* cream */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.signup-google-icon {
-  width: 34px;
-  height: 34px;
-  display: inline-flex;
-  flex-shrink: 0;
-  object-fit: contain;
 }
