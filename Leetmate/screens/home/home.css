@@ -13,8 +13,8 @@ body {
 
 /* HOME CONTAINER */ 
 .home-card {
-  width: 90%;
-  max-width: 342px;
+  width: 100%;
+  max-width: 380px;
   min-height: 360px;
   margin: 0 auto;
   padding: 16px;
