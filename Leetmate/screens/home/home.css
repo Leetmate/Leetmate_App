@@ -1,0 +1,229 @@
+/* Home Screen Layout */
+@import url("../../styles/layout.css");
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+/* HOME CONTAINER */ 
+.home-card {
+  width: 100%;
+  max-width: 380px;
+  min-height: 360px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #EEEAE1;
+  border-radius: 28px;
+  border: 4px solid #111;
+  display: flex;
+  flex-direction: column; 
+  gap: 16px;
+}
+
+/* HOME HEADER  */
+.home-header {
+  background: #D6D0C5;
+  border-bottom: 4px solid #111;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+
+  /* Pull header to edges of card */
+  margin: -16px -16px 0 -16px;
+  padding: 0px 12px;
+
+  display: flex;
+  align-items: center;
+}
+
+/* Layout for perfect centering of Premium btn, Home title, & Menu btn*/
+.home-header-left,
+.home-header-center,
+.home-header-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.home-header-left { justify-content: flex-start; }
+.home-header-center { justify-content: center; }
+.home-header-right { justify-content: flex-end; }
+
+/* Home Title */
+.home-title {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+/* Premium Button */
+.premium-btn {
+  background: linear-gradient(to right, #cfb98d, #e7ce9d, #edddbb, #f0e6d1, #edddbb, #e7ce9d, #cfb98d);
+  border: 3px solid #B89D5B;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-weight: 700;
+  color: #B89D5B
+}
+
+/* Menu Button */
+.menu-btn {
+  border: 3px solid #111;
+  border-radius: 16px;
+  background: #EEEAE1;
+  padding: 6px 10px;
+  font-weight: bold;
+}
+
+/* LEETCODE DAILY REMINDER CARD */
+.leetcode-card {
+  flex: 0 0 auto;
+  background: linear-gradient(to right, #aeacac, #d4d2d2, #e2e1e1, #d4d2d2, #aeacac);
+  border: 4px solid #111;
+  border-radius: 28px;
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+  margin: 0;
+}
+
+.leetcode-card strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 16px;
+}
+
+/* PET DISPLAY CARD */
+.pet-card {
+  flex: 1;             
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  position: relative;
+  background: linear-gradient(#BFD1DF, #DCEAF5);
+  border: 4px solid #111;
+  border-radius: 28px;
+  padding: 16px;
+  margin: 0;
+  min-height: 210px;
+  overflow: hidden;
+}
+
+/* Top Row: Coins + Minimize btn */
+.pet-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Minimize Button */
+.minimize-btn {
+  border: 2px solid #111;
+  border-radius: 10px;
+  background: #EEEAE1;
+  padding: 4px 8px;
+}
+
+/* Pet Container */
+.home-hero {
+  display: flex;
+  justify-content: center;
+}
+
+/* Pet Sprite */
+.home-hero-pet {
+  width: 188px;
+  height: 141px;
+  transform: scale(0.90);
+  transform-origin: center;
+
+  background-image: url("../../assets/Animals - Outline/CubicJaguatirica.png");
+  background-repeat: no-repeat;
+  background-size: 752px 141px;
+  image-rendering: pixelated;
+  animation: home-pet-idle 0.8s steps(1) infinite;
+}
+
+/* Sprite Animation */
+@keyframes home-pet-idle {
+  0% { background-position: 0 0; }
+  50% { background-position: -376px 0; }
+  100% { background-position: 0 0; }
+}
+
+/* Pet Name */
+.pet-name {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(150, 150, 150, 0.75);
+  padding: 8px 18px;
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+  font-style: italic; 
+
+}
+
+.pet-name h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.pet-name p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* STATS BAR */
+.stats-bar {
+  flex: 0 0 auto;
+  background: #F1E0BF;
+  border: 4px solid #111;
+  border-radius: 28px;
+  padding: 0px 12px 4px 12px;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* Reduce label spacing */
+.stats-bar p {
+  line-height: 0.75;
+}
+
+/* Hearts */
+.hearts {
+  margin: -6px 0px 6px;
+  font-size: 22px;
+}
+
+/* Streak */
+.streak {
+  margin: -6px 0px 6px;
+}
+
+/* XP Progress Bar */
+.xp-bar {
+  width: 90px;
+  height: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #111;
+  background: #E6E6E6;
+}
+
+.xp-fill {
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(90deg, #6FC27B, #8EDC97);
+}

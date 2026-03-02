@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leetmate – Sign in</title>
-    <link rel="stylesheet" href="../styles/popup.css" />
+    <link rel="stylesheet" href="../../styles/popup.css" />
     <link rel="stylesheet" href="signin.css" />
   </head>
   <body>
@@ -47,12 +47,13 @@
               >
             </div>
 
+            <p
+              id="signin-message"
+              class="signin-message"
+              aria-live="polite"
+              hidden
+            ></p>
             <button type="submit" class="signin-btn-primary">Sign In</button>
-
-            <button type="button" class="signin-btn-google">
-              <img src="./google-logo.png" alt="" class="signin-google-icon" />
-              <span>Continue with Google</span>
-            </button>
           </form>
 
           <button
@@ -65,6 +66,9 @@
         </div>
       </div>
     </div>
+    <script src="../../firebase-bundle.js"></script>
+    <script src="../../firebase-config.js"></script>
+    <script src="../signup/user-doc-defaults.js"></script>
     <script src="signin.js"></script>
   </body>
 </html>
