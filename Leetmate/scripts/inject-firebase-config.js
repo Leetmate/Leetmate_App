@@ -24,6 +24,8 @@ const ENV_KEYS = [
 function loadEnv() {
   if (!fs.existsSync(ENV_PATH)) {
     console.error('Missing .env. Copy .env.example to .env and set your Firebase values.');
+    console.error('Put .env in the Leetmate folder (same folder as package.json):');
+    console.error('  ' + ENV_PATH);
     process.exit(1);
   }
   const raw = fs.readFileSync(ENV_PATH, 'utf8');

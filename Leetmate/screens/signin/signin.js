@@ -97,6 +97,9 @@
           return;
         }
 
+        var loading = document.getElementById('loading-overlay');
+        if (loading) loading.classList.remove('hidden');
+
         // Always use LOCAL persistence so the user stays signed in when the extension is closed
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
           .then(function () {
@@ -106,6 +109,9 @@
             return onAuthSuccess(result.user);
           })
           .catch(function (err) {
+            var loading = document.getElementById('loading-overlay');
+            if (loading) loading.classList.add('hidden');
+
             var msg = 'Sign in failed.';
             if (err && err.code === 'auth/user-not-found') {
               msg = 'No account found for this email. Try signing up first.';

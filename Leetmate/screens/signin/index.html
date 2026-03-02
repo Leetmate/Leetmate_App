@@ -6,11 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Leetmate – Sign in</title>
   <link rel="stylesheet" href="../../styles/popup.css" />
+  <link rel="stylesheet" href="../loading/loading.css" />
   <link rel="stylesheet" href="signin.css" />
 </head>
 
 <body>
   <div class="popup-layout">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+      <div class="loading-spinner">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <p class="loading-text" id="loading-text">Signing in...</p>
+    </div>
+
     <div class="popup-content">
       <div class="signin-card">
         <button type="button" class="signin-back-btn" id="signin-back-btn">

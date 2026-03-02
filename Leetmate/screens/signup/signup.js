@@ -108,11 +108,20 @@
           return;
         }
 
-        auth.createUserWithEmailAndPassword(email, password)
+        var loading = document.getElementById('loading-overlay');
+        if (loading) loading.classList.remove('hidden');
+
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+          .then(function () {
+            return auth.createUserWithEmailAndPassword(email, password);
+          })
           .then(function (cred) {
             return onAuthSuccess(cred.user, username);
           })
           .catch(function (err) {
+            var loading = document.getElementById('loading-overlay');
+            if (loading) loading.classList.add('hidden');
+
             var msg = err.message || 'Sign up failed.';
             if (err.code === 'auth/email-already-in-use') msg = 'This email is already in use.';
             else if (err.code === 'auth/weak-password') msg = 'Password is too weak.';
