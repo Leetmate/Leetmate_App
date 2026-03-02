@@ -1,76 +1,87 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leetmate – Home</title>
-    <link rel="stylesheet" href="../../styles/layout.css" />
-    <link rel="stylesheet" href="home.css" />
-  </head>
-  <body>
-    <div class="popup-layout">
-      <div class="popup-content">
-        <div class="home-card">
 
-          <div class="home-header">
-            <div class="home-header-left">
-              <button class="premium-btn">+ Premium</button>
-            </div>
-          
-            <div class="home-header-center">
-              <h1 class="home-title">Home</h1>
-            </div>
-          
-            <div class="home-header-right">
-              <button class="menu-btn">☰</button>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leetmate – Home</title>
+  <link rel="stylesheet" href="../../styles/layout.css" />
+  <link rel="stylesheet" href="home.css" />
+</head>
+
+<body>
+  <div class="popup-layout">
+    <div class="popup-content">
+      <div class="home-card">
+
+        <div class="home-header">
+          <div class="home-header-left">
+            <button class="premium-btn">+ Premium</button>
           </div>
-        
-          <div class="leetcode-card">
-            Leetcode Time, time to grind
-            <strong>Solve 1 Leetcode Today!</strong>
+
+          <div class="home-header-center">
+            <h1 class="home-title">Home</h1>
           </div>
-        
-          <div class="pet-card">
-        
-            <div class="pet-top">
-              <div> 🟡 0</div>
-              <button class="minimize-btn">--</button>
-            </div>
-        
-            <div class="pet-name">
-              <h2>Fluffy Cat</h2>
-              <p>Age: --</p>
-            </div>
-        
-            <div class="home-hero">
-              <div class="home-hero-pet"></div>
-            </div>
-        
+
+          <div class="home-header-right">
+            <button class="menu-btn">☰</button>
           </div>
-        
-          <div class="stats-bar">
-            <div>
-              <p>Happiness</p>
-              <div class="hearts">❤️❤️❤️❤️❤️</div>
-            </div>
-        
-            <div>
-              <p>Streak</p>
-              <div class="streak">🔥 --</div>
-            </div>
-        
-            <div>
-              <p>Lvl --</p>
-              <div class="xp-bar">
-                <div class="xp-fill"></div>
-              </div>
-            </div>
-          </div>
-        
         </div>
 
-    </div>
-  </body>
-</html>
+        <div class="leetcode-card">
+          Leetcode Time, time to grind
+          <strong>Solve 1 Leetcode Today!</strong>
+        </div>
 
+        <div class="pet-card">
+
+          <div class="pet-top">
+            <div> 🟡 0</div>
+            <button class="minimize-btn">--</button>
+          </div>
+
+          <div class="pet-name">
+            <h2>Fluffy Cat</h2>
+            <p>Age: --</p>
+          </div>
+
+          <div class="home-hero">
+            <div class="home-hero-pet"></div>
+          </div>
+
+        </div>
+
+        <div class="stats-bar">
+          <div>
+            <p>Happiness</p>
+            <div class="hearts">❤️❤️❤️❤️❤️</div>
+          </div>
+
+          <div>
+            <p>Streak</p>
+            <div class="streak">🔥 --</div>
+          </div>
+
+          <div>
+            <p>Lvl --</p>
+            <div class="xp-bar">
+              <div class="xp-fill"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <script src="../../firebase-bundle.js"></script>
+    <script src="../../firebase-config.js"></script>
+    <!-- 
+      REQUIRE LOGIN TO VIEW THIS SCREEN:
+      Including auth-gate.js ensures only signed-in users can access this page.
+      Copy these three <script> tags to the bottom of any new protected screen.
+    -->
+    <script src="../../scripts/auth-gate.js"></script>
+    <!-- Add home.js later if needed -->
+</body>
+
+</html>

@@ -4,8 +4,16 @@
 (function () {
   'use strict';
 
-  var auth = typeof firebase !== 'undefined' ? firebase.auth() : null;
-  var db = typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null;
+  var auth = null;
+  var db = null;
+  try {
+    if (typeof firebase !== 'undefined') {
+      auth = firebase.auth();
+      db = firebase.firestore ? firebase.firestore() : null;
+    }
+  } catch (e) {
+    console.warn('Firebase not initialized:', e);
+  }
 
   function showMessage(el, text, isError) {
     if (!el) return;
@@ -35,6 +43,19 @@
     var email = user.email || '';
     var displayName = user.displayName || email.split('@')[0] || 'User';
     return ensureUserDoc(user.uid, email, displayName).then(function () {
+      if (!db) {
+        window.location.href = '../leetcode/index.html?from=signin';
+        return Promise.resolve();
+      }
+      return db.collection('users').doc(user.uid).get().then(function (snap) {
+        var data = snap.exists ? snap.data() || {} : {};
+        if (data.leetcode && data.leetcode.connected) {
+          window.location.href = '../home/index.html';
+        } else {
+          window.location.href = '../leetcode/index.html?from=signin';
+        }
+      });
+    }).catch(function () {
       window.location.href = '../leetcode/index.html?from=signin';
     });
   }
@@ -76,7 +97,11 @@
           return;
         }
 
-        auth.signInWithEmailAndPassword(email, password)
+        // Always use LOCAL persistence so the user stays signed in when the extension is closed
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+          .then(function () {
+            return auth.signInWithEmailAndPassword(email, password);
+          })
           .then(function (result) {
             return onAuthSuccess(result.user);
           })

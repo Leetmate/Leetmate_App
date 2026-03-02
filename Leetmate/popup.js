@@ -36,9 +36,12 @@
         .get()
         .then(function (snap) {
           var data = snap.exists ? snap.data() || {} : {};
-          // Whether connected or not, the next step in the flow is the
-          // LeetCode connect screen; it will show success or connect state.
-          window.location.href = 'screens/leetcode/index.html';
+
+          if (data.leetcode && data.leetcode.connected) {
+            window.location.href = 'screens/home/index.html';
+          } else {
+            window.location.href = 'screens/leetcode/index.html';
+          }
         })
         .catch(function () {
           // On error, still send to LeetCode screen – it can handle failures.

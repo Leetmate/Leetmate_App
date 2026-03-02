@@ -11,31 +11,34 @@ body {
     sans-serif;
 }
 
-/* HOME CONTAINER */ 
+/* HOME CONTAINER */
 .home-card {
   width: 100%;
   max-width: 380px;
-  min-height: 360px;
+  min-height: 520px;
+  /* Stretch to fill the frame */
   margin: 0 auto;
   padding: 16px;
   background: #EEEAE1;
-  border-radius: 28px;
-  border: 4px solid #111;
+  border-radius: 0;
+  /* Remove border radius since it fills entire window */
+  border: none;
+  /* Remove border since it touches the edge */
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   gap: 16px;
+  box-sizing: border-box;
 }
 
 /* HOME HEADER  */
 .home-header {
   background: #D6D0C5;
   border-bottom: 4px solid #111;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
 
-  /* Pull header to edges of card */
+  /* Pull header to absolute edges of card */
   margin: -16px -16px 0 -16px;
-  padding: 0px 12px;
+  padding: 10px 12px;
+  /* Increase vertical padding */
 
   display: flex;
   align-items: center;
@@ -50,9 +53,17 @@ body {
   align-items: center;
 }
 
-.home-header-left { justify-content: flex-start; }
-.home-header-center { justify-content: center; }
-.home-header-right { justify-content: flex-end; }
+.home-header-left {
+  justify-content: flex-start;
+}
+
+.home-header-center {
+  justify-content: center;
+}
+
+.home-header-right {
+  justify-content: flex-end;
+}
 
 /* Home Title */
 .home-title {
@@ -99,7 +110,8 @@ body {
 
 /* PET DISPLAY CARD */
 .pet-card {
-  flex: 1;             
+  flex: 1 1 auto;
+  /* Allow to grow aggressively */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -110,7 +122,8 @@ body {
   border-radius: 28px;
   padding: 16px;
   margin: 0;
-  min-height: 210px;
+  min-height: 250px;
+  /* Increase minimum height */
   overflow: hidden;
 }
 
@@ -153,9 +166,17 @@ body {
 
 /* Sprite Animation */
 @keyframes home-pet-idle {
-  0% { background-position: 0 0; }
-  50% { background-position: -376px 0; }
-  100% { background-position: 0 0; }
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: -376px 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
 }
 
 /* Pet Name */
@@ -169,7 +190,7 @@ body {
   border-radius: 20px;
   color: white;
   text-align: center;
-  font-style: italic; 
+  font-style: italic;
 
 }
 

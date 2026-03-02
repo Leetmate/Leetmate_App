@@ -4,8 +4,16 @@
 (function () {
   'use strict';
 
-  var auth = typeof firebase !== 'undefined' ? firebase.auth() : null;
-  var db = typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null;
+  var auth = null;
+  var db = null;
+  try {
+    if (typeof firebase !== 'undefined') {
+      auth = firebase.auth();
+      db = firebase.firestore ? firebase.firestore() : null;
+    }
+  } catch (e) {
+    console.warn('Firebase not initialized:', e);
+  }
 
   function showMessage(el, text, isError) {
     if (!el) return;
