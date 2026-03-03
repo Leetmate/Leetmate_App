@@ -96,7 +96,7 @@ body {
   border: 4px solid #111;
   border-radius: 28px;
   padding: 12px;
-  text-align: center;
+  text-align: left;
   font-size: 14px;
   margin: 0;
 }
@@ -107,14 +107,37 @@ body {
   object-fit: contain;
 }
 
-.leetcode-text {
+.leetcode-view {
   line-height: 1.3835;
 }
 
-.leetcode-text strong {
+.leetcode-view strong {
   display: block;
   font-size: 16px;
 }
+
+/* Leetcode daily reminder changes to 'Claim Reward' upon completion */
+/* Hide alternate view by default */
+.icon-alt,
+.view-alt { 
+  display: none; 
+}
+
+/* Leetcode reminder (before) */
+.leetcode-card.completed .view-default, 
+.leetcode-card.completed .icon-default { 
+  display: none; 
+}
+
+/* Claim reward (after) */
+.leetcode-card.completed .view-alt, 
+.leetcode-card.completed .icon-alt { 
+  display: block; 
+}
+.leetcode-card.completed {
+  background: linear-gradient(to right, #f4bb7e, #f1d4b5, #eaddcf, #f1d4b5, #f4bb7e );
+}
+
 
 /* PET DISPLAY CARD */
 .pet-card {
@@ -148,7 +171,6 @@ body {
   border-radius: 10px;
   background: #f1f1f1;
   padding: 4px 8px;
-  cursor: pointer;
 }
 
 .minimize-icon {
@@ -255,15 +277,26 @@ body {
   background: linear-gradient(90deg, #6FC27B, #8EDC97);
 }
 
-/* Buttons animation */
+/* BUTTONS ANIMATION */
 .premium-btn:hover,
 .menu-btn:hover,
-.minimize-btn:hover {
+.minimize-btn:hover{
+  cursor: pointer;
   transform: scale(1.1);
 }
 
 .premium-btn:active,
 .menu-btn:active,
 .minimize-btn:active {
+  transform: scale(0.9);
+}
+
+/* Leetcode card click animation */
+.leetcode-card {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.leetcode-card:active {
   transform: scale(0.9);
 }
