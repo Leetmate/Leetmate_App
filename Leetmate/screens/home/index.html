@@ -6,6 +6,7 @@
     <title>Leetmate – Home</title>
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="home.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
   </head>
   <body>
     <div class="popup-layout">
@@ -49,28 +50,32 @@
         
           </div>
         
-          <div class="stats-bar">
-            <div>
-              <p>Happiness</p>
+          <div class="status-bar">
+            <div class="status-col hearts">
+              <div>Happiness</div>
               <div class="hearts">❤️❤️❤️❤️❤️</div>
             </div>
         
-            <div>
-              <p>Streak</p>
+            <div class="status-col streak">
+              <div>Streak</div>
               <div class="streak">🔥 --</div>
             </div>
         
-            <div>
-              <p>Lvl --</p>
+            <div class="status-col xp">
+              <div class="level-text">Lv. 1</div>
               <div class="xp-bar">
                 <div class="xp-fill"></div>
+                <div class="xp-text">0 / 100</div>
               </div>
+              <button type="button" class="xp-test-button">
+                +30 XP
+              </button>
+
             </div>
           </div>
-        
         </div>
-
+      </div>
     </div>
+    <script src="xp.js"></script>
   </body>
 </html>
-
