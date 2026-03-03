@@ -9,13 +9,13 @@ body {
     Roboto,
     Arial,
     sans-serif;
+  background: black;
 }
 
 /* HOME CONTAINER */ 
 .home-card {
   width: 100%;
-  max-width: 380px;
-  min-height: 360px;
+  height: 100%;
   margin: 0 auto;
   padding: 16px;
   background: #EEEAE1;
@@ -79,9 +79,19 @@ body {
   font-weight: bold;
 }
 
+.menu-icon {
+  width: 20px;      
+  height: 20px;
+  object-fit: contain;
+}
+
 /* LEETCODE DAILY REMINDER CARD */
 .leetcode-card {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center; 
+  gap: 26px; 
+
   background: linear-gradient(to right, #aeacac, #d4d2d2, #e2e1e1, #d4d2d2, #aeacac);
   border: 4px solid #111;
   border-radius: 28px;
@@ -91,9 +101,18 @@ body {
   margin: 0;
 }
 
-.leetcode-card strong {
+.leetcode-icon {
+  width: 40px;      
+  height: 40px;
+  object-fit: contain;
+}
+
+.leetcode-text {
+  line-height: 1.3835;
+}
+
+.leetcode-text strong {
   display: block;
-  margin-top: 6px;
   font-size: 16px;
 }
 
@@ -127,8 +146,15 @@ body {
 .minimize-btn {
   border: 2px solid #111;
   border-radius: 10px;
-  background: #EEEAE1;
+  background: #f1f1f1;
   padding: 4px 8px;
+  cursor: pointer;
+}
+
+.minimize-icon {
+  width: 20px;      
+  height: 20px;
+  object-fit: contain;
 }
 
 /* Pet Container */
@@ -178,6 +204,7 @@ body {
   font-size: 18px;
 }
 
+/* Pet Age */
 .pet-name p {
   margin: 0;
   font-size: 14px;
@@ -226,4 +253,17 @@ body {
   width: 75%;
   height: 100%;
   background: linear-gradient(90deg, #6FC27B, #8EDC97);
+}
+
+/* Buttons animation */
+.premium-btn:hover,
+.menu-btn:hover,
+.minimize-btn:hover {
+  transform: scale(1.1);
+}
+
+.premium-btn:active,
+.menu-btn:active,
+.minimize-btn:active {
+  transform: scale(0.9);
 }
