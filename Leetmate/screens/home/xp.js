@@ -1,4 +1,9 @@
+// XP Logic
+
+// Max XP is fixed, not scaling
 const MAX_XP = 100;
+
+// local storage keys used to store values
 const XP_KEY = "leetmate_xp";
 const LEVEL_KEY = "leetmate_level";
 
@@ -49,17 +54,12 @@ function addXP(xp_amount) {
     let currentXP = getXP();
     currentXP += xp_amount;
 
-    if (currentXP >= MAX_XP) {
+    while (currentXP >= MAX_XP) {
         currentXP -= MAX_XP;
         levelUp();
-        setXP(currentXP);
-        updateXPSectionUI();
-        levelUpBounce();
-        return;
     }
 
     setXP(currentXP);
-    updateXPSectionUI();
 }
 
 function levelUpBounce() {
@@ -77,8 +77,13 @@ function levelUpBounce() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateXPSectionUI();
+    const btn = document.querySelector(".xp-test-button");
+    if (!btn) return;
 
-  const btn = document.querySelector(".xp-test-button");
-  btn?.addEventListener("click", () => addXP(30));
-});
+    updateXPSectionUI();
+
+    btn?.addEventListener("click", () => {
+        addXP(30);
+        updateXPSectionUI();
+    });
+})
