@@ -8,17 +8,18 @@
   </head>
   <body>
     <div class="menu-preview">
-      <div class="nav-overlay" aria-hidden="false"></div>
-      <button type="button" class="nav-close-btn" aria-label="Close menu">×</button>
-      <div class="nav-drawer" role="dialog" aria-label="Main menu">
-        <nav class="nav-menu">
-          <button type="button" class="nav-menu-btn">Home</button>
-          <button type="button" class="nav-menu-btn">Playground</button>
-          <button type="button" class="nav-menu-btn">Store</button>
-          <button type="button" class="nav-menu-btn">Community</button>
-          <button type="button" class="nav-menu-btn">Activity</button>
-          <button type="button" class="nav-menu-btn">Settings</button>
-        </nav>
+      <div class="nav-overlay is-open" id="nav-overlay" aria-hidden="false">
+        <div class="nav-drawer" id="nav-drawer" role="dialog" aria-label="Main menu">
+          <button type="button" class="nav-close-btn" id="nav-close" aria-label="Close menu">×</button>
+          <nav class="nav-menu">
+            <button type="button" class="nav-menu-btn">Home</button>
+            <button type="button" class="nav-menu-btn">Playground</button>
+            <button type="button" class="nav-menu-btn">Store</button>
+            <button type="button" class="nav-menu-btn">Community</button>
+            <button type="button" class="nav-menu-btn">Activity</button>
+            <button type="button" class="nav-menu-btn">Settings</button>
+          </nav>
+        </div>
       </div>
     </div>
   </body>

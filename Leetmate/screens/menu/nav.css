@@ -12,24 +12,35 @@
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* Dim overlay behind menu (when used as popup) */
+/* Dim overlay – curved to match home screen, nothing goes beyond */
 .nav-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
+  border-radius: 28px;
+  overflow: hidden;
   z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-/* Menu container – right side, rounded, thick border, drop shadow */
+.nav-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Menu container – majority of screen, right side, rounded, thick border */
 .nav-drawer {
   position: absolute;
   top: 50%;
   right: 0;
-  transform: translateY(-50%);
-  width: 260px;
-  max-height: 88%;
-  min-height: 400px;
-  background: #DCDCDC;
+  transform: translateY(-50%) translateX(100%);
+  width: 300px;
+  min-height: 440px;
+  max-height: 90%;
+  pointer-events: auto;
+  background: #D9D9D9;
   border: 4px solid #111;
   border-radius: 28px 0 0 28px;
   box-shadow: -4px 4px 0 rgba(0, 0, 0, 0.25);
@@ -37,35 +48,38 @@
   display: flex;
   flex-direction: column;
   z-index: 101;
+  transition: transform 0.25s ease;
 }
 
-/* Close (X) – outside and above top-right of menu, on dark background */
+.nav-overlay.is-open .nav-drawer {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Close (X) – top right inside the menu panel, shaped like the header hamburger */
 .nav-close-btn {
   position: absolute;
   top: 12px;
-  right: 276px;
-  width: 40px;
-  height: 40px;
+  right: 12px;
+  width: 44px;
+  height: 32px;
   padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1;
   font-weight: bold;
   color: #111;
-  background: #DCDCDC;
+  background: #D9D9D9;
   border: 3px solid #111;
-  border-radius: 12px;
+  border-radius: 16px;
   cursor: pointer;
   z-index: 102;
 }
 
 .nav-close-btn:hover,
 .nav-close-btn:focus {
-  background: #E8E8E8;
-  outline: 2px solid #111;
-  outline-offset: 2px;
+  background: #CFCFCF;
 }
 
 /* Stack of menu buttons */
@@ -74,18 +88,18 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 44px;
 }
 
 .nav-menu-btn {
   width: 100%;
-  max-width: 220px;
+  max-width: 260px;
   padding: 14px 20px;
   font-size: 16px;
   font-weight: 700;
   text-align: center;
   color: #111;
-  background: #F5F5DC;
+  background: #F8EFDF;
   border: 3px solid #111;
   border-radius: 20px;
   cursor: pointer;
@@ -93,7 +107,5 @@
 
 .nav-menu-btn:hover,
 .nav-menu-btn:focus {
-  background: #EDEDD4;
-  outline: 2px solid #111;
-  outline-offset: 2px;
+  background: #E6DAC6;
 }
