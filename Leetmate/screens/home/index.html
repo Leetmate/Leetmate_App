@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate – Home</title>
+    <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="home.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="home-card">
+
+          <div class="home-header">
+            <div class="home-header-left">
+              <button class="premium-btn">+ Premium</button>
+            </div>
+          
+            <div class="home-header-center">
+              <h1 class="home-title">Home</h1>
+            </div>
+          
+            <div class="home-header-right">
+              <button class="menu-btn">☰</button>
+            </div>
+          </div>
+        
+          <div class="leetcode-card">
+            Leetcode Time, time to grind
+            <strong>Solve 1 Leetcode Today!</strong>
+          </div>
+        
+          <div class="pet-card">
+        
+            <div class="pet-top">
+              <div> 🟡 0</div>
+              <button class="minimize-btn">--</button>
+            </div>
+        
+            <div class="pet-name">
+              <h2>Fluffy Cat</h2>
+              <p>Age: --</p>
+            </div>
+        
+            <div class="home-hero">
+              <div class="home-hero-pet"></div>
+            </div>
+        
+          </div>
+        
+          <div class="status-bar">
+            <div class="status-col hearts">
+              <div>Happiness</div>
+              <div class="hearts">❤️❤️❤️❤️❤️</div>
+            </div>
+        
+            <div class="status-col streak">
+              <div>Streak</div>
+              <div class="streak">🔥 --</div>
+            </div>
+        
+            <div class="status-col xp">
+              <div class="level-text">Lv. 1</div>
+              <div class="xp-bar">
+                <div class="xp-fill"></div>
+                <div class="xp-text">0 / 100</div>
+              </div>
+              <button type="button" class="xp-test-button">
+                +30 XP
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../../firebase-bundle.js"></script>
+    <script src="../../firebase-config.js"></script>
+    <script src="xp.js"></script>
+    <script src="home.js"></script>
+  </body>
+</html>
