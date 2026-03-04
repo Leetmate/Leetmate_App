@@ -112,17 +112,22 @@
             var loading = document.getElementById('loading-overlay');
             if (loading) loading.classList.add('hidden');
 
+            console.error('Firebase sign in error:', err);
+
             var msg = 'Sign in failed.';
             if (err && err.code === 'auth/user-not-found') {
               msg = 'No account found for this email. Try signing up first.';
             } else if (err && err.code === 'auth/wrong-password') {
               msg = 'Incorrect password. Please try again.';
+            } else if (err && err.code === 'auth/invalid-credential') {
+              msg = 'Invalid email or password.';
             } else if (err && err.code === 'auth/invalid-email') {
               msg = 'Invalid email address.';
             } else if (err && err.code === 'auth/too-many-requests') {
               msg = 'Too many attempts. Please wait a moment and try again.';
             } else if (err && err.message) {
-              msg = err.message;
+              var strippedMsg = err.message.replace(/^Firebase:\s*/, '').replace(/\s*\(auth\/.*?\)\.$/, '.');
+              msg = strippedMsg || 'Sign in failed.';
             }
             showMessage(msgEl, msg, true);
           });
