@@ -28,13 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btn.addEventListener("click", () => {
-    const prevLevel = getLocalLv();
-    if (!currentUid) return;
+    const prevLevel = getLocalLevel();
 
     addXP(30);
     updateXPSectionUI();
 
-    if (prevLevel !== getLocalLv()) {
+    if (prevLevel !== getLocalLevel()) {
       animateLevelUp();
     }
     
