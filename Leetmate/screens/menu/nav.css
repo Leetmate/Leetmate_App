@@ -1,0 +1,99 @@
+/* Navigation menu – pixel UI, matches Home screen style */
+
+/* Viewport for design preview (380×520) */
+.menu-preview {
+  width: 380px;
+  height: 520px;
+  margin: 0;
+  padding: 0;
+  background: #4a4a4a;
+  position: relative;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Dim overlay behind menu (when used as popup) */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 100;
+}
+
+/* Menu container – right side, rounded, thick border, drop shadow */
+.nav-drawer {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 260px;
+  max-height: 88%;
+  min-height: 400px;
+  background: #DCDCDC;
+  border: 4px solid #111;
+  border-radius: 28px 0 0 28px;
+  box-shadow: -4px 4px 0 rgba(0, 0, 0, 0.25);
+  padding: 20px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  z-index: 101;
+}
+
+/* Close (X) – outside and above top-right of menu, on dark background */
+.nav-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 276px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: bold;
+  color: #111;
+  background: #DCDCDC;
+  border: 3px solid #111;
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 102;
+}
+
+.nav-close-btn:hover,
+.nav-close-btn:focus {
+  background: #E8E8E8;
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* Stack of menu buttons */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nav-menu-btn {
+  width: 100%;
+  max-width: 220px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: #111;
+  background: #F5F5DC;
+  border: 3px solid #111;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.nav-menu-btn:hover,
+.nav-menu-btn:focus {
+  background: #EDEDD4;
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
