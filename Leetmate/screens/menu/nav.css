@@ -12,7 +12,7 @@
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* Dim overlay – curved to match home screen, nothing goes beyond */
+/* Dim overlay */
 .nav-overlay {
   position: absolute;
   inset: 0;
@@ -30,7 +30,7 @@
   visibility: visible;
 }
 
-/* Menu container – majority of screen, right side, rounded, thick border */
+/* Menu container */
 .nav-drawer {
   position: absolute;
   top: 50%;
@@ -55,7 +55,7 @@
   transform: translateY(-50%) translateX(0);
 }
 
-/* Close (X) – top right inside the menu panel, shaped like the header hamburger */
+/* Close (X) – top right inside the menu panel */
 .nav-close-btn {
   position: absolute;
   top: 12px;
