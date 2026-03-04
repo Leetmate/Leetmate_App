@@ -6,6 +6,7 @@
     <title>Leetmate – Home</title>
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="../menu/nav.css" />
     <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
   </head>
   <body>
@@ -23,7 +24,7 @@
             </div>
           
             <div class="home-header-right">
-              <button class="menu-btn">☰</button>
+              <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">☰</button>
             </div>
           </div>
         
@@ -75,7 +76,23 @@
           </div>
         </div>
       </div>
+
+      <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
+        <div class="nav-drawer" id="nav-drawer" role="dialog" aria-modal="true" aria-label="Main menu">
+          <button type="button" class="nav-close-btn" id="nav-close" aria-label="Close menu">×</button>
+          <nav class="nav-menu" id="nav-menu">
+            <button type="button" class="nav-menu-btn">Home</button>
+            <button type="button" class="nav-menu-btn">Playground</button>
+            <button type="button" class="nav-menu-btn">Store</button>
+            <button type="button" class="nav-menu-btn">Community</button>
+            <button type="button" class="nav-menu-btn">Activity</button>
+            <button type="button" class="nav-menu-btn">Settings</button>
+          </nav>
+        </div>
+      </div>
     </div>
+
+    <script src="../menu/nav.js"></script>
     <script src="../../firebase-bundle.js"></script>
     <script src="../../firebase-config.js"></script>
     <script src="xp.js"></script>

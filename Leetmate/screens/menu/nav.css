@@ -1,0 +1,111 @@
+/* Navigation menu – pixel UI, matches Home screen style */
+
+/* Viewport for design preview (380×520) */
+.menu-preview {
+  width: 380px;
+  height: 520px;
+  margin: 0;
+  padding: 0;
+  background: #4a4a4a;
+  position: relative;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Dim overlay */
+.nav-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 28px;
+  overflow: hidden;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.nav-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Menu container */
+.nav-drawer {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%) translateX(100%);
+  width: 300px;
+  min-height: 440px;
+  max-height: 90%;
+  pointer-events: auto;
+  background: #D9D9D9;
+  border: 4px solid #111;
+  border-radius: 28px 0 0 28px;
+  box-shadow: -4px 4px 0 rgba(0, 0, 0, 0.25);
+  padding: 20px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  z-index: 101;
+  transition: transform 0.25s ease;
+}
+
+.nav-overlay.is-open .nav-drawer {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Close (X) – top right inside the menu panel */
+.nav-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: bold;
+  color: #111;
+  background: #D9D9D9;
+  border: 3px solid #111;
+  border-radius: 16px;
+  cursor: pointer;
+  z-index: 102;
+}
+
+.nav-close-btn:hover,
+.nav-close-btn:focus {
+  background: #CFCFCF;
+}
+
+/* Stack of menu buttons */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 44px;
+}
+
+.nav-menu-btn {
+  width: 100%;
+  max-width: 260px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: #111;
+  background: #F8EFDF;
+  border: 3px solid #111;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.nav-menu-btn:hover,
+.nav-menu-btn:focus {
+  background: #E6DAC6;
+}
