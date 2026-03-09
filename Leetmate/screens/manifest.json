@@ -1,0 +1,6 @@
+{
+    "permissions": {
+        "activeTab": true,
+        "tabs": true
+    }
+}
