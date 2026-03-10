@@ -26,7 +26,7 @@
       if (snap.exists) return Promise.resolve();
       var doc = window.LeetmateUserDoc && window.LeetmateUserDoc.createUserDoc
         ? window.LeetmateUserDoc.createUserDoc(uid, email, username)
-        : { email: email || '', username: username || '', xp: 0, coins: 0, leetcodeUsername: null, pets: [], friends: [], itemsOwned: [] };
+        : { email: email || '', username: username || '', xp: 0, coins: 0, leetcodeUsername: null, pets: [], friends: [], itemsOwned: [], streakFreezeEnd: null };
       return userRef.set(doc);
     });
   }

@@ -41,6 +41,7 @@
         username: null,
         connected: false
       },
+      streakFreezeEnd: null,
 
       // Pets / inventory / social (references only; assets are local)
       pets: [], // array of PET_SCHEMA objects (see PET_SCHEMA)
