@@ -1,6 +1,8 @@
 {
-    "permissions": {
-        "activeTab": true,
-        "tabs": true
+    "name": "Multiple Pages",
+    "manifest_version": 3,
+    "version": "1.0.0.0",
+    "action": {
+        "default_popup": "navigation_menu_index.html"
     }
 }

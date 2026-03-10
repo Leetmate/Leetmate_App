@@ -75,4 +75,12 @@
   trigger.setAttribute('aria-controls', 'nav-drawer');
   trigger.setAttribute('aria-label', 'Open menu');
   closeBtn.setAttribute('aria-label', 'Close menu');
+
+
+  const storeButton = document.getElementById('store-btn');
+  storeButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../store/store.html"
+  });
 })();
+
