@@ -5,6 +5,6 @@ storeButton.addEventListener('click', function () {
     window.location.href = "../store/store.html"
 });
 
-function changeColor(element) {
+/*function changeColor(element) {
   element.style.color = "red"; // Change to your desired color (e.g., "blue", "#ff0000")
-}
+}*/
