@@ -24,20 +24,34 @@
             </div>
           
             <div class="home-header-right">
-              <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">☰</button>
+              <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
+                <img src="../../assets/icons/menu_icon.png" class="menu-icon" alt="☰"/>
+              </button>
             </div>
           </div>
         
-          <div class="leetcode-card">
-            Leetcode Time, time to grind
-            <strong>Solve 1 Leetcode Today!</strong>
+          <div class="leetcode-card" id="leetcodeCard">
+            <img src="../../assets/icons/leetcode_icon.png" class="leetcode-icon icon-default"/>
+            <img src="../../assets/icons/reward_icon.png" class="leetcode-icon icon-alt"/>
+
+            <div class="leetcode-view view-default">
+              <div> Leetcode Time, time to grind </div>
+              <strong> Solve 1 Leetcode Today! </strong>
+            </div>
+
+            <div class="leetcode-view view-alt">
+              <div> Congrats, Leetcode Daily done ✓</div>
+              <strong> Claim Your Reward Here! </strong>
+            </div>
           </div>
         
           <div class="pet-card">
         
             <div class="pet-top">
               <div> 🟡 0</div>
-              <button class="minimize-btn">--</button>
+              <button class="minimize-btn">
+                <img src="../../assets/icons/minimize_icon.png" class="minimize-icon"/>
+              </button>
             </div>
         
             <div class="pet-name">
@@ -53,12 +67,12 @@
         
           <div class="status-bar">
             <div class="status-col hearts">
-              <div>Happiness</div>
+              <div class="hearts-text">Happiness</div>
               <div class="hearts">❤️❤️❤️❤️❤️</div>
             </div>
         
             <div class="status-col streak">
-              <div>Streak</div>
+              <div class="streak-text">Streak</div>
               <div class="streak">🔥 --</div>
             </div>
         
@@ -93,6 +107,9 @@
     </div>
 
     <script src="../menu/nav.js"></script>
+    <script src="../../firebase-bundle.js"></script>
+    <script src="../../firebase-config.js"></script>
     <script src="xp.js"></script>
+    <script src="home.js"></script>
   </body>
 </html>

@@ -9,13 +9,13 @@ body {
     Roboto,
     Arial,
     sans-serif;
+  background-image: url("../../assets/bg_silver.png");
 }
 
 /* HOME CONTAINER */ 
 .home-card {
   width: 100%;
-  max-width: 380px;
-  min-height: 360px;
+  height: 100%;
   margin: 0 auto;
   padding: 16px;
   background: #EEEAE1;
@@ -24,6 +24,8 @@ body {
   display: flex;
   flex-direction: column; 
   gap: 16px;
+  transform: scale(0.95);
+  transform-origin: center;
 }
 
 /* HOME HEADER  */
@@ -79,23 +81,65 @@ body {
   font-weight: bold;
 }
 
+.menu-icon {
+  width: 20px;      
+  height: 20px;
+  object-fit: contain;
+}
+
 /* LEETCODE DAILY REMINDER CARD */
 .leetcode-card {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center; 
+  gap: 26px; 
+
   background: linear-gradient(to right, #aeacac, #d4d2d2, #e2e1e1, #d4d2d2, #aeacac);
   border: 4px solid #111;
   border-radius: 28px;
   padding: 12px;
-  text-align: center;
+  text-align: left;
   font-size: 14px;
   margin: 0;
 }
 
-.leetcode-card strong {
+.leetcode-icon {
+  width: 40px;      
+  height: 40px;
+  object-fit: contain;
+}
+
+.leetcode-view {
+  line-height: 1.3835;
+}
+
+.leetcode-view strong {
   display: block;
-  margin-top: 6px;
   font-size: 16px;
 }
+
+/* Leetcode daily reminder changes to 'Claim Reward' upon completion */
+/* Hide alternate view by default */
+.icon-alt,
+.view-alt { 
+  display: none; 
+}
+
+/* Leetcode reminder (before) */
+.leetcode-card.completed .view-default, 
+.leetcode-card.completed .icon-default { 
+  display: none; 
+}
+
+/* Claim reward (after) */
+.leetcode-card.completed .view-alt, 
+.leetcode-card.completed .icon-alt { 
+  display: block; 
+}
+.leetcode-card.completed {
+  background: linear-gradient(to right, #f4bb7e, #f1d4b5, #eaddcf, #f1d4b5, #f4bb7e );
+}
+
 
 /* PET DISPLAY CARD */
 .pet-card {
@@ -127,8 +171,14 @@ body {
 .minimize-btn {
   border: 2px solid #111;
   border-radius: 10px;
-  background: #EEEAE1;
+  background: #f1f1f1;
   padding: 4px 8px;
+}
+
+.minimize-icon {
+  width: 20px;      
+  height: 20px;
+  object-fit: contain;
 }
 
 /* Pet Container */
@@ -178,6 +228,7 @@ body {
   font-size: 18px;
 }
 
+/* Pet Age */
 .pet-name p {
   margin: 0;
   font-size: 14px;
@@ -211,7 +262,8 @@ body {
 .status-col.streak  {flex: 0.8;}
 .status-col.xp      {flex: 1.3;}
 
-/* XP */
+.hearts-text, 
+.streak-text,
 .level-text {
   font-family: 'Lilita One', sans-serif;
   font-size: 24px;
@@ -220,11 +272,12 @@ body {
   -webkit-text-stroke: 1px #111;
 }
 
+/* XP */
 .level-text.level-up {
-  animation: levelUpBounce 1500ms;
+  animation: animate-level-up 1500ms;
 }
 
-@keyframes levelUpBounce {
+@keyframes animate-level-up {
   0%    {transform: scale(1);     color: white;}
   25%   {transform: scale(1.25);  color: rgb(40, 255, 40);}
   65%   {transform: scale(0.90);  color: white;}
@@ -244,7 +297,7 @@ body {
 
 .xp-fill {
   height: 100%;
-  width: 50%;
+  width: 0%;
   background-color: rgb(0, 180, 0);
   transition: width 150ms ease;
 }
@@ -275,4 +328,28 @@ body {
   background: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* BUTTONS ANIMATION */
+.premium-btn:hover,
+.menu-btn:hover,
+.minimize-btn:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.premium-btn:active,
+.menu-btn:active,
+.minimize-btn:active {
+  transform: scale(0.9);
+}
+
+/* Leetcode card click animation */
+.leetcode-card {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.leetcode-card:active {
+  transform: scale(0.9);
 }
