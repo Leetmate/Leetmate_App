@@ -1,3 +1,4 @@
+// Firebase XP syncing and UI updates 
 function hasFirebase() {
   return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
 }
@@ -39,7 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
     saveXPToFirestore(db, currentUid);
   })
-})// LeetCode Daily Card
+})
+
+// LeetCode Daily Card
 // TEMP: Toggles completed state visually
 // TODO: Replace with real completion check and reward-claim logic
 // (Should only toggle after verifying user solved daily problem)
