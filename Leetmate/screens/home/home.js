@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentUid = user.uid;
     loadXPFromFirestore(db, currentUid).then(updateXPSectionUI)
     loadStreakData(db, currentUid).then(updateStreakUI)
+    loadCoinsFromFirestore(db, currentUid).then(updateCoinsUI)
   });
 
   btn.addEventListener("click", () => {

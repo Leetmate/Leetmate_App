@@ -140,6 +140,11 @@ body {
   background: linear-gradient(to right, #f4bb7e, #f1d4b5, #eaddcf, #f1d4b5, #f4bb7e );
 }
 
+.coins-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px; 
+}
 
 /* PET DISPLAY CARD */
 .pet-card {
