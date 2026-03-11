@@ -77,10 +77,41 @@
   closeBtn.setAttribute('aria-label', 'Close menu');
 
 
+  const activityButton = document.getElementById('activity-btn');
+  activityButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../activity/activity_index.html"
+  });
+
+  const communityButton = document.getElementById('community-btn');
+  communityButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../community/community_index.html"
+  });
+
+
+  const homeButton = document.getElementById('home-btn');
+  homeButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../home/index.html"
+  });
+
+  const playgroundButton = document.getElementById('playground-btn');
+  playgroundButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../playground/playground_index.html"
+  });
+
+  const settingsButton = document.getElementById('settings-btn');
+  settingsButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../settings/settings_index.html"
+  });
+
   const storeButton = document.getElementById('store-btn');
   storeButton.addEventListener('click', function () {
             //window.location.href = '../home/index.html';
-      window.location.href = "../store/store.html"
+      window.location.href = "../store/store_index.html"
   });
 })();
 
