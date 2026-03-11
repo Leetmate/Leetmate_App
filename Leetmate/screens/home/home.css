@@ -225,6 +225,11 @@ body {
   box-shadow: 0 0px 0 rgba(184, 157, 91, 0.4);
 }
 
+.coins-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px; 
+}
 
 /* PET DISPLAY CARD */
 .pet-card {

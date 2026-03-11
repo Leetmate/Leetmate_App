@@ -25,10 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged((user) => {
     if (!user) return;
     currentUid = user.uid;
-    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI);
-    if (typeof loadStreakData === 'function') {
-      loadStreakData(db, currentUid).then(updateStreakUI);
-    }
+    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI)
+    loadStreakData(db, currentUid).then(updateStreakUI)
+    loadCoinsFromFirestore(db, currentUid).then(updateCoinsUI)
   });
 
   btn.addEventListener("click", () => {
