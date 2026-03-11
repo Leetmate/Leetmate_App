@@ -274,10 +274,10 @@ body {
 
 /* XP */
 .level-text.level-up {
-  animation: levelUpBounce 1500ms;
+  animation: animate-level-up 1500ms;
 }
 
-@keyframes levelUpBounce {
+@keyframes animate-level-up {
   0%    {transform: scale(1);     color: white;}
   25%   {transform: scale(1.25);  color: rgb(40, 255, 40);}
   65%   {transform: scale(0.90);  color: white;}
@@ -297,7 +297,7 @@ body {
 
 .xp-fill {
   height: 100%;
-  width: 50%;
+  width: 0%;
   background-color: rgb(0, 180, 0);
   transition: width 150ms ease;
 }
