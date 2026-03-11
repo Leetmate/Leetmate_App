@@ -1,4 +1,6 @@
-// Firebase XP syncing and UI updates 
+// Firebase XP syncing and UI updates
+let rewardsState = { solved: false, claimableCount: 0, claimableCoins: 0, claimableXp: 0 };
+
 function hasFirebase() {
   return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
 }
@@ -8,13 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("Firebase not available on this page.");
     return;
   }
-  
+
   const btn = document.querySelector(".xp-test-button");
   if (!btn) {
     console.warn("Unable to find xp-test-button.");
     return;
   }
-
 
   updateXPSectionUI();
 
@@ -25,9 +26,18 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged((user) => {
     if (!user) return;
     currentUid = user.uid;
-    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI)
-    loadStreakData(db, currentUid).then(updateStreakUI)
-    loadCoinsFromFirestore(db, currentUid).then(updateCoinsUI)
+    window.__leetmateAuth = { db, uid: currentUid };
+    loadLeetCodeUsernameFromFirestore(db, currentUid);
+    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI);
+    loadStreakData(db, currentUid).then(updateStreakUI);
+    loadCoinsFromFirestore(db, currentUid).then(updateCoinsUI);
+    syncPendingSubmissionsToFirestore(db, currentUid)
+      .then(() => getRewardsState(db, currentUid))
+      .then((state) => {
+        rewardsState = state;
+        loadLeetCodeProgressToday(db, currentUid);
+        setupLeetCodeCard(db, currentUid, state);
+      });
   });
 
   btn.addEventListener("click", () => {
@@ -39,22 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (prevLevel !== getLocalLevel()) {
       animateLevelUp();
     }
-    
+
     saveXPToFirestore(db, currentUid);
-  })
-})
-
-// LeetCode Daily Card
-// TEMP: Toggles completed state visually
-// TODO: Replace with real completion check and reward-claim logic
-// (Should only toggle after verifying user solved daily problem)
-
-document.addEventListener("DOMContentLoaded", () => {
-    const leetcodeCard = document.getElementById("leetcodeCard");
-  
-    if (!leetcodeCard) return;
-  
-    leetcodeCard.addEventListener("click", () => {
-      leetcodeCard.classList.toggle("completed");
-    });
   });
+});
