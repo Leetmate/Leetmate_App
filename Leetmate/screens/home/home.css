@@ -102,8 +102,9 @@ body {
 .leetcode-card {
   flex: 0 0 auto;
   display: flex;
-  align-items: center; 
-  gap: 26px; 
+  align-items: center;
+  gap: 26px;
+  height: 80px;
 
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
   border: 4px solid #111;
@@ -145,11 +146,21 @@ body {
 
 .leetcode-view {
   line-height: 1.3835;
+  flex: 1;
+  min-width: 0;
 }
 
 .leetcode-view strong {
   display: block;
   font-size: 14px;
+  font-size: 14px;
+}
+
+.view-alt {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
 }
 
 /* Leetcode daily reminder changes to 'Claim Reward' upon completion */
@@ -171,58 +182,25 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+.leetcode-card.completed .view-alt {
+  display: flex;
+}
+.leetcode-card.completed .icon-alt {
+  display: block;
 }
 .leetcode-card.completed {
-  background: linear-gradient(135deg, #f4bb7e 0%, #f1d4b5 50%, #eaddcf 100%);
-  border-color: #B89D5B;
-  box-shadow: 0 4px 15px rgba(184, 157, 91, 0.15);
+  background: linear-gradient(to right, #f4bb7e, #f1d4b5, #eaddcf, #f1d4b5, #f4bb7e );
 }
 
-.leetcode-card.completed .view-alt strong {
-  color: #3b2b1a;
+.leetcode-claim-btn {
+  align-self: flex-start;
+  padding: 8px 20px;
   font-size: 14px;
-  letter-spacing: -0.2px;
-}
-
-.leetcode-card.completed .view-alt span {
-  display: inline-block;
-  color: #3b2b1a;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-size: 10px;
-  margin-top: 6px;
-  background: linear-gradient(to right, #cfb98d, #e7ce9d, #edddbb, #f0e6d1, #edddbb, #e7ce9d, #cfb98d);
-  border: 2px solid #B89D5B;
-  padding: 4px 12px;
-  border-radius: 999px;
-  box-shadow: 0 4px 0 rgba(184, 157, 91, 0.4);
-  text-decoration: none !important;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.1s ease;
-}
-
-.leetcode-card.completed .view-alt span::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
-  transform: skewX(-25deg);
-  animation: shine 2s infinite;
-}
-
-.leetcode-card.completed .view-alt span:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 rgba(184, 157, 91, 0.4);
-}
-
-.leetcode-card.completed .view-alt span:active {
-  transform: translateY(2px);
-  box-shadow: 0 0px 0 rgba(184, 157, 91, 0.4);
+  font-weight: 700;
+  border: 2px solid #111;
+  border-radius: 12px;
+  background: #f4bb7e;
+  cursor: pointer;
 }
 
 .coins-wrap {

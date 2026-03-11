@@ -16,6 +16,12 @@
     "service_worker": "background.js",
     "type": "module"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/*"],
+      "js": ["content/leetcodeContent.js"]
+    }
+  ],
   "permissions": ["storage", "notifications", "alarms", "tabs", "cookies", "webNavigation"],
   "host_permissions": ["<all_urls>", "https://leetcode.com/*"],
   "content_security_policy": {
