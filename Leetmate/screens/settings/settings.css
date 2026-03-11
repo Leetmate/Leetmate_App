@@ -53,26 +53,7 @@ body {
   margin-bottom: 8px;
 }
 
-.settings-back-btn {
-  padding: 4px 12px;
-  border-radius: 999px;
-  border: 3px solid #3b2b1a;
-  background: #f0d5ae; /* Warm button tone */
-  color: #3b2b1a;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  transition: filter 0.2s;
-}
 
-.settings-back-btn:hover {
-  filter: brightness(0.95);
-}
-
-.settings-back-btn:focus-visible {
-  outline: 2px solid #3b2b1a;
-  outline-offset: 2px;
-}
 
 .settings-title-main {
   margin: 0;

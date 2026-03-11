@@ -14,11 +14,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Handle Back Button
-    const backBtn = document.querySelector('.settings-back-btn');
-    if (backBtn) {
-        backBtn.addEventListener('click', () => {
-            window.history.back();
-        });
-    }
+
 });

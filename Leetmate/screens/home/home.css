@@ -9,16 +9,17 @@ body {
     Roboto,
     Arial,
     sans-serif;
+  background: black;
 }
 
 /* HOME CONTAINER */
 .home-card {
   width: 100%;
   max-width: 380px;
-  min-height: 520px;
+  height: 100%;
   /* Stretch to fill the frame */
   margin: 0 auto;
-  padding: 16px;
+  padding: 12px;
   background: #EEEAE1;
   border-radius: 0;
   /* Remove border radius since it fills entire window */
@@ -26,7 +27,7 @@ body {
   /* Remove border since it touches the edge */
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   box-sizing: border-box;
 }
 
@@ -36,8 +37,8 @@ body {
   border-bottom: 4px solid #111;
 
   /* Pull header to absolute edges of card */
-  margin: -16px -16px 0 -16px;
-  padding: 10px 12px;
+  margin: -12px -12px 0 -12px;
+  padding: 8px 12px;
   /* Increase vertical padding */
 
   display: flex;
@@ -83,28 +84,79 @@ body {
 
 
 
+/* Menu Button */
+.menu-btn {
+  border: 3px solid #111;
+  border-radius: 16px;
+  background: #EEEAE1;
+  padding: 6px 10px;
+  font-weight: bold;
+}
+
+.menu-icon {
+  width: 20px;      
+  height: 20px;
+  object-fit: contain;
+}
+
 /* LEETCODE DAILY REMINDER CARD */
 .leetcode-card {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center; 
+  gap: 26px; 
+
   background: linear-gradient(to right, #aeacac, #d4d2d2, #e2e1e1, #d4d2d2, #aeacac);
   border: 4px solid #111;
   border-radius: 28px;
   padding: 12px;
-  text-align: center;
+  text-align: left;
   font-size: 14px;
   margin: 0;
 }
 
-.leetcode-card strong {
+.leetcode-icon {
+  width: 40px;      
+  height: 40px;
+  object-fit: contain;
+}
+
+.leetcode-view {
+  line-height: 1.3835;
+}
+
+.leetcode-view strong {
   display: block;
-  margin-top: 6px;
   font-size: 16px;
 }
 
+/* Leetcode daily reminder changes to 'Claim Reward' upon completion */
+/* Hide alternate view by default */
+.icon-alt,
+.view-alt { 
+  display: none; 
+}
+
+/* Leetcode reminder (before) */
+.leetcode-card.completed .view-default, 
+.leetcode-card.completed .icon-default { 
+  display: none; 
+}
+
+/* Claim reward (after) */
+.leetcode-card.completed .view-alt, 
+.leetcode-card.completed .icon-alt { 
+  display: block; 
+}
+.leetcode-card.completed {
+  background: linear-gradient(to right, #f4bb7e, #f1d4b5, #eaddcf, #f1d4b5, #f4bb7e );
+}
+
+
 /* PET DISPLAY CARD */
 .pet-card {
-  flex: 1 1 auto;
-  /* Allow to grow aggressively */
+  flex: 1 1 200px;
+  /* Allow to grow and shrink, targeting 200px as a base */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -113,10 +165,10 @@ body {
   background: linear-gradient(#BFD1DF, #DCEAF5);
   border: 4px solid #111;
   border-radius: 28px;
-  padding: 16px;
+  padding: 12px;
   margin: 0;
-  min-height: 250px;
-  /* Increase minimum height */
+  min-height: 180px;
+  /* Reduced minimum height to fit within 520px */
   overflow: hidden;
 }
 
@@ -133,8 +185,14 @@ body {
 .minimize-btn {
   border: 2px solid #111;
   border-radius: 10px;
-  background: #EEEAE1;
+  background: #f1f1f1;
   padding: 4px 8px;
+}
+
+.minimize-icon {
+  width: 20px;      
+  height: 20px;
+  object-fit: contain;
 }
 
 /* Pet Container */
@@ -192,6 +250,7 @@ body {
   font-size: 18px;
 }
 
+/* Pet Age */
 .pet-name p {
   margin: 0;
   font-size: 14px;
@@ -235,10 +294,10 @@ body {
 }
 
 .level-text.level-up {
-  animation: animate-level-up 1500ms;
+  animation: levelUpBounce 1500ms;
 }
 
-@keyframes animate-level-up {
+@keyframes levelUpBounce {
   0%    {transform: scale(1);     color: white;}
   25%   {transform: scale(1.25);  color: rgb(40, 255, 40);}
   65%   {transform: scale(0.90);  color: white;}
@@ -258,7 +317,7 @@ body {
 
 .xp-fill {
   height: 100%;
-  width: 0%;
+  width: 50%;
   background-color: rgb(0, 180, 0);
   transition: width 150ms ease;
 }
@@ -289,4 +348,28 @@ body {
   background: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* BUTTONS ANIMATION */
+.premium-btn:hover,
+.menu-btn:hover,
+.minimize-btn:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.premium-btn:active,
+.menu-btn:active,
+.minimize-btn:active {
+  transform: scale(0.9);
+}
+
+/* Leetcode card click animation */
+.leetcode-card {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.leetcode-card:active {
+  transform: scale(0.9);
 }

@@ -7,67 +7,65 @@ const MAX_XP = 100;
 const XP_KEY = "leetmate_xp";
 const LEVEL_KEY = "leetmate_level";
 
-function getLocalXP() {
-  const raw = localStorage.getItem(XP_KEY);
-  return raw ? parseInt(raw, 10) : 0;
+function getXP() {
+    const raw = localStorage.getItem(XP_KEY);
+    return raw ? parseInt(raw, 10) : 0;
 }
 
-function setLocalXP(value) {
-  localStorage.setItem(XP_KEY, String(value))
+function setXP(value) {
+    localStorage.setItem(XP_KEY, String(value))
 }
 
-function getLocalLevel() {
-  const raw = localStorage.getItem(LEVEL_KEY);
-  return raw ? parseInt(raw, 10) : 1;
+function getLevel() {
+    const raw = localStorage.getItem(LEVEL_KEY);
+    return raw ? parseInt(raw, 10) : 1;
 }
 
-function setLocalLevel(value) {
-  localStorage.setItem(LEVEL_KEY, String(value));
+function setLevel(value) {
+    localStorage.setItem(LEVEL_KEY, String(value));
 }
 
 function levelUp() {
-  let currentLevel = getLocalLevel();
-  currentLevel += 1;
-  setLocalLevel(currentLevel);
+    let currentLevel = getLevel();
+    currentLevel += 1;
+    setLevel(currentLevel);
 }
 
 function updateXPSectionUI() {
-  const currentXP = getLocalXP();
-  const currentLevel = getLocalLevel();
+    const currentXP = getXP();
+    const currentLevel = getLevel();
 
-  const xpFill = document.querySelector(".xp-fill");
-  const xpText = document.querySelector(".xp-text");
-  const levelText = document.querySelector(".level-text");
+    const xpFill = document.querySelector(".xp-fill");
+    const xpText = document.querySelector(".xp-text");
+    const levelText = document.querySelector(".level-text");
 
 
-  if (!xpFill || !xpText || !levelText) {
-    console.warn("XP elements not found (.xp-fill, .xp-text, or .level-text).")
-    return;
-  }
+    if (!xpFill || !xpText || !levelText) {
+        console.warn("XP elements not found (.xp-fill, .xp-text, or .level-text).")
+        return;
+    }
 
-  xpFill.style.width = currentXP + "%";
-  xpText.textContent = `${currentXP} / ${MAX_XP}`;
-  levelText.textContent = `Lv. ${currentLevel}`;
+    xpFill.style.width = currentXP + "%";
+    xpText.textContent = `${currentXP} / ${MAX_XP}`;
+    levelText.textContent = `Lv. ${currentLevel}`;
 }
 
-function addXP(XpAmount) {
-  let currentXP = getLocalXP();
-  currentXP += XpAmount;
+function addXP(xp_amount) {
+    let currentXP = getXP();
+    currentXP += xp_amount;
 
-  // While-loop accounts for multiple level ups just in case
-  while (currentXP >= MAX_XP) {
-    currentXP -= MAX_XP;
-    levelUp();
-  }
+    while (currentXP >= MAX_XP) {
+        currentXP -= MAX_XP;
+        levelUp();
+    }
 
-  setLocalXP(currentXP);
+    setXP(currentXP);
 }
 
 function animateLevelUp() {
   const levelText = document.querySelector(".level-text");
   if (!levelText) return;
 
-  // Restart the animation by removing and readding the class
   levelText.classList.remove("level-up");
   requestAnimationFrame(() => {
     levelText.classList.add("level-up");
@@ -91,10 +89,10 @@ function loadXPFromFirestore(db, uid) {
 
       // check data before writing to local storage
       if (Number.isInteger(data.xp)) {
-        setLocalXP(data.xp);
+        setXP(data.xp);
       }
       if (Number.isInteger(data.level)) {
-        setLocalLevel(data.level);
+        setLevel(data.level);
       }
     })
     .catch((e) => {
@@ -108,8 +106,8 @@ function saveXPToFirestore(db, uid) {
     .doc(uid)
     .set(
     {
-      xp: getLocalXP(),
-      level: getLocalLevel(),
+      xp: getXP(),
+      level: getLevel(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     },
     {
@@ -119,3 +117,14 @@ function saveXPToFirestore(db, uid) {
       console.error("saveXPToFirestore failed: ", e);
     })
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector(".xp-test-button");
+    if (!btn) return;
+
+    updateXPSectionUI();
+
+    btn?.addEventListener("click", () => {
+        addXP(30);
+        updateXPSectionUI();
+    });
+})
