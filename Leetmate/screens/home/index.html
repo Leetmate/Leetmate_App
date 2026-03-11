@@ -73,7 +73,13 @@
         
             <div class="status-col streak">
               <div class="streak-text">Streak</div>
-              <div class="streak">🔥 --</div>
+              <div class="streak-display">
+                <div class="streak-icon-wrap">
+                  <div class="streak-icon">🔥</div>
+                  <img src="../../assets/ice.png" class="streak-freeze-overlay" alt="ice">
+                </div>
+                <div class="streak-count">0</div>
+              </div>
             </div>
         
             <div class="status-col xp">
@@ -110,6 +116,7 @@
     <script src="../../firebase-bundle.js"></script>
     <script src="../../firebase-config.js"></script>
     <script src="xp.js"></script>
+    <script src="streak.js"></script>
     <script src="home.js"></script>
   </body>
 </html>

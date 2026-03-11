@@ -41,6 +41,7 @@
         username: null,
         connected: false
       },
+      streak: 0,
       streakFreezeEnd: null,
 
       // Pets / inventory / social (references only; assets are local)

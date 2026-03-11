@@ -241,10 +241,10 @@ body {
   border: 4px solid #111;
   border-radius: 28px;
 
-  padding: 6px 4px;
+  padding: 12px 4px 4px 4px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   text-align: center;
 }
 
@@ -264,6 +264,7 @@ body {
 
 .hearts-text, 
 .streak-text,
+.streak-count,
 .level-text {
   font-family: 'Lilita One', sans-serif;
   font-size: 24px;
@@ -272,6 +273,28 @@ body {
   -webkit-text-stroke: 1px #111;
 }
 
+.streak-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.streak-icon-wrap {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.streak-freeze-overlay {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  opacity: 0.65;
+  display: none;
+}
 /* XP */
 .level-text.level-up {
   animation: animate-level-up 1500ms;
