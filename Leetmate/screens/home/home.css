@@ -9,7 +9,7 @@ body {
     Roboto,
     Arial,
     sans-serif;
-  background: black;
+  background-image: url("../../assets/bg_silver.png");
 }
 
 /* HOME CONTAINER */ 
@@ -24,6 +24,8 @@ body {
   display: flex;
   flex-direction: column; 
   gap: 16px;
+  transform: scale(0.95);
+  transform-origin: center;
 }
 
 /* HOME HEADER  */
@@ -260,7 +262,8 @@ body {
 .status-col.streak  {flex: 0.8;}
 .status-col.xp      {flex: 1.3;}
 
-/* XP */
+.hearts-text, 
+.streak-text,
 .level-text {
   font-family: 'Lilita One', sans-serif;
   font-size: 24px;
@@ -269,6 +272,7 @@ body {
   -webkit-text-stroke: 1px #111;
 }
 
+/* XP */
 .level-text.level-up {
   animation: levelUpBounce 1500ms;
 }
