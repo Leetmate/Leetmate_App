@@ -71,15 +71,47 @@
   trigger.addEventListener('click', openNav);
   closeBtn.addEventListener('click', closeNav);
 
-  trigger.setAttribute('aria-expanded', 'false');  // Navigation Logic
-  var navMenu = document.getElementById('nav-menu');
-  if (navMenu) {
-    var navButtons = navMenu.querySelectorAll('.nav-menu-btn');
-    for (var i = 0; i < navButtons.length; i++) {
-      navButtons[i].addEventListener('click', function(e) {
-        var screenName = e.target.textContent.trim().toLowerCase();
-        window.location.href = '../' + screenName + '/index.html';
-      });
-    }
-  }
+  trigger.setAttribute('aria-expanded', 'false');
+  trigger.setAttribute('aria-controls', 'nav-drawer');
+  trigger.setAttribute('aria-label', 'Open menu');
+  closeBtn.setAttribute('aria-label', 'Close menu');
+
+
+  const activityButton = document.getElementById('activity-btn');
+  activityButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../activity/activity_index.html"
+  });
+
+  const communityButton = document.getElementById('community-btn');
+  communityButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../community/community_index.html"
+  });
+
+
+  const homeButton = document.getElementById('home-btn');
+  homeButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../home/index.html"
+  });
+
+  const playgroundButton = document.getElementById('playground-btn');
+  playgroundButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../playground/playground_index.html"
+  });
+
+  const settingsButton = document.getElementById('settings-btn');
+  settingsButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../settings/settings_index.html"
+  });
+
+  const storeButton = document.getElementById('store-btn');
+  storeButton.addEventListener('click', function () {
+            //window.location.href = '../home/index.html';
+      window.location.href = "../store/store_index.html"
+  });
 })();
+

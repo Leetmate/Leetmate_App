@@ -1,0 +1,21 @@
+@import url("../../styles/layout.css");
+
+.navigation-card button {
+  background-color: beige; /* beige background */
+  border: 1px solid black; /* black border */
+  color: black; /* black text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  width: 50%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+  justify-content: space-between;
+}
+
+.navigation-card button:not(:last-child) {
+  border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.navigation-card button:hover {
+  background-color: gray;
+}
