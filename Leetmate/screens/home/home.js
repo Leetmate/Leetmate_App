@@ -1,3 +1,4 @@
+// Firebase XP syncing and UI updates 
 function hasFirebase() {
   return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
 }
@@ -24,7 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged((user) => {
     if (!user) return;
     currentUid = user.uid;
-    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI)      
+    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI);
+    if (typeof loadStreakData === 'function') {
+      loadStreakData(db, currentUid).then(updateStreakUI);
+    }
   });
 
   btn.addEventListener("click", () => {

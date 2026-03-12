@@ -71,19 +71,12 @@
   trigger.addEventListener('click', openNav);
   closeBtn.addEventListener('click', closeNav);
 
-  trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-controls', 'nav-drawer');
-  trigger.setAttribute('aria-label', 'Open menu');
-  closeBtn.setAttribute('aria-label', 'Close menu');
-
-  // Navigation Logic
+  trigger.setAttribute('aria-expanded', 'false');  // Navigation Logic
   var navMenu = document.getElementById('nav-menu');
   if (navMenu) {
     var navButtons = navMenu.querySelectorAll('.nav-menu-btn');
     for (var i = 0; i < navButtons.length; i++) {
       navButtons[i].addEventListener('click', function(e) {
-        // Only run routing for default buttons without custom inline onclick handlers
-        // Wait, some have onclicks inline, but this will just act globally
         var screenName = e.target.textContent.trim().toLowerCase();
         window.location.href = '../' + screenName + '/index.html';
       });

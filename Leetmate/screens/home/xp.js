@@ -50,10 +50,11 @@ function updateXPSectionUI() {
     levelText.textContent = `Lv. ${currentLevel}`;
 }
 
-function addXP(xp_amount) {
+function addXP(XpAmount) {
     let currentXP = getXP();
-    currentXP += xp_amount;
+    currentXP += XpAmount;
 
+    // While-loop accounts for multiple level ups just in case
     while (currentXP >= MAX_XP) {
         currentXP -= MAX_XP;
         levelUp();
@@ -66,6 +67,7 @@ function animateLevelUp() {
   const levelText = document.querySelector(".level-text");
   if (!levelText) return;
 
+  // Restart the animation by removing and readding the class
   levelText.classList.remove("level-up");
   requestAnimationFrame(() => {
     levelText.classList.add("level-up");
@@ -117,14 +119,3 @@ function saveXPToFirestore(db, uid) {
       console.error("saveXPToFirestore failed: ", e);
     })
 }
-document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.querySelector(".xp-test-button");
-    if (!btn) return;
-
-    updateXPSectionUI();
-
-    btn?.addEventListener("click", () => {
-        addXP(30);
-        updateXPSectionUI();
-    });
-})
