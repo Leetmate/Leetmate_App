@@ -22,8 +22,8 @@ function getRewardsState(db, uid) {
 
     let claimableCoins = 0;
     let claimableXp = 0;
-    claimable.forEach((s, i) => {
-      if (i === 0) {
+    claimable.forEach((s) => {
+      if (s.order === 1) {
         claimableCoins += COINS_FIRST_SUBMISSION;
         claimableXp += XP_FIRST_SUBMISSION;
       } else {
