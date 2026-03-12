@@ -9,7 +9,6 @@ body {
     Roboto,
     Arial,
     sans-serif;
-  background-image: url("../../assets/backgrounds/silver_bg.png");
 }
 
 /* HOME CONTAINER */
@@ -22,9 +21,7 @@ body {
   padding: 12px;
   background: #EEEAE1;
   border-radius: 0;
-  /* Remove border radius since it fills entire window */
   border: none;
-  /* Remove border since it touches the edge */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -80,7 +77,6 @@ body {
   font-weight: 700;
   color: #B89D5B
 }
-
 
 
 /* Menu Button */
@@ -234,7 +230,7 @@ body {
   flex-direction: column;
   justify-content: center;
   position: relative;
-  background-image: url("../../assets/bg_home.png");
+  background-image: url("../../assets/backgrounds/bg_home.png");
   background-size: cover;
   background-position: center bottom;
   border: 4px solid #111;
@@ -277,6 +273,7 @@ body {
 }
 
 .coin-icon {
+  margin-top: 2px;
   width: 28px;
   height: auto;
 }
@@ -344,7 +341,7 @@ body {
   width: 188px;
   height: 141px;
 
-  background-image: url("../../assets/Animals - Outline/CubicCat.png");
+  background-image: url("../../assets/Animals - Outline/CubicJaguatirica.png");
   background-repeat: no-repeat;
   background-size: 752px 141px;
   image-rendering: pixelated;
@@ -530,12 +527,13 @@ body {
 /* Hearts beating animation */
 .hearts {
   display: flex;
-  gap: 2px;
+  gap: 3px;
   cursor: default;
 }
 
 .hearts span {
   display: inline-block;
+  margin-top: 5px;
   animation: heart-beat 1.5s infinite ease-in-out;
 }
 
