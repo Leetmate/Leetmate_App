@@ -5,3 +5,6 @@
 firebase-config.js
 
 node_modules/
+
+# Mac OS Directory Meta Data
+.DS_Store

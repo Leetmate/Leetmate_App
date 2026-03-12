@@ -9,8 +9,10 @@ body {
     Arial,
     sans-serif;
   font-size: 14px;
-  background: #5a5a5a; /* dark gray backdrop */
-  color: #000;
+  background: #f4e0c6;
+  /* Warm background matching Leetmate theme */
+  color: #3b2b1a;
+  /* Dark brown text for better contrast */
 }
 
 .popup-layout {
@@ -22,35 +24,51 @@ body {
 .popup-content {
   width: 100%;
   height: 100%;
-  padding: 12px;
+  padding: 16px;
+  /* Expand base padding */
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  /* Stretch to fill height */
 }
 
 .signin-card {
-  width: 90% !important;
-  min-width: 330px;
-  max-width: none !important;
-  margin: 0 auto;
-  background: #d9d9d9; /* light gray card */
-  border: 4px solid #000;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0;
+  background: #fdf5e6;
+  /* Soft cream card color */
+  border: 4px solid #3b2b1a;
+  /* Dark brown border */
   border-radius: 28px;
-  padding: 14px 18px 12px;
+  padding: 24px 20px 20px;
+  /* Decrease padding */
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  /* Decrease gap */
   box-sizing: border-box;
+  flex: 1;
+  box-shadow: 0 8px 16px rgba(59, 43, 26, 0.15);
+  /* Soft shadow */
 }
 
 .signin-back-btn {
   align-self: flex-start;
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 999px;
-  border: 4px solid #000;
-  background: #d9d9d9;
+  border: 3px solid #3b2b1a;
+  background: #f0d5ae;
+  /* Warm button tone */
+  color: #3b2b1a;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: filter 0.2s;
+}
+
+.signin-back-btn:hover {
+  filter: brightness(0.95);
 }
 
 .signin-back-btn:focus-visible,
@@ -58,41 +76,52 @@ body {
 .signin-link-signup:focus-visible,
 .signin-input:focus-visible,
 .signin-checkbox:focus-visible {
-  outline: 2px solid #000;
+  outline: 2px solid #3b2b1a;
   outline-offset: 2px;
 }
 
 .signin-title-main {
-  margin: 2px 0 6px;
+  margin: 8px 0 16px;
   text-align: center;
   font-size: 38px;
+  /* Slightly smaller title */
   font-weight: 900;
   line-height: 1;
+  color: #3b2b1a;
 }
 
 .signin-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  /* Decrease gap */
+  flex: 1;
 }
 
 .signin-label {
   font-weight: 800;
   font-size: 14px;
   margin-bottom: 2px;
+  color: #5c4327;
+  /* Slightly lighter brown than pure text */
 }
 
 .signin-input {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 4px solid #000;
+  padding: 12px 14px;
+  /* Smaller inputs */
+  border-radius: 14px;
+  border: 3px solid #3b2b1a;
+  /* Thinner but distinct border */
   background: #ffffff;
-  font-size: 13px;
+  font-size: 14px;
+  color: #3b2b1a;
 }
 
 .signin-input:focus {
   outline: none;
+  border-color: #d0b27a;
+  /* Accent color on focus */
 }
 
 .signin-remember-row {
@@ -103,31 +132,36 @@ body {
 }
 
 .signin-checkbox {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  border: 3px solid #000;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 3px solid #3b2b1a;
   appearance: none;
   background: #ffffff;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s;
 }
 
 .signin-checkbox:checked {
-  background: #5c7bd9;
+  background: #d0b27a;
+  /* Accent color when checked */
+  border-color: #d0b27a;
 }
 
 .signin-checkbox:checked::after {
   content: "✓";
-  font-size: 10px;
+  font-size: 12px;
   color: #ffffff;
+  font-weight: bold;
 }
 
 .signin-remember-label {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
+  color: #5c4327;
 }
 
 .signin-message {
@@ -135,29 +169,42 @@ body {
   margin: 4px 0 0;
   padding: 6px 8px;
   border-radius: 8px;
-  background: #e8f4e8;
-  color: #1a4d1a;
+  background: #d4edda;
+  color: #155724;
 }
 
 .signin-message--error {
-  background: #fce8e8;
-  color: #8b2020;
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .signin-btn-primary {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
+  /* Revert padding slightly */
   border-radius: 14px;
-  border: 4px solid #000;
+  border: 4px solid #3b2b1a;
   font-size: 16px;
+  /* Revert font slightly */
   font-weight: 800;
   cursor: pointer;
+  margin-top: 4px;
+  background: #d0b27a;
+  /* Main Accent */
+  color: #3b2b1a;
+  /* Dark text on button for legibility */
+  box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
+  /* Premium button shadow */
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.2s;
 }
 
-.signin-btn-primary {
-  margin-top: 4px;
-  background: #5c7bd9; /* medium blue */
-  color: #ffffff;
+.signin-btn-primary:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
+}
+
+.signin-btn-primary:hover {
+  filter: brightness(1.05);
 }
 
 .signin-link-signup {
@@ -165,7 +212,11 @@ body {
   align-self: center;
   border: none;
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
+  color: #3b2b1a;
   text-decoration: underline;
+  text-decoration-color: #d0b27a;
+  text-decoration-thickness: 2px;
 }

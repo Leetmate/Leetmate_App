@@ -25,24 +25,25 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged((user) => {
     if (!user) return;
     currentUid = user.uid;
-    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI)
-    loadStreakData(db, currentUid).then(updateStreakUI)
+    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI);
+    if (typeof loadStreakData === 'function') {
+      loadStreakData(db, currentUid).then(updateStreakUI);
+    }
   });
 
   btn.addEventListener("click", () => {
-    const prevLevel = getLocalLevel();
+    const prevLevel = getLevel();
 
     addXP(30);
     updateXPSectionUI();
 
-    if (prevLevel !== getLocalLevel()) {
+    if (prevLevel !== getLevel()) {
       animateLevelUp();
     }
     
     saveXPToFirestore(db, currentUid);
   })
 })
-
 // LeetCode Daily Card
 // TEMP: Toggles completed state visually
 // TODO: Replace with real completion check and reward-claim logic
