@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+
   const btn = document.querySelector(".xp-test-button");
   if (!btn) {
     console.warn("Unable to find xp-test-button.");
@@ -38,6 +39,18 @@ document.addEventListener("DOMContentLoaded", () => {
         loadLeetCodeProgressToday(db, currentUid);
         setupLeetCodeCard(db, currentUid, state);
       });
+    window.__leetmateAuth = { db, uid: currentUid };
+    loadLeetCodeUsernameFromFirestore(db, currentUid);
+    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI);
+    loadStreakData(db, currentUid).then(updateStreakUI);
+    loadCoinsFromFirestore(db, currentUid).then(updateCoinsUI);
+    syncPendingSubmissionsToFirestore(db, currentUid)
+      .then(() => getRewardsState(db, currentUid))
+      .then((state) => {
+        rewardsState = state;
+        loadLeetCodeProgressToday(db, currentUid);
+        setupLeetCodeCard(db, currentUid, state);
+      });
   });
 
   btn.addEventListener("click", () => {
@@ -49,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (prevLevel !== getLevel()) {
       animateLevelUp();
     }
+
 
     saveXPToFirestore(db, currentUid);
   });
