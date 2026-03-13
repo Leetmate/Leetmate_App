@@ -10,7 +10,8 @@ function loadStreakData(db, uid) {
 
     return {
       streak: typeof data.streak === 'number' ? data.streak : 0,
-      streakFreezeEnd: data.streakFreezeEnd || null
+      streakFreezeEnd: data.streakFreezeEnd || null,
+      streakLastUpdated: data.streakLastUpdated || null
     };
   })
   .catch((e) => {
@@ -27,6 +28,7 @@ function saveStreakData(db, uid, streakData) {
     {
       streak: streakData.streak,
       streakFreezeEnd: streakData.streakFreezeEnd,
+      streakLastUpdated: streakData.streakLastUpdated || null,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     },
     {merge: true}
@@ -47,6 +49,7 @@ function getTodayString() {
     timeZone: "America/Los_Angeles"
   });
 }
+
 
 function isStreakFreezeActive(streakData) {
   if (!streakData.streakFreezeEnd) return false;
@@ -117,6 +120,13 @@ function updateStreakUI(streakData) {
 
   streakCount.textContent = streakData.streak;
   freezeOverlay.style.display = isStreakFreezeActive(streakData) ? "block" : "none"
+}
+
+function isStreakUpdatedToday(streakData) {
+  if (!streakData.streakLastUpdated) return false;
+
+  const today = getTodayString();
+  return streakData.streakLastUpdated === today;
 }
 
 window.streakTest = {

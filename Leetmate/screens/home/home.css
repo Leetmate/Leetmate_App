@@ -222,11 +222,6 @@ body {
   cursor: pointer;
 }
 
-.coins-wrap {
-  display: flex;
-  align-items: center;
-  gap: 6px; 
-}
 
 /* PET DISPLAY CARD */
 .pet-card {
