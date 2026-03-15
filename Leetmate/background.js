@@ -1,22 +1,43 @@
-/**
- * background.js – Event page (runs in background when the popup is closed).
- *
- * Add logic here later, for example:
- *
- * - On install (chrome.runtime.onInstalled): set default storage (pet, coins, happiness).
- * - Daily reminder: use chrome.alarms to fire at a set time; then chrome.notifications
- *   to show "Time for LeetCode!" (options page can save reminder time to storage and
- *   send a message here to reschedule the alarm).
- * - Happiness decay: periodic check; if no LeetCode activity today, decrease pet happiness.
- * - LeetCode detection: chrome.tabs or a content script on leetcode.com to detect
- *   visits/solutions and grant coins or increase happiness.
- * - Badge: chrome.action.setBadgeText / setBadgeBackgroundColor to show streak or happiness on the icon.
- */
+// helper so that background can access the images
+async function assetToDataUrl(path) {
+	const response = await fetch(chrome.runtime.getURL(path));
+	const buffer = await response.arrayBuffer();
+	const base64String = new Uint8Array(buffer).toBase64();
 
-(function () {
-  'use strict';
+	const dataUrl = `data:image/png;base64,${base64String}`
+	return dataUrl;
+}
 
-  // chrome.runtime.onInstalled.addListener(function () { ... });
-  // chrome.alarms.onAlarm.addListener(function (alarm) { ... });
-  // chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) { ... });
-})();
+chrome.runtime.onMessage.addListener((message) => {
+
+	if (message.type === "openMiniDisplay") {
+		chrome.windows.getLastFocused(
+			{populate: true, windowTypes: ["normal"]}, // gets all the tabs in window, ignore popups/dev
+			
+			async(win) => {
+				const allTabs = win.tabs; 
+				const activeTab = allTabs.find(tab => tab.active); // find active tab from array
+
+				const petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica.png");
+
+				chrome.scripting.executeScript(
+					{target: {tabId: activeTab.id}, files: ["js/pip.js"]},
+					() => {
+						chrome.tabs.sendMessage(activeTab.id, {type: "loadPip", petDataUrl});
+					}
+				)
+			}
+		);
+	}
+
+	if (message.type === "restoreMainDisplay") {
+		chrome.windows.getAll({windowTypes: ["normal"]}, (windows) => {
+			const mainWin = windows[0]; // first window in array 
+
+			chrome.windows.update(mainWin.id, {focused: true}, () => {
+				chrome.action.openPopup({windowId: mainWin.id});
+			})
+		})
+	}
+})
+
