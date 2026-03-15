@@ -7,8 +7,15 @@ function changePet() {
     //var element = document.getElementById("active-pet");
     //element.classList.toggle("home-hero-pet.bat");
     let pet = document.getElementById("active-pet");
-    pet.classList.remove("home-hero-pet");
-    pet.classList.add("home-hero-pet-bat");
+    if (pet.classList != "home-hero-pet") {
+        pet.classList.remove("home-hero-pet-bat");
+        pet.classList.add("home-hero-pet");
+    }
+    else
+    {
+        pet.classList.remove("home-hero-pet");
+        pet.classList.add("home-hero-pet-bat");
+    }
 }
 
 const petChangeButton = document.getElementById('pet-change-btn');
