@@ -50,7 +50,10 @@ function saveLeetCodeProgressToFirestore(db, uid, rawSubmissions) {
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         },
         { merge: true }
-      );
+      )
+      .then(() => {
+        return storageSet({ leetmate_last_progress_date: todayKey });
+      });
     })
     .catch((e) => console.error("saveLeetCodeProgressToFirestore failed:", e));
 }
@@ -155,4 +158,37 @@ function syncPendingSubmissionsToFirestore(db, uid) {
       });
     });
   });
+}
+
+/**
+ * Gets the latest date the user has any leetcode progress recorded in Firestore.
+ * Returns a "YYYY-MM-DD" string or null if none found.
+ */
+async function loadLatestProgressDate(db, uid) {
+  if (!db || !uid) return null;
+
+  try {
+    const snap = await db
+      .collection("users")
+      .doc(uid)
+      .collection("leetcodeProgress")
+      .orderBy("updatedAt", "desc")
+      .limit(1)
+      .get();
+
+    if (snap.empty) return null;
+
+    // The document ID is the date string e.g. "2026-03-15"
+    const latestDate = snap.docs[0].id;
+
+    // Sync to chrome storage
+    await storageSet({ leetmate_last_progress_date: latestDate });
+    console.log("Latest progress date loaded:", latestDate);
+
+    return latestDate;
+
+  } catch (e) {
+    console.error("loadLatestProgressDate failed:", e);
+    return null;
+  }
 }

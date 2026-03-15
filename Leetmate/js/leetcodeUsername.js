@@ -1,14 +1,15 @@
 const LEETCODE_USERNAME_KEY = "leetmate_leetcode_username";
 
-function getLeetCodeUsername() {
-  return localStorage.getItem(LEETCODE_USERNAME_KEY);
+async function getLeetCodeUsername() {
+  const result = await storageGet(LEETCODE_USERNAME_KEY);
+  return result[LEETCODE_USERNAME_KEY] ?? null;
 }
 
-function setLeetCodeUsername(username) {
-  localStorage.setItem(LEETCODE_USERNAME_KEY, username);
+async function setLeetCodeUsername(username) {
+  await storageSet({ [LEETCODE_USERNAME_KEY]: username });
 }
 
-function loadLeetCodeUsernameFromFirestore(db, uid) {
+async function loadLeetCodeUsernameFromFirestore(db, uid) {
   return db
     .collection("users")
     .doc(uid)
@@ -31,10 +32,10 @@ function loadLeetCodeUsernameFromFirestore(db, uid) {
     });
 }
 
-function saveLeetCodeUsernameToFirestore(db, uid, username) {
+async function saveLeetCodeUsernameToFirestore(db, uid, username) {
   if (!username) return;
 
-  setLeetCodeUsername(username);
+  await setLeetCodeUsername(username);
 
   return db
     .collection("users")

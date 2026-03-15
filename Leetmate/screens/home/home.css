@@ -195,17 +195,6 @@ body {
   background: linear-gradient(to right, #f4bb7e, #f1d4b5, #eaddcf, #f1d4b5, #f4bb7e );
 }
 
-.leetcode-claim-btn {
-  align-self: flex-start;
-  padding: 8px 20px;
-  font-size: 14px;
-  font-weight: 700;
-  border: 2px solid #111;
-  border-radius: 12px;
-  background: #f4bb7e;
-  cursor: pointer;
-}
-
 .coins-wrap {
   display: flex;
   align-items: center;

@@ -31,11 +31,13 @@ async function fetchAndSaveSubmissions() {
     const data = await res.json();
     const submissions = data.data?.recentSubmissionList ?? [];
 
-    const today = new Date().toDateString();
+    const today = new Date().toLocaleDateString("en-CA", {
+      timeZone: "America/Los_Angeles",
+    });
     const todaySubmissions = submissions.filter((submission) => {
       const submissionDate = new Date(
         Number(submission.timestamp) * 1000
-      ).toDateString();
+      ).toLocaleDateString("en-CA", { timeZone: "America/Los_Angeles" });
       return submissionDate === today;
     });
 

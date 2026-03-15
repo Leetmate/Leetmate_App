@@ -1,59 +1,36 @@
-// Coins logic
 const COINS_KEY = "leetmate_coins";
 
-
-function getLocalCoins() {
-    const raw = localStorage.getItem(COINS_KEY);
-    return raw ? parseInt(raw, 10) : 0;
+async function getLocalCoins() {
+  const result = await storageGet(COINS_KEY);
+  return result[COINS_KEY] ?? 0;
 }
 
-function setLocalCoins(value) {
-    localStorage.setItem(COINS_KEY, String(value));
+async function setLocalCoins(value) {
+  await storageSet({ [COINS_KEY]: value });
 }
 
-function addCoins(amount) {
-    const current = getLocalCoins();
-    setLocalCoins(current + amount);
+async function addCoins(amount) {
+  const current = await getLocalCoins();
+  await setLocalCoins(current + amount);
 }
 
-function updateCoinsUI() {
-    const coins = getLocalCoins();
-
-    const coinsElement = document.querySelector(".coins-amount");
-    if (coinsElement) {
-        coinsElement.textContent = coins;
-    }
-    else return;
+async function updateCoinsUI() {
+  const coins = await getLocalCoins();
+  const coinsElement = document.querySelector(".coins-amount");
+  if (coinsElement) coinsElement.textContent = coins;
 }
 
-function loadCoinsFromFirestore(db, uid) {
-    return db
-    .collection("users")
-    .doc(uid)
-    .get()
-    .then((snap) => {
-        if (!snap.exists) return;
-
-        const data = snap.data();
-
-        if (Number.isInteger(data.coins)) {
-            setLocalCoins(data.coins);
-        }
-    })
-    .catch((e) => { 
-        console.error("loadCoinsFromFirestore failed: ", e);
-        return null;
-    })
+async function loadCoinsFromFirestore(db, uid) {
+  const snap = await db.collection("users").doc(uid).get();
+  if (!snap.exists) return;
+  const data = snap.data();
+  if (Number.isInteger(data.coins)) await setLocalCoins(data.coins);
 }
 
-function saveCoinsToFirestore(db, uid, coins) {
-    return db
-    .collection("users")
-    .doc(uid)
-    .set({ coins: getLocalCoins(),
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()}, 
-        { merge: true })
-    .catch((e) => {
-        console.error("saveCoinsToFirestore failed: ", e);
-    })
+async function saveCoinsToFirestore(db, uid) {
+  const coins = await getLocalCoins();
+  return db.collection("users").doc(uid).set(
+    { coins, updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+    { merge: true }
+  );
 }

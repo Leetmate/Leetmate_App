@@ -46,23 +46,19 @@ function getRewardsState(db, uid) {
  * Claim rewards for new submissions today.
  * Adds coins/XP, marks submissions as claimed, returns updated state.
  */
-function claimRewards(db, uid) {
-  return getRewardsState(db, uid).then((state) => {
-    const { claimableIds, claimableCoins, claimableXp } = state;
-    if (claimableIds.length === 0) {
-      return state;
-    }
+async function claimRewards(db, uid) {
+  const state = await getRewardsState(db, uid);
+  const { claimableIds, claimableCoins, claimableXp } = state;
+  if (claimableIds.length === 0) return state;
 
-    addCoins(claimableCoins);
-    addXP(claimableXp);
+  await addCoins(claimableCoins);   // now must be awaited
+  await addXP(claimableXp);         // now must be awaited
 
-    return markSubmissionsClaimed(db, uid, claimableIds)
-      .then(() => saveCoinsToFirestore(db, uid))
-      .then(() => saveXPToFirestore(db, uid))
-      .then(() => getRewardsState(db, uid));
-  });
+  await markSubmissionsClaimed(db, uid, claimableIds);
+  await saveCoinsToFirestore(db, uid);
+  await saveXPToFirestore(db, uid);
+  return getRewardsState(db, uid);
 }
-
 // LeetCode Daily Card – 3 states: reminder, claim, completed
 function setupLeetCodeCard(db, uid, state) {
     const leetcodeCard = document.getElementById("leetcodeCard");
@@ -88,16 +84,15 @@ function setupLeetCodeCard(db, uid, state) {
       if (claimBtn) {
         claimBtn.textContent = "Claim (+" + state.claimableCoins + " coins, +" + state.claimableXp + " XP)";
         claimBtn.style.display = "inline-block";
-        claimBtn.onclick = (e) => {
+        claimBtn.onclick = async (e) => {
           e.stopPropagation();
-          const prevLevel = getLocalLevel();
-          claimRewards(db, uid).then((newState) => {
-            rewardsState = newState;
-            updateCoinsUI();
-            updateXPSectionUI();
-            if (getLocalLevel() !== prevLevel) animateLevelUp();
-            setupLeetCodeCard(db, uid, newState);
-          });
+          const prevLevel = await getLocalLevel();         
+          const newState  = await claimRewards(db, uid);
+          rewardsState = newState;
+          await updateCoinsUI();                           
+          await updateXPSectionUI();                       
+          if ((await getLocalLevel()) !== prevLevel) animateLevelUp();
+          setupLeetCodeCard(db, uid, newState);
         };
       }
     } else {

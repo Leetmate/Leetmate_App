@@ -1,18 +1,21 @@
-function loadStreakData(db, uid) {
+async function loadStreakData(db, uid) {
   return db
   .collection("users")
   .doc(uid)
   .get()
-  .then((snap) => {
+  .then(async (snap) => {
     if (!snap.exists) return null;
 
     const data = snap.data()
 
-    return {
-      streak: typeof data.streak === 'number' ? data.streak : 0,
+    const streakData = {
+      streak: typeof data.streak === "number" ? data.streak : 0,
       streakFreezeEnd: data.streakFreezeEnd || null,
-      streakLastUpdated: data.streakLastUpdated || null
+      streakLastUpdated: data.streakLastUpdated || null,
     };
+    await storageSet({ leetmate_streak: streakData.streak });
+
+    return streakData;
   })
   .catch((e) => {
     console.error("loadStreakData failed: ", e);
@@ -20,7 +23,9 @@ function loadStreakData(db, uid) {
   })
 }
 
-function saveStreakData(db, uid, streakData) {
+async function saveStreakData(db, uid, streakData) {
+  await storageSet({ leetmate_streak: streakData.streak});
+
   return db
   .collection("users")
   .doc(uid)
@@ -40,12 +45,11 @@ function saveStreakData(db, uid, streakData) {
 
 function getTodayString() {
   // For demo/testing
-  if (window.__leetmateFakeToday) {
+  if (typeof window !== "undefined" && window.__leetmateFakeToday) {
     return window.__leetmateFakeToday;
   }
 
-  const today = new Date();
-  return today.toLocaleDateString("en-CA", {
+  return new Date().toLocaleDateString("en-CA", {
     timeZone: "America/Los_Angeles"
   });
 }
@@ -129,80 +133,138 @@ function isStreakUpdatedToday(streakData) {
   return streakData.streakLastUpdated === today;
 }
 
-window.streakTest = {
-  async freeze(days = 1) {
-    const db = firebase.firestore();
-    const user = firebase.auth().currentUser;
-    if (!user) return console.warn("No signed-in user.");
+async function runDailyStreakCheck() {
+  try {
+    const { uid } = await storageGet("uid");
+    if (!uid) {
+      console.log("No uid in storage, skipping.");
+      return;
+    }
 
-    const data = await loadStreakData(db, user.uid);
-    const updated = activateStreakFreeze(data, days);
+    const today = getTodayString();
 
-    await saveStreakData(db, user.uid, updated);
-    updateStreakUI(updated);
+    // Check if user solved today
+    const { leetmate_last_progress_date } = await storageGet("leetmate_last_progress_date");
+    const solvedToday = leetmate_last_progress_date === today;
 
-    console.log("Freeze activated:", updated);
-  },
+    // ✅ Solved today → home.js already handled the increment, do nothing
+    if (solvedToday) {
+      console.log("User solved today, streak already handled by home.js.");
+      return;
+    }
 
-  async clear() {
-    const db = firebase.firestore();
-    const user = firebase.auth().currentUser;
-    if (!user) return console.warn("No signed-in user.");
+    // ✅ Didn't solve today → reset streak to 0
+    const { leetmate_streak, leetmate_last_streak_date, leetmate_streak_freeze_end }
+      = await storageGet([
+          "leetmate_streak",
+          "leetmate_last_streak_date",
+          "leetmate_streak_freeze_end"
+        ]);
 
-    const data = await loadStreakData(db, user.uid);
-    const updated = clearStreakFreeze(data);
+    const streakData = {
+      streak: leetmate_streak ?? 0,
+      streakLastUpdated: leetmate_last_streak_date ?? null,
+      streakFreezeEnd: leetmate_streak_freeze_end ?? null,
+    };
 
-    await saveStreakData(db, user.uid, updated);
-    updateStreakUI(updated);
+    // Check freeze before resetting
+    const updated = isStreakFreezeActive(streakData)
+      ? streakData                  // freeze active → preserve streak
+      : resetStreak(streakData);    // no freeze → reset to 0
 
-    console.log("Freeze cleared:", updated);
-  },
+    updated.streakLastUpdated = today;
 
-  async increment() {
-    const db = firebase.firestore();
-    const user = firebase.auth().currentUser;
-    if (!user) return console.warn("No signed-in user.");
+    // Save to chrome storage
+    await storageSet({
+      leetmate_streak: updated.streak,
+      leetmate_last_streak_date: updated.streakLastUpdated,
+      leetmate_streak_freeze_end: updated.streakFreezeEnd ?? null,
+    });
 
-    const data = await loadStreakData(db, user.uid);
-    const updated = incrementStreak(data);
+    console.log("Streak reset at midnight:", updated);
 
-    await saveStreakData(db, user.uid, updated);
-    updateStreakUI(updated);
-
-    console.log("Streak incremented:", updated);
-  },
-
-  async miss() {
-    const db = firebase.firestore();
-    const user = firebase.auth().currentUser;
-    if (!user) return console.warn("No signed-in user.");
-
-    const data = await loadStreakData(db, user.uid);
-    const updated = processMissedDay(data);
-
-    await saveStreakData(db, user.uid, updated);
-    updateStreakUI(updated);
-
-    console.log("Streak updated:", updated);
-  },
-
-  setFakeToday(dateString) {
-    window.__leetmateFakeToday = dateString;
-    console.log("Fake today set to:", dateString);
-  },
-
-  clearFakeToday() {
-    window.__leetmateFakeToday = null;
-    console.log("Fake today cleared.");
-  },
-
-  async reload() {
-    const db = firebase.firestore();
-    const user = firebase.auth().currentUser;
-    if (!user) return console.warn("No signed-in user.");
-
-    const data = await loadStreakData(db, user.uid);
-    updateStreakUI(data);
-    console.log("Reloaded streak data:", data);
+  } catch (e) {
+    console.error("runDailyStreakCheck failed:", e);
   }
-};
+}
+
+if (typeof window !== "undefined") {
+
+  window.streakTest = {
+    async freeze(days = 1) {
+      const db = firebase.firestore();
+      const user = firebase.auth().currentUser;
+      if (!user) return console.warn("No signed-in user.");
+
+      const data = await loadStreakData(db, user.uid);
+      const updated = activateStreakFreeze(data, days);
+
+      await saveStreakData(db, user.uid, updated);
+      updateStreakUI(updated);
+
+      console.log("Freeze activated:", updated);
+    },
+
+    async clear() {
+      const db = firebase.firestore();
+      const user = firebase.auth().currentUser;
+      if (!user) return console.warn("No signed-in user.");
+
+      const data = await loadStreakData(db, user.uid);
+      const updated = clearStreakFreeze(data);
+
+      await saveStreakData(db, user.uid, updated);
+      updateStreakUI(updated);
+
+      console.log("Freeze cleared:", updated);
+    },
+
+    async increment() {
+      const db = firebase.firestore();
+      const user = firebase.auth().currentUser;
+      if (!user) return console.warn("No signed-in user.");
+
+      const data = await loadStreakData(db, user.uid);
+      const updated = incrementStreak(data);
+
+      await saveStreakData(db, user.uid, updated);
+      updateStreakUI(updated);
+
+      console.log("Streak incremented:", updated);
+    },
+
+    async miss() {
+      const db = firebase.firestore();
+      const user = firebase.auth().currentUser;
+      if (!user) return console.warn("No signed-in user.");
+
+      const data = await loadStreakData(db, user.uid);
+      const updated = processMissedDay(data);
+
+      await saveStreakData(db, user.uid, updated);
+      updateStreakUI(updated);
+
+      console.log("Streak updated:", updated);
+    },
+
+    setFakeToday(dateString) {
+      window.__leetmateFakeToday = dateString;
+      console.log("Fake today set to:", dateString);
+    },
+
+    clearFakeToday() {
+      window.__leetmateFakeToday = null;
+      console.log("Fake today cleared.");
+    },
+
+    async reload() {
+      const db = firebase.firestore();
+      const user = firebase.auth().currentUser;
+      if (!user) return console.warn("No signed-in user.");
+
+      const data = await loadStreakData(db, user.uid);
+      updateStreakUI(data);
+      console.log("Reloaded streak data:", data);
+    }
+  };
+}
