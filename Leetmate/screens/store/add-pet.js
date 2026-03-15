@@ -1,4 +1,7 @@
 // Adding Pet Logic (for testing only!)
+//const homeFile = require('../home/home.js');
+<script type="module" src="../home/home.js"></script>
+import {db, uid} from '../home/home.js';
 
 //https://stackoverflow.com/questions/19635077/adding-objects-to-array-in-localstorage
 
@@ -54,17 +57,18 @@ addBatButton.addEventListener('click', function(db, uid) {
     document.writeln(String(un))
 });*/
 
+//note, Joon said that the db uid that he used in his savexptofirestore function was passed from the home.js
 const addBatButton = document.getElementById('add-bat-btn');
 addBatButton.addEventListener('click', function() {
-    return db
+    //var db = homeFile.db;
+    //var uid = homeFile.uid;
+    var un = db
     .collection("users")
     .doc(uid)
-    .set(
-        {
-            pets: ["Batsy"]
-        },
-        {
-            merge: true
-        }
-    )
-})
+    .get()
+    .then((snap) => {
+        const data = snap.data();
+        return data.username;
+    })
+    document.writeln(String(un));
+});

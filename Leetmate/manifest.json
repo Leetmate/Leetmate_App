@@ -21,4 +21,5 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   }
+  //make a module for add pet like background.js here
 }
