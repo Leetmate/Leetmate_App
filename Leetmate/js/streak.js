@@ -9,8 +9,8 @@ function loadStreakData(db, uid) {
     const data = snap.data()
 
     return {
-      streak: data.streak,
-      streakFreezeEnd: data.streakFreezeEnd
+      streak: typeof data.streak === 'number' ? data.streak : 0,
+      streakFreezeEnd: data.streakFreezeEnd || null
     };
   })
   .catch((e) => {

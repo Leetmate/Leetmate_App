@@ -31,44 +31,46 @@
           </div>
         
           <div class="leetcode-card" id="leetcodeCard">
-            <img src="../../assets/icons/leetcode_icon.png" class="leetcode-icon icon-default"/>
-            <img src="../../assets/icons/reward_icon.png" class="leetcode-icon icon-alt"/>
-
-            <div class="leetcode-view view-default">
-              <div> Leetcode Time, time to grind </div>
-              <strong> Solve 1 Leetcode Today! </strong>
+            <div class="icon-default">
+              <img src="../../assets/icons/leetcode_icon.png" class="leetcode-icon" alt="LeetCode Icon"/>
             </div>
-
+            <div class="icon-alt">
+              <img src="../../assets/icons/reward_icon.png" class="leetcode-icon" alt="Reward Icon"/>
+            </div>
+          
+            <div class="leetcode-view view-default">
+              <strong>LeetCode Daily</strong>
+              <span>Solve today's challenge!</span>
+            </div>
             <div class="leetcode-view view-alt">
-              <div> Congrats, Leetcode Daily done ✓</div>
-              <strong> Claim Your Reward Here! </strong>
+              <strong>Congrats, Leetcode Daily done ✓</strong>
+              <span style="color: #007bff; font-weight: bold; text-decoration: underline;">Claim Your Reward Here!</span>
             </div>
           </div>
         
           <div class="pet-card">
-        
+            <div class="pet-name">
+              <h2 id="pet-name-display">Fluffy Cat</h2>
+              <p>Age: <span id="pet-age-display">--</span></p>
+            </div>
             <div class="pet-top">
-              <div> 🟡 0</div>
-              <button class="minimize-btn">
-                <img src="../../assets/icons/minimize_icon.png" class="minimize-icon"/>
+              <div class="coin-display">
+                <span class="coin-icon">🟡</span>
+                <span id="coin-count">0</span>
+              </div>
+              <button type="button" class="minimize-btn">
+                <img src="../../assets/icons/minimize_icon.png" class="minimize-icon" alt="minimize"/>
               </button>
             </div>
-        
-            <div class="pet-name">
-              <h2>Fluffy Cat</h2>
-              <p>Age: --</p>
-            </div>
-        
             <div class="home-hero">
               <div class="home-hero-pet"></div>
             </div>
-        
           </div>
         
           <div class="status-bar">
             <div class="status-col hearts">
               <div class="hearts-text">Happiness</div>
-              <div class="hearts">❤️❤️❤️❤️❤️</div>
+              <div class="hearts"><span>❤️</span><span>❤️</span><span>❤️</span><span>❤️</span><span>❤️</span></div>
             </div>
         
             <div class="status-col streak">
@@ -88,10 +90,7 @@
                 <div class="xp-fill"></div>
                 <div class="xp-text">0 / 100</div>
               </div>
-              <button type="button" class="xp-test-button">
-                +30 XP
-              </button>
-
+              <button type="button" class="xp-test-button">+30 XP</button>
             </div>
           </div>
         </div>
@@ -115,8 +114,14 @@
     <script src="../menu/nav.js"></script>
     <script src="../../firebase-bundle.js"></script>
     <script src="../../firebase-config.js"></script>
-    <script src="xp.js"></script>
-    <script src="streak.js"></script>
+    <script src="../../js/xp.js"></script>
+    <script src="../../js/streak.js"></script>
     <script src="home.js"></script>
+    <!-- 
+      REQUIRE LOGIN TO VIEW THIS SCREEN:
+      Including auth-gate.js ensures only signed-in users can access this page.
+      Copy these three <script> tags to the bottom of any new protected screen.
+    -->
+    <script src="../../scripts/auth-gate.js"></script>
   </body>
 </html>

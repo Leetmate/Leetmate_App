@@ -14,37 +14,59 @@
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function () {
+    console.log('Leetmate: popup.js DOMContentLoaded');
     if (
       typeof firebase === 'undefined' ||
       !firebase.auth ||
       !firebase.firestore
     ) {
+      console.error('Leetmate: Firebase not loaded in popup.js');
       return;
     }
 
     var auth = firebase.auth();
     var db = firebase.firestore();
 
+    console.log('Leetmate: attaching onAuthStateChanged');
     auth.onAuthStateChanged(function (user) {
+      console.log('Leetmate: onAuthStateChanged fired. User:', user ? user.uid : 'null');
       if (!user) {
         // Not signed in – keep showing the Welcome screen.
+        var loading = document.getElementById('loading-overlay');
+        if (loading) loading.classList.add('hidden');
         return;
       }
 
+      console.log('Leetmate: Fetching user doc from Firestore...');
       db.collection('users')
         .doc(user.uid)
         .get()
         .then(function (snap) {
+          console.log('Leetmate: User doc fetched! exists:', snap.exists);
           var data = snap.exists ? snap.data() || {} : {};
-          // Whether connected or not, the next step in the flow is the
-          // LeetCode connect screen; it will show success or connect state.
-          window.location.href = 'screens/leetcode/index.html';
+
+          if (data.leetcode && data.leetcode.connected) {
+            console.log('Leetmate: Redirecting to home...');
+            window.location.href = 'screens/home/index.html';
+          } else {
+            console.log('Leetmate: Redirecting to leetcode connect...');
+            window.location.href = 'screens/leetcode/index.html';
+          }
         })
-        .catch(function () {
-          // On error, still send to LeetCode screen – it can handle failures.
+        .catch(function (error) {
+          console.error('Leetmate: Firestore get error:', error);
           window.location.href = 'screens/leetcode/index.html';
         });
     });
+
+    // Failsafe: if nothing happens after 5s, hide the loading screen and log
+    setTimeout(() => {
+      var loading = document.getElementById('loading-overlay');
+      if (loading && !loading.classList.contains('hidden')) {
+         console.warn('Leetmate: Failsafe triggered. Stuck on loading for 5 seconds.');
+         loading.classList.add('hidden');
+      }
+    }, 5000);
   });
 })();
 

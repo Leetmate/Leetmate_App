@@ -4,19 +4,20 @@
   "version": "1.0",
   "description": "A browser extension that keeps you accountable on LeetCode with a virtual pet companion.",
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "assets/LeetMate_icons/icon16.png",
+    "48": "assets/LeetMate_icons/icon48.png",
+    "128": "assets/LeetMate_icons/icon128.png"
   },
   "action": {
-    "default_icon": "icon16.png",
+    "default_icon": "assets/LeetMate_icons/icon16.png",
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
-  "permissions": ["storage", "notifications", "alarms", "tabs", "cookies"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": ["storage", "notifications", "alarms", "tabs", "cookies", "webNavigation"],
+  "host_permissions": ["<all_urls>", "https://leetcode.com/*"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   }

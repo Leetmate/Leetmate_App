@@ -5,10 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leetmate – Sign up</title>
     <link rel="stylesheet" href="../../styles/popup.css" />
+    <link rel="stylesheet" href="../loading/loading.css" />
     <link rel="stylesheet" href="signup.css" />
   </head>
   <body>
     <div class="popup-layout">
+      <!-- Loading Overlay -->
+      <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+        </div>
+        <p class="loading-text" id="loading-text">Signing up...</p>
+      </div>
+
       <div class="popup-content">
         <div class="signup-card">
           <button type="button" class="signup-back-btn" id="signup-back-btn">
