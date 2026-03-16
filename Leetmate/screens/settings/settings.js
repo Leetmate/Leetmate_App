@@ -3,13 +3,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Sign Out Button
     const signoutBtn = document.getElementById('signout-btn');
     if (signoutBtn) {
-        signoutBtn.addEventListener('click', () => {
+        signoutBtn.addEventListener('click', async () => {
             if (firebase && firebase.auth) {
-                firebase.auth().signOut().then(() => {
+                try {
+                    await clearAppStorage(); // clear all chrome storage
+                    await storageSet({ uid: null, leetcodeUsername: null }); // clear uid and leetcodeUsername from chrome storage
+          
+                    await firebase.auth().signOut();
                     window.location.replace('../../popup.html');
-                }).catch((error) => {
+                } catch (error) {
                     console.error("Sign out error", error);
-                });
+                }
             }
         });
     }
