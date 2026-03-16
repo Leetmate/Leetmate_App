@@ -1,16 +1,26 @@
 /**
  * happinessDecay.js
  * Happiness is calculated from the last time the pet was fed.
- * Decays by 1 heart (20%) every 8 hours after feeding.
+ * Decays gradually and continuously — 20% per 8 hours (100% over 40 hours).
  * Full happiness (100%) resets when pet is fed.
  *
+ * ── Single source of truth ────────────────────────────────────────────────────
+ * lastFedTime is the ONLY persisted value that matters.
+ * Happiness is ALWAYS derived from it on the fly — never stored as a snapshot.
+ *
+ * This means Firestore and local can never drift:
+ *   currentHappiness = calculateHappinessFromFedTime(lastFedTime)
+ *
+ * The decay timer only refreshes the UI each minute — it does NOT write to
+ * Chrome storage or Firestore. Writes only happen on feed.
+ *
  * Chrome storage keys:
- *   leetmate_happiness   – last saved happiness value (0–100)
- *   leetmate_last_fed    – timestamp (ms) of last feed
+ *   leetmate_last_fed    – timestamp (ms) of last feed  ← source of truth
+ *   leetmate_happiness   – derived cache, written on feed/load only (for fast reads)
  *
  * Firestore fields (on users/{uid}):
- *   happiness            – last saved happiness value (0–100)
- *   lastFedTime          – timestamp (ms) of last feed
+ *   lastFedTime          – timestamp (ms) of last feed  ← source of truth
+ *   happiness            – derived cache, written on feed only (for quick reads)
  */
 
 const HAPPINESS_STORAGE_KEY = "leetmate_happiness";
@@ -22,16 +32,16 @@ const TOTAL_HEARTS          = 5;
 
 /**
  * Translates a happiness percentage (0–100) into an array of 5 fill values.
- * Each heart = 20% of total happiness.
+ * Each heart = 20% of total happiness. Values are continuous (gradual decay).
  *
  * Returns array of 5 numbers (0 to 1):
  *   1.0 = full, 0.0 = empty, 0.x = partial
  *
- * calculateHeartValues(100) → [1,    1,    1,    1,    1   ]
- * calculateHeartValues(95)  → [1,    1,    1,    1,    0.75]
- * calculateHeartValues(80)  → [1,    1,    1,    1,    0   ]
- * calculateHeartValues(55)  → [1,    1,    0.75, 0,    0   ]
- * calculateHeartValues(0)   → [0,    0,    0,    0,    0   ]
+ * calculateHeartValues(100)  → [1,    1,    1,    1,    1   ]
+ * calculateHeartValues(90)   → [1,    1,    1,    1,    0.5 ]
+ * calculateHeartValues(82.5) → [1,    1,    1,    1,    0.125]
+ * calculateHeartValues(55)   → [1,    1,    0.75, 0,    0   ]
+ * calculateHeartValues(0)    → [0,    0,    0,    0,    0   ]
  */
 function calculateHeartValues(timePerc) {
   const hearts = [0, 0, 0, 0, 0];
@@ -52,15 +62,14 @@ function calculateHeartValues(timePerc) {
 
 /**
  * Calculate current happiness % from lastFedTime.
- * Decays 20% per 8-hour interval elapsed since last feed.
+ * Decays continuously — 20% per 8 hours (100% over 40 hours).
  * Returns 100 if never fed (fresh pet = full happiness).
  */
 function calculateHappinessFromFedTime(lastFedTime) {
   if (!lastFedTime) return 100;
 
-  const elapsed = Date.now() - lastFedTime;
-  const intervalsElapsed = Math.floor(elapsed / DECAY_INTERVAL_MS);
-  const decayAmount = intervalsElapsed * 20;
+  const elapsed     = Date.now() - lastFedTime;
+  const decayAmount = (elapsed / DECAY_INTERVAL_MS) * 20; // continuous, not stepped
 
   return Math.max(0, 100 - decayAmount);
 }
@@ -85,41 +94,67 @@ async function setLocalLastFedTime(timestamp) {
   await storageSet({ [LAST_FED_KEY]: timestamp });
 }
 
+// ── Decay timer ───────────────────────────────────────────────────────────────
+
+let _decayTimerInterval = null;
+
+/**
+ * Starts a 1-minute interval that recalculates happiness from lastFedTime
+ * and refreshes the hearts UI. Does NOT write to storage or Firestore —
+ * lastFedTime is the source of truth, so no writes are needed between feeds.
+ *
+ * Call once after auth. Safe to call again — clears any previous timer first.
+ */
+function startHappinessDecayTimer() {
+  if (_decayTimerInterval) clearInterval(_decayTimerInterval);
+
+  _decayTimerInterval = setInterval(async () => {
+    await updateHeartsUI();
+  }, 60 * 1000); // every 1 minute
+
+  console.log("Happiness decay timer started.");
+}
+
 // ── Feed the pet ──────────────────────────────────────────────────────────────
 
 /**
  * Call this when the user feeds their pet.
- * Resets happiness to 100 and records the current time.
+ * Resets happiness to 100, records the current time, and restarts the decay timer.
  */
 async function feedPet(db, uid) {
-    await setLocalLastFedTime(Date.now());
-    await setLocalHappiness(100);
-    await updateHeartsUI();
-  
-    // Then save to Firestore and sync server timestamp back
-    await saveHappinessToFirestore(db, uid, 100);
-  
-    // Refresh UI again with accurate server timestamp
-    await updateHeartsUI();
-  
-    console.log("Pet fed! Happiness reset to 100.");
-  }
+  await setLocalLastFedTime(Date.now());
+  await setLocalHappiness(100);
+  await updateHeartsUI();
+
+  // Save to Firestore and sync the authoritative server timestamp back
+  await saveHappinessToFirestore(db, uid, 100);
+
+  // Refresh UI with the accurate server timestamp
+  await updateHeartsUI();
+
+  // Restart decay timer from this new feed time
+  startHappinessDecayTimer();
+
+  console.log("Pet fed! Happiness reset to 100.");
+}
 
 function setupFeedButton(db, uid) {
-    const feedBtn = document.getElementById("feedBtn");
-    if (!feedBtn) {
-      console.warn("feedBtn not found in DOM.");
-      return;
-    }
-   
-    feedBtn.addEventListener("click", async () => {
-      await feedPet(db, uid);
-    });
+  const feedBtn = document.getElementById("feedBtn");
+  if (!feedBtn) {
+    console.warn("feedBtn not found in DOM.");
+    return;
+  }
+
+  feedBtn.addEventListener("click", async () => {
+    await feedPet(db, uid);
+  });
 }
+
 // ── UI ────────────────────────────────────────────────────────────────────────
 
 /**
- * Recalculates happiness from lastFedTime and updates the hearts display.
+ * Derives happiness live from lastFedTime and updates the hearts display.
+ * Does NOT write happiness to storage — reads lastFedTime, computes on the fly.
  */
 async function updateHeartsUI() {
   const heartSpans = document.querySelectorAll(".hearts span");
@@ -128,31 +163,26 @@ async function updateHeartsUI() {
     return;
   }
 
-  // Always derive happiness live from lastFedTime for accuracy
-  const lastFedTime = await getLocalLastFedTime();
+  const lastFedTime   = await getLocalLastFedTime();
   const happinessPerc = calculateHappinessFromFedTime(lastFedTime);
-
-  // Keep stored happiness in sync with live value
-  await setLocalHappiness(happinessPerc);
-
-  const heartValues = calculateHeartValues(happinessPerc);
+  const heartValues   = calculateHeartValues(happinessPerc);
 
   heartSpans.forEach((span, i) => {
     const fill = heartValues[i];
 
     if (fill >= 1) {
       span.style.opacity = "1";
-      span.style.filter = "none";
-      span.textContent = "❤️";
+      span.style.filter  = "none";
+      span.textContent   = "❤️";
     } else if (fill <= 0) {
       span.style.opacity = "0.25";
-      span.style.filter = "grayscale(100%)";
-      span.textContent = "🤍";
+      span.style.filter  = "grayscale(100%)";
+      span.textContent   = "🤍";
     } else {
       // Partial heart — blend opacity and grayscale
       span.style.opacity = String(0.25 + fill * 0.75);
-      span.style.filter = `grayscale(${Math.round((1 - fill) * 100)}%)`;
-      span.textContent = "❤️";
+      span.style.filter  = `grayscale(${Math.round((1 - fill) * 100)}%)`;
+      span.textContent   = "❤️";
     }
   });
 }
@@ -160,41 +190,42 @@ async function updateHeartsUI() {
 // ── Firestore ─────────────────────────────────────────────────────────────────
 
 /**
- * Save happiness and lastFedTime to Firestore + chrome storage.
+ * On feed: writes lastFedTime (as server timestamp) and happiness snapshot to
+ * Firestore, then reads the server timestamp back and stores it locally.
+ * The happiness field here is only a convenience snapshot — never read on load.
  */
 async function saveHappinessToFirestore(db, uid, happiness) {
-    const ref = db.collection("users").doc(uid);
-  
-    return ref
-      .set(
-        {
-          happiness:   happiness,
-          lastFedTime: firebase.firestore.FieldValue.serverTimestamp(),
-          updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      )
-      .then(() => ref.get())           
-      .then(async (snap) => {
-        if (!snap.exists) return;
-        const data = snap.data();
-  
-        // Convert Firestore Timestamp → ms
-        const lastFedTime = data.lastFedTime ? data.lastFedTime.toMillis() : null;
-  
-        // Sync server timestamp back to local storage
-        await setLocalLastFedTime(lastFedTime);
-        await setLocalHappiness(happiness);
-  
-        console.log("Firestore synced. lastFedTime:", new Date(lastFedTime).toLocaleString());
-      })
-      .catch((e) => console.error("saveHappinessToFirestore failed:", e));
-  }
+  const ref = db.collection("users").doc(uid);
+
+  return ref
+    .set(
+      {
+        happiness:   happiness,
+        lastFedTime: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    )
+    .then(() => ref.get())
+    .then(async (snap) => {
+      if (!snap.exists) return;
+      const data = snap.data();
+
+      // Store the authoritative server timestamp locally
+      const lastFedTime = data.lastFedTime ? data.lastFedTime.toMillis() : null;
+      await setLocalLastFedTime(lastFedTime);
+      // Derive happiness from the server timestamp (may differ slightly from 100
+      // if there was a round-trip delay, but will be accurate)
+      await setLocalHappiness(calculateHappinessFromFedTime(lastFedTime));
+
+      console.log("Firestore synced. lastFedTime:", new Date(lastFedTime).toLocaleString());
+    })
+    .catch((e) => console.error("saveHappinessToFirestore failed:", e));
+}
 
 /**
- * Load happiness and lastFedTime from Firestore.
- * Recalculates live happiness from lastFedTime (never trusts stale stored value).
- * Syncs result to chrome storage and updates the UI.
+ * On load: reads lastFedTime from Firestore, derives happiness from it,
+ * and syncs both to Chrome storage. Never trusts the stored happiness field.
  */
 async function loadHappinessFromFirestore(db, uid) {
   return db
@@ -208,110 +239,10 @@ async function loadHappinessFromFirestore(db, uid) {
       const lastFedTime = data.lastFedTime ? data.lastFedTime.toMillis() : null;
       const happiness   = calculateHappinessFromFedTime(lastFedTime);
 
-
-      await setLocalHappiness(happiness);
       await setLocalLastFedTime(lastFedTime);
+      await setLocalHappiness(happiness);
 
-      console.log("Happiness loaded:", happiness, "lastFedTime:", lastFedTime);
+      console.log("Happiness loaded:", happiness.toFixed(1) + "%", "lastFedTime:", lastFedTime ? new Date(lastFedTime).toLocaleString() : "never");
     })
     .catch((e) => console.error("loadHappinessFromFirestore failed:", e));
 }
-
-// ── Debug helpers (dev only) ──────────────────────────────────────────────────
-if (typeof window !== "undefined") {
-    window.happinessTest = {
-  
-      // ── Firestore tests (writes to Firestore + reloads UI) ────────────────
-  
-      // Set specific happiness value directly in Firestore
-      async setHappiness(value) {
-        const db = firebase.firestore();
-        const uid = firebase.auth().currentUser?.uid;
-        await db.collection("users").doc(uid).set(
-          { happiness: value, updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
-          { merge: true }
-        );
-        // Reload from Firestore so UI reflects what's actually stored
-        await loadHappinessFromFirestore(db, uid);
-        await updateHeartsUI();
-        console.log("Firestore happiness set to:", value);
-      },
-  
-      // Set lastFedTime to X hours ago in Firestore + recalculate happiness
-      async setFedHoursAgo(hours) {
-        const db = firebase.firestore();
-        const uid = firebase.auth().currentUser?.uid;
-        const fakeMs = Date.now() - (hours * 60 * 60 * 1000);
-        const fakeTimestamp = firebase.firestore.Timestamp.fromMillis(fakeMs);
-        const happiness = calculateHappinessFromFedTime(fakeMs);
-        await db.collection("users").doc(uid).set(
-          {
-            happiness,
-            lastFedTime: fakeTimestamp,  // ✅ Firestore Timestamp format
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          },
-          { merge: true }
-        );
-        await loadHappinessFromFirestore(db, uid);
-        await updateHeartsUI();
-        console.log(`Firestore: fed ${hours}h ago → happiness: ${happiness}`);
-      },
-  
-      // ── Local-only tests (fast, no Firestore write) ───────────────────────
-  
-      async fed8hAgo()  { await this._localFake(8);  },
-      async fed16hAgo() { await this._localFake(16); },
-      async fed24hAgo() { await this._localFake(24); },
-      async fedLongAgo(){ await this._localFake(40); },
-  
-      async fedHoursAgo(hours) { await this._localFake(hours); },
-  
-      async _localFake(hours) {
-        const fakeTime = Date.now() - (hours * 60 * 60 * 1000);
-        await setLocalLastFedTime(fakeTime);
-        await setLocalHappiness(calculateHappinessFromFedTime(fakeTime));
-        await updateHeartsUI();
-        console.log(`Local only: fed ${hours}h ago. Happiness:`, await getLocalHappiness());
-      },
-  
-      // Feed now — writes to Firestore
-      async feed() {
-        const db = firebase.firestore();
-        const uid = firebase.auth().currentUser?.uid;
-        await feedPet(db, uid);
-        console.log("Pet fed! Happiness:", await getLocalHappiness());
-      },
-  
-      // Check current state
-      async status() {
-        const db = firebase.firestore();
-        const uid = firebase.auth().currentUser?.uid;
-        const snap = await db.collection("users").doc(uid).get();
-        const data = snap.data();
-        const lastFedTime = await getLocalLastFedTime();
-        console.group("Happiness Status");
-        console.log("Firestore happiness:", data?.happiness);
-        console.log("Firestore lastFedTime:", data?.lastFedTime?.toDate().toLocaleString() ?? "never");
-        console.log("Local lastFedTime:", lastFedTime ? new Date(lastFedTime).toLocaleString() : "never");
-        console.log("Local happiness:", await getLocalHappiness());
-        console.log("Derived from lastFedTime:", calculateHappinessFromFedTime(lastFedTime));
-        console.groupEnd();
-      },
-  
-      // Clear local storage and reload from Firestore
-      async reload() {
-        const db = firebase.firestore();
-        const uid = firebase.auth().currentUser?.uid;
-        await loadHappinessFromFirestore(db, uid);
-        await updateHeartsUI();
-        console.log("Reloaded from Firestore. Happiness:", await getLocalHappiness());
-      },
-  
-      // Wipe local storage only
-      async reset() {
-        await storageSet({ [HAPPINESS_STORAGE_KEY]: 100, [LAST_FED_KEY]: null });
-        await updateHeartsUI();
-        console.log("Local storage reset.");
-      }
-    };
-  }

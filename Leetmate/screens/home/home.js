@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadHappinessFromFirestore(db, currentUid).then(updateHeartsUI);
     setupFeedButton(db, currentUid);
     updateHeartsUI();
+    startHappinessDecayTimer();
 
     // ── Step 2: Sync pending submissions FIRST before checking progress ────
     // This must complete before streak or rewards checks,
