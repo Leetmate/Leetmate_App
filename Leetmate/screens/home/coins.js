@@ -26,7 +26,7 @@ function showCoinReward(amount) {
     setTimeout(() => {
       popup.remove();
     }, 900);
-  }
+}
   
 // COIN FLYING ANIMATION 
 function flyCoinToCounter(delay = 0) {
@@ -75,7 +75,7 @@ function flyCoinToCounter(delay = 0) {
   }
   
 // COIN COUNTER ANIMATION - Increment the coin number with bounce effect
-  function animateCoinCounter(amount) {
+function animateCoinCounter(amount) {
     const counter = document.getElementById("coin-count");
     const display = document.getElementById("coinDisplay");
     if (!counter) return;
