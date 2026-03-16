@@ -12,10 +12,11 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		}
 	});
 
-	function showLaunchButton() {
+	function showLaunchButton() { 
 		const style = document.createElement("style");
+		// pip styling needs to be injected here instead of separate files
 		style.textContent = `
-			#pip-launch {
+			.pip-launch {
 				position: fixed;
 				bottom: 24px;
 				right: 24px;
@@ -30,18 +31,19 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				cursor: pointer;
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 			}
-			#pip-launch:hover {
+			.pip-launch:hover {
 				background: #4338ca;
 			}
 		`;
 		document.head.appendChild(style);
 
 		const btn = document.createElement("button");
-		btn.id = "pip-launch";
+		btn.className = "pip-launch";
 		btn.textContent = "🐾 Open Mini Display";
 
 		btn.addEventListener("click", () => {
 			btn.remove();
+			style.remove();
 			openPip();
 		});
 		document.body.appendChild(btn);
@@ -51,13 +53,20 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		let posX = 0;
 		let posY = 0;
 		let facingDirection = 1;
+		let animationsEnabled = true;
+
 		const bgUrl = chrome.runtime.getURL("assets/bg_home.png");
 
 		// build the pip with the html and styling
-		pipWindow = await documentPictureInPicture.requestWindow({width: 220, height: 200});
+		pipWindow = await documentPictureInPicture.requestWindow({
+			width: 220, 
+			height: 200, 
+			preferInitialWindowPlacement: true
+		});
+		
 		pipWindow.document.head.innerHTML = buildStyles(bgUrl);
 		pipWindow.document.body.innerHTML = buildHTML();
-
+		
 		// send restore message  to background when button is clicked
 		pipWindow.document.getElementById("restore-btn").addEventListener("click", () => {
 			chrome.runtime.sendMessage({type: "restore"});
@@ -66,15 +75,38 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		})
 
 		const sprite = pipWindow.document.querySelector(".mini-pet-sprite");
-		
-		// Behavioral Functions
-		function idle() {
-			sprite.style.animation = "pet-idle 1.6s steps(1) infinite";
+		const animToggle = pipWindow.document.getElementById("anim-toggle");
+
+		animToggle.addEventListener("click", () => {
+			idle();
+			animationsEnabled = !animationsEnabled;
+			animToggle.classList.toggle("off", !animationsEnabled);
+			if (animationsEnabled) {
+				nextAction();
+			}
+		})
+
+		// Pet Behavior Functions
+
+		function placeSprite() {
 			sprite.style.translate = `${posX}px ${posY}px`;
 			sprite.style.scale = `${facingDirection} 1`;
 		}
 
+		function resetSprite() {
+			sprite.style.transform = "";
+			sprite.style.transition = "";
+			placeSprite();			
+		}
+
+		function idle() {
+			sprite.style.animation = "pet-idle 1.6s steps(1) infinite";
+			sprite.style.backgroundPosition = "";
+			resetSprite();
+		}
+
 		function walk() {
+			if (!animationsEnabled) return;
 			// random direction and distance for travel (15-35)
 			const direction = Math.random() < 0.5 ? 1 : -1;
 			const distance = Math.round(Math.random() * 20 + 15);
@@ -91,7 +123,6 @@ if (!window.pipInitialized) {	// guard against multiple injections
 
 			// same as before, but for y
 			const newY = Math.max(-15, Math.min(15, posY + verticalDistance));
-			if (newX === posX && newY === posY) { nextAction(); return; }
 
 			// consistent speed calc
 			const travelMs = Math.abs(newX - posX) / 18 * 1000;
@@ -99,11 +130,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 
 			// start animation (cant add the new transition/translate here)
 			sprite.style.animation = `pet-walk 1s steps(1) infinite`;
-			sprite.style.transform  = ""; // clear any leftovers
-			sprite.style.transition = ""; 
-			sprite.style.translate = `${posX}px ${posY}px`;
-			sprite.style.scale = `${facingDirection} 1`;
-
+			resetSprite();
 			
 			setTimeout(() => {
 				sprite.style.transition = `translate ${travelMs}ms linear`;
@@ -121,73 +148,71 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		}
 
 		function jump() {
-			sprite.style.translate = `${posX}px ${posY}px`;
-			sprite.style.scale = `${facingDirection} 1`;
-			sprite.style.animation = "pet-jump 1s steps(1)";
+			if (!animationsEnabled) return;
+			placeSprite();
+			sprite.style.animation = "pet-jump 1s ease-in-out, pet-jump-frames 1s steps(1) forwards";
 			setTimeout(() => {
 				sprite.style.animation = "";
-				sprite.style.transform = "";
 				idle();
 				nextAction();
 			}, 1100);
 		}
 
-		function backflip() {
-			sprite.style.translate = `${posX}px ${posY}px`;
-			sprite.style.scale = `${facingDirection} 1`;
-			sprite.style.animation = `pet-backflip 1s steps(1)`
+		function backflip() { // pretty similar to jump, maybe i should somehow just use one function
+			if (!animationsEnabled) return;
+			placeSprite();
+			sprite.style.animation = `pet-backflip 1s ease-in-out, pet-backflip-frames 1s steps(1) forwards`;
 			setTimeout(() => {
 				sprite.style.animation = "";
-				sprite.style.transform = "";
 				idle();
 				nextAction();
 			}, 1100);
 		}
 
 		function sleep() {
+			if (!animationsEnabled) return;
+
 			sprite.style.animation = "none";
-			sprite.style.transform = "";
-			sprite.style.translate = `${posX}px ${posY}px`;
-			sprite.style.scale = `${facingDirection} 1`;
 			sprite.style.backgroundPosition = "100% 0%";
-			sprite.style.position = "relative";
+			resetSprite();
 
 			const sleepDuration = Math.random() * 3000 + 6000;
 			const zTexts = ["Z", "Zz", "Zzz"];
 			let zIdx = 0;
 			let elapsed = 0;
 
-			const zTimer = setInterval(() => {
+			const zTimer = setInterval(() => { // creates the z text every second
+				if (!pipWindow || pipWindow.closed) {clearInterval(zTimer); return;}
+
 				elapsed += 1000;
+
 				const zzz = pipWindow.document.createElement("span");
 				zzz.className = "pet-sleep";
 				zzz.textContent = zTexts[zIdx % 3];
-				zzz.style.setProperty("--flip", `${facingDirection}`);
+				zzz.style.setProperty("--flip", `${facingDirection}`); // make sure it's legible regardless of facing direction
 				zIdx++;
+
 				sprite.appendChild(zzz);
+
 				setTimeout(() => zzz.remove(), 1600);
 
-				if (elapsed >= sleepDuration) {
+				if (elapsed >= sleepDuration) { // go back to idle and nextaction after sleep
 					clearInterval(zTimer);
 					setTimeout(() => {idle(); nextAction();}, 400);
 				}
 			}, 1000);
 		}
 
-		// function nextAction() {
-		// 	const delay = 2000 + Math.random() * 3000;
-		// 	const roll = Math.random();
-		// 	setTimeout(() => {
-		// 		if (roll < 0.45) walk();
-		// 		else if (roll < 0.65) jump();
-		// 		else if (roll < 0.80) backflip;
-		// 		else sleep();
-		// 	}, delay);
-		// }
-		let testToggle = false;
 		function nextAction() {
-			testToggle = !testToggle;
-			setTimeout(testToggle ? walk : sleep, 200);  // always sleep, short delay
+			const delay = Math.random() * 3000 + 2000;
+			
+			setTimeout(() => {
+				const roll = Math.random();
+				if (roll < 0.45) walk();
+				else if (roll < 0.65) jump();
+				else if (roll < 0.80) backflip();
+				else sleep();
+			}, delay);
 		}
 
 		idle();
@@ -199,16 +224,18 @@ if (!window.pipInitialized) {	// guard against multiple injections
 			<div class="pip-card">
 				<div class="top-buttons">
 					<button class="icon-btn anim-toggle" id="anim-toggle">⚡</button>
-					<button class="icon-btn restore-btn" id="restore-btn">🎁</button>
+					<button class="icon-btn restore-btn" id="restore-btn">
+						<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+							<path d="M21 11V3h-8l3.29 3.29-10 10L3 13v8h8l-3.29-3.29 10-10z"/>
+						</svg>
+					</button>
 				</div>
-				<div class="debug-range"></div>
 				<div class="mini-pet-sprite"></div>
-			</div>`
-			
-
+			</div>
+		`;
 	}
 
-	function buildStyles(bgUrl) {
+	function buildStyles(bgUrl) { // check if the font works in secured pages
 		return `
 			<meta charset="UTF-8">
 			<link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
@@ -225,9 +252,8 @@ if (!window.pipInitialized) {	// guard against multiple injections
 					display: flex;
 					align-items: center;
 					justify-content: flex-end;
-					padding: 10px;
+					padding: 10px 10px 20px;
 					flex-direction: column;
-					padding-bottom: 20px;
 				}
 
 				.top-buttons {
@@ -239,10 +265,14 @@ if (!window.pipInitialized) {	// guard against multiple injections
 
 				.icon-btn {
 					position: absolute;
+					width: 28px;
+					height: 28px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
 					border: 1px solid rgba(255,255,255,0.3);
 					border-radius: 10px;
 					background: rgba(255,255,255,0.9);
-					padding: 5px;
 					box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 					cursor: pointer;
 					transition: transform 0.1s ease;
@@ -256,22 +286,13 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				.restore-btn {right: 0;}
 				.anim-toggle {left: 0;}
 				
-				/* DEBUG: remove when done */
-				.debug-range {
-					position: absolute;
-					left: 50%; top: 123px;
-					transform: translateX(-50%);
-					width: 160px; height: 30px;
-					border: 1px dashed red;
-					pointer-events: none;
-				}
-
 				.mini-pet-sprite{
 					width: clamp(60px, 50%, 180px);
 					aspect-ratio: 21 / 16;
 					background-image: url("${petDataUrl}");
 					background-size: 700%;
 					image-rendering: pixelated;
+					position: relative;
 				}
 
 				/* base: 0%, walk: 16.67%, down: 33.33%, happy: 66.67%. jump: 83.33%, sleep: 100% (don't need F4)*/
@@ -288,17 +309,29 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				}
 
 				@keyframes pet-jump {
-					0%		{background-position: 66.67% 0%;	transform: translateY(0);}
-					40%		{background-position: 83.33% 0%;	transform: translateY(-40px);}
-					60%		{background-position: 83.33% 0%;	transform: translateY(-40px);}
-					100%	{background-position: 66.67% 0%;	transform: translateY(0);}
+					0%		{transform: translateY(0);}
+					50%		{transform: translateY(-40px);}
+					100%	{transform: translateY(0);}
 				}
 
+				@keyframes pet-jump-frames {
+					0%		{background-position: 66.67% 0%;}
+					25%		{background-position: 83.33% 0%;}
+					80%		{background-position: 66.67% 0%;}
+					100%		{background-position: 66.67% 0%;}}
+
 				@keyframes pet-backflip {
-					0%		{background-position: 66.67% 0%; transform: translateY(0) rotate(0deg);}
-					50%		{background-position: 83.33% 0%; transform: translateY(-40px) rotate(180deg);}
-					100%	{background-position: 66.67% 0%; transform: translateY(0) rotate(360deg);}
+					0%		{transform: translateY(0) rotate(0deg);}
+					40%		{transform: translateY(-40px) rotate(180deg);}
+					80%		{transform: translateY(0) rotate(360deg);}
+					100%	{transform: translateY(0) rotate(360deg);}
 				}
+
+				@keyframes pet-backflip-frames {
+					0%		{background-position: 66.67% 0%;}
+					25%		{background-position: 83.33% 0%;}
+					80%		{background-position: 66.67% 0%;}
+					100%	{background-position: 66.67% 0%;}}
 
 				.pet-sleep {
 					position: absolute;
@@ -310,7 +343,6 @@ if (!window.pipInitialized) {	// guard against multiple injections
 					-webkit-text-stroke: 0.5px #3355aa;
 					text-shadow: 0 0 8px rgba(180, 210, 255, 0.9);
 					animation: zzz-float 1.5s ease-out forwards;
-					pointer-events: none;
 				}
 
 				@keyframes zzz-float {
