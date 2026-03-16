@@ -7,115 +7,67 @@ const MAX_XP = 100;
 const XP_KEY = "leetmate_xp";
 const LEVEL_KEY = "leetmate_level";
 
-function getXP() {
-    const raw = localStorage.getItem(XP_KEY);
-    return raw ? parseInt(raw, 10) : 0;
+async function getXP() {
+  const result = await storageGet(XP_KEY);
+  return result[XP_KEY] ?? 0;
 }
 
-function setXP(value) {
-    localStorage.setItem(XP_KEY, String(value))
+async function setXP(value) {
+  await storageSet({ [XP_KEY]: value });
 }
 
-function getLevel() {
-    const raw = localStorage.getItem(LEVEL_KEY);
-    return raw ? parseInt(raw, 10) : 1;
+async function getLevel() {
+  const result = await storageGet(LEVEL_KEY);
+  return result[LEVEL_KEY] ?? 1;
 }
 
-function setLevel(value) {
-    localStorage.setItem(LEVEL_KEY, String(value));
+// Alias used in rewards.js for the level-up animation check
+async function getLocalLevel() {
+  return getLevel();
 }
 
-function levelUp() {
-    let currentLevel = getLevel();
-    currentLevel += 1;
-    setLevel(currentLevel);
+async function setLevel(value) {
+  await storageSet({ [LEVEL_KEY]: value });
 }
 
-function updateXPSectionUI() {
-    const currentXP = getXP();
-    const currentLevel = getLevel();
-
-    const xpFill = document.querySelector(".xp-fill");
-    const xpText = document.querySelector(".xp-text");
-    const levelText = document.querySelector(".level-text");
-
-
-    if (!xpFill || !xpText || !levelText) {
-        console.warn("XP elements not found (.xp-fill, .xp-text, or .level-text).")
-        return;
-    }
-
-    xpFill.style.width = currentXP + "%";
-    xpText.textContent = `${currentXP} / ${MAX_XP}`;
-    levelText.textContent = `Lv. ${currentLevel}`;
+async function levelUp() {
+  const current = await getLevel();
+  await setLevel(current + 1);
 }
 
-function addXP(XpAmount) {
-    let currentXP = getXP();
-    currentXP += XpAmount;
-
-    // While-loop accounts for multiple level ups just in case
-    while (currentXP >= MAX_XP) {
-        currentXP -= MAX_XP;
-        levelUp();
-    }
-
-    setXP(currentXP);
+async function addXP(amount) {
+  let currentXP = await getXP();
+  currentXP += amount;
+  while (currentXP >= MAX_XP) {
+    currentXP -= MAX_XP;
+    await levelUp();
+  }
+  await setXP(currentXP);
 }
 
-function animateLevelUp() {
+async function updateXPSectionUI() {
+  const [currentXP, currentLevel] = await Promise.all([getXP(), getLevel()]);
+  const xpFill   = document.querySelector(".xp-fill");
+  const xpText   = document.querySelector(".xp-text");
   const levelText = document.querySelector(".level-text");
-  if (!levelText) return;
-
-  // Restart the animation by removing and readding the class
-  levelText.classList.remove("level-up");
-  requestAnimationFrame(() => {
-    levelText.classList.add("level-up");
-    
-    setTimeout(() => {
-      levelText.classList.remove("level-up");
-    }, 1500)
-  })
+  if (!xpFill || !xpText || !levelText) return;
+  xpFill.style.width    = currentXP + "%";
+  xpText.textContent    = `${currentXP} / ${MAX_XP}`;
+  levelText.textContent = `Lv. ${currentLevel}`;
 }
 
-/* Implement database */
-
-function loadXPFromFirestore(db, uid) {
-  return db
-    .collection("users")
-    .doc(uid)
-    .get()
-    .then((snap) => {
-      if (!snap.exists) return;
-      const data = snap.data();
-
-      // check data before writing to local storage
-      if (Number.isInteger(data.xp)) {
-        setXP(data.xp);
-      }
-      if (Number.isInteger(data.level)) {
-        setLevel(data.level);
-      }
-    })
-    .catch((e) => {
-      console.error("loadXPFromFirestore failed: ", e);
-    });
+async function loadXPFromFirestore(db, uid) {
+  const snap = await db.collection("users").doc(uid).get();
+  if (!snap.exists) return;
+  const data = snap.data();
+  if (Number.isInteger(data.xp))    await setXP(data.xp);
+  if (Number.isInteger(data.level)) await setLevel(data.level);
 }
 
-function saveXPToFirestore(db, uid) {
-  return db
-    .collection("users")
-    .doc(uid)
-    .set(
-    {
-      xp: getXP(),
-      level: getLevel(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    },
-    {
-      merge: true
-    })
-    .catch((e) => {
-      console.error("saveXPToFirestore failed: ", e);
-    })
+async function saveXPToFirestore(db, uid) {
+  const [xp, level] = await Promise.all([getXP(), getLevel()]);
+  return db.collection("users").doc(uid).set(
+    { xp, level, updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+    { merge: true }
+  );
 }
