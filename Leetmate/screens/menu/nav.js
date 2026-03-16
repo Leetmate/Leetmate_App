@@ -89,7 +89,6 @@
       window.location.href = "../community/community_index.html"
   });
 
-
   const homeButton = document.getElementById('home-btn');
   homeButton.addEventListener('click', function () {
             //window.location.href = '../home/index.html';

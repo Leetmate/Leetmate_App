@@ -1,6 +1,7 @@
 {
   "name": "leetmate-extension",
   "private": true,
+  "type": "module",
   "scripts": {
     "build:config": "node scripts/inject-firebase-config.js",
     "build:firebase": "node scripts/build-firebase-bundle.js",
