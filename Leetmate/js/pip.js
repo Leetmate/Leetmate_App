@@ -1,118 +1,325 @@
-let petDataUrl = null;
-let sprite = null;
-chrome.runtime.onMessage.addListener((message) => {
-	if (message.type === "loadPip") {
-		petDataUrl = message.petDataUrl;
-		showLaunchButton();
-	}
-});
+if (!window.pipInitialized) {	// guard against multiple injections
+	window.pipInitialized = true;
 
-function showLaunchButton() {
-	const style = document.createElement("style");
-	style.textContent = `
-		#pip-launch {
-			position: fixed;
-			bottom: 24px;
-			right: 24px;
-			z-index: 2147483647;
-			padding: 8px 14px;
-			border-radius: 20px;
-			border: none;
-			background: #4f46e5;
-			color: white;
-			font-family: sans-serif;
-			font-size: 14px;
-			cursor: pointer;
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-		}
-		#pip-launch:hover {
-			background: #4338ca;
-		}
-	`;
-	document.head.appendChild(style);
-
-	const btn = document.createElement("button");
-	btn.id = "pip-launch";
-	btn.textContent = "🐾 Open Mini Display";
-
-	btn.addEventListener("click", () => {
-		btn.remove();
-		openPip();
-	});
-	document.body.appendChild(btn);
-}
-
-async function openPip() {
-	const bgUrl = chrome.runtime.getURL("assets/bg_home.png");
-	const pipWindow = await documentPictureInPicture.requestWindow({width: 220, height: 200});
+	let petDataUrl = null;
+	let pipWindow = null;
 	
-	pipWindow.document.head.innerHTML = buildStyles(bgUrl);
-	pipWindow.document.body.innerHTML = buildHTML();
-	sprite = pipWindow.document.querySelector(".mini-pet-sprite");
-}
+	// wait for background to send message
+	chrome.runtime.onMessage.addListener((message) => {
+		if (message.type === "loadPip") {
+			petDataUrl = message.petDataUrl;
+			showLaunchButton();
+		}
+	});
 
-function buildHTML() {
-	return `
-		<div class="pip-card">
-			<div class="top-buttons">
-				<button class="icon-btn anim-toggle" id="anim-toggle">⚡</button>
-				<button class="icon-btn restore-btn" id="restore-btn">🎁</button>
-			</div>
-			<div class="mini-pet-sprite"></div>
-		</div>`
-		
-
-}
-
-function buildStyles(bgUrl) {
-	return `
-		<meta charset="UTF-8">
-		<style>
-			* {margin: 0; padding: 0; box-sizing: border-box;}
-			html, body {width: 100%; height: 100%; overflow: hidden;}
-			
-			.pip-card {
-				width: 100%; 
-				height: 100%;
-				background-image: url("${bgUrl}");
-				background-size: 100% 100%;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: space-between;
-				padding: 10px;
-			}
-
-			.top-buttons {
-				position: relative;
-				width: 100%;
-			}
-
-			.icon-btn {
-				position: absolute;
-				border: 1px solid rgba(255,255,255,0.3);
-				border-radius: 10px;
-				background: rgba(255,255,255,0.9);
-				padding: 5px;
-				box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+	function showLaunchButton() {
+		const style = document.createElement("style");
+		style.textContent = `
+			#pip-launch {
+				position: fixed;
+				bottom: 24px;
+				right: 24px;
+				z-index: 2147483647;
+				padding: 8px 14px;
+				border-radius: 20px;
+				border: none;
+				background: #4f46e5;
+				color: white;
+				font-family: sans-serif;
+				font-size: 14px;
 				cursor: pointer;
-				transition: transform 0.1s ease;
-				font-size: 16px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 			}
+			#pip-launch:hover {
+				background: #4338ca;
+			}
+		`;
+		document.head.appendChild(style);
 
-			.icon-btn:hover {transform: scale(1.1);}
-			.icon-btn:active{transform: scale(0.9);}
-			.icon-btn.off {opacity: 0.4;}
+		const btn = document.createElement("button");
+		btn.id = "pip-launch";
+		btn.textContent = "🐾 Open Mini Display";
 
-			.restore-btn {right: 0;}
-			.anim-toggle {left: 0;}
+		btn.addEventListener("click", () => {
+			btn.remove();
+			openPip();
+		});
+		document.body.appendChild(btn);
+	}
+
+	async function openPip() {
+		let posX = 0;
+		let posY = 0;
+		let facingDirection = 1;
+		const bgUrl = chrome.runtime.getURL("assets/bg_home.png");
+
+		// build the pip with the html and styling
+		pipWindow = await documentPictureInPicture.requestWindow({width: 220, height: 200});
+		pipWindow.document.head.innerHTML = buildStyles(bgUrl);
+		pipWindow.document.body.innerHTML = buildHTML();
+
+		// send restore message  to background when button is clicked
+		pipWindow.document.getElementById("restore-btn").addEventListener("click", () => {
+			chrome.runtime.sendMessage({type: "restore"});
+			pipWindow.close();
+			pipWindow = null;
+		})
+
+		const sprite = pipWindow.document.querySelector(".mini-pet-sprite");
+		
+		// Behavioral Functions
+		function idle() {
+			sprite.style.animation = "pet-idle 1.6s steps(1) infinite";
+			sprite.style.translate = `${posX}px ${posY}px`;
+			sprite.style.scale = `${facingDirection} 1`;
+		}
+
+		function walk() {
+			// random direction and distance for travel (15-35)
+			const direction = Math.random() < 0.5 ? 1 : -1;
+			const distance = Math.round(Math.random() * 20 + 15);
+			const displacement = direction * distance;
+
+			// New x position between -80 and 80
+			const newX = Math.max(-80, Math.min(80, posX + displacement));
+			if (newX === posX) { nextAction(); return;} // collision check
+
+			// Chance to add in vertical shift (5-13)
+			const walkDiagonal = Math.random() < 0.3;
+			const verticalDirection = Math.random() < 0.5 ? 1 : -1;
+			const verticalDistance = walkDiagonal ? Math.round(verticalDirection * (Math.random() * 8 + 5)) : 0;
+
+			// same as before, but for y
+			const newY = Math.max(-15, Math.min(15, posY + verticalDistance));
+			if (newX === posX && newY === posY) { nextAction(); return; }
+
+			// consistent speed calc
+			const travelMs = Math.abs(newX - posX) / 18 * 1000;
+			facingDirection = newX > posX ? -1 : 1;
+
+			// start animation (cant add the new transition/translate here)
+			sprite.style.animation = `pet-walk 1s steps(1) infinite`;
+			sprite.style.transform  = ""; // clear any leftovers
+			sprite.style.transition = ""; 
+			sprite.style.translate = `${posX}px ${posY}px`;
+			sprite.style.scale = `${facingDirection} 1`;
+
 			
-			.mini-pet-sprite{
-				width: clamp(60px, 50%, 180px);
-				aspect-ratio: 21 / 16;
-				background-image: url("${petDataUrl}");
-				background-size: 700%;
-				image-rendering: pixelated;
+			setTimeout(() => {
+				sprite.style.transition = `translate ${travelMs}ms linear`;
+				sprite.style.translate = `${newX}px ${newY}px`;
+
+				// once finished, update position
+				setTimeout(() => {
+					posX = newX;
+					posY = newY;
+					sprite.style.transition = "";
+					idle();
+					nextAction();
+				}, travelMs + 100);
+			}, 16);
+		}
+
+		function jump() {
+			sprite.style.translate = `${posX}px ${posY}px`;
+			sprite.style.scale = `${facingDirection} 1`;
+			sprite.style.animation = "pet-jump 1s steps(1)";
+			setTimeout(() => {
+				sprite.style.animation = "";
+				sprite.style.transform = "";
+				idle();
+				nextAction();
+			}, 1100);
+		}
+
+		function backflip() {
+			sprite.style.translate = `${posX}px ${posY}px`;
+			sprite.style.scale = `${facingDirection} 1`;
+			sprite.style.animation = `pet-backflip 1s steps(1)`
+			setTimeout(() => {
+				sprite.style.animation = "";
+				sprite.style.transform = "";
+				idle();
+				nextAction();
+			}, 1100);
+		}
+
+		function sleep() {
+			sprite.style.animation = "none";
+			sprite.style.transform = "";
+			sprite.style.translate = `${posX}px ${posY}px`;
+			sprite.style.scale = `${facingDirection} 1`;
+			sprite.style.backgroundPosition = "100% 0%";
+			sprite.style.position = "relative";
+
+			const sleepDuration = Math.random() * 3000 + 6000;
+			const zTexts = ["Z", "Zz", "Zzz"];
+			let zIdx = 0;
+			let elapsed = 0;
+
+			const zTimer = setInterval(() => {
+				elapsed += 1000;
+				const zzz = pipWindow.document.createElement("span");
+				zzz.className = "pet-sleep";
+				zzz.textContent = zTexts[zIdx % 3];
+				zzz.style.setProperty("--flip", `${facingDirection}`);
+				zIdx++;
+				sprite.appendChild(zzz);
+				setTimeout(() => zzz.remove(), 1600);
+
+				if (elapsed >= sleepDuration) {
+					clearInterval(zTimer);
+					setTimeout(() => {idle(); nextAction();}, 400);
 				}
-				`
+			}, 1000);
+		}
+
+		// function nextAction() {
+		// 	const delay = 2000 + Math.random() * 3000;
+		// 	const roll = Math.random();
+		// 	setTimeout(() => {
+		// 		if (roll < 0.45) walk();
+		// 		else if (roll < 0.65) jump();
+		// 		else if (roll < 0.80) backflip;
+		// 		else sleep();
+		// 	}, delay);
+		// }
+		let testToggle = false;
+		function nextAction() {
+			testToggle = !testToggle;
+			setTimeout(testToggle ? walk : sleep, 200);  // always sleep, short delay
+		}
+
+		idle();
+		nextAction();
+	}
+
+	function buildHTML() {
+		return `
+			<div class="pip-card">
+				<div class="top-buttons">
+					<button class="icon-btn anim-toggle" id="anim-toggle">⚡</button>
+					<button class="icon-btn restore-btn" id="restore-btn">🎁</button>
+				</div>
+				<div class="debug-range"></div>
+				<div class="mini-pet-sprite"></div>
+			</div>`
+			
+
+	}
+
+	function buildStyles(bgUrl) {
+		return `
+			<meta charset="UTF-8">
+			<link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+			<style>
+				* {margin: 0; padding: 0; box-sizing: border-box;}
+				html, body {width: 100%; height: 100%; overflow: hidden;}
+				
+				.pip-card {
+					position: relative;
+					width: 100%; 
+					height: 100%;
+					background-image: url("${bgUrl}");
+					background-size: 100% 100%;
+					display: flex;
+					align-items: center;
+					justify-content: flex-end;
+					padding: 10px;
+					flex-direction: column;
+					padding-bottom: 20px;
+				}
+
+				.top-buttons {
+					position: absolute;
+					top: 10px;
+					left: 10px;
+					right: 10px;
+				}
+
+				.icon-btn {
+					position: absolute;
+					border: 1px solid rgba(255,255,255,0.3);
+					border-radius: 10px;
+					background: rgba(255,255,255,0.9);
+					padding: 5px;
+					box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+					cursor: pointer;
+					transition: transform 0.1s ease;
+					font-size: 16px;
+				}
+
+				.icon-btn:hover {transform: scale(1.1);}
+				.icon-btn:active{transform: scale(0.9);}
+				.icon-btn.off {opacity: 0.4;}
+
+				.restore-btn {right: 0;}
+				.anim-toggle {left: 0;}
+				
+				/* DEBUG: remove when done */
+				.debug-range {
+					position: absolute;
+					left: 50%; top: 123px;
+					transform: translateX(-50%);
+					width: 160px; height: 30px;
+					border: 1px dashed red;
+					pointer-events: none;
+				}
+
+				.mini-pet-sprite{
+					width: clamp(60px, 50%, 180px);
+					aspect-ratio: 21 / 16;
+					background-image: url("${petDataUrl}");
+					background-size: 700%;
+					image-rendering: pixelated;
+				}
+
+				/* base: 0%, walk: 16.67%, down: 33.33%, happy: 66.67%. jump: 83.33%, sleep: 100% (don't need F4)*/
+				@keyframes pet-idle {
+					0%		{background-position: 0% 0%;}
+					50%		{background-position: 33.33% 0%;}
+					100%	{background-position: 0% 0%;}
+				}
+
+				@keyframes pet-walk {
+					0%		{background-position: 0% 0%;}
+					50%		{background-position: 16.67% 0%;}
+					100%	{background-position: 0% 0%;}
+				}
+
+				@keyframes pet-jump {
+					0%		{background-position: 66.67% 0%;	transform: translateY(0);}
+					40%		{background-position: 83.33% 0%;	transform: translateY(-40px);}
+					60%		{background-position: 83.33% 0%;	transform: translateY(-40px);}
+					100%	{background-position: 66.67% 0%;	transform: translateY(0);}
+				}
+
+				@keyframes pet-backflip {
+					0%		{background-position: 66.67% 0%; transform: translateY(0) rotate(0deg);}
+					50%		{background-position: 83.33% 0%; transform: translateY(-40px) rotate(180deg);}
+					100%	{background-position: 66.67% 0%; transform: translateY(0) rotate(360deg);}
+				}
+
+				.pet-sleep {
+					position: absolute;
+					right: 14px;
+					bottom: 65%;
+					font-family: "Lilita One", sans-serif;
+					font-size: 24px;
+					color: #c8deff;
+					-webkit-text-stroke: 0.5px #3355aa;
+					text-shadow: 0 0 8px rgba(180, 210, 255, 0.9);
+					animation: zzz-float 1.5s ease-out forwards;
+					pointer-events: none;
+				}
+
+				@keyframes zzz-float {
+					0%		{opacity: 1; transform: scaleX(var(--flip, 1)) translateY(0) scale(1.1);}
+					40%		{opacity: 1;}
+					100%	{opacity: 0; transform: scaleX(var(--flip, 1)) translateY(-20px) scale(0.65);}
+				}
+			</style>
+		`;
+	}
+
 }
