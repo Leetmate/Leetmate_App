@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!user) return;
     currentUid = user.uid;
 
-    // ✅ Save uid to chrome storage so background.js can access it
+    // Save uid to chrome storage so background.js can access it
     await storageSet({ uid: currentUid });
     window.__leetmateAuth = { db, uid: currentUid };
 
@@ -37,6 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
     loadLeetCodeUsernameFromFirestore(db, currentUid);
     loadXPFromFirestore(db, currentUid).then(updateXPSectionUI);
     loadCoinsFromFirestore(db, currentUid).then(updateCoinsUI);
+    loadHappinessFromFirestore(db, currentUid).then(updateHeartsUI);
+    setupFeedButton(db, currentUid);
+    updateHeartsUI();
 
     // ── Step 2: Sync pending submissions FIRST before checking progress ────
     // This must complete before streak or rewards checks,

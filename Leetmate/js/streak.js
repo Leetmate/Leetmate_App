@@ -147,13 +147,13 @@ async function runDailyStreakCheck() {
     const { leetmate_last_progress_date } = await storageGet("leetmate_last_progress_date");
     const solvedToday = leetmate_last_progress_date === today;
 
-    // ✅ Solved today → home.js already handled the increment, do nothing
+    // Solved today → home.js already handled the increment, do nothing
     if (solvedToday) {
       console.log("User solved today, streak already handled by home.js.");
       return;
     }
 
-    // ✅ Didn't solve today → reset streak to 0
+    // Didn't solve today → reset streak to 0
     const { leetmate_streak, leetmate_last_streak_date, leetmate_streak_freeze_end }
       = await storageGet([
           "leetmate_streak",

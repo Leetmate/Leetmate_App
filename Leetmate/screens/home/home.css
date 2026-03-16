@@ -541,7 +541,13 @@ body {
 .hearts span {
   display: inline-block;
   animation: heart-beat 1.5s infinite ease-in-out;
+  
+  /* Outline effect for empty/faded hearts */
+  text-shadow: 
+    0 0 0 2px #111,   /* hard border */
+    0 1px 3px rgba(0, 0, 0, 0.3); /* soft shadow */
 }
+
 
 /* Add delays to make hearts beat in sequence */
 .hearts span:nth-child(1) { animation-delay: 0.0s; }
