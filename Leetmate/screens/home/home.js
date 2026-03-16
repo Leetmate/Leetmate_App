@@ -44,17 +44,57 @@ document.addEventListener("DOMContentLoaded", () => {
     saveXPToFirestore(db, currentUid);
   })
 })
+
 // LeetCode Daily Card
 // TEMP: Toggles completed state visually
 // TODO: Replace with real completion check and reward-claim logic
 // (Should only toggle after verifying user solved daily problem)
-
 document.addEventListener("DOMContentLoaded", () => {
     const leetcodeCard = document.getElementById("leetcodeCard");
-  
+    const rewardIcon = document.querySelector(".icon-reward img");
+    const rewardContainer = document.querySelector(".icon-reward");
     if (!leetcodeCard) return;
-  
+
+    // default state 
+    let state = "leetcode";
+
+    // states: leetcode -> completed -> motivation
     leetcodeCard.addEventListener("click", () => {
-      leetcodeCard.classList.toggle("completed");
+      if (state === "leetcode") {
+        // TODO: Add AND condition for user solving daily challenge
+        // Change state to completed upon leetcode completion 
+        leetcodeCard.classList.add("completed");
+        state = "completed";
+        return;
+      }
+  
+      if (state === "completed") {
+        // Play reward animation
+        rewardIcon.classList.add("reward-claim-animate");        
+        rewardContainer.classList.add("coin-burst");
+
+        // Launch flying coins
+        flyCoinToCounter(0);
+        flyCoinToCounter(120);
+        flyCoinToCounter(240);
+
+        // Update coins from reward amount
+        setTimeout(() => {
+          animateCoinCounter(25);
+          showCoinReward(25);
+        }, 700);
+
+        // Wait for animation to finish before switching card
+        setTimeout(() => {
+          leetcodeCard.classList.remove("completed");
+          leetcodeCard.classList.add("motivation");
+          rewardIcon.classList.remove("reward-claim-animate");
+          rewardContainer.classList.remove("coin-burst");
+        }, 1100);
+
+        // Switch from claim reward to motivation card 
+        state = "motivation";
+        return;
+      }
     });
   });

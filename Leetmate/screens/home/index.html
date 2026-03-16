@@ -31,20 +31,31 @@
           </div>
         
           <div class="leetcode-card" id="leetcodeCard">
-            <div class="icon-default">
+            <div class="icon-leetcode">
               <img src="../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
             </div>
-            <div class="icon-alt">
+            <div class="icon-reward">
               <img src="../../assets/icons/reward.png" class="leetcode-icon" alt="Reward Icon"/>
+              <img src="../../assets/icons/coin.png" class="reward-coin coin1" alt="Coin">
+              <img src="../../assets/icons/coin.png" class="reward-coin coin2" alt="Coin">
+              <img src="../../assets/icons/coin.png" class="reward-coin coin3" alt="Coin">
             </div>
-          
-            <div class="leetcode-view view-default">
+            <div class="icon-motivation">
+              <img src="../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
+            </div>          
+            <div class="leetcode-view view-leetcode">
               <strong>LeetCode Daily</strong>
               <span>Solve today's challenge!</span>
             </div>
-            <div class="leetcode-view view-alt">
-              <strong>Congrats, Leetcode Daily done ✓</strong>
+            <div class="leetcode-view view-reward">
+              <strong> Congrats, Leetcode Daily done ✓</strong>
               <span style="color: #007bff; font-weight: bold; text-decoration: underline;">Claim Your Reward Here!</span>
+            </div>
+            <div class="leetcode-view view-motivation">
+              <strong>🔥 Keep Going!</strong>
+              <span>
+                Solve another LeetCode problem 
+              </span>
             </div>
           </div>
         
@@ -54,7 +65,7 @@
               <p>Age: <span id="pet-age-display">--</span></p>
             </div>
             <div class="pet-top">
-              <div class="coin-display">
+              <div class="coin-display" id="coinDisplay">
                 <span> <img src="../../assets/icons/coin.png" class="coin-icon"></span>
                 <span id="coin-count">0</span>
               </div>
@@ -123,6 +134,7 @@
     <script src="../../firebase-config.js"></script>
     <script src="../../js/xp.js"></script>
     <script src="../../js/streak.js"></script>
+    <script src="coins.js"></script>
     <script src="home.js"></script>
     <!-- 
       REQUIRE LOGIN TO VIEW THIS SCREEN:
