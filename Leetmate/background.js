@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener((message) => { // gets message from pip or 
 				const allTabs = win.tabs; 
 				const activeTab = allTabs.find(tab => tab.active); // find active tab from array
 
-				const petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica.png");
+				const petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica2.png");
 
 				chrome.scripting.executeScript(
 					{target: {tabId: activeTab.id}, files: ["js/pip.js"]},
