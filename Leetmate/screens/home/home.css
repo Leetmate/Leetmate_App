@@ -344,6 +344,33 @@ body {
   z-index: 2;
 }
 
+.home-hero-pet-bat {
+  width: 188px;
+  height: 141px;
+
+  background-image: url("../../assets/Animals - Outline/CubicBat.png");
+  background-repeat: no-repeat;
+  background-size: 752px 141px;
+  image-rendering: pixelated;
+  animation: home-pet-idle 0.8s steps(1) infinite;
+  
+  /* Add floor shadow */
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+  z-index: 2;
+}
+
+/* Change Pet Button */
+.change-pet-test-button {
+  margin-top: 0;
+  font-size: 12px;
+  border: 2px solid #111;
+  border-radius: 8px;
+  background: white;
+  font-weight: bold;
+  cursor: pointer;
+  float: right;
+}
+
 @keyframes home-pet-idle {
   0% { background-position: 0 0; }
   50% { background-position: -376px 0; }
