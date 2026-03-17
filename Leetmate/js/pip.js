@@ -21,29 +21,31 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				bottom: 24px;
 				right: 24px;
 				z-index: 2147483647;
-				padding: 8px 14px;
+				padding: 12px 16px;
 				border-radius: 20px;
 				border: none;
 				background: #4f46e5;
 				color: white;
 				font-family: sans-serif;
-				font-size: 14px;
+				font-size: 16px;
 				cursor: pointer;
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-				display: inline-flex;
+				display: flex;
 				align-items: center;
 				justify-content: center;
 				line-height: 1;
+				gap: 6px;
 			}
 			.pip-launch:hover {
 				background: #4338ca;
 			}
+			.pip-launch svg {margin-top: -4px;}
 		`;
 		document.head.appendChild(style);
 
 		const btn = document.createElement("button");
 		btn.className = "pip-launch";
-		btn.textContent = "\uD83D\uDC3E Open Mini Display";
+		btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#ff7d04" stroke="#000000" stroke-width="60"><path d="M180-475q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Zm109-189q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29Zm240 0q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29Zm251 189q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM266-75q-45 0-75.5-34.5T160-191q0-52 35.5-91t70.5-77q29-31 50-67.5t50-68.5q22-26 51-43t63-17q34 0 63 16t51 42q28 32 49.5 69t50.5 69q35 38 70.5 77t35.5 91q0 47-30.5 81.5T694-75q-54 0-107-9t-107-9q-54 0-107 9t-107 9Z"/></svg> Open Mini Display`;
 
 		btn.addEventListener("click", () => {
 			btn.remove();
@@ -207,7 +209,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 			}, 1000);
 		}
 
-		function nextAction() {
+		function nextAction() { // change values here to adjust behavior
 			const delay = Math.random() * 3000 + 2000;
 			
 			setTimeout(() => {
@@ -227,9 +229,11 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		return `
 			<div class="pip-card">
 				<div class="top-buttons">
-					<button class="icon-btn anim-toggle" id="anim-toggle">⚡</button>
+					<button class="icon-btn anim-toggle" id="anim-toggle">
+						<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#fcd00d" stroke="#3d3d3d" stroke-width="40"><path d="M280.11-87.87 420.28-373 126.3-422.43l473.94-449.7h79.65l-141.37 286.8 294.7 48.96-473.46 448.5h-79.65Z"/></svg>
+					</button>
 					<button class="icon-btn restore-btn" id="restore-btn">
-						<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+						<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#181818"><path d="M135.87-135.87v-299h83v157.11l463.37-463.37H525.13v-83h299v299h-83v-157.11L277.76-218.87h157.11v83h-299Z"/></svg>
 							<path d="M21 11V3h-8l3.29 3.29-10 10L3 13v8h8l-3.29-3.29 10-10z"/>
 						</svg>
 					</button>
@@ -289,6 +293,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 
 				.restore-btn {right: 0;}
 				.anim-toggle {left: 0;}
+
 				
 				.mini-pet-sprite{
 					width: clamp(60px, 50%, 180px);
