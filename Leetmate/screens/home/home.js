@@ -58,3 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
       leetcodeCard.classList.toggle("completed");
     });
   });
+
+document.querySelector(".minimize-btn").addEventListener("click", () => {
+  chrome.runtime.sendMessage({ type: "openPip" });
+  window.close();
+});
