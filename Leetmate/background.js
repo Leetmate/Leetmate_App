@@ -12,16 +12,9 @@
  *   visits/solutions and grant coins or increase happiness.
  * - Badge: chrome.action.setBadgeText / setBadgeBackgroundColor to show streak or happiness on the icon.
  */
-
+importScripts("../../js/storageHelper.js", "../../js/streak.js");
 (function () {
   'use strict';
-
-  // Queue submissions from content script; Home will sync to Firestore when it loads
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === 'SAVE_LEETCODE_PROGRESS' && Array.isArray(message.payload) && message.payload.length > 0) {
-      chrome.storage.local.set({ leetcode_pending_submissions: message.payload });
-    }
-  });
 
   // Re-run LeetCode submission fetch on every navigation within leetcode.com (SPA route changes)
   chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
@@ -74,7 +67,17 @@ async function assetToDataUrl(path) {
 	return dataUrl;
 }
 
-chrome.runtime.onMessage.addListener((message) => { // gets message from pip or home to minimize or restore
+chrome.runtime.onMessage.addListener((message) => { // content-script queueing + pip + restore
+
+  // Queue submissions from content script; Home will sync to Firestore when it loads
+  if (
+    message.type === 'SAVE_LEETCODE_PROGRESS' &&
+    Array.isArray(message.payload) &&
+    message.payload.length > 0
+  ) {
+    chrome.storage.local.set({ leetcode_pending_submissions: message.payload });
+    return;
+  }
 
 	if (message.type === "openPip") {
 		chrome.windows.getLastFocused(
@@ -83,13 +86,31 @@ chrome.runtime.onMessage.addListener((message) => { // gets message from pip or 
 			async(win) => {
 				const allTabs = win.tabs; 
 				const activeTab = allTabs.find(tab => tab.active); // find active tab from array
+        if (!activeTab || !activeTab.id) return;
 
-				const petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica2.png");
+        // Can't inject into chrome://, edge://, etc.
+        const url = activeTab.url || "";
+        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+          console.warn("Leetmate PIP: not a scriptable tab:", url);
+          return;
+        }
+
+        let petDataUrl = null;
+        try {
+				  petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica2.png");
+        } catch (e) {
+          console.warn("Leetmate PIP: failed to load asset", e);
+          return;
+        }
 
 				chrome.scripting.executeScript(
 					{target: {tabId: activeTab.id}, files: ["js/pip.js"]},
 					() => {
-						chrome.tabs.sendMessage(activeTab.id, {type: "loadPip", petDataUrl});
+            if (chrome.runtime.lastError) {
+              console.warn("Leetmate PIP: inject failed:", chrome.runtime.lastError.message);
+              return;
+            }
+						chrome.tabs.sendMessage(activeTab.id, {type: "loadPip", petDataUrl}).catch(() => {});
 					}
 				)
 			}

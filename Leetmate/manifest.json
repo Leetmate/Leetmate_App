@@ -13,8 +13,7 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "background.js",
-    "type": "module" // need to reconsider this
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
