@@ -61,7 +61,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		let facingDirection = 1;
 		let animationsEnabled = true;
 
-		const bgUrl = chrome.runtime.getURL("assets/bg_home.png");
+		const bgUrl = chrome.runtime.getURL("assets/backgrounds/bg_home.png");
 
 		// build the pip with the html and styling
 		pipWindow = await documentPictureInPicture.requestWindow({
