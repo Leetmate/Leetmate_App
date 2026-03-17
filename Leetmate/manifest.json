@@ -13,14 +13,19 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/*"],
+      "js": ["content/leetcodeContent.js", "js/storageHelper.js"]
+    }
+  ],
   "permissions": ["storage", "notifications", "alarms", "tabs", "cookies", "webNavigation", "scripting"],
 	"web_accessible_resources": [
 		{
 			"resources": [
-				"assets/bg_home.png",
+				"assets/backgrounds/bg_home.png",
 				"assets/Animals - Outline/*.png"
 			],
 			"matches": ["<all_urls>"]
