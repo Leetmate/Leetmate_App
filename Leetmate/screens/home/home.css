@@ -539,6 +539,11 @@ body {
   z-index: 2;
 }
 
+.pet-change {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+}
 /* Change Pet Button */
 .change-pet-test-button {
   margin-top: 0;
