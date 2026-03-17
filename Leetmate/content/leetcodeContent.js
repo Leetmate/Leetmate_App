@@ -41,10 +41,21 @@ async function fetchAndSaveSubmissions() {
       return submissionDate === today;
     });
 
-    if (todaySubmissions.length > 0) {
+    // Only store unique problems per day (dedupe by titleSlug).
+    // recentSubmissionList is accepted-only, so resubmits shouldn't create extra rewards.
+    const seen = new Set();
+    const uniqueToday = [];
+    for (const s of todaySubmissions) {
+      const slug = s && s.titleSlug;
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      uniqueToday.push(s);
+    }
+
+    if (uniqueToday.length > 0) {
       chrome.runtime.sendMessage({
         type: "SAVE_LEETCODE_PROGRESS",
-        payload: todaySubmissions,
+        payload: uniqueToday,
       });
     }
   } catch (err) {

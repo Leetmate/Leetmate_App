@@ -88,6 +88,40 @@ document.addEventListener("DOMContentLoaded", () => {
 async function updateStreakOnLoad(db, uid, solvedToday) {
   const streakData = await loadStreakData(db, uid);
   if (!streakData) return;
+  const today = getTodayString();
+
+  // If the background daily check already ran, it would have written the new
+  // streak values to chrome storage with leetmate_last_streak_date === today.
+  // In that case, sync storage -> Firestore so the UI matches.
+  const {
+    leetmate_streak,
+    leetmate_last_streak_date,
+    leetmate_streak_freeze_end,
+  } = await storageGet([
+    "leetmate_streak",
+    "leetmate_last_streak_date",
+    "leetmate_streak_freeze_end",
+  ]);
+
+  const storageUpdatedToday = leetmate_last_streak_date === today;
+  if (storageUpdatedToday) {
+    const fromStorage = {
+      streak: leetmate_streak ?? 0,
+      streakLastUpdated: leetmate_last_streak_date ?? null,
+      streakFreezeEnd: leetmate_streak_freeze_end ?? null,
+    };
+
+    if (
+      fromStorage.streak !== streakData.streak ||
+      fromStorage.streakLastUpdated !== streakData.streakLastUpdated ||
+      fromStorage.streakFreezeEnd !== streakData.streakFreezeEnd
+    ) {
+      await saveStreakData(db, uid, fromStorage);
+    }
+
+    updateStreakUI(fromStorage);
+    return;
+  }
 
   // Already updated today — just show current streak
   if (isStreakUpdatedToday(streakData)) {
@@ -95,7 +129,7 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
     return;
   }
 
-  // Not solved today — show streak as-is, background will handle reset at 11:59pm
+  // Not solved today — show streak as-is. Background will handle reset at 11:59pm.
   if (!solvedToday) {
     updateStreakUI(streakData);
     return;
@@ -103,7 +137,7 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
 
   // Solved today and not yet updated → increment once
   const updated = incrementStreak(streakData);
-  updated.streakLastUpdated = getTodayString();
+  updated.streakLastUpdated = today;
   await saveStreakData(db, uid, updated);
   updateStreakUI(updated);
 }

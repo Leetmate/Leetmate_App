@@ -13,7 +13,11 @@ async function loadStreakData(db, uid) {
       streakFreezeEnd: data.streakFreezeEnd || null,
       streakLastUpdated: data.streakLastUpdated || null,
     };
-    await storageSet({ leetmate_streak: streakData.streak });
+    await storageSet({
+      leetmate_streak: streakData.streak,
+      leetmate_last_streak_date: streakData.streakLastUpdated ?? null,
+      leetmate_streak_freeze_end: streakData.streakFreezeEnd ?? null,
+    });
 
     return streakData;
   })
@@ -24,7 +28,11 @@ async function loadStreakData(db, uid) {
 }
 
 async function saveStreakData(db, uid, streakData) {
-  await storageSet({ leetmate_streak: streakData.streak});
+  await storageSet({
+    leetmate_streak: streakData.streak,
+    leetmate_last_streak_date: streakData.streakLastUpdated ?? null,
+    leetmate_streak_freeze_end: streakData.streakFreezeEnd ?? null,
+  });
 
   return db
   .collection("users")
@@ -255,6 +263,28 @@ if (typeof window !== "undefined") {
     clearFakeToday() {
       window.__leetmateFakeToday = null;
       console.log("Fake today cleared.");
+    },
+
+    async runDailyCheck() {
+      await runDailyStreakCheck();
+      const {
+        leetmate_streak,
+        leetmate_last_streak_date,
+        leetmate_streak_freeze_end,
+      } = await storageGet([
+        "leetmate_streak",
+        "leetmate_last_streak_date",
+        "leetmate_streak_freeze_end",
+      ]);
+
+      const updated = {
+        streak: leetmate_streak ?? 0,
+        streakLastUpdated: leetmate_last_streak_date ?? null,
+        streakFreezeEnd: leetmate_streak_freeze_end ?? null,
+      };
+
+      updateStreakUI(updated);
+      console.log("Daily streak check complete (UI updated from storage):", updated);
     },
 
     async reload() {
