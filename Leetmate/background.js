@@ -67,17 +67,7 @@ async function assetToDataUrl(path) {
 	return dataUrl;
 }
 
-chrome.runtime.onMessage.addListener((message) => { // content-script queueing + pip + restore
-
-  // Queue submissions from content script; Home will sync to Firestore when it loads
-  if (
-    message.type === 'SAVE_LEETCODE_PROGRESS' &&
-    Array.isArray(message.payload) &&
-    message.payload.length > 0
-  ) {
-    chrome.storage.local.set({ leetcode_pending_submissions: message.payload });
-    return;
-  }
+chrome.runtime.onMessage.addListener((message) => { // gets message from pip or home to minimize or restore
 
 	if (message.type === "openPip") {
 		chrome.windows.getLastFocused(
@@ -86,31 +76,13 @@ chrome.runtime.onMessage.addListener((message) => { // content-script queueing +
 			async(win) => {
 				const allTabs = win.tabs; 
 				const activeTab = allTabs.find(tab => tab.active); // find active tab from array
-        if (!activeTab || !activeTab.id) return;
 
-        // Can't inject into chrome://, edge://, etc.
-        const url = activeTab.url || "";
-        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
-          console.warn("Leetmate PIP: not a scriptable tab:", url);
-          return;
-        }
-
-        let petDataUrl = null;
-        try {
-				  petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica2.png");
-        } catch (e) {
-          console.warn("Leetmate PIP: failed to load asset", e);
-          return;
-        }
+				const petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica2.png");
 
 				chrome.scripting.executeScript(
 					{target: {tabId: activeTab.id}, files: ["js/pip.js"]},
 					() => {
-            if (chrome.runtime.lastError) {
-              console.warn("Leetmate PIP: inject failed:", chrome.runtime.lastError.message);
-              return;
-            }
-						chrome.tabs.sendMessage(activeTab.id, {type: "loadPip", petDataUrl}).catch(() => {});
+						chrome.tabs.sendMessage(activeTab.id, {type: "loadPip", petDataUrl});
 					}
 				)
 			}
@@ -127,7 +99,6 @@ chrome.runtime.onMessage.addListener((message) => { // content-script queueing +
 		})
 	}
 })
-
 
   
 })();
