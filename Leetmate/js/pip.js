@@ -30,6 +30,10 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				font-size: 14px;
 				cursor: pointer;
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				line-height: 1;
 			}
 			.pip-launch:hover {
 				background: #4338ca;
@@ -39,7 +43,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 
 		const btn = document.createElement("button");
 		btn.className = "pip-launch";
-		btn.textContent = "🐾 Open Mini Display";
+		btn.textContent = "\uD83D\uDC3E Open Mini Display";
 
 		btn.addEventListener("click", () => {
 			btn.remove();
@@ -59,8 +63,8 @@ if (!window.pipInitialized) {	// guard against multiple injections
 
 		// build the pip with the html and styling
 		pipWindow = await documentPictureInPicture.requestWindow({
-			width: 220, 
-			height: 200, 
+			width: 240, 
+			height: 210, 
 			preferInitialWindowPlacement: true
 		});
 		
@@ -116,13 +120,13 @@ if (!window.pipInitialized) {	// guard against multiple injections
 			const newX = Math.max(-80, Math.min(80, posX + displacement));
 			if (newX === posX) { nextAction(); return;} // collision check
 
-			// Chance to add in vertical shift (5-13)
-			const walkDiagonal = Math.random() < 0.3;
+			// Chance to add in vertical shift (8-20)
+			const walkDiagonal = Math.random() < 0.5;
 			const verticalDirection = Math.random() < 0.5 ? 1 : -1;
-			const verticalDistance = walkDiagonal ? Math.round(verticalDirection * (Math.random() * 8 + 5)) : 0;
+			const verticalDistance = walkDiagonal ? Math.round(verticalDirection * (Math.random() * 12 + 8)) : 0;
 
 			// same as before, but for y
-			const newY = Math.max(-15, Math.min(15, posY + verticalDistance));
+			const newY = Math.max(-25, Math.min(15, posY + verticalDistance));
 
 			// consistent speed calc
 			const travelMs = Math.abs(newX - posX) / 18 * 1000;
