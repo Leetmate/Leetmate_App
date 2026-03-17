@@ -141,3 +141,7 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
   await saveStreakData(db, uid, updated);
   updateStreakUI(updated);
 }
+document.querySelector(".minimize-btn").addEventListener("click", () => {
+  chrome.runtime.sendMessage({ type: "openPip" });
+  window.close();
+});
