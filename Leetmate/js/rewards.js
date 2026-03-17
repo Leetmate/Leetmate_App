@@ -236,6 +236,10 @@ function setupLeetCodeCard(db, uid, state) {
         e.stopPropagation();
         if (_claimInFlight) return;
 
+        // Disable the button so a single click
+        // always leads to a visible state change.
+        claimBtn.disabled = true;
+
         const newState = await claimRewards(db, uid);
         rewardsState = newState;
         setupLeetCodeCard(db, uid, newState);
