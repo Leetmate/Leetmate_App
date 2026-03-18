@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
     await storageSet({ uid: currentUid });
     window.__leetmateAuth = { db, uid: currentUid };
 
+		refreshRewardsCard(db, currentUid)
+
     // Load static UI state
     loadLeetCodeUsernameFromFirestore(db, currentUid);
     await loadXPFromFirestore(db, currentUid);

@@ -12,7 +12,7 @@
  *   visits/solutions and grant coins or increase happiness.
  * - Badge: chrome.action.setBadgeText / setBadgeBackgroundColor to show streak or happiness on the icon.
  */
-importScripts("app/features/shared/storage-helper.js", "app/features/progression/streak.js");
+importScripts("app/features/shared/storage-helper.js", "app/features/shared/date-helper.js", "app/features/progression/streak.js");
 (function () {
   'use strict';
 
