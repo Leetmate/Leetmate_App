@@ -153,9 +153,6 @@ function markSubmissionsClaimed(db, uid, submissionIds) {
     .catch((e) => console.error("markSubmissionsClaimed failed:", e));
 }
 
-function hasSolvedToday(db, uid) {
-  return loadLeetCodeProgressToday(db, uid).then((subs) => subs.length > 0);
-}
 
 /**
  * Sync any pending submissions from chrome.storage to Firestore.
