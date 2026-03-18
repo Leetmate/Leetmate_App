@@ -16,7 +16,7 @@ body {
   max-width: 380px;
   min-height: 520px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 10px;
   background: #EAF0EA; /* slightly different green tone */
   border-radius: 0;
   border: none;
@@ -30,8 +30,8 @@ body {
 .community-header {
   background: #C5D6C5; /* matching green tone */
   border-bottom: 4px solid #111;
-  margin: -16px -16px 0 -16px;
-  padding: 10px 12px;
+  margin: -10px -10px 0 -10px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
 }
@@ -49,7 +49,7 @@ body {
 .community-header-right { justify-content: flex-end; }
 
 .community-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
 }
 

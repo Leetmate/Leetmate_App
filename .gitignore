@@ -3,6 +3,7 @@ Leetmate/.env
 
 # Generated from .env – do not commit (use firebase-config.template.js as source)
 Leetmtae/scripts/firebase-config.js
+Leetmate/scripts/firebase-bundle.js
 
 Leetmate/node_modules/
 

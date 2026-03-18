@@ -72,16 +72,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 40px;
-  font-size: 20px;
+  width: 40px;
+  height: 36px;
+  font-size: 18px;
   font-weight: 900;
   color: #111;
   background: #fdf5e6;
   border: 3px solid #111;
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 4px 0 rgba(17, 17, 17, 1);
+  box-shadow: 0 3px 0 rgba(17, 17, 17, 1);
   transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -89,7 +89,7 @@
 .menu-btn:focus-visible {
   background: #d0b27a; /* Gold hover */
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 rgba(17, 17, 17, 1);
+  box-shadow: 0 5px 0 rgba(17, 17, 17, 1);
   outline: none;
 }
 

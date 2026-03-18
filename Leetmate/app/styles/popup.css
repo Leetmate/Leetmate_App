@@ -37,13 +37,13 @@ body {
 }
 
 .popup-header {
-  padding: 0 0 8px;
+  padding: 0 0 4px;
 }
 
 .popup-header h1 {
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   /* title to subtitle: 4 + 12 from subtitle margin = 16 */
-  font-size: 2.4rem;
+  font-size: 2rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   color: #000;
@@ -52,9 +52,9 @@ body {
 }
 
 .popup-header .subtitle {
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   /* 16px gap from title total */
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--muted);
 }
 
