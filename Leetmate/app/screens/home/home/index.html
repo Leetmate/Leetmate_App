@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate – Home</title>
+    <link rel="stylesheet" href="../../../styles/layout.css" />
+    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="../menu/nav.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="home-card">
+
+          <div class="home-header">
+            <div class="home-header-left">
+              <button class="premium-btn">+ Premium</button>
+            </div>
+          
+            <div class="home-header-center">
+              <h1 class="home-title">Home</h1>
+            </div>
+          
+            <div class="home-header-right">
+              <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
+                <img src="../../../../assets/icons/menu.png" class="menu-icon" alt="☰"/>
+              </button>
+            </div>
+          </div>
+        
+          <div class="leetcode-card" id="leetcodeCard">
+            <div class="icon-default">
+              <img src="../../../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
+            </div>
+            <div class="icon-alt icon-reward">
+              <img src="../../../../assets/icons/reward.png" class="leetcode-icon" alt="Reward Icon"/>
+              <img src="../../../../assets/icons/coin.png" class="reward-coin coin1" alt="Coin" />
+              <img src="../../../../assets/icons/coin.png" class="reward-coin coin2" alt="Coin" />
+              <img src="../../../../assets/icons/coin.png" class="reward-coin coin3" alt="Coin" />
+            </div>
+            <div class="icon-done">
+              <img src="../../../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
+            </div>
+          
+            <div class="leetcode-view view-default">
+              <span class="leetcode-default-headline">Today's Quest</span>
+              <span class="leetcode-default-subtext">Solve 1 LeetCode problem</span>
+              <span class="leetcode-default-reward">
+                Earn <span class="reward-xp">XP</span> and <span class="reward-coins">coins</span> for your pet!
+              </span>
+            </div>
+            <div class="leetcode-view view-alt">
+              <div class="leetcode-alt-claim">
+                <div class="leetcode-alt-main">
+                  <div class="leetcode-alt-title">Daily Quest Complete!</div>
+                  <div class="leetcode-alt-subtext">
+                    You solved today's<br />
+                    LeetCode problem!
+                  </div>
+                </div>
+                <div class="leetcode-alt-right">
+                  <div class="leetcode-alt-rewards">
+                    <span class="leetcode-alt-reward xp">+10 XP</span>
+                    <span class="leetcode-alt-reward coins">+10 Coins</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="leetcode-claim-btn"
+                    id="leetcodeClaimBtn"
+                    style="display: none;"
+                  >
+                    Claim Reward
+                  </button>
+                </div>
+              </div>
+
+              <div class="leetcode-alt-done">
+                <div class="leetcode-done-title">Quest Complete! ✓</div>
+                <div class="leetcode-done-body">
+                  <span class="leetcode-done-kicker">Bonus rewards await.</span>
+                  <span class="leetcode-done-body-rest"> Solve more LeetCode</span><br />
+                  problems to earn extra XP and coins.
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="pet-card">
+            <div class="pet-name">
+              <h2 id="pet-name-display">Fluffy Cat</h2>
+              <p>Age: <span id="pet-age-display">--</span></p>
+            </div>
+            <div class="pet-top">
+              <div class="coins-display" id="coinDisplay">
+                <span> <img src="../../../../assets/icons/coin.png" class="coin-icon"></span>
+                <span id="coin-count">0</span>
+              </div>
+              <button type="button" class="minimize-btn">
+                <img src="../../../../assets/icons/minimize.png" class="minimize-icon" alt="minimize"/>
+              </button>
+            </div>
+            <div class="home-hero">
+              <div class="home-hero-pet" id="active-pet"></div>
+            </div>
+
+            <!--temporary button to change the active pet-->
+            <div class="pet-change">
+              <button type="button" class="change-pet-test-button" id="pet-change-btn">Change Pet</button>
+            </div>  
+
+          </div>
+        
+          <div class="status-bar">
+
+            <div class="status-col hearts">
+              <div class="hearts-text">Happiness</div>
+              <div class="hearts hearts-empty bottom-hearts">
+                <span><img src="../../../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+              </div>
+              <div class="hearts hearts-full top-hearts">
+                <span><img src="../../../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../../../assets/icons/heart.png" class="hearts-icon"/></span>
+              </div>
+              <button type="button" class="feedPet" id="feedBtn">Feed Pet</button>
+            </div>
+        
+            <div class="status-col streak">
+              <div class="streak-text">Streak</div>
+              <div class="streak-display">
+                <div class="streak-icon-wrap">
+                  <img src="../../../../assets/icons/streak_fire.png" class="streak-icon" alt="ice">
+                  <img src="../../../../assets/icons/streak_ice.png" class="streak-freeze-overlay" alt="ice">
+                </div>
+                <div class="streak-count">0</div>
+              </div>
+            </div>
+        
+            <div class="status-col xp">
+              <div class="level-text">Lv. 1</div>
+              <div class="xp-bar">
+                <div class="xp-fill"></div>
+                <div class="xp-text">0 / 100</div>
+              </div>
+              <button type="button" class="xp-test-button">+30 XP</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
+        <div class="nav-drawer" id="nav-drawer" role="dialog" aria-modal="true" aria-label="Main menu">
+          <button type="button" class="nav-close-btn" id="nav-close" aria-label="Close menu">×</button>
+          <nav class="nav-menu" id="nav-menu">
+            <button type="button" class="nav-menu-btn" id="home-btn">Home</button>
+            <button type="button" class="nav-menu-btn" id="playground-btn">Playground</button>
+            <button type="button" class="nav-menu-btn" id="store-btn">Store</button>
+            <button type="button" class="nav-menu-btn" id="community-btn">Community</button>
+            <button type="button" class="nav-menu-btn" id="activity-btn">Activity</button>
+            <button type="button" class="nav-menu-btn" id="settings-btn">Settings</button>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <script src="../menu/nav.js"></script>
+    <script src="../../../features/shared/storage-helper.js"></script>
+    <script src="../../../../scripts/firebase-bundle.js"></script>
+    <script src="../../../../scripts/firebase-config.js"></script>
+    <script src="../../../features/shared/leetcode-username.js"></script>
+    <script src="../../../features/progression/leetcode-progress.js"></script>
+    <script src="../../../features/progression/coins.js"></script>
+    <script src="../../../features/progression/xp.js"></script>
+    <script src="../../../features/progression/happiness-decay.js"></script>
+    <script src="../../../tests/happinessDecayTests.js"></script>
+    <script src="../../../features/pet/pet-change.js"></script>
+    <script src="../../../features/progression/streak.js"></script>
+    <script src="../../../features/progression/rewards.js"></script>
+    <script src="home.js"></script>
+    <!-- 
+      REQUIRE LOGIN TO VIEW THIS SCREEN:
+      Including auth-gate.js ensures only signed-in users can access this page.
+      Copy these three <script> tags to the bottom of any new protected screen.
+    -->
+    <script src="../../../../scripts/auth-gate.js"></script>
+  </body>
+</html>

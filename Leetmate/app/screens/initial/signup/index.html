@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate – Sign up</title>
+    <link rel="stylesheet" href="../../../styles/popup.css" />
+    <link rel="stylesheet" href="../loading/loading.css" />
+    <link rel="stylesheet" href="signup.css" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <!-- Loading Overlay -->
+      <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+        </div>
+        <p class="loading-text" id="loading-text">Signing up...</p>
+      </div>
+
+      <div class="popup-content">
+        <div class="signup-card">
+          <button type="button" class="signup-back-btn" id="signup-back-btn">
+            ◀ Back
+          </button>
+          <h1 class="signup-title-main">Sign Up</h1>
+
+          <form class="signup-form">
+            <label class="signup-label" for="signup-email">Email</label>
+            <input
+              id="signup-email"
+              name="email"
+              type="email"
+              class="signup-input"
+              autocomplete="email"
+            />
+
+            <label class="signup-label" for="signup-password">Password</label>
+            <input
+              id="signup-password"
+              name="password"
+              type="password"
+              class="signup-input"
+              autocomplete="new-password"
+            />
+
+            <label class="signup-label" for="signup-confirm-password"
+              >Confirm Password</label
+            >
+            <input
+              id="signup-confirm-password"
+              name="confirmPassword"
+              type="password"
+              class="signup-input"
+              autocomplete="new-password"
+            />
+
+            <label class="signup-label" for="signup-username">Username</label>
+            <input
+              id="signup-username"
+              name="username"
+              type="text"
+              class="signup-input"
+              autocomplete="username"
+              placeholder="Display name"
+            />
+
+            <div class="signup-terms-row">
+              <input
+                id="signup-accept"
+                name="accept"
+                type="checkbox"
+                class="signup-checkbox"
+              />
+              <label for="signup-accept" class="signup-terms-label">
+                I accept the
+                <button
+                  type="button"
+                  class="signup-terms-link"
+                  id="signup-terms-link"
+                >
+                  Terms
+                </button>
+              </label>
+            </div>
+
+            <p
+              id="signup-message"
+              class="signup-message"
+              aria-live="polite"
+              hidden
+            ></p>
+            <button type="submit" class="signup-btn-primary">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="../../../../scripts/firebase-bundle.js"></script>
+    <script src="../../../../scripts/firebase-config.js"></script>
+    <script src="user-doc-defaults.js"></script>
+    <script src="signup.js"></script>
+  </body>
+</html>

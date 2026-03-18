@@ -2,7 +2,7 @@
 .env
 
 # Generated from .env – do not commit (use firebase-config.template.js as source)
-firebase-config.js
+scripts/firebase-config.js
 
 node_modules/
 

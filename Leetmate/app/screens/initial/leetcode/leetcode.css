@@ -1,0 +1,255 @@
+@import url("../../../styles/layout.css");
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+  font-size: 14px;
+  background: #5a5a5a;
+  /* dark gray backdrop */
+  color: #000;
+}
+
+.popup-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-content {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lc-card {
+  width: 100% !important;
+  max-width: 340px !important;
+  margin: 0 auto;
+  background: #dcdcdc;
+  /* light gray card */
+  border: 4px solid #000;
+  border-radius: 18px;
+  padding: 24px 20px 20px;
+  /* Increase padding */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Slightly increase gap */
+  box-sizing: border-box;
+  min-height: 480px;
+  /* Expand to fill the available 520px height minus padding */
+  justify-content: center;
+  /* Center the contents vertically */
+}
+
+.lc-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.lc-header--center {
+  align-items: center;
+}
+
+.lc-logo {
+  width: 48px;
+  height: auto;
+  margin-top: 2px;
+}
+
+.lc-title {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.lc-title--success {
+  margin: 6px 0 18px;
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.lc-body {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.lc-body--center {
+  justify-content: center;
+  min-height: 180px;
+}
+
+.lc-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: 100%;
+}
+
+.lc-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+}
+
+.lc-hero-pet {
+  width: 192px;
+  height: 144px;
+  background-image: url("../../../../assets/sprites/CubicChicken.png");
+  background-repeat: no-repeat;
+  background-size: 768px 144px;
+  /* 4 frames * 192px */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+  margin: 16px auto 20px auto;
+  animation: lc-hero-idle 0.8s steps(1) infinite;
+}
+
+@keyframes lc-hero-idle {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: -384px 0;
+    /* 2 * 192px */
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.lc-primary-btn {
+  width: 80%;
+  padding: 12px 18px;
+  height: 52px;
+  border-radius: 999px;
+  border: 4px solid #000;
+  background: #f3c98c;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.lc-primary-btn:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.lc-btn-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lc-helper {
+  font-size: 12px;
+  margin: 10px 0 0;
+  text-align: center;
+  color: #444;
+}
+
+.lc-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 4px solid #ccc;
+  border-top-color: #5c7bd9;
+  animation: lc-spin 0.8s linear infinite;
+}
+
+@keyframes lc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lc-text {
+  font-size: 13px;
+  text-align: center;
+  margin: 4px 0 0;
+}
+
+.lc-text-sub {
+  color: #555;
+}
+
+.lc-text-error {
+  color: #8b2020;
+  margin-bottom: 4px;
+}
+
+.lc-status-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.lc-status-icon--success {
+  background: #22c55e;
+}
+
+.lc-status-icon--failure {
+  background: #ef4444;
+}
+
+.lc-state {
+  display: none;
+}
+
+.lc-state--active {
+  display: block;
+}
+
+.lc-success-badge {
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  background: #35b35a;
+  border: 4px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lc-success-check {
+  width: 54px;
+  height: 54px;
+  fill: #fff;
+  display: block;
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leetmate – Sign in</title>
+  <link rel="stylesheet" href="../../../styles/popup.css" />
+  <link rel="stylesheet" href="../loading/loading.css" />
+  <link rel="stylesheet" href="signin.css" />
+</head>
+
+<body>
+  <div class="popup-layout">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+      <div class="loading-spinner">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <p class="loading-text" id="loading-text">Signing in...</p>
+    </div>
+
+    <div class="popup-content">
+      <div class="signin-card">
+        <button type="button" class="signin-back-btn" id="signin-back-btn">
+          ◀ Back
+        </button>
+        <h1 class="signin-title-main">Sign In</h1>
+
+        <form class="signin-form">
+          <label class="signin-label" for="signin-email">Email</label>
+          <input id="signin-email" name="email" type="email" class="signin-input" autocomplete="email" />
+
+          <label class="signin-label" for="signin-password">Password</label>
+          <input id="signin-password" name="password" type="password" class="signin-input"
+            autocomplete="current-password" />
+
+
+
+          <p id="signin-message" class="signin-message" aria-live="polite" hidden></p>
+          <button type="submit" class="signin-btn-primary">Sign In</button>
+        </form>
+
+        <button type="button" class="signin-link-signup" id="signin-signup-link">
+          Sign Up
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="../../../../scripts/firebase-bundle.js"></script>
+  <script src="../../../../scripts/firebase-config.js"></script>
+  <script src="../signup/user-doc-defaults.js"></script>
+  <script src="signin.js"></script>
+</body>
+
+</html>

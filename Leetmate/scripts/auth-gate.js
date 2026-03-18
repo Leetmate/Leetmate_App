@@ -26,7 +26,7 @@
             console.warn('Firebase Auth is not available for auth gate.');
             // Fail safe: If firebase isn't loaded, maybe they shouldn't be here,
             // but let's just observe. We can redirect to popup to be safe.
-            window.location.replace('../../popup.html');
+            window.location.replace(chrome.runtime.getURL('app/popup.html'));
             return;
         }
 
@@ -36,7 +36,7 @@
         auth.onAuthStateChanged(function (user) {
             if (!user) {
                 // Not signed in; redirect to Welcome (popup.html)
-                window.location.replace('../../popup.html');
+                window.location.replace(chrome.runtime.getURL("app/popup.html"));
             }
         });
 

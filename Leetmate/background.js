@@ -12,7 +12,7 @@
  *   visits/solutions and grant coins or increase happiness.
  * - Badge: chrome.action.setBadgeText / setBadgeBackgroundColor to show streak or happiness on the icon.
  */
-importScripts("../../js/storageHelper.js", "../../js/streak.js");
+importScripts("app/features/shared/storage-helper.js", "app/features/progression/streak.js");
 (function () {
   'use strict';
 
@@ -84,10 +84,10 @@ chrome.runtime.onMessage.addListener((message) => { // gets message from pip or 
 				const allTabs = win.tabs; 
 				const activeTab = allTabs.find(tab => tab.active); // find active tab from array
 
-				const petDataUrl = await assetToDataUrl("assets/Animals - Outline/CubicJaguatirica2.png");
+				const petDataUrl = await assetToDataUrl("assets/sprites/CubicJaguatirica2.png");
 
 				chrome.scripting.executeScript(
-					{target: {tabId: activeTab.id}, files: ["js/pip.js"]},
+					{target: {tabId: activeTab.id}, files: ["app/features/pet/pip.js"]},
 					() => {
 						chrome.tabs.sendMessage(activeTab.id, {type: "loadPip", petDataUrl});
 					}
