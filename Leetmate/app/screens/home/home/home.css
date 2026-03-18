@@ -77,15 +77,6 @@ body {
   color: #B89D5B
 }
 
-/* Menu Button */
-.menu-btn {
-  border: 3px solid #111;
-  border-radius: 16px;
-  background: #EEEAE1;
-  padding: 6px 10px;
-  font-weight: bold;
-}
-
 .menu-icon {
   width: 20px;      
   height: 20px;
@@ -926,14 +917,12 @@ body {
 
 /* Existing Button Animations */
 .premium-btn:hover,
-.menu-btn:hover,
 .minimize-btn:hover {
   cursor: pointer;
   transform: scale(1.1) !important; /* Override pulse animation scale on hover */
 }
 
 .premium-btn:active,
-.menu-btn:active,
 .minimize-btn:active {
   transform: scale(0.9) !important;
 }
@@ -946,3 +935,4 @@ body {
   background: white;
   font-weight: bold;
   cursor: pointer;
+}

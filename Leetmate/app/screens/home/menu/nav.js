@@ -3,12 +3,36 @@
  * Focus trap and return focus to trigger on close.
  */
 (function () {
-  var overlay = document.getElementById('nav-overlay');
   var trigger = document.getElementById('nav-trigger');
+
+  if (!trigger) return;
+
+  if (!document.getElementById('nav-overlay')) {
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      [
+        '<div class="nav-overlay" id="nav-overlay" aria-hidden="true">',
+        '  <div class="nav-drawer" id="nav-drawer" role="dialog" aria-modal="true" aria-label="Main menu">',
+        '    <button type="button" class="nav-close-btn" id="nav-close" aria-label="Close menu">\u00d7</button>',
+        '    <nav class="nav-menu" id="nav-menu">',
+        '      <button type="button" class="nav-menu-btn" id="home-btn">Home</button>',
+        '      <button type="button" class="nav-menu-btn" id="playground-btn">Playground</button>',
+        '      <button type="button" class="nav-menu-btn" id="store-btn">Store</button>',
+        '      <button type="button" class="nav-menu-btn" id="community-btn">Community</button>',
+        '      <button type="button" class="nav-menu-btn" id="activity-btn">Activity</button>',
+        '      <button type="button" class="nav-menu-btn" id="settings-btn">Settings</button>',
+        '    </nav>',
+        '  </div>',
+        '</div>'
+      ].join('')
+    );
+  }
+	
+  var overlay = document.getElementById('nav-overlay');
   var drawer = document.getElementById('nav-drawer');
   var closeBtn = document.getElementById('nav-close');
 
-  if (!overlay || !trigger || !drawer || !closeBtn) return;
+  if (!overlay || !drawer || !closeBtn) return;
 
   var focusableSelector = [
     'button:not([disabled])',
@@ -113,4 +137,3 @@
       window.location.href = "/app/screens/store/accessory/index.html"
   });
 })();
-
