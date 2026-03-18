@@ -12,7 +12,6 @@
  *   visits/solutions and grant coins or increase happiness.
  * - Badge: chrome.action.setBadgeText / setBadgeBackgroundColor to show streak or happiness on the icon.
  */
-// import { storageGet, storageSet } from "../../js/storageHelper.js";
 importScripts("../../js/storageHelper.js", "../../js/streak.js");
 (function () {
   'use strict';
@@ -64,8 +63,6 @@ function getNextAlarmTime() {
   const target = new Date(`${getTodayString()}T23:59:00`).getTime();
   return target > Date.now() ? target : target + 24 * 60 * 60 * 1000;
 }
-  
-})();
 // pip needs this since it can't access the assets directly
 // basic flow is: url > raw binary > base 64
 async function assetToDataUrl(path) {
@@ -109,4 +106,7 @@ chrome.runtime.onMessage.addListener((message) => { // gets message from pip or 
 		})
 	}
 })
+
+  
+})();
 

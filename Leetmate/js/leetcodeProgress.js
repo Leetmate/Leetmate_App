@@ -19,7 +19,7 @@ function normalizeSubmissions(rawSubmissions, startingOrder) {
 
 /**
  * Save today's submissions to Firestore.
- * Merges with existing, dedupes by id, assigns order.
+ * Merges with existing, dedupes by titleSlug (and id), assigns order.
  */
 function saveLeetCodeProgressToFirestore(db, uid, rawSubmissions) {
   if (!db || !uid || !Array.isArray(rawSubmissions) || rawSubmissions.length === 0) {
@@ -37,12 +37,29 @@ function saveLeetCodeProgressToFirestore(db, uid, rawSubmissions) {
     .get()
     .then((snap) => {
       const existing = snap.exists ? snap.data().submissions || [] : [];
-      const existingIds = new Set(existing.map((s) => s.id));
-      const newSubs = rawSubmissions.filter((s) => !existingIds.has(s.id));
+      const existingIds = new Set(existing.map((s) => s.id).filter(Boolean));
+      const existingSlugs = new Set(existing.map((s) => s.titleSlug).filter(Boolean));
+
+      // Only keep submissions that introduce a new problem (titleSlug) for the day.
+      // Also ignore ids we've already seen, for safety.
+      const newSubs = rawSubmissions.filter((s) => {
+        if (!s || !s.titleSlug) return false;
+        if (existingSlugs.has(s.titleSlug)) return false;
+        if (s.id && existingIds.has(s.id)) return false;
+        return true;
+      });
       if (newSubs.length === 0) return Promise.resolve();
 
       const normalized = normalizeSubmissions(newSubs, existing.length);
-      const merged = existing.concat(normalized);
+      // Final safety: dedupe merged by titleSlug.
+      const merged = [];
+      const seenSlugs = new Set();
+      for (const s of existing.concat(normalized)) {
+        const slug = s && s.titleSlug;
+        if (!slug || seenSlugs.has(slug)) continue;
+        seenSlugs.add(slug);
+        merged.push(s);
+      }
 
       return ref.set(
         {
@@ -136,9 +153,6 @@ function markSubmissionsClaimed(db, uid, submissionIds) {
     .catch((e) => console.error("markSubmissionsClaimed failed:", e));
 }
 
-function hasSolvedToday(db, uid) {
-  return loadLeetCodeProgressToday(db, uid).then((subs) => subs.length > 0);
-}
 
 /**
  * Sync any pending submissions from chrome.storage to Firestore.

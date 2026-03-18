@@ -31,31 +31,59 @@
           </div>
         
           <div class="leetcode-card" id="leetcodeCard">
-            <div class="icon-leetcode">
+            <div class="icon-default">
               <img src="../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
             </div>
-            <div class="icon-reward">
+            <div class="icon-alt icon-reward">
               <img src="../../assets/icons/reward.png" class="leetcode-icon" alt="Reward Icon"/>
-              <img src="../../assets/icons/coin.png" class="reward-coin coin1" alt="Coin">
-              <img src="../../assets/icons/coin.png" class="reward-coin coin2" alt="Coin">
-              <img src="../../assets/icons/coin.png" class="reward-coin coin3" alt="Coin">
+              <img src="../../assets/icons/coin.png" class="reward-coin coin1" alt="Coin" />
+              <img src="../../assets/icons/coin.png" class="reward-coin coin2" alt="Coin" />
+              <img src="../../assets/icons/coin.png" class="reward-coin coin3" alt="Coin" />
             </div>
-            <div class="icon-motivation">
+            <div class="icon-done">
               <img src="../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
-            </div>          
-            <div class="leetcode-view view-leetcode">
-              <strong>LeetCode Daily</strong>
-              <span>Solve a problem to receive rewards!</span>
             </div>
-            <div class="leetcode-view view-reward">
-              <strong> Congrats, Leetcode Daily done ✓</strong>
-              <span style="color: #007bff; font-weight: bold; text-decoration: underline;">Claim Your Reward Here!</span>
-            </div>
-            <div class="leetcode-view view-motivation">
-              <strong>🔥 Keep Going!</strong>
-              <span>
-                Solve another LeetCode problem 
+          
+            <div class="leetcode-view view-default">
+              <span class="leetcode-default-headline">Today's Quest</span>
+              <span class="leetcode-default-subtext">Solve 1 LeetCode problem</span>
+              <span class="leetcode-default-reward">
+                Earn <span class="reward-xp">XP</span> and <span class="reward-coins">coins</span> for your pet!
               </span>
+            </div>
+            <div class="leetcode-view view-alt">
+              <div class="leetcode-alt-claim">
+                <div class="leetcode-alt-main">
+                  <div class="leetcode-alt-title">Daily Quest Complete!</div>
+                  <div class="leetcode-alt-subtext">
+                    You solved today's<br />
+                    LeetCode problem!
+                  </div>
+                </div>
+                <div class="leetcode-alt-right">
+                  <div class="leetcode-alt-rewards">
+                    <span class="leetcode-alt-reward xp">+10 XP</span>
+                    <span class="leetcode-alt-reward coins">+10 Coins</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="leetcode-claim-btn"
+                    id="leetcodeClaimBtn"
+                    style="display: none;"
+                  >
+                    Claim Reward
+                  </button>
+                </div>
+              </div>
+
+              <div class="leetcode-alt-done">
+                <div class="leetcode-done-title">Quest Complete! ✓</div>
+                <div class="leetcode-done-body">
+                  <span class="leetcode-done-kicker">Bonus rewards await.</span>
+                  <span class="leetcode-done-body-rest"> Solve more LeetCode</span><br />
+                  problems to earn extra XP and coins.
+                </div>
+              </div>
             </div>
           </div>
         
@@ -155,7 +183,6 @@
     <script src="../../tests/happinessDecayTests.js"></script>
     <script src="../../js/pet_change.js"></script>
     <script src="../../js/streak.js"></script>
-    <script src="hearts.js"></script>
     <script src="../../js/rewards.js"></script>
     <script src="home.js"></script>
     <!-- 
