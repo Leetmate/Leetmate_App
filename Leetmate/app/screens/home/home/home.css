@@ -1,5 +1,4 @@
 /* Home Screen Layout */
-@import url("../../../styles/layout.css");
 
 body {
   font-family:
@@ -947,4 +946,3 @@ body {
   background: white;
   font-weight: bold;
   cursor: pointer;
-}
