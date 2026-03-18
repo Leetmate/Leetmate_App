@@ -80,7 +80,7 @@ body {
 }
 
 .signin-title-main {
-  margin: 8px 0 16px;
+  margin: 8px 0;
   text-align: center;
   font-size: 38px;
   /* Slightly smaller title */
@@ -107,7 +107,7 @@ body {
 
 .signin-input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 8px;
   /* Smaller inputs */
   border-radius: 14px;
   border: 3px solid #3b2b1a;
