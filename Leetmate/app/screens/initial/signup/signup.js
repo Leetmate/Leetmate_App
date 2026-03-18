@@ -24,7 +24,9 @@
 
   function hideMessage(el) {
     if (!el) return;
-    el.hidden = true;
+    el.hidden = false;
+    el.textContent = '';
+    el.className = 'signup-message';
   }
 
   /** Ensure Firestore users/{uid} exists with the given data (create only, do not overwrite existing). */
@@ -80,9 +82,15 @@
     if (!msgEl) {
       msgEl = document.createElement('p');
       msgEl.id = 'signup-message';
+      msgEl.className = 'signup-message';
       msgEl.setAttribute('aria-live', 'polite');
-      msgEl.hidden = true;
+      msgEl.hidden = false;
       if (form) form.appendChild(msgEl);
+    }
+    msgEl.className = 'signup-message';
+    msgEl.hidden = false;
+    if (!msgEl.textContent) {
+      msgEl.textContent = '';
     }
 
     var emailInput = document.getElementById('signup-email');

@@ -174,6 +174,24 @@ body {
   font-weight: 800;
 }
 
+.signup-message {
+  min-height: 32px;
+  margin: 4px 0 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #721c24;
+  visibility: hidden;
+}
+
+.signup-message:not(:empty) {
+  visibility: visible;
+  background: #f8d7da;
+}
+
 .signup-btn-primary {
   width: 100%;
   padding: 10px;
