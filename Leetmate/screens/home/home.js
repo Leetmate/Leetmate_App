@@ -1,5 +1,5 @@
+// home.js
 // Firebase XP syncing and UI updates
-let rewardsState = { solved: false, claimableCount: 0, claimableCoins: 0, claimableXp: 0 };
 
 function hasFirebase() {
   return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
@@ -11,13 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const btn = document.querySelector(".xp-test-button");
-  if (!btn) {
+  const xpBtn = document.querySelector(".xp-test-button");
+  if (!xpBtn) {
     console.warn("Unable to find xp-test-button.");
     return;
   }
 
-  // Show cached UI immediately from chrome storage while Firestore loads
   updateXPSectionUI();
   updateCoinsUI();
 
@@ -25,59 +24,75 @@ document.addEventListener("DOMContentLoaded", () => {
   const auth = firebase.auth();
   let currentUid = null;
 
+  async function refreshAfterProgressSync() {
+    if (!currentUid) return;
+
+    await syncPendingSubmissionsToFirestore(db, currentUid);
+    await refreshRewardsCard(db, currentUid);
+  }
+
   auth.onAuthStateChanged(async (user) => {
     if (!user) return;
+
     currentUid = user.uid;
 
-    // Save uid to chrome storage so background.js can access it
     await storageSet({ uid: currentUid });
     window.__leetmateAuth = { db, uid: currentUid };
 
-    // ── Step 1: Load static user data (independent, run in parallel) ──────
+    // Load static UI state
     loadLeetCodeUsernameFromFirestore(db, currentUid);
-    loadXPFromFirestore(db, currentUid).then(updateXPSectionUI);
-    loadCoinsFromFirestore(db, currentUid).then(updateCoinsUI);
-    loadHappinessFromFirestore(db, currentUid).then(updateHeartsUI);
+    await loadXPFromFirestore(db, currentUid);
+    await updateXPSectionUI();
+
+    await loadCoinsFromFirestore(db, currentUid);
+    await updateCoinsUI();
+
+    await loadHappinessFromFirestore(db, currentUid);
+    await updateHeartsUI();
+
     setupFeedButton(db, currentUid);
-    updateHeartsUI();
     startHappinessDecayTimer();
 
-    // ── Step 2: Sync pending submissions FIRST before checking progress ────
-    // This must complete before streak or rewards checks,
-    // otherwise hasSolvedToday() may return false for fresh solves.
+    // Sync submissions before rewards/streak evaluation
     await syncPendingSubmissionsToFirestore(db, currentUid);
 
-    // ── Step 3: Load latest progress date from Firestore ──────────────────
     const latestProgressDate = await loadLatestProgressDate(db, currentUid);
     const today = getTodayString();
     const solvedToday = latestProgressDate === today;
 
-    //  Save last progress date to chrome storage for background.js
     if (solvedToday) {
-      await storageSet({ leetmate_last_progress_date: getTodayString() });
+      await storageSet({ leetmate_last_progress_date: today });
     }
 
-    // ── Step 4: Update streak based on accurate solved status ─────────────
     await updateStreakOnLoad(db, currentUid, solvedToday);
 
-    // ── Step 5: Load rewards state and set up LeetCode card ───────────────
-    const state = await getRewardsState(db, currentUid);
-    rewardsState = state;
-    setupLeetCodeCard(db, currentUid, state);
+    // State-driven reward banner
+    await refreshRewardsCard(db, currentUid);
   });
 
-  // ── XP test button ───────────────────────────────────────────────────────
-  btn.addEventListener("click", async () => {
+  // Refresh reward card whenever user returns to the extension
+  window.addEventListener("focus", async () => {
+    await refreshAfterProgressSync();
+  });
+
+  document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState !== "visible") return;
+    await refreshAfterProgressSync();
+  });
+
+  xpBtn.addEventListener("click", async () => {
     const prevLevel = await getLocalLevel();
 
     await addXP(30);
-    updateXPSectionUI();
+    await updateXPSectionUI();
 
     if ((await getLocalLevel()) !== prevLevel) {
       animateLevelUp();
     }
 
-    saveXPToFirestore(db, currentUid);
+    if (currentUid) {
+      await saveXPToFirestore(db, currentUid);
+    }
   });
 });
 
@@ -122,7 +137,6 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
     updateStreakUI(fromStorage);
     return;
   }
-
   // Already updated today — just show current streak
   if (isStreakUpdatedToday(streakData)) {
     updateStreakUI(streakData);
@@ -135,13 +149,13 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
     return;
   }
 
-  // Solved today and not yet updated → increment once
   const updated = incrementStreak(streakData);
   updated.streakLastUpdated = today;
   await saveStreakData(db, uid, updated);
   updateStreakUI(updated);
 }
 
+/* Minimize window */
 document.querySelector(".minimize-btn").addEventListener("click", () => {
   chrome.runtime.sendMessage({ type: "openPip" });
   window.close();

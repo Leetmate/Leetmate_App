@@ -25,27 +25,37 @@
           
             <div class="home-header-right">
               <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
-                <img src="../../assets/icons/menu_icon.png" class="menu-icon" alt="☰"/>
+                <img src="../../assets/icons/menu.png" class="menu-icon" alt="☰"/>
               </button>
             </div>
           </div>
         
           <div class="leetcode-card" id="leetcodeCard">
-            <div class="icon-default">
-              <img src="../../assets/icons/leetcode_icon.png" class="leetcode-icon" alt="LeetCode Icon"/>
+            <div class="icon-leetcode">
+              <img src="../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
             </div>
-            <div class="icon-alt">
-              <img src="../../assets/icons/reward_icon.png" class="leetcode-icon" alt="Reward Icon"/>
+            <div class="icon-reward">
+              <img src="../../assets/icons/reward.png" class="leetcode-icon" alt="Reward Icon"/>
+              <img src="../../assets/icons/coin.png" class="reward-coin coin1" alt="Coin">
+              <img src="../../assets/icons/coin.png" class="reward-coin coin2" alt="Coin">
+              <img src="../../assets/icons/coin.png" class="reward-coin coin3" alt="Coin">
             </div>
-          
-            <div class="leetcode-view view-default">
+            <div class="icon-motivation">
+              <img src="../../assets/icons/leetcode.png" class="leetcode-icon" alt="LeetCode Icon"/>
+            </div>          
+            <div class="leetcode-view view-leetcode">
               <strong>LeetCode Daily</strong>
               <span>Solve a problem to receive rewards!</span>
             </div>
-            <div class="leetcode-view view-alt">
-              <div class="leetcode-alt-text"> Congrats, Leetcode Daily done ✓</div>
-              <strong class="leetcode-alt-strong"> </strong>
-              <button type="button" class="leetcode-claim-btn" id="leetcodeClaimBtn" style="display: none;">Claim</button>
+            <div class="leetcode-view view-reward">
+              <strong> Congrats, Leetcode Daily done ✓</strong>
+              <span style="color: #007bff; font-weight: bold; text-decoration: underline;">Claim Your Reward Here!</span>
+            </div>
+            <div class="leetcode-view view-motivation">
+              <strong>🔥 Keep Going!</strong>
+              <span>
+                Solve another LeetCode problem 
+              </span>
             </div>
           </div>
         
@@ -55,12 +65,12 @@
               <p>Age: <span id="pet-age-display">--</span></p>
             </div>
             <div class="pet-top">
-              <div class="coins-display">
-                <div class="coins-icon">🟡</div>
-                <div class="coins-amount">0</div>
+              <div class="coins-display" id="coinDisplay">
+                <span> <img src="../../assets/icons/coin.png" class="coin-icon"></span>
+                <span id="coin-count">0</span>
               </div>
-              <button type = "button" class="minimize-btn">
-                <img src="../../assets/icons/minimize_icon.png" class="minimize-icon" alt="minimize"/>
+              <button type="button" class="minimize-btn">
+                <img src="../../assets/icons/minimize.png" class="minimize-icon" alt="minimize"/>
               </button>
             </div>
             <div class="home-hero">
@@ -75,18 +85,32 @@
           </div>
         
           <div class="status-bar">
+
             <div class="status-col hearts">
               <div class="hearts-text">Happiness</div>
-              <div class="hearts"><span>❤️</span><span>❤️</span><span>❤️</span><span>❤️</span><span>❤️</span></div>
-              <button type="button" id="feedBtn">Feed Pet</button>
+              <div class="hearts hearts-empty bottom-hearts">
+                <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon"/></span>
+              </div>
+              <div class="hearts hearts-full top-hearts">
+                <span><img src="../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart.png" class="hearts-icon"/></span>
+                <span><img src="../../assets/icons/heart.png" class="hearts-icon"/></span>
+              </div>
+              <button type="button" class="feedPet" id="feedBtn">Feed Pet</button>
             </div>
         
             <div class="status-col streak">
               <div class="streak-text">Streak</div>
               <div class="streak-display">
                 <div class="streak-icon-wrap">
-                  <div class="streak-icon">🔥</div>
-                  <img src="../../assets/ice.png" class="streak-freeze-overlay" alt="ice">
+                  <img src="../../assets/icons/streak_fire.png" class="streak-icon" alt="ice">
+                  <img src="../../assets/icons/streak_ice.png" class="streak-freeze-overlay" alt="ice">
                 </div>
                 <div class="streak-count">0</div>
               </div>
@@ -131,6 +155,7 @@
     <script src="../../tests/happinessDecayTests.js"></script>
     <script src="../../js/pet_change.js"></script>
     <script src="../../js/streak.js"></script>
+    <script src="hearts.js"></script>
     <script src="../../js/rewards.js"></script>
     <script src="home.js"></script>
     <!-- 

@@ -16,6 +16,13 @@ importScripts("../../js/storageHelper.js", "../../js/streak.js");
 (function () {
   'use strict';
 
+  // Queue submissions from content script; Home will sync to Firestore when it loads
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.type === 'SAVE_LEETCODE_PROGRESS' && Array.isArray(message.payload) && message.payload.length > 0) {
+      chrome.storage.local.set({ leetcode_pending_submissions: message.payload });
+    }
+  });
+
   // Re-run LeetCode submission fetch on every navigation within leetcode.com (SPA route changes)
   chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
     if (details.url.startsWith('https://leetcode.com/')) {
