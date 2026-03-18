@@ -100,7 +100,7 @@ function flyCoinToCounter(delay = 0) {
   const end = counter.getBoundingClientRect();
 
   const coin = document.createElement("img");
-  coin.src = "../../../assets/icons/coin.png";
+  coin.src = "../../../../assets/icons/coin.png";
   coin.className = "coin-fly";
 
   const startX = start.left + start.width / 2 - 12;
