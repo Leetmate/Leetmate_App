@@ -3,7 +3,7 @@
  * 
  * Ensures that the user is authenticated before allowing them to access
  * protected screens (like Home). If no user is logged in, it redirects
- * them to the welcome screen (popup.html).
+ * them to the welcome screen (screens/start/index.html).
  * 
  * =========================================================================
  * HOW TO PROTECT NEW SCREENS:
@@ -13,8 +13,8 @@
  * AFTER including the Firebase scripts. 
  * 
  * Example:
- *   <script src="../../firebase-bundle.js"></script>
- *   <script src="../../firebase-config.js"></script>
+ *   <script src="../../scripts/firebase-bundle.js"></script>
+ *   <script src="../../scripts/firebase-config.js"></script>
  *   <script src="../../scripts/auth-gate.js"></script>
  * =========================================================================
  */
@@ -26,7 +26,7 @@
             console.warn('Firebase Auth is not available for auth gate.');
             // Fail safe: If firebase isn't loaded, maybe they shouldn't be here,
             // but let's just observe. We can redirect to popup to be safe.
-            window.location.replace('../../popup.html');
+            window.location.replace('../start/index.html');
             return;
         }
 
@@ -35,8 +35,8 @@
         // Listen for auth state changes
         auth.onAuthStateChanged(function (user) {
             if (!user) {
-                // Not signed in; redirect to Welcome (popup.html)
-                window.location.replace('../../popup.html');
+                // Not signed in; redirect to Welcome (screens/start/index.html)
+                window.location.replace('../start/index.html');
             }
         });
 

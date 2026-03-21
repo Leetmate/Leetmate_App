@@ -79,14 +79,12 @@
 
   const activityButton = document.getElementById('activity-btn');
   activityButton.addEventListener('click', function () {
-            //window.location.href = '../home/index.html';
-      window.location.href = "../activity/activity_index.html"
+      window.location.href = "../activity/index.html"
   });
 
   const communityButton = document.getElementById('community-btn');
   communityButton.addEventListener('click', function () {
-            //window.location.href = '../home/index.html';
-      window.location.href = "../community/community_index.html"
+      window.location.href = "../community-main/index.html"
   });
 
   const homeButton = document.getElementById('home-btn');
@@ -97,20 +95,17 @@
 
   const playgroundButton = document.getElementById('playground-btn');
   playgroundButton.addEventListener('click', function () {
-            //window.location.href = '../home/index.html';
-      window.location.href = "../playground/playground_index.html"
+      window.location.href = "../playground-main/index.html"
   });
 
   const settingsButton = document.getElementById('settings-btn');
   settingsButton.addEventListener('click', function () {
-            //window.location.href = '../home/index.html';
-      window.location.href = "../settings/settings_index.html"
+      window.location.href = "../settings-main/index.html"
   });
 
   const storeButton = document.getElementById('store-btn');
   storeButton.addEventListener('click', function () {
-            //window.location.href = '../home/index.html';
-      window.location.href = "../store/store_index.html"
+      window.location.href = "../store-accessory/index.html"
   });
 })();
 

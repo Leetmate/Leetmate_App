@@ -635,7 +635,7 @@ body {
   width: 188px;
   height: 141px;
 
-  background-image: url("../../assets/Animals - Outline/CubicJaguatirica.png");
+  background-image: url("../../assets/spritesheets/CubicJaguatirica.png");
   background-repeat: no-repeat;
   background-size: 752px 141px;
   image-rendering: pixelated;
@@ -650,7 +650,7 @@ body {
   width: 188px;
   height: 141px;
 
-  background-image: url("../../assets/Animals - Outline/CubicBat.png");
+  background-image: url("../../assets/spritesheets/CubicBat.png");
   background-repeat: no-repeat;
   background-size: 752px 141px;
   image-rendering: pixelated;

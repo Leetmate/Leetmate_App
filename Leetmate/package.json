@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:config": "node scripts/inject-firebase-config.js",
-    "build:firebase": "node scripts/build-firebase-bundle.js",
+    "build:config": "node scripts/inject-firebase-config.cjs",
+    "build:firebase": "node scripts/build-firebase-bundle.cjs",
     "build": "npm run build:config && npm run build:firebase",
     "prepack": "npm run build"
   },
