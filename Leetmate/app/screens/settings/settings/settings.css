@@ -114,3 +114,18 @@ body {
   background: #e57373;
   color: white;
 }
+
+.settings-btn-secondary {
+  width: 80%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 3px solid #3b2b1a;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #ffe7b9;
+  box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.2s;
+  display: block;
+  margin: 0 auto;
+}
