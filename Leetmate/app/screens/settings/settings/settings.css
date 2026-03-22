@@ -129,3 +129,7 @@ body {
   display: block;
   margin: 0 auto;
 }
+
+.settings-btn-secondary:hover {
+  filter: brightness(1.05);
+}
