@@ -18,7 +18,7 @@
   "content_scripts": [
     {
       "matches": ["https://leetcode.com/*"],
-      "js": ["features/leetcode/leetcode-content.js", "features/helpers/storage-helper.js"]
+      "js": ["features/leetcode/leetcode-content.js", "features/shared/storage-helper.js"]
     }
   ],
   "permissions": ["storage", "notifications", "alarms", "tabs", "cookies", "webNavigation", "scripting"],

@@ -13,6 +13,9 @@ body {
 
 /* STORE CONTAINER */
 .store-card {
+  --screen-banner-bg: #c4b5d6;
+  --screen-banner-offset-top: 16px;
+  --screen-banner-offset-x: 16px;
   width: 100%;
   max-width: 380px;
   min-height: 520px;
@@ -25,33 +28,6 @@ body {
   flex-direction: column;
   gap: 16px;
   box-sizing: border-box;
-}
-
-/* STORE HEADER  */
-.store-header {
-  background: #C4B5D6; /* matching purple tone */
-  border-bottom: 4px solid #111;
-  margin: -16px -16px 0 -16px;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-}
-
-.store-header-left,
-.store-header-center,
-.store-header-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.store-header-left { justify-content: flex-start; }
-.store-header-center { justify-content: center; }
-.store-header-right { justify-content: flex-end; }
-
-.store-title {
-  font-size: 28px;
-  font-weight: 800;
 }
 
 /* STORE CONTENT BLOCK */

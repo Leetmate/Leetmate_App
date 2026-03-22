@@ -13,6 +13,9 @@ body {
 
 /* ACTIVITY CONTAINER */
 .activity-card {
+  --screen-banner-bg: #c5cdd6;
+  --screen-banner-offset-top: 16px;
+  --screen-banner-offset-x: 16px;
   width: 100%;
   max-width: 380px;
   min-height: 520px;
@@ -25,33 +28,6 @@ body {
   flex-direction: column;
   gap: 16px;
   box-sizing: border-box;
-}
-
-/* ACTIVITY HEADER  */
-.activity-header {
-  background: #C5CDD6; /* matching cool tone */
-  border-bottom: 4px solid #111;
-  margin: -16px -16px 0 -16px;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-}
-
-.activity-header-left,
-.activity-header-center,
-.activity-header-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.activity-header-left { justify-content: flex-start; }
-.activity-header-center { justify-content: center; }
-.activity-header-right { justify-content: flex-end; }
-
-.activity-title {
-  font-size: 28px;
-  font-weight: 800;
 }
 
 /* ACTIVITY CONTENT BLOCK */

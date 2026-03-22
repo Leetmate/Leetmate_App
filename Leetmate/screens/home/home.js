@@ -11,12 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const xpBtn = document.querySelector(".xp-test-button");
-  if (!xpBtn) {
-    console.warn("Unable to find xp-test-button.");
-    return;
-  }
-
   updateXPSectionUI();
   updateCoinsUI();
 
@@ -50,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadHappinessFromFirestore(db, currentUid);
     await updateHeartsUI();
 
-    setupFeedButton(db, currentUid);
     startHappinessDecayTimer();
 
     // Sync submissions before rewards/streak evaluation
@@ -78,21 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState !== "visible") return;
     await refreshAfterProgressSync();
-  });
-
-  xpBtn.addEventListener("click", async () => {
-    const prevLevel = await getLocalLevel();
-
-    await addXP(30);
-    await updateXPSectionUI();
-
-    if ((await getLocalLevel()) !== prevLevel) {
-      animateLevelUp();
-    }
-
-    if (currentUid) {
-      await saveXPToFirestore(db, currentUid);
-    }
   });
 });
 

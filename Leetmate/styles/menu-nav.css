@@ -99,6 +99,13 @@
   background: #B89D5B;
 }
 
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+}
+
 /* Close (X) – top right inside the menu panel */
 .nav-close-btn {
   position: absolute;

@@ -30,6 +30,9 @@ body {
 }
 
 .settings-card {
+  --screen-banner-bg: #f0d5ae;
+  --screen-banner-offset-top: 24px;
+  --screen-banner-offset-x: 20px;
   width: 100% !important;
   max-width: 100% !important;
   margin: 0;
@@ -44,24 +47,11 @@ body {
   flex: 1;
   box-shadow: 0 8px 16px rgba(59, 43, 26, 0.15); /* Soft shadow */
   position: relative; /* For absolutely positioned nav menu trigger if needed */
+  overflow: hidden;
 }
-
-.settings-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-
 
 .settings-title-main {
-  margin: 0;
-  text-align: center;
   font-size: 32px;
-  font-weight: 900;
-  line-height: 1;
-  color: #3b2b1a;
 }
 
 

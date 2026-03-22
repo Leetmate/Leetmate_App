@@ -13,6 +13,9 @@ body {
 
 /* HOME CONTAINER */
 .home-card {
+  --screen-banner-bg: #d6d0c5;
+  --screen-banner-offset-top: 12px;
+  --screen-banner-offset-x: 12px;
   width: 100%;
   max-width: 380px;
   height: 100%;
@@ -26,71 +29,6 @@ body {
   flex-direction: column;
   gap: 12px;
   box-sizing: border-box;
-}
-
-/* HOME HEADER  */
-.home-header {
-  background: #D6D0C5;
-  border-bottom: 4px solid #111;
-
-  /* Pull header to absolute edges of card */
-  margin: -12px -12px 0 -12px;
-  padding: 12px;
-
-  display: flex;
-  align-items: center;
-}
-
-/* Layout for perfect centering of Premium btn, Home title, & Menu btn*/
-.home-header-left,
-.home-header-center,
-.home-header-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.home-header-left {
-  justify-content: flex-start;
-}
-
-.home-header-center {
-  justify-content: center;
-}
-
-.home-header-right {
-  justify-content: flex-end;
-}
-
-/* Home Title */
-.home-title {
-  font-size: 28px;
-  font-weight: 800;
-}
-
-/* Premium Button */
-.premium-btn {
-  background: linear-gradient(to right, #cfb98d, #e7ce9d, #edddbb, #f0e6d1, #edddbb, #e7ce9d, #cfb98d);
-  border: 3px solid #B89D5B;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-weight: 700;
-  color: #B89D5B
-}
-
-/* Menu Button */
-.menu-btn {
-  border: 3px solid #111;
-  border-radius: 16px;
-  background: #EEEAE1;
-  padding: 6px 10px;
-  font-weight: bold;
-}
-
-.menu-icon {
-  width: 20px;      
-  height: 20px;
-  object-fit: contain;
 }
 
 /* LEETCODE DAILY REMINDER CARD */
@@ -542,7 +480,7 @@ body {
 /* Top Row: Coins + Minimize btn */
 .pet-top {
   position: absolute;
-  top: 12px;
+  top: 8px;
   left: 12px;
   right: 12px;
   display: flex;
@@ -554,7 +492,8 @@ body {
 .coins-display {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  padding: 4px 12px;
+  min-height: 32px;
+  padding: 4px 10px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
@@ -562,22 +501,24 @@ body {
   gap: 6px;
   color: #FFD700; /* Gold color for text */
   font-family: 'Lilita One', sans-serif;
-  font-size: 18px;
+  font-size: 15px;
   -webkit-text-stroke: 0.5px #111;
 }
 
 .coin-icon {
-  margin-top: 2px;
-  width: 28px;
+  margin-top: 1px;
+  width: 22px;
   height: auto;
 }
 
 /* Minimize Button */
 .minimize-btn {
+  width: 32px;
+  height: 32px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.9);
-  padding: 6px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -585,42 +526,48 @@ body {
 }
 
 .minimize-icon {
-  width: 18px;      
-  height: 18px;
+  width: 14px;
+  height: 14px;
   object-fit: contain;
 }
 
 /* Pet Name Bubble */
 .pet-name {
   position: absolute;
-  top: 16px;
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.85); /* Brighter for visibility */
   backdrop-filter: blur(8px);
-  padding: 6px 20px;
+  min-height: 44px;
+  padding: 5px 20px;
   border-radius: 24px;
   color: #3b2b1a; /* Darker brown for contrast */
   text-align: center;
   border: 2px solid #D6D0C5;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .pet-name h2 {
   margin: 0;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 800;
   font-family: 'Lilita One', sans-serif;
   letter-spacing: 0.5px;
+  line-height: 1;
 }
 
 /* Pet Age */
 .pet-name p {
   margin: 0;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   opacity: 0.8;
+  line-height: 1;
 }
 
 /* Pet Container */
@@ -661,23 +608,6 @@ body {
   z-index: 2;
 }
 
-.pet-change {
-	position: absolute;
-	right: 12px;
-	bottom: 12px;
-}
-/* Change Pet Button */
-.change-pet-test-button {
-  margin-top: 0;
-  font-size: 12px;
-  border: 2px solid #111;
-  border-radius: 8px;
-  background: white;
-  font-weight: bold;
-  cursor: pointer;
-  float: right;
-}
-
 @keyframes home-pet-idle {
   0% { background-position: 0 0; }
   50% { background-position: -376px 0; }
@@ -691,7 +621,7 @@ body {
   border: 4px solid #111;
   border-radius: 28px;
 
-  padding: 12px 4px 4px 4px;
+  padding: 12px 10px 10px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -702,15 +632,24 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-start;
+  gap: 8px;
   min-width: 0;
   font-size: 18px;
   margin: 0;
 }
 
-.status-col.hearts  {flex: 1.6; position: relative;}
-.status-col.streak  {flex: 0.8;}
-.status-col.xp      {flex: 1.3;}
+.status-col.hearts {
+  flex: 1.6;
+}
+
+.status-col.streak {
+  flex: 0.8;
+}
+
+.status-col.xp {
+  flex: 1.3;
+}
 
 .hearts-text, 
 .streak-text,
@@ -720,7 +659,19 @@ body {
   font-size: 24px;
   font-weight: bold;
   color: white;
-  -webkit-text-stroke: 1px #111;
+  -webkit-text-stroke: 0.75px #111;
+  line-height: 1;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hearts-stack {
+  position: relative;
+  width: 130px;
+  height: 28px;
+  margin-top: 8px;
 }
 
 .hearts-row {
@@ -739,6 +690,7 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
+  min-height: 28px;
 }
 
 .streak-icon-wrap {
@@ -752,8 +704,8 @@ body {
 
 .streak-freeze-overlay {
   position: absolute;
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   opacity: 0.65;
   display: none;
 }
@@ -778,6 +730,7 @@ body {
   background-color: #e6e6e6;
   border: 3px solid #111;
   position: relative;
+  margin-top: 6px;
 }
 
 .xp-fill {
@@ -805,38 +758,11 @@ body {
   opacity: 1;
 }
 
-.xp-test-button {
-  margin-top: 0;
-  font-size: 12px;
-  border: 2px solid #111;
-  border-radius: 8px;
-  background: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Premium Button lively animation */
-.premium-btn {
-  background: linear-gradient(to right, #cfb98d, #e7ce9d, #edddbb, #f0e6d1, #edddbb, #e7ce9d, #cfb98d);
-  border: 3px solid #B89D5B;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-weight: 700;
-  color: #B89D5B;
-  animation: premium-pulse 3s infinite ease-in-out;
-  box-shadow: 0 0 10px rgba(184, 157, 91, 0.3);
-}
-
-@keyframes premium-pulse {
-  0%, 100% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.05); filter: brightness(1.1); box-shadow: 0 0 15px rgba(184, 157, 91, 0.5); }
-}
-
 /* Ice Freeze shivering animation */
 .streak-freeze-overlay {
   position: absolute;
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   opacity: 0.65;
   display: none;
   animation: ice-shiver 0.4s infinite ease-in-out;
@@ -855,11 +781,11 @@ body {
   display: flex;
   gap: 3px;
   cursor: default;
+  justify-content: center;
 }
 
 .hearts span {
   display: inline-block;
-  margin-top: 5px;
   animation: heart-beat 1.5s infinite ease-in-out;
   
   /* Outline effect for empty/faded hearts */
@@ -884,16 +810,16 @@ body {
 /* Full hearts -> portion adjusted based on calculation */
 .top-hearts {
   position: absolute;
-  top: 30px;
-  left: 13px;
+  top: 0;
+  left: 0;
   z-index: 2;
 }
 
 /* Empty hearts -> underneath the full hearts */
 .bottom-hearts{
   position: absolute;
-  top: 30px;
-  left: 13px;
+  top: 0;
+  left: 0;
   z-index: 1;
 }
 
@@ -927,24 +853,13 @@ body {
 
 /* Existing Button Animations */
 .premium-btn:hover,
-.menu-btn:hover,
 .minimize-btn:hover {
   cursor: pointer;
   transform: scale(1.1) !important; /* Override pulse animation scale on hover */
 }
 
 .premium-btn:active,
-.menu-btn:active,
 .minimize-btn:active {
   transform: scale(0.9) !important;
 }
 
-.feedPet {
-  margin-top: 30px;
-  font-size: 12px;
-  border: 2px solid #111;
-  border-radius: 8px;
-  background: white;
-  font-weight: bold;
-  cursor: pointer;
-}
