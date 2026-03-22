@@ -1,0 +1,149 @@
+body {
+  padding: var(--space-5) !important;
+}
+
+.popup-header {
+  padding: 0 0 var(--space-3);
+}
+
+.popup-header h1 {
+  margin: 0 0 var(--space-1);
+  font-size: 3rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  text-align: center;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.popup-main {
+  padding: var(--space-3) var(--space-3) 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 24px;
+  position: relative;
+}
+
+.hero-egg {
+  width: 320px;
+  height: 240px;
+  border-radius: 160px 160px 0 0;
+  box-shadow: var(--shadow-hero);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--color-surface-3);
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-pet {
+  width: 280px;
+  height: 210px;
+  background-image: url("../../assets/spritesheets/CubicJaguatirica2.png");
+  background-repeat: no-repeat;
+  background-size: 1960px 210px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  animation: hero-idle 0.8s steps(1) infinite;
+}
+
+@keyframes hero-idle {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: -560px 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.hero-base {
+  width: 310px;
+  height: 32px;
+  background: #bfa77a;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  box-shadow: var(--shadow-soft);
+}
+
+.hero-caption {
+  margin: var(--space-4) 0 var(--space-5);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+.start-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.start-btn {
+  min-width: 140px;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  text-align: center;
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-button);
+  transition: transform 0.1s, box-shadow 0.1s, filter var(--transition-fast);
+  will-change: transform;
+}
+
+.start-btn--primary {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+.start-btn--secondary {
+  background: #e8decc;
+  color: var(--color-text);
+}
+
+.start-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(59, 43, 26, 0.3);
+}
+
+.start-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
+}

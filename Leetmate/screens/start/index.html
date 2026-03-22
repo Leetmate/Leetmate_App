@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate</title>
+		<link rel="stylesheet" href="../../styles/layout.css" />		
+    <link rel="stylesheet" href="start.css" />
+    <link rel="stylesheet" href="../../styles/loading.css" />
+  </head>
+  <body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <p class="loading-text" id="loading-text">Loading...</p>
+    </div>
+
+    <main class="popup-main">
+      <header class="popup-header">
+        <h1>LeetMate</h1>
+      </header>
+      <section class="hero">
+        <div class="hero-egg">
+          <img src="../../assets/backgrounds/bg_park.png" alt="" class="hero-bg" />
+        </div>
+        <div class="hero-base"></div>
+        <div class="hero-pet"></div>
+      </section>
+      <p class="hero-caption">A cute companion for your Chrome Browser</p>
+      <nav class="start-nav">
+        <a href="../auth-signup/index.html" class="start-btn start-btn--primary"
+          >Sign Up</a
+        >
+        <a
+          href="../auth-signin/index.html"
+          class="start-btn start-btn--secondary"
+          >Sign In</a
+        >
+      </nav>
+    </main>
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="start.js"></script>
+  </body>
+</html>

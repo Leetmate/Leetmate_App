@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate - Connect Leetcode</title>
+    <link rel="stylesheet" href="../../styles/auth.css" />
+    <link rel="stylesheet" href="../../styles/loading.css" />
+    <link rel="stylesheet" href="leetcode.css" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+          <div class="loading-dot"></div>
+        </div>
+        <p class="loading-text" id="loading-text">Loading...</p>
+      </div>
+      <div class="popup-content auth-content">
+        <div class="lc-card auth-card" id="lc-card">
+          <!-- State A: Initial -->
+          <section class="lc-state lc-state--initial lc-state--active" id="lc-state-initial">
+            <header class="lc-header">
+              <img
+                src="../../assets/icons/leetcode.png"
+                alt="LeetCode"
+                class="lc-logo"
+              />
+              <h1 class="lc-title">Connect Your Leetcode Account</h1>
+            </header>
+
+            <div class="lc-body">
+              <div class="lc-hero">
+                <div
+                  class="lc-hero-pet"
+                  role="img"
+                  aria-label="Chicken"
+                ></div>
+              </div>
+
+              <button type="button" class="lc-primary-btn" id="lc-connect-btn">
+                <span class="lc-btn-icon">
+                  <img
+                    src="../../assets/icons/link.png"
+                    alt=""
+                    class="lc-link-icon"
+                    aria-hidden="true"
+                  />
+                </span>
+                <span>Sign In with Leetcode</span>
+              </button>
+
+              <p class="lc-helper">
+                We&apos;ll use this to sync your daily progress
+              </p>
+            </div>
+          </section>
+
+          <!-- State B: Success -->
+          <section class="lc-state lc-state--success" id="lc-state-success">
+            <header class="lc-header">
+              <img
+                src="../../assets/icons/leetcode.png"
+                alt="LeetCode"
+                class="lc-logo"
+              />
+              <h1 class="lc-title lc-title--success">Successfully Connected!</h1>
+            </header>
+            <div class="lc-body">
+              <div class="lc-hero lc-hero--status">
+                <div class="lc-success-badge" aria-hidden="true">
+                  <svg class="lc-success-check" viewBox="0 0 24 24">
+                    <path
+                      d="M9.0 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="lc-primary-btn"
+                id="lc-choose-pet-btn"
+              >
+                Choose your starter Pet
+              </button>
+            </div>
+          </section>
+
+          <!-- State C: Failure -->
+          <section class="lc-state lc-state--failure" id="lc-state-failure">
+            <header class="lc-header">
+              <img
+                src="../../assets/icons/leetcode.png"
+                alt="LeetCode"
+                class="lc-logo"
+              />
+              <h1 class="lc-title">Failed To Connect</h1>
+            </header>
+            <div class="lc-body">
+              <div class="lc-hero lc-hero--status">
+                <div class="lc-status-icon lc-status-icon--failure">x</div>
+              </div>
+              <p class="lc-text lc-text-error" id="lc-error-text"></p>
+              <button type="button" class="lc-primary-btn" id="lc-retry-btn">
+                Try Again
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="leetcode.js"></script>
+  </body>
+</html>

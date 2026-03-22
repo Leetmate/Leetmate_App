@@ -1,0 +1,26 @@
+.signin-card {
+  padding: var(--space-4) var(--space-5) var(--space-4);
+  gap: var(--space-4);
+}
+
+.signin-title-main {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-xl);
+}
+
+.signin-btn-primary {
+  border-color: var(--color-border);
+  background: var(--color-accent);
+  color: var(--color-text);
+  box-shadow: var(--shadow-button);
+  transition: transform 0.1s, box-shadow 0.1s, filter var(--transition-fast);
+}
+
+.signin-btn-primary:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
+}
+
+.signin-btn-primary:hover {
+  filter: brightness(1.05);
+}

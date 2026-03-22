@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate - Settings</title>
+    <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="../../styles/top-banner.css" />
+    <link rel="stylesheet" href="settings.css" />
+    <link rel="stylesheet" href="../../styles/menu-nav.css" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="settings-card">
+          <div class="screen-banner">
+            <div class="screen-banner__left"></div>
+            <div class="screen-banner__center">
+              <h1 class="screen-banner__title settings-title-main">Settings</h1>
+            </div>
+            <div class="screen-banner__right">
+              <button
+                type="button"
+                class="menu-btn nav-trigger"
+                id="nav-trigger"
+                aria-expanded="false"
+                aria-controls="nav-drawer"
+                aria-label="Open menu"
+              >
+                <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-content">
+            <div class="settings-section">
+              <h2 class="settings-section-title">Account Details</h2>
+              <p style="margin: 0; font-size: 14px;">Email: [User Email]</p>
+            </div>
+
+            <button
+              type="button"
+              class="settings-btn-primary settings-btn-danger"
+              id="signout-btn"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../features/shared/menu-nav.js"></script>
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/progression/xp.js"></script>
+    <script src="../../features/progression/streak.js"></script>
+    <script src="../../features/shared/storage-helper.js"></script>
+    <script src="../../scripts/auth-gate.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>

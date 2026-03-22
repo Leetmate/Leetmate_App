@@ -1,4 +1,4 @@
-/* Activity Screen Layout */
+/* Store Screen Layout */
 @import url("../../styles/layout.css");
 
 body {
@@ -11,9 +11,9 @@ body {
     sans-serif;
 }
 
-/* ACTIVITY CONTAINER */
-.activity-card {
-  --screen-banner-bg: #c5cdd6;
+/* STORE CONTAINER */
+.store-card {
+  --screen-banner-bg: #c4b5d6;
   --screen-banner-offset-top: 16px;
   --screen-banner-offset-x: 16px;
   width: 100%;
@@ -21,7 +21,7 @@ body {
   min-height: 520px;
   margin: 0 auto;
   padding: 16px;
-  background: #EAEBF0; /* slightly different cool tone */
+  background: #EBE5F0; /* slightly purple tone */
   border-radius: 0;
   border: none;
   display: flex;
@@ -30,14 +30,14 @@ body {
   box-sizing: border-box;
 }
 
-/* ACTIVITY CONTENT BLOCK */
-.activity-content {
+/* STORE CONTENT BLOCK */
+.store-content {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(#BFD1DF, #DCEAF5);
+  background: linear-gradient(#DCEAF5, #E5DCF5); /* playful gradient */
   border: 4px solid #111;
   border-radius: 28px;
   padding: 16px;

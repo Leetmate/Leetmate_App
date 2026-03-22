@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leetmate – Sign in</title>
+	<link rel="stylesheet" href="../../styles/auth.css" />
+  <link rel="stylesheet" href="../../styles/loading.css" />
+  <link rel="stylesheet" href="signin.css" />
+</head>
+
+<body>
+  <div class="popup-layout">
+    <div id="loading-overlay" class="loading-overlay hidden">
+      <div class="loading-spinner">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <p class="loading-text" id="loading-text">Signing in...</p>
+    </div>
+
+    <div class="popup-content auth-content">
+      <div class="signin-card auth-card">
+        <h1 class="signin-title-main auth-title">Sign In</h1>
+
+        <form class="signin-form auth-form">
+          <div class="auth-field">
+            <label class="signin-label auth-label" for="signin-email">Email</label>
+            <input id="signin-email" name="email" type="email" class="signin-input auth-input" autocomplete="email" />
+          </div>
+
+          <div class="auth-field">
+            <label class="signin-label auth-label" for="signin-password">Password</label>
+            <input id="signin-password" name="password" type="password" class="signin-input auth-input"
+              autocomplete="current-password" />
+          </div>
+
+          <div class="auth-actions">
+            <p id="signin-message" class="signin-message auth-message" aria-live="polite" hidden></p>
+            <button type="submit" class="signin-btn-primary auth-primary-btn">Sign In</button>
+            <button type="button" class="signin-link-signup auth-link-btn" id="signin-signup-link">
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="../../scripts/firebase-bundle.js"></script>
+  <script src="../../scripts/firebase-config.js"></script>
+  <script src="../../features/shared/user-doc-defaults.js"></script>
+  <script src="signin.js"></script>
+</body>
+
+</html>
