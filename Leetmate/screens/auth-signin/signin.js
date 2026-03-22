@@ -18,7 +18,7 @@
   function showMessage(el, text, isError) {
     if (!el) return;
     el.textContent = text;
-    el.className = 'signin-message' + (isError ? ' signin-message--error' : '');
+    el.className = 'signin-message auth-message' + (isError ? ' signin-message--error auth-message--error' : '');
     el.hidden = false;
   }
 
@@ -61,13 +61,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    var backBtn = document.getElementById('signin-back-btn');
-    if (backBtn) {
-      backBtn.addEventListener('click', function () {
-        window.location.href = '../start/index.html';
-      });
-    }
-
     var signupLink = document.getElementById('signin-signup-link');
     if (signupLink) {
       signupLink.addEventListener('click', function () {

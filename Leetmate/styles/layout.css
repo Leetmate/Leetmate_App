@@ -1,7 +1,8 @@
+@import url("./theme.css");
+
 html,
 body,
-#root,
-.popup-layout {
+#root {
   width: 380px !important;
   height: 520px !important;
   margin: 0 !important;
@@ -10,10 +11,21 @@ body,
   overflow: hidden !important;
 }
 
+
 *,
 *::before,
 *::after {
   box-sizing: inherit;
+}
+
+body {
+  width: var(--popup-width) !important;
+  height: var(--popup-height) !important;
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow: hidden;
 }
 
 .popup-layout {
@@ -27,7 +39,11 @@ body,
 .popup-content {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
-	overflow-x: hidden;
+  overflow: hidden;
   box-sizing: border-box;
+}
+
+.popup-content--scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
 }

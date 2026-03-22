@@ -4,13 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leetmate – Sign up</title>
-    <link rel="stylesheet" href="../../styles/popup.css" />
+		<link rel="stylesheet" href="../../styles/auth.css" />
     <link rel="stylesheet" href="../../styles/loading.css" />
     <link rel="stylesheet" href="signup.css" />
   </head>
   <body>
     <div class="popup-layout">
-      <!-- Loading Overlay -->
       <div id="loading-overlay" class="loading-overlay hidden">
         <div class="loading-spinner">
           <div class="loading-dot"></div>
@@ -20,59 +19,65 @@
         <p class="loading-text" id="loading-text">Signing up...</p>
       </div>
 
-      <div class="popup-content">
-        <div class="signup-card">
-          <button type="button" class="signup-back-btn" id="signup-back-btn">
-            ◀ Back
-          </button>
-          <h1 class="signup-title-main">Sign Up</h1>
+      <div class="popup-content auth-content">
+        <div class="signup-card auth-card">
+          <h1 class="signup-title-main auth-title">Sign Up</h1>
 
-          <form class="signup-form">
-            <label class="signup-label" for="signup-email">Email</label>
-            <input
-              id="signup-email"
+          <form class="signup-form auth-form">
+            <div class="auth-field">
+              <label class="signup-label auth-label" for="signup-email">Email</label>
+              <input
+                id="signup-email"
               name="email"
               type="email"
-              class="signup-input"
+              class="signup-input auth-input"
               autocomplete="email"
+              placeholder="example@gmail.com"
             />
+            </div>
 
-            <label class="signup-label" for="signup-password">Password</label>
-            <input
-              id="signup-password"
-              name="password"
-              type="password"
-              class="signup-input"
-              autocomplete="new-password"
-            />
+            <div class="auth-field">
+              <label class="signup-label auth-label" for="signup-password">Password</label>
+              <input
+                id="signup-password"
+                name="password"
+                type="password"
+                class="signup-input auth-input"
+                autocomplete="new-password"
+                placeholder="At least 6 characters"
+              />
+            </div>
 
-            <label class="signup-label" for="signup-confirm-password"
-              >Confirm Password</label
-            >
-            <input
-              id="signup-confirm-password"
-              name="confirmPassword"
-              type="password"
-              class="signup-input"
-              autocomplete="new-password"
-            />
+            <div class="auth-field">
+              <label class="signup-label auth-label" for="signup-confirm-password">Confirm Password</label>
+              <input
+                id="signup-confirm-password"
+                name="confirmPassword"
+                type="password"
+                class="signup-input auth-input"
+                autocomplete="new-password"
+                placeholder="Re-enter password"
+              />
+            </div>
 
-            <label class="signup-label" for="signup-username">Username</label>
-            <input
-              id="signup-username"
-              name="username"
-              type="text"
-              class="signup-input"
-              autocomplete="username"
-              placeholder="Display name"
-            />
+            <div class="auth-field">
+              <label class="signup-label auth-label" for="signup-username">Username</label>
+              <input
+                id="signup-username"
+                name="username"
+                type="text"
+                class="signup-input auth-input"
+                autocomplete="username"
+                placeholder="Display name"
+              />
+            </div>
 
             <div class="signup-terms-row">
               <input
                 id="signup-accept"
                 name="accept"
                 type="checkbox"
-                class="signup-checkbox"
+                class="signup-checkbox auth-checkbox"
               />
               <label for="signup-accept" class="signup-terms-label">
                 I accept the
@@ -86,14 +91,78 @@
               </label>
             </div>
 
-            <p
-              id="signup-message"
-              class="signup-message"
-              aria-live="polite"
-              hidden
-            ></p>
-            <button type="submit" class="signup-btn-primary">Sign Up</button>
+            <div class="auth-actions">
+              <p
+                id="signup-message"
+                class="signup-message auth-message"
+                aria-live="polite"
+                hidden
+              ></p>
+              <button type="submit" class="signup-btn-primary auth-primary-btn">Sign Up</button>
+              <button type="button" class="signup-link-signin auth-link-btn" id="signup-signin-link">
+                Sign In
+              </button>
+            </div>
           </form>
+        </div>
+      </div>
+
+      <div class="signup-terms-modal" id="signup-terms-modal" hidden>
+        <div class="signup-terms-backdrop" id="signup-terms-backdrop"></div>
+        <div
+          class="signup-terms-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="signup-terms-title"
+        >
+          <header class="signup-terms-header">
+            <h2 class="signup-terms-title" id="signup-terms-title">Terms of Service</h2>
+            <button
+              type="button"
+              class="signup-terms-close"
+              id="signup-terms-close-btn"
+              aria-label="Close terms"
+            >
+              ×
+            </button>
+          </header>
+
+          <section class="signup-terms-body">
+            <p>
+              By accessing or using Leetmate, you agree to be bound by these
+              Terms of Service and all applicable laws and regulations. The app
+              is intended for personal, non-commercial use only, and you agree
+              not to misuse the service or attempt to access it in an
+              unauthorized manner.
+            </p>
+            <p>
+              Leetmate helps you track your practice on LeetCode, but it is not
+              affiliated with or endorsed by LeetCode. You are responsible for
+              complying with LeetCode&apos;s own terms and policies when using
+              their services in connection with this extension.
+            </p>
+            <p>
+              When you choose to connect your LeetCode account, Leetmate may
+              store limited profile information from LeetCode (such as your
+              username and basic activity data) for the sole purpose of
+              tracking your practice progress, streaks, and related in-app
+              stats. We do not use this information for advertising or sell it
+              to third parties.
+            </p>
+            <p>
+              We may update or modify these terms from time to time, and any
+              changes will be effective upon posting within the extension or in
+              the project documentation. If you continue to use Leetmate after
+              changes are posted, you are indicating that you accept the
+              updated terms.
+            </p>
+            <p>
+              The extension is provided &quot;as is&quot; without warranties of
+              any kind, either express or implied. To the fullest extent
+              permitted by law, we disclaim all liability for any loss or
+              damage arising from your use of Leetmate.
+            </p>
+          </section>
         </div>
       </div>
     </div>

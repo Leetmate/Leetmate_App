@@ -1,66 +1,24 @@
-/* popup.css – Styles for the extension popup (toolbar popup). */
-
-:root {
-  --popup-width: 380px;
-  --popup-height: 520px;
-  --bg: #f4e0c6;
-  --surface: #f0d5ae;
-  --accent: #d0b27a;
-  --text: #3b2b1a;
-  --muted: #7a6a55;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  width: 380px !important;
-  height: 520px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
-
 body {
-  width: var(--popup-width) !important;
-  height: var(--popup-height) !important;
-  margin: 0 !important;
-  padding: 16px 16px 24px;
-  box-sizing: border-box !important;
-  font-family: system-ui, sans-serif;
-  font-size: 14px;
-  color: var(--text);
-  background: var(--bg);
-  overflow: hidden;
-  /* Prevent scrolling on the main body if we want strict dimensions */
+  padding: var(--space-5) !important;
 }
 
 .popup-header {
-  padding: 0 0 8px;
+  padding: 0 0 var(--space-3);
 }
 
 .popup-header h1 {
-  margin: 0 0 4px;
-  /* title to subtitle: 4 + 12 from subtitle margin = 16 */
-  font-size: 2.4rem;
+  margin: 0 0 var(--space-1);
+  font-size: 3rem;
+  font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: 0.05em;
-  color: #000;
+  color: var(--color-text);
   text-align: center;
   text-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
 }
 
-.popup-header .subtitle {
-  margin: 12px 0 0;
-  /* 16px gap from title total */
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-
 .popup-main {
-  padding: 16px 8px 0;
-  /* Increase top padding */
+  padding: var(--space-3) var(--space-3) 0;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -71,23 +29,21 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin: 30px 0 36px;
-  /* Static margin from header, enough bottom margin to secure caption */
+  margin: 18px 0 24px;
   position: relative;
 }
 
 .hero-egg {
   width: 320px;
-  /* Big enough to serve as back of the pet */
   height: 240px;
   border-radius: 160px 160px 0 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-hero);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   position: relative;
-  background-color: #d9c6a2;
+  background-color: var(--color-surface-3);
 }
 
 .hero-bg {
@@ -100,10 +56,9 @@ body {
 .hero-pet {
   width: 280px;
   height: 210px;
-  background-image: url("../../assets/spritesheets/CubicJaguatirica.png");
+  background-image: url("../../assets/spritesheets/CubicJaguatirica2.png");
   background-repeat: no-repeat;
-  background-size: 1120px 210px;
-  /* 4 frames * 280px */
+  background-size: 1960px 210px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   position: absolute;
@@ -121,7 +76,6 @@ body {
 
   50% {
     background-position: -560px 0;
-    /* 2 * 280px */
   }
 
   100% {
@@ -131,7 +85,6 @@ body {
 
 .hero-base {
   width: 310px;
-  /* Big enough to extend slightly past the pet */
   height: 32px;
   background: #bfa77a;
   border-radius: 50%;
@@ -140,14 +93,13 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-soft);
 }
 
 .hero-caption {
-  margin: 16px 0 24px;
-  /* 16px below hero, 24px above buttons */
+  margin: var(--space-4) 0 var(--space-5);
   font-size: 0.8rem;
-  color: var(--muted);
+  color: var(--color-text-muted);
   text-align: center;
   font-style: italic;
 }
@@ -156,34 +108,42 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 20px;
-  margin-top: auto;
-  /* Push down to bottom */
-  margin-bottom: 16px;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-5);
 }
 
 .start-btn {
   min-width: 140px;
-  padding: 14px 24px;
-  border-radius: 999px;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
   text-decoration: none;
   text-align: center;
-  font-size: 1rem;
-  font-weight: 500;
-  border: 2px solid #3b2b1a;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-button);
+  transition: transform 0.1s, box-shadow 0.1s, filter var(--transition-fast);
+  will-change: transform;
 }
 
 .start-btn--primary {
-  background: #d0b27a;
-  color: #3b2b1a;
+  background: var(--color-accent);
+  color: var(--color-text);
 }
 
 .start-btn--secondary {
-  background: #fffdf8;
-  color: #3b2b1a;
+  background: #e8decc;
+  color: var(--color-text);
 }
 
 .start-btn:hover {
-  filter: brightness(1.15);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(59, 43, 26, 0.3);
+}
+
+.start-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
 }

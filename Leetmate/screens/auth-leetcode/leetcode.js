@@ -1,12 +1,11 @@
 /**
  * Connect with LeetCode flow inside the popup.
- * States: initial -> loading -> success / failure.
+ * States: initial -> success / failure.
  */
 (function () {
   'use strict';
 
   var STATE_INITIAL = 'initial';
-  var STATE_LOADING = 'loading';
   var STATE_SUCCESS = 'success';
   var STATE_FAILURE = 'failure';
 
@@ -17,7 +16,6 @@
 
   var stateEls = {
     initial: document.getElementById('lc-state-initial'),
-    loading: document.getElementById('lc-state-loading'),
     success: document.getElementById('lc-state-success'),
     failure: document.getElementById('lc-state-failure')
   };
@@ -26,12 +24,29 @@
   var STORAGE_STARTED_AT_KEY = 'leetcodeStartedAt';
   var isWaiting = false;
 
+  function setLoadingVisible(visible, text) {
+    var overlay = document.getElementById('loading-overlay');
+    var label = document.getElementById('loading-text');
+    if (!overlay) return;
+    if (label && text) label.textContent = text;
+    overlay.classList.toggle('hidden', !visible);
+  }
+
+  function showLoading(text) {
+    setLoadingVisible(true, text);
+  }
+
+  function hideLoading() {
+    setLoadingVisible(false);
+  }
+
   // Determine how the user arrived at this screen (signup vs signin)
   var fromParam = null;
   var isFromSignup = false;
   try {
     if (typeof URLSearchParams !== 'undefined') {
-      fromParam = new URLSearchParams(window.location.search).get('from');
+      var params = new URLSearchParams(window.location.search);
+      fromParam = params.get('from');
       isFromSignup = fromParam === 'signup';
     }
   } catch (e) {
@@ -39,6 +54,7 @@
   }
 
   function setState(next) {
+    hideLoading();
     Object.keys(stateEls).forEach(function (key) {
       var el = stateEls[key];
       if (!el) return;
@@ -85,7 +101,7 @@
 
   function pollForSession(remainingMs) {
     stopPolling();
-    setState(STATE_LOADING);
+    showLoading('Waiting for LeetCode sign-in...');
 
     var timeoutMs =
       typeof remainingMs === 'number' && remainingMs > 0
@@ -98,6 +114,7 @@
     function handleFailure(reason) {
       stopPolling();
       setWaitingFlag(false);
+      hideLoading();
       var errEl = document.getElementById('lc-error-text');
       if (errEl) {
         errEl.textContent =
@@ -107,11 +124,13 @@
     }
 
     function onSessionDetected() {
+      showLoading('Syncing your LeetCode account...');
       fetchLeetCodeProfile()
         .then(saveLeetCodeProfileToFirebase)
         .then(function () {
           stopPolling();
           setWaitingFlag(false);
+          hideLoading();
           setState(STATE_SUCCESS);
         })
         .catch(function (err) {
@@ -209,6 +228,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    hideLoading();
     // On load, wait for Firebase Auth to resolve the current user.
     if (
       typeof firebase !== 'undefined' &&
@@ -239,8 +259,6 @@
               if (waiting && startedAt) {
                 var elapsed = Date.now() - startedAt;
                 var remaining = pollingTimeoutMs - elapsed;
-                // Resume waiting flow immediately in Loading state.
-                setState(STATE_LOADING);
                 pollForSession(remaining > 0 ? remaining : pollingTimeoutMs);
                 return;
               }

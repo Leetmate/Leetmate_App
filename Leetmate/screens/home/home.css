@@ -635,9 +635,9 @@ body {
   width: 188px;
   height: 141px;
 
-  background-image: url("../../assets/spritesheets/CubicJaguatirica.png");
+  background-image: url("../../assets/spritesheets/CubicJaguatirica2.png");
   background-repeat: no-repeat;
-  background-size: 752px 141px;
+  background-size: 1316px 141px;
   image-rendering: pixelated;
   animation: home-pet-idle 0.8s steps(1) infinite;
   

@@ -18,7 +18,7 @@
   function showMessage(el, text, isError) {
     if (!el) return;
     el.textContent = text;
-    el.className = 'signup-message' + (isError ? ' signup-message--error' : '');
+    el.className = 'signup-message auth-message' + (isError ? ' signup-message--error auth-message--error' : '');
     el.hidden = false;
   }
 
@@ -61,17 +61,46 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    var backBtn = document.getElementById('signup-back-btn');
-    if (backBtn) {
-      backBtn.addEventListener('click', function () {
-        window.location.href = '../start/index.html';
+    var termsLink = document.getElementById('signup-terms-link');
+    var termsModal = document.getElementById('signup-terms-modal');
+    var termsCloseBtn = document.getElementById('signup-terms-close-btn');
+    var termsBackdrop = document.getElementById('signup-terms-backdrop');
+
+    function openTermsModal() {
+      if (!termsModal) return;
+      termsModal.hidden = false;
+    }
+
+    function closeTermsModal() {
+      if (!termsModal) return;
+      termsModal.hidden = true;
+    }
+
+    if (termsLink) {
+      termsLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        openTermsModal();
       });
     }
 
-    var termsLink = document.getElementById('signup-terms-link');
-    if (termsLink) {
-      termsLink.addEventListener('click', function () {
-        window.location.href = '../auth-terms/index.html';
+    if (termsCloseBtn) {
+      termsCloseBtn.addEventListener('click', closeTermsModal);
+    }
+
+    if (termsBackdrop) {
+      termsBackdrop.addEventListener('click', closeTermsModal);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && termsModal && !termsModal.hidden) {
+        closeTermsModal();
+      }
+    });
+
+    var signinLink = document.getElementById('signup-signin-link');
+    if (signinLink) {
+      signinLink.addEventListener('click', function () {
+        window.location.href = '../auth-signin/index.html';
       });
     }
 
@@ -129,7 +158,7 @@
         var domain = email.indexOf('@') !== -1 ? email.split('@')[1].toLowerCase() : '';
 
         if (!emailRegex.test(email) || validDomains.indexOf(domain) === -1) {
-          showMessage(msgEl, 'Please enter a valid email address (e.g., @gmail.com).', true);
+          showMessage(msgEl, 'Please enter a valid email address.', true);
           return;
         }
         if (!username) {

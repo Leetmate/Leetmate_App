@@ -1,53 +1,8 @@
-@import url("../../styles/layout.css");
-
-body {
-  font-family:
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
-  font-size: 14px;
-  background: #5a5a5a;
-  /* dark gray backdrop */
-  color: #000;
-}
-
-.popup-layout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup-content {
-  width: 100%;
-  height: 100%;
-  padding: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .lc-card {
-  width: 100% !important;
-  max-width: 340px !important;
-  margin: 0 auto;
-  background: #dcdcdc;
-  /* light gray card */
-  border: 4px solid #000;
-  border-radius: 18px;
-  padding: 24px 20px 20px;
-  /* Increase padding */
+  padding: var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  /* Slightly increase gap */
-  box-sizing: border-box;
-  min-height: 480px;
-  /* Expand to fill the available 520px height minus padding */
-  justify-content: center;
-  /* Center the contents vertically */
+  gap: var(--space-2);
 }
 
 .lc-header {
@@ -55,10 +10,6 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-}
-
-.lc-header--center {
-  align-items: center;
 }
 
 .lc-logo {
@@ -75,7 +26,7 @@ body {
 }
 
 .lc-title--success {
-  margin: 6px 0 18px;
+  margin: 12px 0 0;
   font-size: 28px;
   font-weight: 800;
   text-align: center;
@@ -89,20 +40,6 @@ body {
   gap: 14px;
 }
 
-.lc-body--center {
-  justify-content: center;
-  min-height: 180px;
-}
-
-.lc-success {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  height: 100%;
-}
-
 .lc-hero {
   display: flex;
   align-items: center;
@@ -110,13 +47,16 @@ body {
   min-height: 140px;
 }
 
+.lc-hero--status {
+  min-height: 180px;
+}
+
 .lc-hero-pet {
-  width: 192px;
-  height: 144px;
-  background-image: url("../../assets/spritesheets/CubicChicken.png");
+  width: 252px;
+  height: 192px;
+  background-image: url("../../assets/spritesheets/CubicChicken2.png");
   background-repeat: no-repeat;
-  background-size: 768px 144px;
-  /* 4 frames * 192px */
+  background-size: 1764px 192px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   display: block;
@@ -130,8 +70,7 @@ body {
   }
 
   50% {
-    background-position: -384px 0;
-    /* 2 * 192px */
+    background-position: -504px 0;
   }
 
   100% {
@@ -170,26 +109,18 @@ body {
   justify-content: center;
 }
 
+.lc-link-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+}
+
 .lc-helper {
   font-size: 12px;
   margin: 10px 0 0;
   text-align: center;
   color: #444;
-}
-
-.lc-spinner {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 4px solid #ccc;
-  border-top-color: #5c7bd9;
-  animation: lc-spin 0.8s linear infinite;
-}
-
-@keyframes lc-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .lc-text {
@@ -198,34 +129,29 @@ body {
   margin: 4px 0 0;
 }
 
-.lc-text-sub {
-  color: #555;
-}
-
 .lc-text-error {
   color: #8b2020;
-  margin-bottom: 4px;
+  margin: 2px 0 0;
+  max-width: 260px;
 }
 
 .lc-status-icon {
-  width: 52px;
-  height: 52px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  line-height: 1;
+  font-size: 56px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 8px;
-}
-
-.lc-status-icon--success {
-  background: #22c55e;
+  text-align: center;
 }
 
 .lc-status-icon--failure {
   background: #ef4444;
+  padding-bottom: 12px;
 }
 
 .lc-state {
