@@ -20,3 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
+const notifButton = document.getElementById('notif-btn');
+notifButton.addEventListener('click', function () {
+    window.location.href = "/screens/settings-notifications/index.html"
+});
+
+const accountButton = document.getElementById('acc-info-btn');
+accountButton.addEventListener('click', function () {
+    window.location.href = "/screens/settings-account/index.html"
+});
