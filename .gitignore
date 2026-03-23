@@ -1,5 +1,5 @@
-.env
-node_modules/
-.DS_Store
-scripts/firebase-config.js
-scripts/firebase-bundle.js
+Leetmate/scripts/firebase-config.js
+Leetmate/scripts/firebase-bundle.js
+Leetmate/.env
+Leetmate/node_modules/
+Leetmate/.DS_Store
