@@ -14,13 +14,38 @@
       <div class="popup-content">
         <div class="account-card">
           <div class="account-header">
-            <h1 class="account-title-main">Account Information</h1>
-            <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">☰</button>
+            <button type="button" class="back-btn" id="back-btn">←</button>
+            <h1 class="account-title-main">Account Info</h1>
+            <button
+              type="button"
+              class="menu-btn nav-trigger"
+              id="nav-trigger"
+              aria-expanded="false"
+              aria-controls="nav-drawer"
+              aria-label="Open menu">
+            <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+            </button>          
           </div>
             
           <div class="account-content">
-            <input type="text" id="update-email" name="update-email" value="">
-            <button type="button" id="submit-updates">Update</button>
+            <div class="form-section">
+              <div class="profile-row" id="profile-click">
+                <div class="profile-avatar"></div>
+                <div class="profile-info">
+                  <div class="username">USERNAME_001 ✏️</div>
+                  <p class="email">Example@gmail.com</p>
+                </div>
+              </div>
+  
+              <input class="input" id="update-email" name="update-email" placeholder="Update Email Address" value="" />
+              <input class="input" type="password" placeholder="New Password" />
+              <input class="input" type="password" placeholder="Confirm New Password" />
+            </div>
+  
+            <div class="action-section">
+              <button class="account-btn-primary" id="submit-updates" name="update-email">Update</button>
+              <button class="account-btn-primary account-btn-danger">Delete Account</button>
+            </div>
           </div>
         </div>
       </div>

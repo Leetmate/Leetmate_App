@@ -1,0 +1,42 @@
+/* Reuse account styles, only tweak what's needed */
+
+.color-card {
+  background: #e9ddc9;
+  border: 3px solid #3b2b1a;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Avatar (match account.css style) */
+.profile-avatar.large {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 4px solid #3b2b1a;
+  background: #d9d9d9;
+}
+
+/* Match SAME grid as account.css */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+/* Match color-box style from account.css */
+.color-option {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 3px solid #3b2b1a;
+  cursor: pointer;
+}
+
+/* Selected state (better visibility) */
+.color-option.selected {
+  outline: 3px solid #000;
+  transform: scale(1.1);
+}

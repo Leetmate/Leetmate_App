@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate – Settings – Account Information</title>
+    <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="profile-color.css" />
+    <link rel="stylesheet" href="../settings-account/account.css" />
+    <link rel="stylesheet" href="../../styles/menu-nav.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="popup-layout">
+    <div class="popup-content">
+      <div class="account-card">
+
+        <!-- HEADER -->
+        <div class="account-header">
+          <button type="button" class="back-btn" id="back-btn">←</button>
+          <h1 class="account-title-main">Profile Color</h1>
+          <button
+            type="button"
+            class="menu-btn nav-trigger"
+            id="nav-trigger"
+            aria-expanded="false"
+            aria-controls="nav-drawer"
+            aria-label="Open menu">
+          <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+          </button>         
+        </div>
+
+        <!-- CONTENT -->
+        <div class="account-content">
+
+          <div class="color-card">
+            <div class="profile-avatar large" id="preview-avatar"></div>
+
+            <div class="color-grid" id="color-grid">
+              <!-- colors injected by JS -->
+            </div>
+
+            <button class="account-btn-primary">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="profile-color.js"></script>
+  <script src="../../features/shared/menu-nav.js"></script>
+</body>
+</html>
