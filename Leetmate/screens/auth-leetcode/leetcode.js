@@ -225,6 +225,10 @@
       leetcode: {
         username: profile.username || null,
         connected: true,
+				linkedAt:
+					FieldValue && FieldValue.serverTimestamp
+						? FieldValue.serverTimestamp()
+						: new Date(),
         lastSyncedAt:
           FieldValue && FieldValue.serverTimestamp
             ? FieldValue.serverTimestamp()
