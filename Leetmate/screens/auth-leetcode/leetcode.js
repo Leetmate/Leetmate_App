@@ -139,29 +139,36 @@
         });
     }
 
-    pollingIntervalId = setInterval(function () {
-      if (!chrome || !chrome.cookies || !chrome.cookies.getAll) {
-        // If cookies API is unavailable, fail quickly.
-        handleFailure('Extension does not have cookie access to leetcode.com.');
-        return;
-      }
+		// changed the cookie checking for LEETCODE_SESSION instead of any cookie
+		pollingIntervalId = setInterval(function () {
+			if (!chrome || !chrome.cookies || !chrome.cookies.getAll) {
+				handleFailure('Extension does not have cookie access to leetcode.com.');
+				return;
+			}
 
-      chrome.cookies.getAll({ domain: 'leetcode.com' }, function (cookies) {
-        if (chrome.runtime && chrome.runtime.lastError) {
-          console.warn('cookies.getAll error', chrome.runtime.lastError);
-          return;
-        }
-        if (cookies && cookies.length > 0) {
-          stopPolling();
-          setWaitingFlag(false);
-          onSessionDetected();
-        } else if (Date.now() - start > timeoutMs) {
-          handleFailure(
-            'Timed out waiting for LeetCode login. Please make sure you are signed in on leetcode.com.'
-          );
-        }
-      });
-    }, pollingMs);
+			chrome.cookies.getAll(
+				{ domain: 'leetcode.com', name: 'LEETCODE_SESSION' },
+				function (cookies) {
+					if (chrome.runtime && chrome.runtime.lastError) {
+						handleFailure(chrome.runtime.lastError.message || 'Cookie lookup failed.');
+						return;
+					}
+
+					if (cookies && cookies.length > 0) {
+						stopPolling();
+						setWaitingFlag(false);
+						onSessionDetected();
+						return;
+					}
+
+					if (Date.now() - start > timeoutMs) {
+						handleFailure(
+							'Timed out waiting for LeetCode login. Please make sure you are signed in on leetcode.com.'
+						);
+					}
+				}
+			);
+		}, pollingMs);
 
     pollingTimeoutId = setTimeout(function () {
       handleFailure(
@@ -184,6 +191,9 @@
       })
       .then(function (data) {
         var username = data && (data.user_name || data.username || null);
+				if (!username) {
+					throw new Error("Leetcode did not return a signed-in username.");
+				}
         // Only keep lightweight info; raw API payload is intentionally discarded
         // to avoid hitting Firestore's 1 MB document limit.
         return { username: username };
@@ -210,10 +220,8 @@
 
     var userRef = db.collection('users').doc(current.uid);
     var FieldValue = firebase.firestore.FieldValue;
-
     var payload = {
       // Simple, queryable fields for later use with LeetCode APIs
-      leetcodeUsername: profile.username || null,
       leetcode: {
         username: profile.username || null,
         connected: true,
@@ -223,9 +231,13 @@
             : new Date()
       }
     };
-
-    return userRef.set(payload, { merge: true });
+    return userRef.set(payload, { merge: true })
+      .then(function () {
+        return setLeetCodeUsername(profile.username);
+      });
   }
+
+
 
   document.addEventListener('DOMContentLoaded', function () {
     hideLoading();
