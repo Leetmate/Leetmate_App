@@ -37,6 +37,36 @@
             if (!user) {
                 // Not signed in; redirect to Welcome (screens/start/index.html)
                 window.location.replace('../start/index.html');
+            } else {
+                // User is signed in. Now check if they have an active pet.
+                // But only if they aren't already on an auth or starter page.
+                var path = window.location.pathname;
+                var isAuthPage = path.indexOf('/auth-') !== -1 || path.indexOf('/start/') !== -1;
+                
+                if (!isAuthPage) {
+                    var db = firebase.firestore();
+                    db.collection('users').doc(user.uid).get().then(function(snap) {
+                        var data = snap.exists ? snap.data() : {};
+                        if (!data.activePetId) {
+                            // No pet chosen yet, send to starters
+                            window.location.replace('../auth-starters/index.html');
+                        } else {
+                            // Pet found. 
+                            // HOME screening: pet-loader.js will handle the reveal after sprite is ready.
+                            // Other pages: reveal immediately.
+                            if (window.location.pathname.indexOf('/home/') === -1) {
+                                document.body.classList.remove('hidden-on-load');
+                            }
+                        }
+                    }).catch(function(err) {
+                        console.error('Auth gate firestore error:', err);
+                        // Fallback reveal in case of error (better to show home than nothing)
+                        document.body.classList.remove('hidden-on-load');
+                    });
+                } else {
+                    // Auth page, reveal content immediately
+                    document.body.classList.remove('hidden-on-load');
+                }
             }
         });
 

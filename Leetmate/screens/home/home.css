@@ -1,6 +1,39 @@
 /* Home Screen Layout */
 @import url("../../styles/layout.css");
+.hidden-on-load .extension-container {
+  display: none !important;
+}
 
+.spinner-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden-on-load .spinner-container {
+  display: flex !important;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--color-surface-2);
+  border-top: 4px solid var(--color-accent-strong);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 body {
   font-family:
     system-ui,
@@ -27,8 +60,10 @@ body {
   border: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 16px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* LEETCODE DAILY REMINDER CARD */
@@ -448,12 +483,13 @@ body {
 
 /* PET DISPLAY CARD */
 .pet-card {
-  flex: 1 1 200px;
-  /* Allow to grow and shrink, targeting 200px as a base */
+  flex: 1;
+  /* Grow to fill available space between quest and stats */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   position: relative;
+  min-height: 0; /* Allow shrink if needed on small screens, though 520px is fixed */
 
   border: 4px solid #111;
   border-radius: 28px;
@@ -572,34 +608,33 @@ body {
 
 /* Pet Container */
 .home-hero {
+  flex: 1;
   display: flex;
+  align-items: center; /* Vertically center pet in the card */
   justify-content: center;
-  margin-top: 20px;
 }
 
 /* Pet Sprite */
 .home-hero-pet {
-  width: 188px;
-  height: 141px;
+  width: 189px; /* 21px * 9 */
+  height: 144px; /* 16px * 9 */
 
-  background-image: url("../../assets/spritesheets/CubicJaguatirica2.png");
   background-repeat: no-repeat;
-  background-size: 1316px 141px;
+  background-size: 756px 144px; /* 84px * 9 */
   image-rendering: pixelated;
   animation: home-pet-idle 0.8s steps(1) infinite;
   
-  /* Add floor shadow */
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
   z-index: 2;
 }
 
 .home-hero-pet-bat {
-  width: 188px;
+  width: 189px;
   height: 141px;
 
   background-image: url("../../assets/spritesheets/CubicBat.png");
   background-repeat: no-repeat;
-  background-size: 752px 141px;
+  background-size: 756px 144px;
   image-rendering: pixelated;
   animation: home-pet-idle 0.8s steps(1) infinite;
   
@@ -609,9 +644,8 @@ body {
 }
 
 @keyframes home-pet-idle {
-  0% { background-position: 0 0; }
-  50% { background-position: -376px 0; }
-  100% { background-position: 0 0; }
+  0%, 100% { background-position: 0 0; }
+  50% { background-position: -378px 0; } /* Frame 2: 2 * 189px */
 }
 
 /* STATUS BAR */

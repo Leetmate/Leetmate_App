@@ -106,7 +106,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		}
 
 		function idle() {
-			sprite.style.animation = "pet-idle 1.6s steps(1) infinite";
+			sprite.style.animation = "pet-idle 0.8s steps(1) infinite";
 			sprite.style.backgroundPosition = "";
 			resetSprite();
 		}
@@ -156,6 +156,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 		function jump() {
 			if (!animationsEnabled) return;
 			placeSprite();
+			// Frame 1: 33.33%
 			sprite.style.animation = "pet-jump 1s ease-in-out, pet-jump-frames 1s steps(1) forwards";
 			setTimeout(() => {
 				sprite.style.animation = "";
@@ -164,60 +165,15 @@ if (!window.pipInitialized) {	// guard against multiple injections
 			}, 1100);
 		}
 
-		function backflip() { // pretty similar to jump, maybe i should somehow just use one function
-			if (!animationsEnabled) return;
-			placeSprite();
-			sprite.style.animation = `pet-backflip 1s ease-in-out, pet-backflip-frames 1s steps(1) forwards`;
-			setTimeout(() => {
-				sprite.style.animation = "";
-				idle();
-				nextAction();
-			}, 1100);
-		}
+		// Removed sleep() to match user request (Walking, Jumping, Idle only)
 
-		function sleep() {
-			if (!animationsEnabled) return;
-
-			sprite.style.animation = "none";
-			sprite.style.backgroundPosition = "100% 0%";
-			resetSprite();
-
-			const sleepDuration = Math.random() * 3000 + 6000;
-			const zTexts = ["Z", "Zz", "Zzz"];
-			let zIdx = 0;
-			let elapsed = 0;
-
-			const zTimer = setInterval(() => { // creates the z text every second
-				if (!pipWindow || pipWindow.closed) {clearInterval(zTimer); return;}
-
-				elapsed += 1000;
-
-				const zzz = pipWindow.document.createElement("span");
-				zzz.className = "pet-sleep";
-				zzz.textContent = zTexts[zIdx % 3];
-				zzz.style.setProperty("--flip", `${facingDirection}`); // make sure it's legible regardless of facing direction
-				zIdx++;
-
-				sprite.appendChild(zzz);
-
-				setTimeout(() => zzz.remove(), 1600);
-
-				if (elapsed >= sleepDuration) { // go back to idle and nextaction after sleep
-					clearInterval(zTimer);
-					setTimeout(() => {idle(); nextAction();}, 400);
-				}
-			}, 1000);
-		}
-
-		function nextAction() { // change values here to adjust behavior
+		function nextAction() { 
 			const delay = Math.random() * 3000 + 2000;
 			
 			setTimeout(() => {
 				const roll = Math.random();
-				if (roll < 0.45) walk();
-				else if (roll < 0.65) jump();
-				else if (roll < 0.80) backflip();
-				else sleep();
+				if (roll < 0.6) walk(); // 60% chance walk
+				else jump(); // 40% chance jump
 			}, delay);
 		}
 
@@ -299,22 +255,21 @@ if (!window.pipInitialized) {	// guard against multiple injections
 					width: clamp(60px, 50%, 180px);
 					aspect-ratio: 21 / 16;
 					background-image: url("${petDataUrl}");
-					background-size: 700%;
+					background-size: 400% 100%; /* 4 frames of 21px */
+					background-repeat: no-repeat;
 					image-rendering: pixelated;
 					position: relative;
 				}
 
-				/* base: 0%, walk: 16.67%, down: 33.33%, happy: 66.67%. jump: 83.33%, sleep: 100% (don't need F4)*/
+				/* 4-frame logic (84x16): Frame 0 (0%), Frame 1 (33.33%), Frame 2 (66.66%), Frame 3 (100%) */
 				@keyframes pet-idle {
-					0%		{background-position: 0% 0%;}
-					50%		{background-position: 33.33% 0%;}
-					100%	{background-position: 0% 0%;}
+					0%, 100% {background-position: 0% 0%;}
+					50%		{background-position: 66.66% 0%;} /* Frame 2 */
 				}
 
 				@keyframes pet-walk {
-					0%		{background-position: 0% 0%;}
-					50%		{background-position: 16.67% 0%;}
-					100%	{background-position: 0% 0%;}
+					0%, 100% {background-position: 0% 0%;}
+					50%		{background-position: 33.33% 0%;} /* Frame 1 */
 				}
 
 				@keyframes pet-jump {
@@ -324,23 +279,10 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				}
 
 				@keyframes pet-jump-frames {
-					0%		{background-position: 66.67% 0%;}
-					25%		{background-position: 83.33% 0%;}
-					80%		{background-position: 66.67% 0%;}
-					100%		{background-position: 66.67% 0%;}}
-
-				@keyframes pet-backflip {
-					0%		{transform: translateY(0) rotate(0deg);}
-					40%		{transform: translateY(-40px) rotate(180deg);}
-					80%		{transform: translateY(0) rotate(360deg);}
-					100%	{transform: translateY(0) rotate(360deg);}
+					0%, 80%, 100% {background-position: 33.33% 0%;} /* Frame 1 */
 				}
 
-				@keyframes pet-backflip-frames {
-					0%		{background-position: 66.67% 0%;}
-					25%		{background-position: 83.33% 0%;}
-					80%		{background-position: 66.67% 0%;}
-					100%	{background-position: 66.67% 0%;}}
+				/* Backflip removed as per user request */
 
 				.pet-sleep {
 					position: absolute;

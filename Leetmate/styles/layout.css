@@ -2,13 +2,17 @@
 
 html,
 body,
-#root {
+#root,
+.extension-container,
+.popup-content {
   width: 380px !important;
   height: 520px !important;
   margin: 0 !important;
   padding: 0 !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
 }
 
 

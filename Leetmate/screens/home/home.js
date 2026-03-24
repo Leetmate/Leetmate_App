@@ -61,6 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // State-driven reward banner
     await refreshRewardsCard(db, currentUid);
+
+    // Load active pet
+    if (typeof loadActivePetFromFirestore === 'function') {
+      await loadActivePetFromFirestore(db, currentUid);
+    }
   });
 
   // Refresh reward card whenever user returns to the extension

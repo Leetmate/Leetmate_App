@@ -132,6 +132,13 @@
           setWaitingFlag(false);
           hideLoading();
           setState(STATE_SUCCESS);
+
+          // If from signup, auto-redirect to pet selection after a moment
+          if (isFromSignup) {
+            setTimeout(function () {
+              window.location.href = '../auth-starters/index.html';
+            }, 1500);
+          }
         })
         .catch(function (err) {
           console.error('LeetCode sync failed', err);
@@ -325,9 +332,8 @@
         // New users coming from sign-up: keep "Choose your starter Pet" CTA.
         choosePetBtn.textContent = 'Choose your starter Pet';
         choosePetBtn.addEventListener('click', function () {
-          // Placeholder navigation to starter pet selection screen.
-          // Wire this up once the starter pet screen exists.
-          window.location.href = '../auth-signup/index.html';
+          // Redirect to the starter pet selection screen.
+          window.location.href = '../auth-starters/index.html';
         });
       } else {
         // Existing users signing in: send them to the pet home screen.

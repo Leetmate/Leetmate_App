@@ -9,8 +9,11 @@
     <link rel="stylesheet" href="home.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
   </head>
-  <body>
-    <div class="popup-layout">
+  <body class="hidden-on-load">
+    <div id="loading-spinner" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <div class="extension-container">
       <div class="popup-content">
         <div class="home-card">
           <div class="screen-banner">
@@ -108,7 +111,7 @@
 
           <div class="pet-card">
             <div class="pet-name">
-              <h2 id="pet-name-display">Fluffy Cat</h2>
+              <h2 id="pet-name-display">Loading...</h2>
               <p>Age: <span id="pet-age-display">--</span></p>
             </div>
             <div class="pet-top">
@@ -193,6 +196,7 @@
     <script src="../../tests/happiness-decay-tests.js"></script>
     <script src="../../features/progression/streak.js"></script>
     <script src="../../features/progression/rewards.js"></script>
+    <script src="../../features/pet/pet-loader.js"></script>
     <script src="home.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
   </body>

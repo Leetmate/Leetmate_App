@@ -30,32 +30,43 @@
    * This is only the initial schema—your app will update these fields later.
    */
   function createUserDoc(uid, email, username) {
+    var now = (function () {
+      if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) {
+        return firebase.firestore.FieldValue.serverTimestamp();
+      }
+      return new Date();
+    })();
+
     return {
       uid: uid || null,
-      email: email || '',
       username: username || '',
-      xp: 0, // level is derived from XP: level = floor(xp/100) + 1
-      level: 1,
+      email: email || '',
+      activePetId: null, // selected pet ID from the pets/ subcollection
+      xp: 0,
       coins: 0,
+      level: 1,
+      streak: 0,
+      trophy: 0,
+      freezeEndDate: null,
+      premium: false,
       leetcode: {
         username: null,
-        connected: false
+        connected: false,
+        lastSyncedAt: null
       },
-      streak: 0,
-      streakFreezeEnd: null,
-
-      // Pets / inventory / social (references only; assets are local)
-      pets: [], // array of PET_SCHEMA objects (see PET_SCHEMA)
-      selectedPetIndex: null, // which pet is currently active/profile (index into pets[])
-      friends: [], // array of user UIDs (references)
-      itemsOwned: [], // array of item ids (references)
-
-      createdAt: (function () {
-        if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) {
-          return firebase.firestore.FieldValue.serverTimestamp();
+      settings: {
+        vacationMode: false,
+        volume: 80,
+        profileColor: '#4f46e5',
+        reminders: {
+          enabled: false,
+          type: 'daily',
+          setTime: '09:00',
+          setHealth: 100
         }
-        return new Date();
-      })()
+      },
+      updatedAt: now,
+      createdAt: now
     };
   }
 
