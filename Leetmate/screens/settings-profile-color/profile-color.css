@@ -1,14 +1,24 @@
-/* Reuse account styles, only tweak what's needed */
+/* Profile Color Picker Screen Layout */
+/* Reuse account.css styles */
+/* TO-DO: Turn into popup later */ 
 
-.color-card {
-  background: #e9ddc9;
-  border: 3px solid #3b2b1a;
-  border-radius: 20px;
-  padding: 20px;
-  text-align: center;
+.setting-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
 }
 
-/* Avatar (match account.css style) */
+.setting-title {
+  margin: 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  color: #3b2b1a;
+}
+
+/* Avatar */
 .profile-avatar.large {
   width: 100px;
   height: 100px;
@@ -18,7 +28,19 @@
   background: #d9d9d9;
 }
 
-/* Match SAME grid as account.css */
+.profile-avatar.large:hover {
+  transform: scale(1.05);
+}
+
+/* Color selection */
+.color-card {
+  background: #e9ddc9;
+  border: 3px solid #3b2b1a;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
 .color-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -26,7 +48,6 @@
   margin: 20px 0;
 }
 
-/* Match color-box style from account.css */
 .color-option {
   width: 40px;
   height: 40px;
@@ -35,7 +56,6 @@
   cursor: pointer;
 }
 
-/* Selected state (better visibility) */
 .color-option.selected {
   outline: 3px solid #000;
   transform: scale(1.1);

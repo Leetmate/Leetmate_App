@@ -1,4 +1,6 @@
 /* Account Screen Layout */
+@import url("../../styles/layout.css");
+
 body {
   font-family:
     system-ui,
@@ -21,20 +23,23 @@ body {
 .popup-content {
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 16px;
   display: flex;
   justify-content: center;
   align-items: stretch;
 }
 
 .account-card {
+  --screen-banner-bg: #f0d5ae;
+  --screen-banner-offset-top: 24px;
+  --screen-banner-offset-x: 20px;
   width: 100% !important;
   max-width: 100% !important;
   margin: 0;
   background: #fdf5e6; /* Soft cream card color from signin */
   border: 4px solid #3b2b1a; /* Dark brown border */
   border-radius: 28px;
-  padding: 14px 16px 16px;
+  padding: 24px 20px 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -43,53 +48,17 @@ body {
   box-shadow: 0 8px 16px rgba(59, 43, 26, 0.15); /* Soft shadow */
   position: relative; /* For absolutely positioned nav menu trigger if needed */
   justify-content: space-between;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.account-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 4px;
+.screen-banner__title {
+  white-space: nowrap;
+  position: relative;
 }
 
 .account-title-main {
-  margin: 0;
-  text-align: center;
   font-size: 24px;
-  font-weight: 900;
-  line-height: 1;
-  color: #3b2b1a;
-}
-
-/* Back button */
-/* Used in Accout info -> Settings, Profile -> Settings, and Notifs -> Settings */
-/* TO-DO: Reorganize in shared */ 
-.back-btn {
-  position: relative;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  
-  background: #f4e0c6;
-  border: 4px solid #3b2b1a;
-  border-radius: 12px;
-  width: 48px;
-  height: 48px;
-  
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
-}
-
-.back-btn:active {
-  transform: translateY(-50%) translateY(4px);
-  box-shadow: none;
 }
 
 .account-content {
@@ -99,148 +68,223 @@ body {
   flex: 1;
 }
 
-.account-section {
-  background: #ffffff;
+/* Profile container */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 5px solid #3b2b1a;
+  background: #d9d9d9;
+  transition: transform 0.15s;
+}
+
+/* Username  */
+.username {
+  font-weight: 900;
+  font-size: 10px;
+  background: #ffe7b9;
+  padding: 8px 14px;
+  border-radius: 12px;
   border: 3px solid #3b2b1a;
-  border-radius: 14px;
-  padding: 16px;
+  text-align: center;
 }
 
-.account-section-title {
-  margin: 0 0 12px 0;
-  font-size: 16px;
-  font-weight: 800;
-  color: #5c4327;
+/* Email */
+.email {
+  color: #8b6b4a; 
+  font-size: 14px;
+  margin: 0;
 }
 
-.account-btn-primary {
+/* Update Email & Change Password containers (uses drop down to expand) */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* Header (clickable row) */
+.accordion-header {
   width: 100%;
   padding: 14px;
-  border-radius: 14px;
-  border: 4px solid #3b2b1a;
-  font-size: 16px;
+  border-radius: 16px;
+  border: 3px solid #3b2b1a;
+  background: #f0d5ae;
   font-weight: 800;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
-  background: #d0b27a; /* Main Accent */
-  color: #3b2b1a;
-  box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
-  transition: transform 0.1s, box-shadow 0.1s, filter 0.2s;
-  margin-top: 10px;
-  flex: 1;
 }
 
-.account-btn-primary:active {
+/* Content (hidden by default) */
+.accordion-content {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  padding: 6px 4px 8px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;   
+}
+
+.accordion-item {
+  border-radius: 18px;
+  transition: all 0.2s ease;
+}
+
+/* Open state */
+/* Add card background */
+.accordion-item.open {
+  background: #f4e0c6;
+  border: 3px solid #3b2b1a;
+  padding: 10px;
+}
+
+/* Adjust header when open (so it blends nicely) */
+.accordion-item.open .accordion-header {
+  border: none;
+  background: transparent;
+  padding-bottom: 6px;
+}
+
+.accordion-item.open .accordion-content {
+  display: flex;
+  max-height: 200px; 
+}
+
+/* Arrow animation */
+.arrow {
+  transition: transform 0.2s ease;
+}
+
+.accordion-item.open .arrow {
+  transform: rotate(180deg);
+}
+
+.accordion-header:hover {
+  filter: brightness(1.05);
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: 3px solid #3b2b1a;
+  background: #f9f3ea;
+  font-size: 14px;
+}
+.input {
+  padding: 14px;
+  border-radius: 14px;
+  border: 3px solid #3b2b1a;
+  background: #f9f3ea;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #d0b27a;
+  box-shadow: 0 0 0 3px rgba(208, 178, 122, 0.3);
+}
+
+/* Buttons */
+
+/* Back button */
+/* Used in Accout info -> Settings, Profile -> Settings, and Notifs -> Settings */
+/* TO-DO: Reorganize in shared */ 
+.back-arrow-btn {  
+  background: #f4e0c6;
+  border: 4px solid #3b2b1a;
+  border-radius: 12px;
+  width: 44px;
+  height: 40px;
+  
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 4px 0 rgba(17, 17, 17, 1);
+}
+
+.back-arrow-btn:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+/* Update button for email and password */
+.update-btn {
+  width: fit-content;
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 10px;
+
+  background: #6fbf73; 
+  color: white;
+
+  border: 3px solid #3b2b1a;
+  box-shadow: 0 3px 0 rgba(59, 43, 26, 0.25);
+
+  align-self: flex-start; 
+}
+
+.update-btn:active {
   transform: translateY(4px);
   box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
 }
 
-.account-btn-primary:hover {
+.update-btn:hover {
   filter: brightness(1.05);
 }
 
-.account-btn-danger {
-  background: #e57373;
-  color: white;
-}
-
-.form-section {
+/* Delete account container */
+.danger-zone {
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 3px solid #a94442;
+  background: #fff1f1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
-.action-section {
-  display: flex;
-  gap: 16px;
-  margin-top: auto;
-}
-
-/* PROFILE ROW */
-.profile-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  margin-top: 10px;
-  margin-bottom: 5px;
-}
-
-.profile-avatar {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 4px solid #3b2b1a;
-  background: #d9d9d9;
-}
-
-.profile-avatar.large {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto;
-}
-
-.profile-info .username {
-  font-weight: 800;
-  background: #f4e0c6;
-  padding: 6px 10px;
-  border-radius: 10px;
-  border: 2px solid #3b2b1a;
-}
-
-.email {
-  color: red;
+.danger-header {
   font-size: 13px;
-  margin-top: -5px;
-  margin-bottom: 10px;
+  font-weight: 900;
+  color: #a94442;
 }
 
-/* INPUTS */
-.input {
+/* Delete button */
+.delete-btn {
   width: 100%;
   padding: 12px;
   border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+
+  background: #d96b6b;
+  color: white;
   border: 3px solid #3b2b1a;
-  margin-bottom: 4px;
+
+  box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
 }
 
-/* BUTTON ROW */
-.btn-row {
-  display: flex;
-  gap: 10px;
+.delete-btn:active {
+  transform: translateY(4px);
+  box-shadow: none;
 }
-
-/* COLOR SCREEN */
-.color-card {
-  background: #e9ddc9;
-  border: 3px solid #3b2b1a;
-  border-radius: 20px;
-  padding: 20px;
-  text-align: center;
-}
-
-/* COLOR GRID */
-.color-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.color-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 3px solid #3b2b1a;
-  cursor: pointer;
-}
-
-/* BACK BUTTON */
-.back-btn {
-  background: #f4e0c6;
-  border: 3px solid #3b2b1a;
-  border-radius: 10px;
-  padding: 8px 12px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
