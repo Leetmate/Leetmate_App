@@ -14,7 +14,6 @@
  */
 importScripts(
 	"features/shared/storage-helper.js", 
-	"scripts/firebase-bundle.js",
 	"scripts/firebase-config.js",
 	"features/progression/streak.js"
 );
