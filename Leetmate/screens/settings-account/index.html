@@ -8,13 +8,12 @@
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="account.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="popup-layout">
       <div class="popup-content">
         <div class="account-card">
-
           <div class="screen-banner">
             <div class="screen-banner__left">
               <button type="button" class="back-arrow-btn" id="back-btn">←</button>
@@ -23,7 +22,7 @@
             <div class="screen-banner__center">
               <h1 class="screen-banner__title account-title-main">Account Info</h1>
             </div>
-            
+
             <div class="screen-banner__right">
               <button
                 type="button"
@@ -31,58 +30,145 @@
                 id="nav-trigger"
                 aria-expanded="false"
                 aria-controls="nav-drawer"
-                aria-label="Open menu">
+                aria-label="Open menu"
+              >
                 <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
-              </button>          
+              </button>
             </div>
           </div>
 
           <div class="account-content">
-            <div class="profile-section" id="profile-click">
-              <div class="profile-avatar"></div>
-              <div class="username">USERNAME_001 ✏️</div>
-              <p class="email">example@gmail.com</p>
-            </div>
-            <div class="accordion">
+            <div class="profile-section">
+              <button
+                type="button"
+                class="profile-avatar-btn"
+                id="profile-avatar-btn"
+                aria-label="Change profile color"
+              >
+                <div class="profile-avatar" id="profile-avatar"></div>
+              </button>
 
-              <!-- Change email section -->
+              <button
+                type="button"
+                class="username-btn"
+                id="username-btn"
+                aria-label="Change username"
+              >
+                <span class="username" id="username-display">Loading...</span>
+              </button>
+
+              <p class="email" id="email-display">Loading...</p>
+            </div>
+
+            <div class="accordion">
               <div class="accordion-item">
-                <button class="accordion-header">
+                <button type="button" class="accordion-header">
                   Update Email
                   <span class="arrow">▾</span>
                 </button>
-            
+
                 <div class="accordion-content">
-                  <input class="input" placeholder="New Email Address" />
-                  <button class="update-btn">Update Email</button>
+                  <input
+                    class="input"
+                    id="current-password-email"
+                    type="password"
+                    placeholder="Current Password"
+                    autocomplete="current-password"
+                  />
+                  <input
+                    class="input"
+                    id="new-email"
+                    type="email"
+                    placeholder="New Email Address"
+                    autocomplete="email"
+                  />
+                  <button type="button" class="update-btn" id="update-email-btn">
+                    Update Email
+                  </button>
                 </div>
               </div>
-            
-              <!-- Change password section -->
+
               <div class="accordion-item">
-                <button class="accordion-header">
+                <button type="button" class="accordion-header">
                   Change Password
                   <span class="arrow">▾</span>
                 </button>
-            
+
                 <div class="accordion-content">
-                  <input class="input" type="password" placeholder="New Password" />
-                  <input class="input" type="password" placeholder="Confirm Password" />
-                  <button class="update-btn">Update Password</button>
+                  <input
+                    class="input"
+                    id="current-password-password"
+                    type="password"
+                    placeholder="Current Password"
+                    autocomplete="current-password"
+                  />
+                  <input
+                    class="input"
+                    id="new-password"
+                    type="password"
+                    placeholder="New Password"
+                    autocomplete="new-password"
+                  />
+                  <input
+                    class="input"
+                    id="confirm-password"
+                    type="password"
+                    placeholder="Confirm Password"
+                    autocomplete="new-password"
+                  />
+                  <button type="button" class="update-btn" id="update-password-btn">
+                    Update Password
+                  </button>
                 </div>
               </div>
             </div>
 
-            <!-- Delete account section -->
             <div class="danger-zone">
-              <div class="danger-header">
-                Danger Zone
-              </div>
+              <div class="danger-header">Danger Zone</div>
 
-              <button class="delete-btn">
+              <button type="button" class="delete-btn">
                 Delete Account
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Username modal -->
+    <div class="username-modal hidden" id="username-modal">
+      <div
+        class="username-modal__overlay"
+        id="username-modal-overlay"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="username-modal__card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="username-modal-title"
+      >
+        <h2 id="username-modal-title" class="username-modal__title">
+          Change Username
+        </h2>
+
+        <input
+          class="input"
+          id="username-input"
+          type="text"
+          placeholder="Enter new username"
+          maxlength="20"
+          autocomplete="username"
+        />
+
+        <div class="username-modal__actions">
+          <button type="button" class="cancel-btn" id="cancel-username-btn">
+            Cancel
+          </button>
+          <button type="button" class="update-btn" id="save-username-btn">
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -93,7 +179,7 @@
     <script src="../../features/progression/xp.js"></script>
     <script src="../../features/progression/streak.js"></script>
     <script src="../../features/shared/storage-helper.js"></script>
-    <script src="../../scripts/auth-gate.js"></script>  
+    <script src="../../scripts/auth-gate.js"></script>
     <script src="account.js"></script>
   </body>
 </html>

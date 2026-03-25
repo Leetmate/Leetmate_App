@@ -23,7 +23,7 @@ body {
 .popup-content {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  /* padding: 16px; */
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -37,8 +37,8 @@ body {
   max-width: 100% !important;
   margin: 0;
   background: #fdf5e6; /* Soft cream card color from signin */
-  border: 4px solid #3b2b1a; /* Dark brown border */
-  border-radius: 28px;
+  /* border: 4px solid #3b2b1a; */
+  /* border-radius: 28px; */
   padding: 24px 20px 20px;
   display: flex;
   flex-direction: column;

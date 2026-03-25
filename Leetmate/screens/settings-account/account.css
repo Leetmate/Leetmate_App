@@ -10,8 +10,8 @@ body {
     Arial,
     sans-serif;
   font-size: 14px;
-  background: #f4e0c6; /* Warm background matching signin */
-  color: #3b2b1a;      /* Dark brown text for better contrast */
+  background: #f4e0c6;
+  color: #3b2b1a;
 }
 
 .popup-layout {
@@ -23,7 +23,7 @@ body {
 .popup-content {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  /* padding: 16px; */
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -33,20 +33,21 @@ body {
   --screen-banner-bg: #f0d5ae;
   --screen-banner-offset-top: 24px;
   --screen-banner-offset-x: 20px;
+
   width: 100% !important;
   max-width: 100% !important;
   margin: 0;
-  background: #fdf5e6; /* Soft cream card color from signin */
-  border: 4px solid #3b2b1a; /* Dark brown border */
-  border-radius: 28px;
+  background: #fdf5e6;
+  /* border: 4px solid #3b2b1a;
+  border-radius: 28px; */
   padding: 24px 20px 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   box-sizing: border-box;
   flex: 1;
-  box-shadow: 0 8px 16px rgba(59, 43, 26, 0.15); /* Soft shadow */
-  position: relative; /* For absolutely positioned nav menu trigger if needed */
+  box-shadow: 0 8px 16px rgba(59, 43, 26, 0.15);
+  position: relative;
   justify-content: space-between;
   overflow-y: auto;
   overflow-x: hidden;
@@ -68,14 +69,26 @@ body {
   flex: 1;
 }
 
-/* Profile container */
+/* Profile section */
 .profile-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
+}
+
+.profile-avatar-btn,
+.username-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
   cursor: pointer;
+}
+
+.profile-avatar-btn {
+  border-radius: 50%;
 }
 
 .profile-avatar {
@@ -84,10 +97,29 @@ body {
   border-radius: 50%;
   border: 5px solid #3b2b1a;
   background: #d9d9d9;
-  transition: transform 0.15s;
+  transition:
+    transform 0.15s,
+    filter 0.15s;
 }
 
-/* Username  */
+.profile-avatar-btn:hover .profile-avatar,
+.username-btn:hover .username {
+  transform: scale(1.03);
+  filter: brightness(1.03);
+}
+
+.profile-avatar-btn:focus-visible,
+.username-btn:focus-visible,
+.accordion-header:focus-visible,
+.update-btn:focus-visible,
+.cancel-btn:focus-visible,
+.delete-btn:focus-visible,
+.back-arrow-btn:focus-visible {
+  outline: 3px solid #d0b27a;
+  outline-offset: 3px;
+}
+
+/* Username */
 .username {
   font-weight: 900;
   font-size: 10px;
@@ -96,16 +128,20 @@ body {
   border-radius: 12px;
   border: 3px solid #3b2b1a;
   text-align: center;
+  display: inline-block;
+  transition:
+    transform 0.15s,
+    filter 0.15s;
 }
 
 /* Email */
 .email {
-  color: #8b6b4a; 
+  color: #8b6b4a;
   font-size: 14px;
   margin: 0;
 }
 
-/* Update Email & Change Password containers (uses drop down to expand) */
+/* Accordion */
 .accordion {
   display: flex;
   flex-direction: column;
@@ -113,7 +149,6 @@ body {
   margin-top: 10px;
 }
 
-/* Header (clickable row) */
 .accordion-header {
   width: 100%;
   padding: 14px;
@@ -127,7 +162,10 @@ body {
   cursor: pointer;
 }
 
-/* Content (hidden by default) */
+.accordion-header:hover {
+  filter: brightness(1.05);
+}
+
 .accordion-content {
   display: none;
   flex-direction: column;
@@ -135,7 +173,7 @@ body {
   padding: 6px 4px 8px;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.25s ease;   
+  transition: max-height 0.25s ease;
 }
 
 .accordion-item {
@@ -143,15 +181,12 @@ body {
   transition: all 0.2s ease;
 }
 
-/* Open state */
-/* Add card background */
 .accordion-item.open {
   background: #f4e0c6;
   border: 3px solid #3b2b1a;
   padding: 10px;
 }
 
-/* Adjust header when open (so it blends nicely) */
 .accordion-item.open .accordion-header {
   border: none;
   background: transparent;
@@ -160,20 +195,15 @@ body {
 
 .accordion-item.open .accordion-content {
   display: flex;
-  max-height: 200px; 
+  max-height: 240px;
 }
 
-/* Arrow animation */
 .arrow {
   transition: transform 0.2s ease;
 }
 
 .accordion-item.open .arrow {
   transform: rotate(180deg);
-}
-
-.accordion-header:hover {
-  filter: brightness(1.05);
 }
 
 /* Inputs */
@@ -184,12 +214,7 @@ body {
   border: 3px solid #3b2b1a;
   background: #f9f3ea;
   font-size: 14px;
-}
-.input {
-  padding: 14px;
-  border-radius: 14px;
-  border: 3px solid #3b2b1a;
-  background: #f9f3ea;
+  box-sizing: border-box;
 }
 
 .input:focus {
@@ -199,25 +224,18 @@ body {
 }
 
 /* Buttons */
-
-/* Back button */
-/* Used in Accout info -> Settings, Profile -> Settings, and Notifs -> Settings */
-/* TO-DO: Reorganize in shared */ 
-.back-arrow-btn {  
+.back-arrow-btn {
   background: #f4e0c6;
   border: 4px solid #3b2b1a;
   border-radius: 12px;
   width: 44px;
   height: 40px;
-  
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   box-shadow: 0 4px 0 rgba(17, 17, 17, 1);
 }
 
@@ -226,32 +244,39 @@ body {
   box-shadow: none;
 }
 
-/* Update button for email and password */
-.update-btn {
+.update-btn,
+.cancel-btn {
   width: fit-content;
   padding: 8px 14px;
   font-size: 13px;
   border-radius: 10px;
-
-  background: #6fbf73; 
-  color: white;
-
   border: 3px solid #3b2b1a;
   box-shadow: 0 3px 0 rgba(59, 43, 26, 0.25);
-
-  align-self: flex-start; 
+  cursor: pointer;
 }
 
-.update-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
+.update-btn {
+  background: #6fbf73;
+  color: white;
+  align-self: flex-start;
 }
 
 .update-btn:hover {
   filter: brightness(1.05);
 }
 
-/* Delete account container */
+.update-btn:active,
+.cancel-btn:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.cancel-btn {
+  background: #e8d6bd;
+  color: #3b2b1a;
+}
+
+/* Danger zone */
 .danger-zone {
   margin-top: 18px;
   padding: 12px;
@@ -269,22 +294,63 @@ body {
   color: #a94442;
 }
 
-/* Delete button */
 .delete-btn {
   width: 100%;
   padding: 12px;
   border-radius: 12px;
   font-size: 14px;
   font-weight: 800;
-
   background: #d96b6b;
   color: white;
   border: 3px solid #3b2b1a;
-
   box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
+  cursor: pointer;
 }
 
 .delete-btn:active {
   transform: translateY(4px);
   box-shadow: none;
+}
+
+/* Username modal */
+.username-modal.hidden {
+  display: none;
+}
+
+.username-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+.username-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.username-modal__card {
+  position: relative;
+  z-index: 1;
+  width: min(90%, 360px);
+  margin: 20vh auto 0;
+  background: #fdf5e6;
+  border: 4px solid #3b2b1a;
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(59, 43, 26, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.username-modal__title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.username-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
