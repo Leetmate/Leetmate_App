@@ -135,7 +135,10 @@
         })
         .catch(function (err) {
           console.error('LeetCode sync failed', err);
-          handleFailure('Failed to sync with LeetCode. Please try again.');
+          handleFailure(
+            (err && err.message) ||
+              'Failed to sync with LeetCode. Please try again.'
+          );
         });
     }
 
@@ -219,6 +222,7 @@
     }
 
     var userRef = db.collection('users').doc(current.uid);
+    var claimRef = db.collection('leetcodeAccountClaims').doc(profile.username); // for unique checking
     var FieldValue = firebase.firestore.FieldValue;
     var payload = {
       // Simple, queryable fields for later use with LeetCode APIs
@@ -235,7 +239,35 @@
             : new Date()
       }
     };
-    return userRef.set(payload, { merge: true })
+
+    return db.runTransaction(function (transaction) {
+      return transaction.get(claimRef).then(function (claimSnap) {
+			   
+        if (claimSnap.exists) {
+          var claimData = claimSnap.data() || {};
+          if (claimData.uid && claimData.uid !== current.uid) {
+            throw new Error(
+              'This LeetCode account is already linked to another user.'
+            );
+          }
+        }
+
+        transaction.set(
+          claimRef,
+          {
+            uid: current.uid,
+            username: profile.username,
+            claimedAt:
+              FieldValue && FieldValue.serverTimestamp
+                ? FieldValue.serverTimestamp()
+                : new Date()
+          },
+          { merge: true }
+        );
+
+        transaction.set(userRef, payload, { merge: true });
+      });
+    })
       .then(function () {
         return setLeetCodeUsername(profile.username);
       });
