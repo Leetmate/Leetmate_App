@@ -1,0 +1,47 @@
+/* Community Screen Layout */
+@import url("../../styles/layout.css");
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+/* COMMUNITY CONTAINER */
+.community-card {
+  --screen-banner-bg: #c5d6c5;
+  --screen-banner-offset-top: 16px;
+  --screen-banner-offset-x: 16px;
+  width: 100%;
+  max-width: 380px;
+  min-height: 520px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #EAF0EA; /* slightly different green tone */
+  border-radius: 0;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+/* COMMUNITY CONTENT BLOCK */
+.community-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(#DCEAF5, #F5DCE0); /* playful gradient */
+  border: 4px solid #111;
+  border-radius: 28px;
+  padding: 16px;
+  margin: 0;
+  min-height: 250px;
+  text-align: center;
+}
