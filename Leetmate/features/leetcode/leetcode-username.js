@@ -18,15 +18,12 @@ async function loadLeetCodeUsernameFromFirestore(db, uid) {
       if (!doc.exists) return;
 
       const data = doc.data();
+			const username = data.leetcode?.username || null;
 
-      if (data.leetcodeUsername) {
-        const username = data.leetcodeUsername;
-
-        chrome.storage.local.set({
-          leetcodeUsername: username
-        });
-      }
-    })
+			if (username) {
+				return setLeetCodeUsername(username);
+			}
+		})
     .catch((error) => {
       console.error("Failed to load LeetCode username:", error);
     });
@@ -35,14 +32,20 @@ async function loadLeetCodeUsernameFromFirestore(db, uid) {
 async function saveLeetCodeUsernameToFirestore(db, uid, username) {
   if (!username) return;
 
-  await setLeetCodeUsername(username);
+  await storageSet({
+    [LEETCODE_USERNAME_KEY]: username,
+  });
 
   return db
     .collection("users")
     .doc(uid)
     .set(
       {
-        leetcodeUsername: username,
+				leetcode: {
+					username: username,
+					connected: true,
+					lastSyncedAt: firebase.firestore.FieldValue.serverTimestamp(),
+				},
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }
