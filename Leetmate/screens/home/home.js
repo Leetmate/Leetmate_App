@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  setHomeLoading(true, "Loading home...");
+  setHomeLoading(true, "Loading Home...");
   updateXPSectionUI();
   updateCoinsUI();
 

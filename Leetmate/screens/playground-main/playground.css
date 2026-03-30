@@ -1,4 +1,3 @@
-/* Playground Screen Layout */
 @import url("../../styles/layout.css");
 
 body {
@@ -9,39 +8,426 @@ body {
     Roboto,
     Arial,
     sans-serif;
+  background: #f3eee5;
 }
 
-/* PLAYGROUND CONTAINER */
 .playground-card {
-  --screen-banner-bg: #d6c5a9;
-  --screen-banner-offset-top: 16px;
-  --screen-banner-offset-x: 16px;
+  --screen-banner-bg: #d6d0c5;
+  --screen-banner-offset-top: 12px;
+  --screen-banner-offset-x: 12px;
   width: 100%;
   max-width: 380px;
-  min-height: 520px;
+  height: 100%;
   margin: 0 auto;
-  padding: 16px;
-  background: #F0EAE1; /* slightly warm orange tone */
+  padding: 12px;
+  background: #eeeae1;
   border-radius: 0;
   border: none;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   box-sizing: border-box;
 }
 
-/* PLAYGROUND CONTENT BLOCK */
 .playground-content {
-  flex: 1 1 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 0;
+}
+
+.playground-pet-name {
+  position: relative;
+  align-self: center;
+  min-height: 42px;
+  min-width: 170px;
+  padding: 6px 32px 6px 14px;
+  border-radius: 16px;
+  border: 4px solid #111;
+  background: #f0d5ae;
+  box-shadow: 0 4px 0 rgba(17, 17, 17, 0.18);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: center;
+}
+
+.playground-pet-name-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 28px 1fr 28px;
   align-items: center;
-  background: linear-gradient(#F5DCE0, #F1E0BF); /* playful gradient */
+  column-gap: 0px;
+}
+
+.playground-pet-name-row::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+}
+
+.playground-pet-name h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  font-family: "Lilita One", sans-serif;
+  line-height: 1;
+	color: #2c2419;
+  grid-column: 2;
+  justify-self: center;
+}
+
+.playground-rename-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+  grid-column: 3;
+  justify-self: end;
+}
+
+.playground-rename-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(18%) sepia(13%) saturate(845%) hue-rotate(352deg) brightness(96%) contrast(90%);
+}
+
+.playground-pet-name p {
+  margin: 1px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.72;
+  line-height: 1;
+	color: #4a4035;
+}
+
+
+.playground-pet-card {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
   border: 4px solid #111;
   border-radius: 28px;
-  padding: 16px;
+  padding: 12px;
   margin: 0;
-  min-height: 250px;
-  text-align: center;
+  min-height: 180px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 -40px 60px rgba(0, 0, 0, 0.2),
+    inset 0 20px 40px rgba(255, 255, 255, 0.1);
+}
+
+.playground-pet-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../../assets/backgrounds/bg_park.png");
+  background-size: cover;
+  background-position: center calc(100% + 20px);
+  opacity: 0.82;
+  pointer-events: none;
+}
+
+.playground-scene {
+  position: relative;
+  min-height: 100%;
+}
+
+.home-hero {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 12px;
+}
+
+.home-hero-pet {
+  width: 188px;
+  aspect-ratio: 21 / 16;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+  z-index: 2;
+}
+
+.home-hero-pet.hidden,
+.home-hero-egg.hidden {
+  display: none;
+}
+
+.home-hero-egg {
+  width: 220px;
+  height: 220px;
+  margin-top: 0;
+  align-self: center;
+  image-rendering: pixelated;
+  object-fit: contain;
+  object-position: center -18px;
+  transform-origin: center bottom;
+  animation: home-egg-idle 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28));
+  z-index: 2;
+}
+
+.home-hero-pet.stage-baby,
+.home-hero-pet.stage-adult {
+  background-size: 700% 100%;
+  background-position: 0% 0%;
+  animation: home-pet-idle 0.8s steps(1) infinite;
+}
+
+.playground-health {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 28px;
+  z-index: 3;
+}
+
+.hearts {
+  display: flex;
+  gap: 3px;
+  cursor: default;
+  justify-content: center;
+}
+
+.hearts span {
+  display: inline-block;
+  animation: heart-beat 1.5s infinite ease-in-out;
+  text-shadow:
+    0 0 0 2px #111,
+    0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.top-hearts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.bottom-hearts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.hearts-full {
+  overflow: hidden;
+}
+
+.hearts-icon {
+  width: 22px;
+  height: auto;
+}
+
+.playground-nav-grid {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.playground-nav-btn {
+  min-height: 64px;
+  border: 3px solid #111;
+  border-radius: 16px;
+  background: #f0d5ae;
+  box-shadow: 0 3px 0 rgba(17, 17, 17, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.15s ease;
+  will-change: transform;
+}
+
+.playground-nav-btn:hover,
+.playground-nav-btn:focus-visible {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(17, 17, 17, 0.55);
+  outline: none;
+}
+
+.playground-nav-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(17, 17, 17, 0.45);
+}
+
+.playground-nav-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+#playground-pets-btn .playground-nav-icon {
+  filter: brightness(0) saturate(100%) invert(18%) sepia(13%) saturate(845%) hue-rotate(352deg) brightness(96%) contrast(90%);
+}
+
+.playground-nav-label {
+  font-family: "Lilita One", sans-serif;
+  font-size: 28px;
+	line-height: 1;
+  color: #221d17;
+}
+
+.playground-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 20;
+}
+
+.playground-modal-overlay.hidden {
+  display: none;
+}
+
+.playground-modal {
+  width: 100%;
+  max-width: 304px;
+  border: 4px solid #111;
+  border-radius: 28px;
+  background: #f3eee5;
+  overflow: hidden;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+}
+
+.playground-modal-header {
+  min-height: 48px;
+  padding: 6px 10px 4px 18px;
+  border-bottom: 4px solid #111;
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+}
+
+.playground-modal-header::before {
+  content: "";
+  width: 34px;
+  height: 34px;
+}
+
+.playground-modal-header h2 {
+  margin: 0;
+  font-family: "Lilita One", sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  color: #111;
+  grid-column: 2;
+  justify-self: center;
+}
+
+.playground-modal-close {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111;
+  font-size: 42px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  grid-column: 3;
+  justify-self: end;
+}
+
+.playground-modal-body {
+  padding: 12px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.playground-modal-label {
+  width: 100%;
+  font-family: "Lilita One", sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  color: #2c2419;
+}
+
+.playground-modal-input {
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  border: 4px solid #111;
+  border-radius: 12px;
+  background: #fff;
+  font-family: "Lilita One", sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  color: #111;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.playground-modal-confirm {
+  min-width: 162px;
+  min-height: 50px;
+  border: 4px solid #111;
+  border-radius: 12px;
+  background: #f0d58b;
+  font-family: "Lilita One", sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  color: #2c2419;
+  cursor: pointer;
+}
+
+@keyframes home-egg-idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes home-pet-idle {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 33.33% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes heart-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
 }

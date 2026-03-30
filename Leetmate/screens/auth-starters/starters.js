@@ -124,6 +124,7 @@
             // 2. Create Pet in subcollection
             batch.set(petRef, {
                 petRef: pet.id, // e.g., "LoboGuara"
+                customName: pet.name,
                 age: 0,
                 stats: pet.stats,
                 stage: "Egg",

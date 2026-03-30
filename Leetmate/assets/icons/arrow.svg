@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960" fill="none">
+  <path
+    d="M120 480H700"
+    stroke="#111111"
+    stroke-width="210"
+    stroke-linecap="round"
+  />
+  <path
+    d="M520 260L740 480L520 700"
+    stroke="#111111"
+    stroke-width="210"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M120 480H700"
+    stroke="#FFFFFF"
+    stroke-width="150"
+    stroke-linecap="round"
+  />
+  <path
+    d="M520 260L740 480L520 700"
+    stroke="#FFFFFF"
+    stroke-width="150"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

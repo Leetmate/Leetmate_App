@@ -24,6 +24,40 @@ const PET_ASSETS = {
 let activePetDataCache = null;
 let currentHappinessPercent = 100;
 
+function getCreatedTimestampMs(petData) {
+    return typeof petData.createdTimestamp?.toMillis === 'function'
+        ? petData.createdTimestamp.toMillis()
+        : petData.createdTimestampMs || petData.createdTimestamp || null;
+}
+
+function getActivePetSpritePath(petType, petStage) {
+    const normalizedStage = (petStage || '').toLowerCase();
+
+    if (petType && normalizedStage === 'baby') {
+        return `assets/spritesheets/Cubic${petType}Baby.png`;
+    }
+
+    if (petType && normalizedStage === 'adult') {
+        return `assets/spritesheets/Cubic${petType}Adult.png`;
+    }
+
+    return null;
+}
+
+function toCachedPetData(petData, petId = null) {
+    if (!petData) return null;
+
+    return {
+        id: petId ?? petData.id ?? null,
+        petRef: petData.petRef || null,
+        stage: petData.stage || null,
+        customName: petData.customName || '',
+        adjustedDays: petData.adjustedDays || 0,
+        stats: petData.stats || null,
+        createdTimestampMs: getCreatedTimestampMs(petData)
+    };
+}
+
 async function loadActivePetFromFirestore(db, uid) {
     const userRef = db.collection('users').doc(uid);
     const userSnap = await userRef.get();
@@ -43,28 +77,22 @@ async function loadActivePetFromFirestore(db, uid) {
     }
     
     const petRef = userRef.collection('pets').doc(activePetId);
-    let petSnap = null;
+    const petSnap = await petRef.get();
     
     // Sync activePetData to storage for background.js (PIP)
+    let allPetsSnap = null;
+
     if (typeof storageSet === 'function') {
-        petSnap = await petRef.get();
-        const petType = petSnap.exists ? petSnap.data().petRef : null;
-        const petStage = petSnap.exists ? petSnap.data().stage || null : null;
-        const normalizedStage = (petStage || '').toLowerCase();
-        const activePetSpritePath =
-            petType && normalizedStage === 'baby'
-                ? `assets/spritesheets/Cubic${petType}Baby.png`
-                : petType && normalizedStage === 'adult'
-                    ? `assets/spritesheets/Cubic${petType}Adult.png`
-                    : null;
+        allPetsSnap = await userRef.collection('pets').get();
+        const activePetData = petSnap.exists ? petSnap.data() : null;
+        const petType = activePetData?.petRef || null;
+        const petStage = activePetData?.stage || null;
         await storageSet({ 
             activePetId,
             activePetType: petType,
             activePetStage: petStage,
-            activePetSpritePath
+            activePetSpritePath: getActivePetSpritePath(petType, petStage)
         });
-    } else {
-        petSnap = await petRef.get();
     }
     
     if (!petSnap.exists) {
@@ -73,8 +101,26 @@ async function loadActivePetFromFirestore(db, uid) {
     }
     
     const petData = petSnap.data();
+    if (typeof storageSet === 'function') {
+        await storageSet({
+            activePetSnapshot: toCachedPetData(petData, activePetId),
+            ownedPetsSnapshot: allPetsSnap
+                ? allPetsSnap.docs.map((doc) => toCachedPetData(doc.data(), doc.id))
+                : null
+        });
+    }
     updatePetUI(petData);
     return petData;
+}
+
+async function loadActivePetFromStorage() {
+    if (typeof storageGet !== 'function') return null;
+
+    const { activePetSnapshot } = await storageGet('activePetSnapshot');
+    if (!activePetSnapshot || !activePetSnapshot.petRef) return null;
+
+    updatePetUI(activePetSnapshot);
+    return activePetSnapshot;
 }
 
 function updatePetUI(petData) {
@@ -82,7 +128,6 @@ function updatePetUI(petData) {
     const petEgg = document.getElementById('active-pet-egg');
     const petNameDisplay = document.getElementById('pet-name-display');
     const petAgeDisplay = document.getElementById('pet-age-display');
-    const minimizeBtn = document.querySelector('.minimize-btn');
     
     if (!petSprite || !petEgg || !petNameDisplay || !petAgeDisplay) return;
     
@@ -92,7 +137,6 @@ function updatePetUI(petData) {
         console.warn('Active pet is missing petRef.');
         return;
     }
-    const petStage = (petData.stage || 'Adult').toLowerCase();
     const assetSet = PET_ASSETS[petType];
     if (!assetSet) {
         console.warn(`No asset set found for pet type: ${petType}`);
@@ -106,7 +150,8 @@ function updatePetUI(petData) {
         'Bat': 'Cubic Bat',
         'Fox': 'Cubic Fox'
     };
-    petNameDisplay.textContent = petNames[petType] || petType;
+    const displayName = (petData.customName || '').trim() || petNames[petType] || petType;
+    petNameDisplay.textContent = displayName;
     
     petSprite.classList.remove('stage-egg', 'stage-baby', 'stage-adult', 'stage-downed');
     petSprite.style.backgroundRepeat = 'no-repeat';
@@ -114,7 +159,7 @@ function updatePetUI(petData) {
     petSprite.style.willChange = 'transform, background-position';
     
     // Set Pet Age
-    const created = petData.createdTimestamp ? petData.createdTimestamp.toMillis() : Date.now();
+    const created = getCreatedTimestampMs(petData) || Date.now();
     const adjusted = petData.adjustedDays || 0;
     const diffMs = Date.now() - created;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -147,6 +192,8 @@ function applyPetVisualState() {
 
     petSprite.classList.remove('stage-egg', 'stage-baby', 'stage-adult', 'stage-downed');
     petSprite.style.animation = 'none';
+		petSprite.style.backgroundSize = '';
+		petSprite.style.backgroundPosition = '';
     petSprite.classList.remove('hidden');
     petEgg.classList.add('hidden');
     petEgg.src = '';
@@ -186,5 +233,7 @@ function setPetHappinessState(happinessPercent) {
 }
 
 window.LeetmatePetUI = {
-    setPetHappinessState
+    setPetHappinessState,
+    loadActivePetFromStorage,
+    toCachedPetData
 };
