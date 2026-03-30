@@ -35,19 +35,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Load static UI state
     loadLeetCodeUsernameFromFirestore(db, currentUid);
-    await loadXPFromFirestore(db, currentUid);
-    await updateXPSectionUI();
 
-    await loadCoinsFromFirestore(db, currentUid);
-    await updateCoinsUI();
+		// default card to load
+		setupLeetCodeCard(db, currentUid, {
+			solved: false,
+			claimableCount: 0,
+			claimableCoins: 0,
+			claimableXp: 0,
+			claimableIds: [],
+			includesFirstSumbission: false,
+		});
 
-    await loadHappinessFromFirestore(db, currentUid);
-    await updateHeartsUI();
+		const initalRewardsPromise = refreshRewardsCard(db, currentUid);
+		const syncedRewardsPromise = syncPendingSubmissionsToFirestore(db, currentUid)
+			.then(() => refreshRewardsCard(db, currentUid));
+		
+		// just changed to load all these in parallel
+		await Promise.all([
+			loadXPFromFirestore(db, currentUid),
+			loadCoinsFromFirestore(db, currentUid),
+			loadHappinessFromFirestore(db, currentUid),
+		]);
+
+		await Promise.all([
+			updateXPSectionUI(),
+			updateCoinsUI(),
+			// i think load happiness already calls update hearts ui
+		])
 
     startHappinessDecayTimer();
 
+		await initalRewardsPromise;
     // Sync submissions before rewards/streak evaluation
-    await syncPendingSubmissionsToFirestore(db, currentUid);
 
     const latestProgressDate = await loadLatestProgressDate(db, currentUid);
     const today = getTodayString();
@@ -56,11 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (solvedToday) {
       await storageSet({ leetmate_last_progress_date: today });
     }
-
-    await updateStreakOnLoad(db, currentUid, solvedToday);
-
-    // State-driven reward banner
-    await refreshRewardsCard(db, currentUid);
+		
+		await Promise.all([
+			syncedRewardsPromise,
+			updateStreakOnLoad(db, currentUid, solvedToday)
+		]);
   });
 
   // Refresh reward card whenever user returns to the extension

@@ -25,54 +25,70 @@ function saveLeetCodeProgressToFirestore(db, uid, rawSubmissions) {
   if (!db || !uid || !Array.isArray(rawSubmissions) || rawSubmissions.length === 0) {
     return Promise.resolve();
   }
+	
+	// filtered the submissions by time after leetcode connect
+	return getLeetCodeLinkedAtTime(db, uid)
+		.then((linkedAtMs) => {
+			const filteredSubmissions = rawSubmissions.filter((s) => {
+				if (!s) return false;
+				const submittedAtMs = Number(s.timestamp) * 1000;
+				if (!linkedAtMs) return true;
+				return submittedAtMs >= linkedAtMs;
+			})
 
-  const todayKey = getTodayString();
-  const ref = db
-    .collection("users")
-    .doc(uid)
-    .collection("leetcodeProgress")
-    .doc(todayKey);
+			if (filteredSubmissions.length === 0) return Promise.resolve();
 
-  return ref
-    .get()
-    .then((snap) => {
-      const existing = snap.exists ? snap.data().submissions || [] : [];
-      const existingIds = new Set(existing.map((s) => s.id).filter(Boolean));
-      const existingSlugs = new Set(existing.map((s) => s.titleSlug).filter(Boolean));
+		
 
-      // Only keep submissions that introduce a new problem (titleSlug) for the day.
-      // Also ignore ids we've already seen, for safety.
-      const newSubs = rawSubmissions.filter((s) => {
-        if (!s || !s.titleSlug) return false;
-        if (existingSlugs.has(s.titleSlug)) return false;
-        if (s.id && existingIds.has(s.id)) return false;
-        return true;
-      });
-      if (newSubs.length === 0) return Promise.resolve();
+			const todayKey = getTodayString();
+			const ref = db
+				.collection("users")
+				.doc(uid)
+				.collection("leetcodeProgress")
+				.doc(todayKey);
 
-      const normalized = normalizeSubmissions(newSubs, existing.length);
-      // Final safety: dedupe merged by titleSlug.
-      const merged = [];
-      const seenSlugs = new Set();
-      for (const s of existing.concat(normalized)) {
-        const slug = s && s.titleSlug;
-        if (!slug || seenSlugs.has(slug)) continue;
-        seenSlugs.add(slug);
-        merged.push(s);
-      }
+			return ref
+				.get()
+				.then((snap) => {
+					const existing = snap.exists ? snap.data().submissions || [] : [];
+					const existingIds = new Set(existing.map((s) => s.id).filter(Boolean));
+					const existingSlugs = new Set(existing.map((s) => s.titleSlug).filter(Boolean));
 
-      return ref.set(
-        {
-          submissions: merged,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      )
-      .then(() => {
-        return storageSet({ leetmate_last_progress_date: todayKey });
-      });
-    })
-    .catch((e) => console.error("saveLeetCodeProgressToFirestore failed:", e));
+					// Only keep submissions that introduce a new problem (titleSlug) for the day.
+					// Also ignore ids we've already seen, for safety.
+					const newSubs = filteredSubmissions.filter((s) => {
+						if (!s || !s.titleSlug) return false;
+						if (existingSlugs.has(s.titleSlug)) return false;
+						if (s.id && existingIds.has(s.id)) return false;
+						return true;
+					});
+					if (newSubs.length === 0) return Promise.resolve();
+
+					const normalized = normalizeSubmissions(newSubs, existing.length);
+					// Final safety: dedupe merged by titleSlug.
+					const merged = [];
+					const seenSlugs = new Set();
+					for (const s of existing.concat(normalized)) {
+						const slug = s && s.titleSlug;
+						if (!slug || seenSlugs.has(slug)) continue;
+						seenSlugs.add(slug);
+						merged.push(s);
+					}
+
+					return ref.set(
+						{
+							submissions: merged,
+							updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+						},
+						{ merge: true }
+					)
+					.then(() => {
+						return storageSet({ leetmate_last_progress_date: todayKey });
+					});
+				});
+		})
+		.catch((e) => console.error("saveLeetCodeProgressToFirestore failed:", e));
+			
 }
 
 /**
@@ -203,6 +219,26 @@ async function loadLatestProgressDate(db, uid) {
 
   } catch (e) {
     console.error("loadLatestProgressDate failed:", e);
+    return null;
+  }
+}
+
+async function getLeetCodeLinkedAtTime(db, uid) {
+  if (!db || !uid) return null;
+
+  try {
+    const snap = await db.collection("users").doc(uid).get();
+    if (!snap.exists) return null;
+
+    const data = snap.data() || {};
+    const linkedAt = data.leetcode && data.leetcode.linkedAt;
+
+    if (!linkedAt) return null;
+    if (typeof linkedAt.toMillis === "function") return linkedAt.toMillis();
+
+    return new Date(linkedAt).getTime() || null;
+  } catch (e) {
+    console.error("getLeetCodeLinkedAtMs failed:", e);
     return null;
   }
 }
