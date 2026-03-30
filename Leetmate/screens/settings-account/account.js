@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Close modal and clear input
   function closeDeleteModal() {
-    usernameModal.classList.add("hidden");
+    deleteModal.classList.add("hidden");
   }
 
   // Open modal after clicking delete 
