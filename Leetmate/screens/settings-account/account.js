@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const backBtn = document.getElementById("back-btn");
   const profileAvatarBtn = document.getElementById("profile-avatar-btn");
 
+  const profileAvatar = document.getElementById("profile-avatar");
   const usernameBtn = document.getElementById("username-btn");
   const usernameDisplay = document.getElementById("username-display");
   const emailDisplay = document.getElementById("email-display");
@@ -104,10 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Use stored username or if cannot find, use default placeholders 
         const username = data.username || data.leetcodeUsername || "USERNAME_001";
         const email = data.email || currentUser.email || "No email";
+        const color = data.profileColor || "#d9d9d9";
 
         // Update UI 
         usernameDisplay.textContent = `${username} ✏️`;
         emailDisplay.textContent = email;
+        profileAvatar.style.backgroundColor = color;
       } else {
         // Fallback if no document exists 
         usernameDisplay.textContent = "USERNAME_001 ✏️";

@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //logic to "remember" selected color upon update button
   async function updateProfileColor() {
-    alert("Updating Profile Color");
+    //alert("Updating Profile Color");
 
     if (!currentUser || !userRef) {
       alert("Please log in again.");
@@ -101,14 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
       //update firestore doc
       await userRef.set(
         {
-          profileColor: newProfileColor,
+          profileColor: newColor,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         },
         {merge: true}
       );
 
       //update the ui
-      colorDisplay.background = newProfileColor;
+      colorDisplay.background = newColor;
     }
     catch (error) {
       console.error("Error updating profile color:", error);
