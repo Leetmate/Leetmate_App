@@ -276,6 +276,38 @@ body {
   color: #3b2b1a;
 }
 
+.cancel-delete-btn,
+.confirm-delete-btn {
+  width: fit-content;
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 10px;
+  border: 3px solid #3b2b1a;
+  box-shadow: 0 3px 0 rgba(59, 43, 26, 0.25);
+  cursor: pointer;
+}
+
+.confirm-delete-btn {
+  background: #6fbf73;
+  color: white;
+  align-self: flex-start;
+}
+
+.confirm-delete-btn:hover {
+  filter: brightness(1.05);
+}
+
+.confirm-delete-btn:active,
+.cancel-delete-btn:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.cancel-delete-btn {
+  background: #e8d6bd;
+  color: #3b2b1a;
+}
+
 /* Danger zone */
 .danger-zone {
   margin-top: 18px;
@@ -350,6 +382,49 @@ body {
 }
 
 .username-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Username modal */
+.delete-modal.hidden {
+  display: none;
+}
+
+.delete-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+.delete-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.delete-modal__card {
+  position: relative;
+  z-index: 1;
+  width: min(90%, 360px);
+  margin: 20vh auto 0;
+  background: #fdf5e6;
+  border: 4px solid #3b2b1a;
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(59, 43, 26, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.delete-modal__title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.delete-modal__actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;

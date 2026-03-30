@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const backBtn = document.getElementById("back-btn");
   const profileAvatarBtn = document.getElementById("profile-avatar-btn");
+  const deleteBtn = document.getElementById("delete-btn");
 
   const profileAvatar = document.getElementById("profile-avatar");
   const usernameBtn = document.getElementById("username-btn");
@@ -20,6 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const usernameInput = document.getElementById("username-input");
   const saveUsernameBtn = document.getElementById("save-username-btn");
   const cancelUsernameBtn = document.getElementById("cancel-username-btn");
+
+  // Delete modal (popup)
+  const deleteModal = document.getElementById("delete-modal");
+  const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+  const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
 
   // Email update inputs
   const newEmailInput = document.getElementById("new-email");
@@ -91,6 +97,30 @@ document.addEventListener("DOMContentLoaded", () => {
   if (cancelUsernameBtn) {
     cancelUsernameBtn.addEventListener("click", closeUsernameModal);
   }
+
+  // ---- Delete Modal ----
+
+  // Open modal and pre-fill with current username 
+  function openDeleteModal() {
+    deleteModal.classList.remove("hidden");
+  }
+
+  // Close modal and clear input
+  function closeDeleteModal() {
+    usernameModal.classList.add("hidden");
+  }
+
+  // Open modal after clicking delete 
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", openDeleteModal);
+  }
+
+  // Click Cancel -> closes modal
+  if (cancelDeleteBtn) {
+    cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+  }
+
+  //TODO: Deleting the Account
 
   // ---- Load User Data From Firestore ----
   async function loadUserProfile() {
