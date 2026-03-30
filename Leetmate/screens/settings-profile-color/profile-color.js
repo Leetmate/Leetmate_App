@@ -54,8 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  //this works
   //load color in profile
   async function loadProfileColor() {
+    //find the current color for testing
+    //const avatar = document.getElementById("preview-avatar");
+    //alert(`The color is ${getComputedStyle(avatar).backgroundColor}`); //rgb(217,217,217)
+    //alert(`The color is ${colorDisplay.style.backgroundColor}`);
+
     if (!currentUser || !userRef) return;
     try {
       const doc = await userRef.get();
@@ -63,11 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = doc.data();
 
         const profileColor = data.profileColor || "#d9d9d9";
-        colorDisplay.background = profileColor;
+        colorDisplay.style.backgroundColor = profileColor;
       }
       else
       {
-        colorDisplay.background = "#d9d9d9";
+        colorDisplay.style.backgroundColor = "#d9d9d9";
       }
     }
     catch (error) {
@@ -105,16 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
       colorDisplay.background = newProfileColor;
     }
     catch (error) {
-      console.error("Error updating username:", error);
+      console.error("Error updating profile color:", error);
       alert(error.message || "Failed to update profile color.");
     }
   }
 
   //when clicking update, the selected color is set in firebase
-  if (updateBtn) {
-    updateBtn.addEventListender("click", updateProfileColor);
-  }
-
+  updateBtn.addEventListener("click", function() {
+    //alert("button clicked");
+    updateProfileColor();
+  });
+  
   auth.onAuthStateChanged(async (user) => {
     if (!user) {
       console.warn("No authenticated user found yet.");
