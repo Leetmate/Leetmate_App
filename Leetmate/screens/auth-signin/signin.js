@@ -27,10 +27,22 @@
     el.hidden = true;
   }
 
+  function ensureUserDoc(uid, email, username) {
+    if (!db) return Promise.resolve();
+    var userRef = db.collection('users').doc(uid);
+    return userRef.get().then(function (snap) {
+      if (snap.exists) return Promise.resolve();
+      var doc = window.LeetmateUserDoc && window.LeetmateUserDoc.createUserDoc
+        ? window.LeetmateUserDoc.createUserDoc(uid, email, username)
+        : { email: email || '', username: username || '', xp: 0, coins: 0, leetcodeUsername: null, pets: [], friends: [], itemsOwned: [], streak: 0, streakFreezeEnd: null };
+      return userRef.set(doc);
+    });
+  }
+
   function onAuthSuccess(user) {
     var email = user.email || '';
     var displayName = user.displayName || email.split('@')[0] || 'User';
-    return window.LeetmateUserDoc.ensureUserDoc(db, user.uid, email, displayName).then(function () {
+    return ensureUserDoc(user.uid, email, displayName).then(function () {
       if (!db) {
         window.location.href = '../auth-leetcode/index.html?from=signin';
         return Promise.resolve();

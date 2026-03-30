@@ -27,6 +27,19 @@
     el.hidden = true;
   }
 
+  /** Ensure Firestore users/{uid} exists with the given data (create only, do not overwrite existing). */
+  function ensureUserDoc(uid, email, username) {
+    if (!db) return Promise.reject(new Error('Firestore not loaded'));
+    var userRef = db.collection('users').doc(uid);
+    return userRef.get().then(function (snap) {
+      if (snap.exists) return Promise.resolve();
+      var doc = window.LeetmateUserDoc && window.LeetmateUserDoc.createUserDoc
+        ? window.LeetmateUserDoc.createUserDoc(uid, email, username)
+        : { email: email, username: username || '', xp: 0, coins: 0, leetcodeUsername: null, pets: [], friends: [], itemsOwned: [], streak: 0, streakFreezeEnd: null };
+      return userRef.set(doc);
+    });
+  }
+
   function onAuthSuccess(user, username) {
     var email = user.email || '';
     var displayName = user.displayName || '';
@@ -42,7 +55,7 @@
     sessionStorage.removeItem('signup-username');
     sessionStorage.removeItem('signup-accept');
 
-    return window.LeetmateUserDoc.ensureUserDoc(db, user.uid, email, nameToUse).then(function () {
+    return ensureUserDoc(user.uid, email, nameToUse).then(function () {
       window.location.href = '../auth-leetcode/index.html?from=signup';
     });
   }

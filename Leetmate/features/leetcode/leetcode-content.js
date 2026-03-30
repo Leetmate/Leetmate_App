@@ -1,8 +1,8 @@
 async function fetchAndSaveSubmissions() {
   const items = await new Promise((resolve) =>
-    chrome.storage.local.get("leetmate_leetcode_username", resolve)
+    chrome.storage.local.get("leetcodeUsername", resolve)
   );
-  const username = items?.leetmate_leetcode_username;
+  const username = items?.leetcodeUsername;
   if (!username) {
     console.log("No LeetCode username cached. Open Leetmate Home to sync.");
     return;

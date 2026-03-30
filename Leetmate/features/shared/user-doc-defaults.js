@@ -59,19 +59,8 @@
     };
   }
 
-  function ensureUserDoc(db, uid, email, username) {
-    if (!db) return Promise.reject(new Error('Firestore not loaded'));
-
-    var userRef = db.collection('users').doc(uid);
-    return userRef.get().then(function (snap) {
-      if (snap.exists) return Promise.resolve();
-      return userRef.set(createUserDoc(uid, email, username));
-    });
-  }
-
   window.LeetmateUserDoc = {
     createUserDoc: createUserDoc,
-    ensureUserDoc: ensureUserDoc,
     PET_SCHEMA: PET_SCHEMA
   };
 })();
