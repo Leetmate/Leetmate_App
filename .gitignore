@@ -1,10 +1,5 @@
-# Env with real values – do not commit
-.env
-
-# Generated from .env – do not commit (use firebase-config.template.js as source)
-firebase-config.js
-
-node_modules/
-
-# Mac OS Directory Meta Data
-.DS_Store
+Leetmate/scripts/firebase-config.js
+Leetmate/scripts/firebase-bundle.js
+Leetmate/.env
+Leetmate/node_modules/
+Leetmate/.DS_Store

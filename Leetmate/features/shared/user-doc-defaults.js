@@ -30,37 +30,62 @@
    * This is only the initial schema—your app will update these fields later.
    */
   function createUserDoc(uid, email, username) {
+    var now = (function () {
+      if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) {
+        return firebase.firestore.FieldValue.serverTimestamp();
+      }
+      return new Date();
+    })();
+
     return {
       uid: uid || null,
       email: email || '',
       username: username || '',
+			activePetId: null,
+      leetcode: {
+        username: null,
+        connected: false,
+				lastSyncedAt: null,
+      },
       xp: 0, // level is derived from XP: level = floor(xp/100) + 1
       level: 1,
       coins: 0,
-      leetcode: {
-        username: null,
-        connected: false
-      },
+			trophy: 0,
+			premium: false,
+			lastFedTime: null,
       streak: 0,
       streakFreezeEnd: null,
+			equippedItemId: null,
+			settings: {
+				easyMode: false,
+				volume: 100,
+				profileColor: null,
+				reminders: {
+					enabled: false,
+					type: 'time',
+					setTime: '00:00',
+					setHealth: 100
+				}
+			},
 
-      // Pets / inventory / social (references only; assets are local)
-      pets: [], // array of PET_SCHEMA objects (see PET_SCHEMA)
-      selectedPetIndex: null, // which pet is currently active/profile (index into pets[])
-      friends: [], // array of user UIDs (references)
-      itemsOwned: [], // array of item ids (references)
-
-      createdAt: (function () {
-        if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp) {
-          return firebase.firestore.FieldValue.serverTimestamp();
-        }
-        return new Date();
-      })()
+			updatedAt: now,
+			createAt: now,
     };
+  }
+
+  function ensureUserDoc(db, uid, email, username) {
+    if (!db) return Promise.reject(new Error('Firestore not loaded'));
+
+    var userRef = db.collection('users').doc(uid);
+    return userRef.get().then(function (snap) {
+      if (snap.exists) return Promise.resolve();
+      return userRef.set(createUserDoc(uid, email, username));
+    });
   }
 
   window.LeetmateUserDoc = {
     createUserDoc: createUserDoc,
+    ensureUserDoc: ensureUserDoc,
     PET_SCHEMA: PET_SCHEMA
   };
 })();

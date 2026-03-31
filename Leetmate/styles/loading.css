@@ -40,11 +40,11 @@
   animation: loading-bounce 1.4s infinite ease-in-out both;
 }
 
-.loading-dot:nth-child(1) {
+.loading-dot:nth-baby(1) {
   animation-delay: -0.32s;
 }
 
-.loading-dot:nth-child(2) {
+.loading-dot:nth-baby(2) {
   animation-delay: -0.16s;
 }
 
