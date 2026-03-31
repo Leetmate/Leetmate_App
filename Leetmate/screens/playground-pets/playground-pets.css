@@ -14,8 +14,8 @@ body {
   margin: 0 auto;
   padding: 12px;
   background:
-    linear-gradient(rgba(238, 234, 225, 0.62), rgba(238, 234, 225, 0.62)),
-    url("../../assets/backgrounds/bg_change-pet.png") center 72% / cover no-repeat;
+    linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+    url("../../assets/backgrounds/pets_bg_v2.png") center top / cover no-repeat;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -29,7 +29,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 0 18px;
+  padding: 0 0 12px;
+  /* Reduced from 40px to prevent cropping */
 }
 
 .pets-loading {
@@ -82,13 +83,14 @@ body {
 
 .pets-carousel {
   width: 100%;
-  height: 206px;
-  flex: 0 0 206px;
+  height: 200px;
+  flex: 0 0 200px;
   display: grid;
   grid-template-columns: 1fr 1.2fr 1fr;
-  align-items: end;
+  align-items: center;
   justify-items: center;
-  margin-top: 8px;
+  margin-top: 10px;
+  /* Natural spacing under the name */
 }
 
 .pets-slot {
@@ -99,45 +101,56 @@ body {
 }
 
 .pets-slot--center {
-  width: 144px;
+  width: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 .pets-slot--side {
-  width: 110px;
+  width: 50px;
+  opacity: 0.4;
 }
 
 .pets-slot-sprite {
   display: none;
   background-repeat: no-repeat;
   image-rendering: pixelated;
-  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.35));
 }
 
 .pets-slot-egg {
   display: block;
   object-fit: contain;
-  object-position: center 20px;
+  object-position: center 25px;
   image-rendering: pixelated;
-  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.18));
-}
-
-.pets-slot .hidden {
-  display: none;
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.3));
 }
 
 .pets-slot--center .pets-slot-sprite {
-  width: 147px;
+  width: 240px;
   aspect-ratio: 21 / 16;
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
 }
 
 .pets-slot--side .pets-slot-sprite {
-  width: 98px;
+  width: 60px;
   aspect-ratio: 21 / 16;
 }
 
 .pets-slot--center .pets-slot-egg {
-  width: 120px;
-  height: 120px;
+  width: 200px;
+  height: 200px;
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
+}
+
+.pets-slot-egg[src=""],
+.pets-slot-egg:not([src]) {
+  display: none !important;
 }
 
 .pets-slot--side .pets-slot-egg {
@@ -145,39 +158,45 @@ body {
   height: 82px;
 }
 
-.pets-slot.stage-baby .pets-slot-sprite,
-.pets-slot.stage-adult .pets-slot-sprite {
-  display: block;
+/* Simplified selectors to ensure display */
+.stage-baby .pets-slot-sprite,
+.stage-adult .pets-slot-sprite {
+  display: block !important;
   background-size: 700% 100%;
   background-position: 0% 0%;
 }
 
-.pets-slot.stage-egg .pets-slot-egg {
-  display: block;
+.stage-egg .pets-slot-egg {
+  display: block !important;
 }
 
-.pets-slot.is-animated.stage-baby .pets-slot-sprite,
-.pets-slot.is-animated.stage-adult .pets-slot-sprite {
+.is-animated.stage-baby .pets-slot-sprite,
+.is-animated.stage-adult .pets-slot-sprite {
   animation:
     pets-idle 0.8s steps(1) infinite,
-    pets-bob 1.8s ease-in-out infinite;
+    pets-bob 1.8s ease-in-out infinite !important;
 }
 
-.pets-slot.is-animated.stage-egg .pets-slot-egg {
-  animation: pets-bob 1.8s ease-in-out infinite;
+.is-animated.stage-egg .pets-slot-egg {
+  animation: pets-bob 1.8s ease-in-out infinite !important;
 }
 
 .pets-current-name {
-  margin: 8px 0 12px;
-  min-height: 34px;
+  margin: 15px 0 0px;
+  min-height: 42px;
+  padding: 4px 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: "Lilita One", sans-serif;
-  font-size: 28px;
-  font-style: italic;
-  color: #23201d;
-  text-align: center;
+  font-size: 30px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }
 
 .pets-controls {
@@ -189,26 +208,29 @@ body {
 }
 
 .pets-arrow-btn {
-  width: 88px;
-  height: 72px;
+  width: 80px;
+  height: 64px;
   padding: 0;
-  border: none;
-  background: transparent;
+  border: 4px solid #111;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 6px 0 #111;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s, opacity 0.15s ease;
+  transition: all 0.1s ease;
 }
 
-.pets-arrow-btn:hover,
-.pets-arrow-btn:focus-visible {
-  transform: scale(1.04);
-  outline: none;
+.pets-arrow-btn:hover {
+  background: #fdf5e6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #111;
 }
 
 .pets-arrow-btn:active {
-  transform: scale(0.96);
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #111;
 }
 
 .pets-arrow-btn:disabled {
@@ -218,28 +240,28 @@ body {
 }
 
 .pets-arrow-icon {
-  width: 86px;
-  height: 58px;
+  width: 42px;
+  height: auto;
   display: block;
-  transform: translateY(8px);
 }
 
 .pets-arrow-icon--left {
-  transform: scaleX(-1) translateY(8px);
+  transform: scaleX(-1);
 }
 
 .pets-select-btn {
   margin-top: auto;
-  min-width: 140px;
-  min-height: 56px;
-  padding: 8px 22px;
-  border: 4px solid #111;
-  border-radius: 14px;
-  background: #f0d58b;
-  box-shadow: 0 4px 0 rgba(17, 17, 17, 0.22);
+  min-width: 220px;
+  min-height: 72px;
+  padding: 12px 32px;
+  border: 5px solid #111;
+  border-radius: 36px;
+  background: linear-gradient(to bottom, #ffeb99 0%, #ffd700 100%);
+  box-shadow: 0 8px 0 #b38f00;
   font-family: "Lilita One", sans-serif;
-  font-size: 22px;
-  color: #23201d;
+  font-size: 34px;
+  color: #2c2419;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.1s, filter 0.15s ease;
 }
@@ -401,19 +423,23 @@ body {
   0% {
     background-position: 0% 0%;
   }
+
   50% {
     background-position: 33.33% 0%;
   }
+
   100% {
     background-position: 0% 0%;
   }
 }
 
 @keyframes pets-bob {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-4px);
   }
