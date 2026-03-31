@@ -27,6 +27,40 @@
   let pets = [];
   let currentIndex = 0;
 
+  // turn pet into snapshot in extension storage
+  function toCachedPetData(pet) {
+    if (window.LeetmatePetUI && typeof window.LeetmatePetUI.toCachedPetData === "function") {
+      return window.LeetmatePetUI.toCachedPetData(pet, pet.id || null);
+    }
+
+    return {
+      id: pet.id || null,
+      petRef: pet.petRef || null,
+      stage: pet.stage || null,
+      customName: pet.customName || "",
+      adjustedDays: pet.adjustedDays || 0,
+      stats: pet.stats || null,
+      createdTimestampMs:
+        typeof pet.createdTimestamp?.toMillis === "function"
+          ? pet.createdTimestamp.toMillis()
+          : pet.createdTimestampMs || pet.createdTimestamp || null
+    };
+  }
+
+  function getActivePetSpritePath(pet) {
+    const normalizedStage = (pet?.stage || "").toLowerCase();
+
+    if (pet?.petRef && normalizedStage === "baby") {
+      return `assets/spritesheets/Cubic${pet.petRef}Baby.png`;
+    }
+
+    if (pet?.petRef && normalizedStage === "adult") {
+      return `assets/spritesheets/Cubic${pet.petRef}Adult.png`;
+    }
+
+    return null;
+  }
+
   function getEls() {
     return {
       leftSlot: document.getElementById("pet-slot-left"),
@@ -46,14 +80,24 @@
       statDef: document.getElementById("pets-stat-def"),
       statSpAtk: document.getElementById("pets-stat-spatk"),
       statSpDef: document.getElementById("pets-stat-spdef"),
-      statSpd: document.getElementById("pets-stat-spd")
+      statSpd: document.getElementById("pets-stat-spd"),
+      loading: document.getElementById("pets-loading")
     };
+  }
+
+  // hide the loading text once display renders
+  function hideLoading() {
+    const { loading } = getEls();
+    if (loading) {
+      loading.classList.add("hidden");
+    }
   }
 
   function hasFirebase() {
     return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
   }
 
+  // use the custom name first, then fall back to the default name
   function getDisplayName(pet) {
     const assetSet = PET_ASSETS[pet.petRef];
     return (pet.customName || "").trim() || assetSet?.defaultName || pet.petRef || "Pet";
@@ -69,21 +113,7 @@
     return Math.max(0, diffDays + adjustedDays);
   }
 
-  function getCachedPetData(pet) {
-    return {
-      id: pet.id || null,
-      petRef: pet.petRef || null,
-      stage: pet.stage || null,
-      customName: pet.customName || "",
-      adjustedDays: pet.adjustedDays || 0,
-      stats: pet.stats || null,
-      createdTimestampMs:
-        typeof pet.createdTimestamp?.toMillis === "function"
-          ? pet.createdTimestamp.toMillis()
-          : pet.createdTimestampMs || pet.createdTimestamp || null
-    };
-  }
-
+  // each slot can render as an egg or baby/adult sprite sheet
   function renderPetSlot(slotEl, pet, isAnimated) {
     if (!slotEl) return;
 
@@ -104,6 +134,7 @@
 
     const stage = (pet.stage || "adult").toLowerCase();
     if (isAnimated) {
+      // only the center pet gets idle animation
       slotEl.classList.add("is-animated");
     }
 
@@ -126,6 +157,7 @@
     spriteEl.style.display = "block";
   }
 
+  // disable arrows when the user only owns one pet
   function updateArrowState() {
     const { prevBtn, nextBtn } = getEls();
     const disabled = pets.length <= 1;
@@ -133,6 +165,7 @@
     if (nextBtn) nextBtn.disabled = disabled;
   }
 
+  // render the three visible slots around the current index
   function renderCarousel() {
     const { leftSlot, centerSlot, rightSlot, currentName } = getEls();
     if (!leftSlot || !centerSlot || !rightSlot || !currentName || pets.length === 0) return;
@@ -142,41 +175,47 @@
     const leftPet = length === 1 ? null : pets[(currentIndex - 1 + length) % length];
     const rightPet = length === 1 ? null : pets[(currentIndex + 1) % length];
 
+    // show previous, current, and next based on the current index
     renderPetSlot(leftSlot, leftPet, false);
     renderPetSlot(centerSlot, centerPet, true);
     renderPetSlot(rightSlot, rightPet, false);
     currentName.textContent = getDisplayName(centerPet);
     updateArrowState();
+    hideLoading();
   }
 
+  // rebuild the carousel from cached storage 
   function renderCachedCarousel() {
-    if (typeof storageGet !== "function") return;
+    if (typeof storageGet !== "function") return Promise.resolve(false);
 
     const { prevBtn, nextBtn } = getEls();
-    if (!prevBtn || !nextBtn) return;
+    if (!prevBtn || !nextBtn) return Promise.resolve(false);
 
-    storageGet(["ownedPetsSnapshot", "activePetId"]).then(({ ownedPetsSnapshot, activePetId }) => {
+    return storageGet(["ownedPetsSnapshot", "activePetId"]).then(({ ownedPetsSnapshot, activePetId }) => {
       if (!Array.isArray(ownedPetsSnapshot) || ownedPetsSnapshot.length === 0) return;
 
       pets = ownedPetsSnapshot.filter((pet) => pet && pet.petRef);
-      if (pets.length === 0) return;
+      if (pets.length === 0) return false;
 
       const activeIndex = pets.findIndex((pet) => pet.id === activePetId);
       currentIndex = activeIndex >= 0 ? activeIndex : 0;
       renderCarousel();
+      return true;
     });
   }
 
   function renderCachedCenterPet() {
-    if (typeof storageGet !== "function") return;
+    if (typeof storageGet !== "function") return Promise.resolve(false);
 
     const { centerSlot, currentName } = getEls();
-    if (!centerSlot || !currentName) return;
+    if (!centerSlot || !currentName) return Promise.resolve(false);
 
-    storageGet("activePetSnapshot").then(({ activePetSnapshot }) => {
-      if (!activePetSnapshot || !activePetSnapshot.petRef) return;
+    return storageGet("activePetSnapshot").then(({ activePetSnapshot }) => {
+      if (!activePetSnapshot || !activePetSnapshot.petRef) return false;
       renderPetSlot(centerSlot, activePetSnapshot, true);
       currentName.textContent = getDisplayName(activePetSnapshot);
+      hideLoading();
+      return true;
     });
   }
 
@@ -197,6 +236,7 @@
   function openModal() {
     const { modalOverlay } = getEls();
     if (!modalOverlay || pets.length === 0) return;
+    // use the centered pet as the current selection
     populateModal(pets[currentIndex]);
     modalOverlay.classList.remove("hidden");
   }
@@ -207,12 +247,14 @@
     modalOverlay.classList.add("hidden");
   }
 
+  // confirming the changes the active pet for the whole extension
   async function setActivePet() {
     if (!auth?.currentUser || !db || pets.length === 0) return;
 
     const selectedPet = pets[currentIndex];
     const userRef = db.collection("users").doc(auth.currentUser.uid);
 
+    // write the new active pet id to firestore first
     await userRef.set(
       {
         activePetId: selectedPet.id,
@@ -222,21 +264,14 @@
     );
 
     if (typeof storageSet === "function") {
-      const normalizedStage = (selectedPet.stage || "").toLowerCase();
-      const activePetSpritePath =
-        selectedPet.petRef && normalizedStage === "baby"
-          ? `assets/spritesheets/Cubic${selectedPet.petRef}Baby.png`
-          : selectedPet.petRef && normalizedStage === "adult"
-            ? `assets/spritesheets/Cubic${selectedPet.petRef}Adult.png`
-            : null;
-
       await storageSet({
+        // mirror that change into storage so home, playground, and pip update right away
         activePetId: selectedPet.id,
         activePetType: selectedPet.petRef || null,
         activePetStage: selectedPet.stage || null,
-        activePetSpritePath,
-        activePetSnapshot: getCachedPetData(selectedPet),
-        ownedPetsSnapshot: pets.map((pet) => getCachedPetData(pet))
+        activePetSpritePath: getActivePetSpritePath(selectedPet),
+        activePetSnapshot: toCachedPetData(selectedPet),
+        ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet))
       });
     }
 
@@ -253,8 +288,10 @@
     if (!userSnap.exists) return;
 
     const activePetId = userSnap.data().activePetId || null;
+    // fetch every pet the user owns
     const petsSnap = await userRef.collection("pets").get();
 
+    // sort by age
     pets = petsSnap.docs
       .map((doc) => ({ id: doc.id, ...doc.data() }))
       .sort((a, b) => getPetAge(a) - getPetAge(b));
@@ -263,21 +300,14 @@
 
     if (typeof storageSet === "function") {
       const activePet = pets.find((pet) => pet.id === activePetId) || pets[0];
-      const normalizedStage = ((activePet && activePet.stage) || "").toLowerCase();
-      const activePetSpritePath =
-        activePet?.petRef && normalizedStage === "baby"
-          ? `assets/spritesheets/Cubic${activePet.petRef}Baby.png`
-          : activePet?.petRef && normalizedStage === "adult"
-            ? `assets/spritesheets/Cubic${activePet.petRef}Adult.png`
-            : null;
 
       await storageSet({
-        ownedPetsSnapshot: pets.map((pet) => getCachedPetData(pet)),
+        ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet)),
         activePetId: activePet?.id || activePetId || null,
         activePetType: activePet?.petRef || null,
         activePetStage: activePet?.stage || null,
-        activePetSpritePath,
-        activePetSnapshot: activePet ? getCachedPetData(activePet) : null,
+        activePetSpritePath: getActivePetSpritePath(activePet),
+        activePetSnapshot: activePet ? toCachedPetData(activePet) : null,
       });
     }
 
@@ -324,12 +354,14 @@
     });
   }
 
-  function initPetChangeScreen() {
+  async function initPetChangeScreen() {
     const { prevBtn, nextBtn } = getEls();
     if (!prevBtn || !nextBtn) return;
 
-    renderCachedCarousel();
-    renderCachedCenterPet();
+    const renderedCachedCarousel = await renderCachedCarousel();
+    if (!renderedCachedCarousel) {
+      await renderCachedCenterPet();
+    }
 
     if (!hasFirebase()) {
       console.warn("Firebase not available on pets screen.");

@@ -57,6 +57,7 @@
     );
 
     if (typeof storageGet === "function" && typeof storageSet === "function") {
+      // update snapshots so Playground/Home show the new name
       const { activePetSnapshot, ownedPetsSnapshot } = await storageGet([
         "activePetSnapshot",
         "ownedPetsSnapshot",

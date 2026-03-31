@@ -57,7 +57,7 @@
       streakFreezeEnd: null,
 			equippedItemId: null,
 			settings: {
-				vacationMode: false,
+				easyMode: false,
 				volume: 100,
 				profileColor: null,
 				reminders: {
