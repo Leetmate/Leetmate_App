@@ -122,6 +122,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //TODO: Deleting the Account
 
+  function deleteUser() {
+    //testing that the button is being clicked
+    //alert("delete account button pressed");
+    
+    //NOTE: this deletes the user, but it doesn't delete the user's document so the data just sits there
+    currentUser.delete().then(() => {
+      //deletes user
+    }).catch((error) => {
+      //error
+      console.error("Error deleting user profile:", error);
+    });
+  }
+
+  confirmDeleteBtn.addEventListener("click", function() {
+    //alert("delete button clicked");
+    deleteUser();
+  });
+
   // ---- Load User Data From Firestore ----
   async function loadUserProfile() {
     if (!currentUser || !userRef) return;
