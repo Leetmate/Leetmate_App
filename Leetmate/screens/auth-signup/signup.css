@@ -1,4 +1,5 @@
 .signup-card {
+  width: min(100%, 308px);
   padding: var(--space-4) var(--space-5) var(--space-4);
   gap: var(--space-4);
 }

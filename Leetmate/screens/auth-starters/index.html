@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leetmate - Choose Your Starter Pet</title>
+    <link rel="stylesheet" href="../../styles/auth.css">
+    <link rel="stylesheet" href="../../styles/loading.css">
+    <link rel="stylesheet" href="starters.css">
+</head>
+<body>
+    <div class="popup-layout">
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="loading-spinner">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
+            <p class="loading-text" id="loading-text">Saving your choice...</p>
+        </div>
+
+        <div class="popup-content starter-content">
+            <div class="starter-card">
+                <div class="starter-content-wrapper">
+                    <h1 class="web-header">Choose an Egg</h1>
+
+                    <div class="carousel-container">
+                        <div class="carousel-track">
+                            <div class="egg-wrapper side" id="egg-left">
+                                <div class="egg-item"><img></div>
+                                <div class="podium-base"></div>
+                            </div>
+                            <div class="egg-wrapper central" id="egg-center">
+                                <div class="egg-item"><img></div>
+                                <div class="podium-base"></div>
+                            </div>
+                            <div class="egg-wrapper side" id="egg-right">
+                                <div class="egg-item"><img></div>
+                                <div class="podium-base"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="pet-name-container">
+                            <h2 id="current-pet-name"></h2>
+                        </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                        <button id="prev-btn" class="control-btn">
+                            <svg class="arrow-icon" viewBox="0 0 24 24" style="transform: scaleX(-1);"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                        </button>
+                        <button id="choose-btn" class="choose-btn">Choose</button>
+                        <button id="next-btn" class="control-btn">
+                            <svg class="arrow-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Web-Grade Selection Dialogue (V8 XL) -->
+        <div id="pet-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <h2 id="modal-pet-name"></h2>
+                
+                <div class="sprite-stage">
+                    <div id="pet-actor" class="sprite-actor"></div>
+                </div>
+
+                <div class="modal-info">
+                   <p id="pet-description" class="pet-description"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="modal-confirm-btn" class="modal-btn confirm">I Choose You!</button>
+                    <button id="modal-cancel-btn" class="modal-btn cancel">Not yet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/shared/user-doc-defaults.js"></script>
+    <script src="starters.js"></script>
+</body>
+</html>

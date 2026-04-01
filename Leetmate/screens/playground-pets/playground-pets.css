@@ -1,0 +1,446 @@
+@import url("../../styles/layout.css");
+
+body {
+  background: #f3eee5;
+}
+
+.pets-card {
+  --screen-banner-bg: #d6d0c5;
+  --screen-banner-offset-top: 12px;
+  --screen-banner-offset-x: 12px;
+  width: 100%;
+  max-width: 380px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 12px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+    url("../../assets/backgrounds/pets_bg_v2.png") center top / cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+
+.pets-content {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 12px;
+  /* Reduced from 40px to prevent cropping */
+}
+
+.pets-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-family: "Lilita One", sans-serif;
+  font-size: 24px;
+  color: #23201d;
+  text-align: center;
+}
+
+.pets-loading.hidden {
+  display: none;
+}
+
+.pets-back-btn {
+  width: 44px;
+  height: 40px;
+  padding: 0 0 2px 0;
+  border: 3px solid #111;
+  border-radius: 14px;
+  background: #fdf5e6;
+  box-shadow: 0 4px 0 rgba(17, 17, 17, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Lilita One", sans-serif;
+  font-size: 22px;
+  color: #111;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.15s ease;
+  text-indent: -2px;
+}
+
+.pets-back-btn:hover,
+.pets-back-btn:focus-visible {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(59, 43, 26, 0.3);
+  outline: none;
+}
+
+.pets-back-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
+}
+
+.pets-carousel {
+  width: 100%;
+  height: 200px;
+  flex: 0 0 200px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  align-items: center;
+  justify-items: center;
+  margin-top: 10px;
+  /* Natural spacing under the name */
+}
+
+.pets-slot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.pets-slot--center {
+  width: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.pets-slot--side {
+  width: 50px;
+  opacity: 0.4;
+}
+
+.pets-slot-sprite {
+  display: none;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.35));
+}
+
+.pets-slot-egg {
+  display: block;
+  object-fit: contain;
+  object-position: center 25px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.3));
+}
+
+.pets-slot--center .pets-slot-sprite {
+  width: 240px;
+  aspect-ratio: 21 / 16;
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
+}
+
+.pets-slot--side .pets-slot-sprite {
+  width: 60px;
+  aspect-ratio: 21 / 16;
+}
+
+.pets-slot--center .pets-slot-egg {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
+}
+
+.pets-slot-egg[src=""],
+.pets-slot-egg:not([src]) {
+  display: none !important;
+}
+
+.pets-slot--side .pets-slot-egg {
+  width: 82px;
+  height: 82px;
+}
+
+/* Simplified selectors to ensure display */
+.stage-baby .pets-slot-sprite,
+.stage-adult .pets-slot-sprite {
+  display: block !important;
+  background-size: 700% 100%;
+  background-position: 0% 0%;
+}
+
+.stage-egg .pets-slot-egg {
+  display: block !important;
+}
+
+.is-animated.stage-baby .pets-slot-sprite,
+.is-animated.stage-adult .pets-slot-sprite {
+  animation:
+    pets-idle 0.8s steps(1) infinite,
+    pets-bob 1.8s ease-in-out infinite !important;
+}
+
+.is-animated.stage-egg .pets-slot-egg {
+  animation: pets-bob 1.8s ease-in-out infinite !important;
+}
+
+.pets-current-name {
+  margin: 15px 0 0px;
+  min-height: 42px;
+  padding: 4px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Lilita One", sans-serif;
+  font-size: 30px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.pets-controls {
+  width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.pets-arrow-btn {
+  width: 80px;
+  height: 64px;
+  padding: 0;
+  border: 4px solid #111;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 6px 0 #111;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+}
+
+.pets-arrow-btn:hover {
+  background: #fdf5e6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #111;
+}
+
+.pets-arrow-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #111;
+}
+
+.pets-arrow-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  transform: none;
+}
+
+.pets-arrow-icon {
+  width: 42px;
+  height: auto;
+  display: block;
+}
+
+.pets-arrow-icon--left {
+  transform: scaleX(-1);
+}
+
+.pets-select-btn {
+  margin-top: auto;
+  min-width: 220px;
+  min-height: 72px;
+  padding: 12px 32px;
+  border: 5px solid #111;
+  border-radius: 36px;
+  background: linear-gradient(to bottom, #ffeb99 0%, #ffd700 100%);
+  box-shadow: 0 8px 0 #b38f00;
+  font-family: "Lilita One", sans-serif;
+  font-size: 34px;
+  color: #2c2419;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.15s ease;
+}
+
+.pets-select-btn:hover,
+.pets-select-btn:focus-visible {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(59, 43, 26, 0.3);
+  outline: none;
+}
+
+.pets-select-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
+}
+
+.pets-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 20;
+}
+
+.pets-modal-overlay.hidden {
+  display: none;
+}
+
+.pets-modal {
+  width: 100%;
+  max-width: 308px;
+  border: 4px solid #111;
+  border-radius: 28px;
+  background: #f3eee5;
+  overflow: hidden;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+}
+
+.pets-modal-header {
+  min-height: 48px;
+  padding: 6px 10px 4px 18px;
+  border-bottom: 4px solid #111;
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+}
+
+.pets-modal-header::before {
+  content: "";
+  width: 34px;
+  height: 34px;
+}
+
+.pets-modal-header h2 {
+  margin: 0;
+  grid-column: 2;
+  justify-self: center;
+  font-family: "Lilita One", sans-serif;
+  font-size: 28px;
+  color: #111;
+}
+
+.pets-modal-close {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111;
+  font-size: 42px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  grid-column: 3;
+  justify-self: end;
+}
+
+.pets-modal-body {
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.pets-modal-name {
+  margin: 0;
+  font-family: "Lilita One", sans-serif;
+  font-size: 26px;
+  color: #23201d;
+  text-align: center;
+}
+
+.pets-modal-age {
+  margin: 0;
+  font-family: "Lilita One", sans-serif;
+  font-size: 18px;
+  color: #5a4a37;
+}
+
+.pets-modal-stats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 18px;
+  padding: 8px 6px;
+}
+
+.pets-modal-stats p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: "Lilita One", sans-serif;
+  font-size: 16px;
+  color: #23201d;
+}
+
+.pets-modal-stats strong {
+  font-size: 18px;
+}
+
+.pets-modal-confirm {
+  min-width: 140px;
+  min-height: 56px;
+  padding: 8px 22px;
+  border: 4px solid #111;
+  border-radius: 14px;
+  background: #f0d58b;
+  box-shadow: 0 4px 0 rgba(17, 17, 17, 0.22);
+  font-family: "Lilita One", sans-serif;
+  font-size: 22px;
+  color: #23201d;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.15s ease;
+}
+
+.pets-modal-confirm:hover,
+.pets-modal-confirm:focus-visible {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(59, 43, 26, 0.3);
+  outline: none;
+}
+
+.pets-modal-confirm:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 rgba(59, 43, 26, 0.3);
+}
+
+@keyframes pets-idle {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 33.33% 0%;
+  }
+
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes pets-bob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}

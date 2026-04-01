@@ -8,16 +8,32 @@
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="store.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body class="hidden-on-load">
+    <div id="loading-spinner" class="spinner-container" style="display: none;">
+      <div class="spinner"></div>
+    </div>
+    
     <div class="popup-layout">
-      <div class="popup-content">
+      <div class="popup-content popup-content--scroll">
         <div class="store-card">
+          <!-- Standard App Header (Ancient/Stone style) -->
           <div class="screen-banner">
-            <div class="screen-banner__left"></div>
+            <div class="screen-banner__left">
+              <div class="coins-display">
+                <img src="../../assets/icons/coin.png" class="coin-icon" alt="Coins" />
+                <span id="coin-count">50</span>
+                <button type="button" class="add-coins-btn" id="add-coins-btn" title="Buy Coins">+</button>
+              </div>
+            </div>
+
             <div class="screen-banner__center">
               <h1 class="screen-banner__title">Store</h1>
             </div>
+
             <div class="screen-banner__right">
               <button
                 type="button"
@@ -32,20 +48,102 @@
             </div>
           </div>
 
-          <div class="store-content">
-            <p
-              style="color: #111; font-family: 'Lilita One', cursive; font-size: 20px;"
-            >
-              Store content goes here...
-            </p>
+          <div class="store-main-content">
+            <!-- Promotional Banner (Scenic Park) -->
+            <section class="promo-banner">
+              <div class="banner-nail tl"></div>
+              <div class="banner-nail tr"></div>
+              <div class="banner-nail bl"></div>
+              <div class="banner-nail br"></div>
+              <div class="promo-content">
+                <div class="banner-pet-wrap">
+                  <div class="banner-pet CubicFox"></div>
+                </div>
+                <div class="sparkles" aria-hidden="true"></div>
+                <div class="unlock-all-btn shiny-btn">
+                  Unlock All Pets & Items
+                </div>
+                <div class="banner-pet-wrap">
+                  <div class="banner-pet CubicCat"></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Category Navigation (Ancient Stone Tabs) -->
+            <nav class="category-tabs">
+              <button class="tab-btn active" data-category="clothing" title="Clothing">
+                <div class="tab-icon-frame">
+                   <img src="../../assets/icons/Accessory.png" class="tab-img-main" alt="" />
+                </div>
+              </button>
+              <button class="tab-btn" data-category="food" title="Food">
+                <div class="tab-icon-frame">
+                  <img src="../../assets/icons/Food.png" class="tab-img-main" alt="" />
+                </div>
+              </button>
+              <button class="tab-btn" data-category="pets" title="Pets">
+                <div class="tab-icon-frame">
+                  <img src="../../assets/icons/Pet.png" class="tab-img-main" alt="" />
+                </div>
+              </button>
+              <button class="tab-btn" data-category="special" title="Special">
+                <div class="tab-icon-frame">
+                   <img src="../../assets/icons/Special.png" class="tab-img-main" alt="" />
+                </div>
+              </button>
+            </nav>
+
+            <!-- Item Grid (Premium Stone Cards) -->
+            <main class="store-grid">
+              <div class="store-item-card">
+                <div class="item-visual-box">
+                  <img src="../../assets/clothes/hat3.png" class="item-image" alt="Red Hat" />
+                </div>
+                <div class="item-price-tag">
+                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                  <span>50</span>
+                </div>
+              </div>
+              <div class="store-item-card">
+                <div class="item-visual-box">
+                  <img src="../../assets/clothes/hat17.png" class="item-image" alt="Green Hat" />
+                </div>
+                <div class="item-price-tag">
+                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                  <span>100</span>
+                </div>
+              </div>
+              <div class="store-item-card">
+                <div class="item-visual-box">
+                   <img src="../../assets/clothes/hat19.png" class="item-image" alt="Top Hat" />
+                </div>
+                <div class="item-price-tag">
+                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                  <span>120</span>
+                </div>
+              </div>
+              <div class="store-item-card">
+                <div class="item-visual-box">
+                   <img src="../../assets/clothes/hat20.png" class="item-image" alt="Grey Hat" />
+                </div>
+                <div class="item-price-tag">
+                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                  <span>75</span>
+                </div>
+              </div>
+            </main>
           </div>
         </div>
       </div>
     </div>
 
     <script src="../../features/shared/menu-nav.js"></script>
+    <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/progression/coins.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
+    <script src="../../features/shared/alive.js"></script>
+  <script src="store.js"></script>
   </body>
 </html>
