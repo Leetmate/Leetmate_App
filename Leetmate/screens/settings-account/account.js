@@ -125,14 +125,29 @@ document.addEventListener("DOMContentLoaded", () => {
   function deleteUser() {
     //testing that the button is being clicked
     //alert("delete account button pressed");
+
+    /*db.collection("users").doc(currentUser.uid).delete().then(() => {
+      //deletes the user's document
+    }).catch((error) => {
+      console.error("Error removing user document: ", error);
+    });*/
     
     //NOTE: this deletes the user, but it doesn't delete the user's document so the data just sits there
     currentUser.delete().then(() => {
-      //deletes user
+      //deletes user auth
     }).catch((error) => {
       //error
       console.error("Error deleting user profile:", error);
     });
+
+    //deletes the user's document too
+    db.collection("users").doc(currentUser.uid).delete().then(() => {
+      //deletes the user's document
+    }).catch((error) => {
+      console.error("Error removing user document: ", error);
+    });
+
+    window.location.href = "../start/index.html";
   }
 
   confirmDeleteBtn.addEventListener("click", function() {
