@@ -43,41 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged(async (user) => {
     if (!user) return;
 
-<<<<<<< HEAD
-    currentUid = user.uid;
-
-    await storageSet({ uid: currentUid });
-    window.__leetmateAuth = { db, uid: currentUid };
-
-    // Load static UI state
-    loadLeetCodeUsernameFromFirestore(db, currentUid);
-    await loadXPFromFirestore(db, currentUid);
-    await updateXPSectionUI();
-
-    await loadCoinsFromFirestore(db, currentUid);
-    await updateCoinsUI();
-
-    await loadHappinessFromFirestore(db, currentUid);
-    await updateHeartsUI();
-
-    startHappinessDecayTimer();
-
-    // Sync submissions before rewards/streak evaluation
-    await syncPendingSubmissionsToFirestore(db, currentUid);
-
-    const latestProgressDate = await loadLatestProgressDate(db, currentUid);
-    const today = getTodayString();
-    const solvedToday = latestProgressDate === today;
-
-    if (solvedToday) {
-      await storageSet({ leetmate_last_progress_date: today });
-    }
-
-    await updateStreakOnLoad(db, currentUid, solvedToday);
-
-    // State-driven reward banner
-    await refreshRewardsCard(db, currentUid);
-=======
     try {
       currentUid = user.uid;
 
@@ -141,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } finally {
       setHomeLoading(false);
     }
->>>>>>> 8babc9f413a4b212eab1b48c96bcc726406871c6
   });
 
   // Refresh reward card whenever user returns to the extension
