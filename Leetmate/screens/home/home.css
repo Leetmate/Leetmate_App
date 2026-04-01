@@ -525,6 +525,12 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.minimize-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
 .minimize-icon {
   width: 14px;
   height: 14px;
@@ -574,44 +580,64 @@ body {
 .home-hero {
   display: flex;
   justify-content: center;
+  align-items: flex-end;
   margin-top: 20px;
+}
+
+body.hidden-on-load .popup-layout {
+  visibility: hidden;
 }
 
 /* Pet Sprite */
 .home-hero-pet {
   width: 188px;
-  height: 141px;
-
-  background-image: url("../../assets/spritesheets/CubicJaguatirica2.png");
+  aspect-ratio: 21 / 16;
   background-repeat: no-repeat;
-  background-size: 1316px 141px;
   image-rendering: pixelated;
-  animation: home-pet-idle 0.8s steps(1) infinite;
   
   /* Add floor shadow */
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
   z-index: 2;
 }
 
-.home-hero-pet-bat {
-  width: 188px;
-  height: 141px;
+.home-hero-pet.hidden,
+.home-hero-egg.hidden {
+  display: none;
+}
 
-  background-image: url("../../assets/spritesheets/CubicBat.png");
-  background-repeat: no-repeat;
-  background-size: 752px 141px;
+.home-hero-egg {
+  width: 220px;
+  height: 220px;
+  margin-top: 34px;
   image-rendering: pixelated;
-  animation: home-pet-idle 0.8s steps(1) infinite;
-  
-  /* Add floor shadow */
-  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+  object-fit: contain;
+  transform-origin: center bottom;
+  animation: home-egg-idle 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28));
   z-index: 2;
+}
+
+.home-hero-pet.stage-baby,
+.home-hero-pet.stage-adult {
+  background-size: 700% 100%;
+  background-position: 0% 0%;
+  animation: home-pet-idle 0.8s steps(1) infinite;
+}
+
+
+@keyframes home-egg-idle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 @keyframes home-pet-idle {
-  0% { background-position: 0 0; }
-  50% { background-position: -376px 0; }
-  100% { background-position: 0 0; }
+  0% { background-position: 0% 0%; }
+  50% { background-position: 33.33% 0%; }
+  100% { background-position: 0% 0%; }
 }
 
 /* STATUS BAR */
@@ -796,11 +822,11 @@ body {
 
 
 /* Add delays to make hearts beat in sequence */
-.hearts span:nth-child(1) { animation-delay: 0.0s; }
-.hearts span:nth-child(2) { animation-delay: 0.1s; }
-.hearts span:nth-child(3) { animation-delay: 0.2s; }
-.hearts span:nth-child(4) { animation-delay: 0.3s; }
-.hearts span:nth-child(5) { animation-delay: 0.4s; }
+.hearts span:nth-baby(1) { animation-delay: 0.0s; }
+.hearts span:nth-baby(2) { animation-delay: 0.1s; }
+.hearts span:nth-baby(3) { animation-delay: 0.2s; }
+.hearts span:nth-baby(4) { animation-delay: 0.3s; }
+.hearts span:nth-baby(5) { animation-delay: 0.4s; }
 
 @keyframes heart-beat {
   0%, 100% { transform: scale(1); }
@@ -853,13 +879,13 @@ body {
 
 /* Existing Button Animations */
 .premium-btn:hover,
-.minimize-btn:hover {
+.minimize-btn:hover:not(:disabled) {
   cursor: pointer;
   transform: scale(1.1) !important; /* Override pulse animation scale on hover */
 }
 
 .premium-btn:active,
-.minimize-btn:active {
+.minimize-btn:active:not(:disabled) {
   transform: scale(0.9) !important;
 }
 

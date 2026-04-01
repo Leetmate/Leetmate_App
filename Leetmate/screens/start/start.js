@@ -1,13 +1,11 @@
 /**
- * popup.js – Welcome screen routing logic.
+ * popup.js - Welcome screen routing logic.
  *
  * If the user is already signed in to Leetmate:
- *  - If their Firestore user doc has leetcode.connected === true, open the
- *    LeetCode connect screen in "success" mode.
- *  - Otherwise, open the LeetCode connect screen in "connect" mode
- *    (that screen decides based on Firestore).
+ *  - If their Firestore user doc has leetcode.connected === true, open Home.
+ *  - Otherwise, open the LeetCode connect screen.
  *
- * If no user is signed in, we leave the Welcome screen as-is.
+ * If no user is signed in, reveal the Welcome screen.
  */
 
 (function () {
@@ -15,12 +13,20 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     console.log('Leetmate: popup.js DOMContentLoaded');
+
+    function revealWelcome() {
+      document.body.classList.remove('auth-checking');
+      var loading = document.getElementById('loading-overlay');
+      if (loading) loading.classList.add('hidden');
+    }
+
     if (
       typeof firebase === 'undefined' ||
       !firebase.auth ||
       !firebase.firestore
     ) {
       console.error('Leetmate: Firebase not loaded in popup.js');
+      revealWelcome();
       return;
     }
 
@@ -29,11 +35,13 @@
 
     console.log('Leetmate: attaching onAuthStateChanged');
     auth.onAuthStateChanged(function (user) {
-      console.log('Leetmate: onAuthStateChanged fired. User:', user ? user.uid : 'null');
+      console.log(
+        'Leetmate: onAuthStateChanged fired. User:',
+        user ? user.uid : 'null'
+      );
+
       if (!user) {
-        // Not signed in – keep showing the Welcome screen.
-        var loading = document.getElementById('loading-overlay');
-        if (loading) loading.classList.add('hidden');
+        revealWelcome();
         return;
       }
 
@@ -55,18 +63,16 @@
         })
         .catch(function (error) {
           console.error('Leetmate: Firestore get error:', error);
-          window.location.href = '../auth-leetcode/index.html';
+          revealWelcome();
         });
     });
 
-    // Failsafe: if nothing happens after 5s, hide the loading screen and log
-    setTimeout(() => {
-      var loading = document.getElementById('loading-overlay');
-      if (loading && !loading.classList.contains('hidden')) {
-         console.warn('Leetmate: Failsafe triggered. Stuck on loading for 5 seconds.');
-         loading.classList.add('hidden');
+    // Failsafe: if auth resolution stalls, reveal the Welcome screen.
+    setTimeout(function () {
+      if (document.body.classList.contains('auth-checking')) {
+        console.warn('Leetmate: Failsafe triggered. Auth check exceeded 5 seconds.');
+        revealWelcome();
       }
     }, 5000);
   });
 })();
-

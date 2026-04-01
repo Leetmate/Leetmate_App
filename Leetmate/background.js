@@ -84,8 +84,28 @@ chrome.runtime.onMessage.addListener((message) => { // gets message from pip or 
 				const allTabs = win.tabs; 
 				const activeTab = allTabs.find(tab => tab.active); // find active tab from array
 
-				const petDataUrl = await assetToDataUrl("assets/spritesheets/CubicJaguatirica2.png");
-
+				const { activePetType, activePetStage, activePetSpritePath, leetmate_happiness } =
+					await storageGet(['activePetType', 'activePetStage', 'activePetSpritePath', 'leetmate_happiness']);
+				if (!activePetType) {
+					console.warn("Leetmate: cannot open PiP without an active pet type.");
+					return;
+				}
+				const normalizedStage = (activePetStage || '').toLowerCase();
+				if (!['baby', 'adult'].includes(normalizedStage)) {
+					console.warn("Leetmate: PiP is only available for baby or adult pets.");
+					return;
+				}
+				if ((leetmate_happiness ?? 100) <= 0) {
+					console.warn("Leetmate: PiP is disabled while the active pet is downed.");
+					return;
+				}
+				const petSpritePath =
+					activePetSpritePath ||
+					(normalizedStage === 'baby'
+						? `assets/spritesheets/Cubic${activePetType}Baby.png`
+						: `assets/spritesheets/Cubic${activePetType}Adult.png`);
+				const petDataUrl = await assetToDataUrl(petSpritePath);
+				
 				chrome.scripting.executeScript(
 					{target: {tabId: activeTab.id}, files: ["features/pet/pip.js"]},
 					() => {

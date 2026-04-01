@@ -217,14 +217,8 @@ async function updateHeartsUI() {
 
 // Change to Fainted Pet when below 0 hearts 
 function updatePetState() {
-  const pet = document.querySelector(".home-hero-pet");
-
-  if (heartPercent === 0) {
-      pet.style.animation = "none";
-      pet.style.backgroundPosition = "-564px 0";
-  } else {
-      pet.style.animation = "home-pet-idle 0.8s steps(1) infinite";
-      pet.style.backgroundPosition = "0 0";
+  if (window.LeetmatePetUI && typeof window.LeetmatePetUI.setPetHappinessState === "function") {
+      window.LeetmatePetUI.setPetHappinessState(heartPercent);
   }
 }
 

@@ -13,6 +13,14 @@ if (!window.pipInitialized) {	// guard against multiple injections
 	});
 
 	function showLaunchButton() { 
+		if (!document.getElementById("leetmate-pip-font")) {
+			const fontLink = document.createElement("link");
+			fontLink.id = "leetmate-pip-font";
+			fontLink.rel = "stylesheet";
+			fontLink.href = "https://fonts.googleapis.com/css2?family=Lilita+One&display=swap";
+			document.head.appendChild(fontLink);
+		}
+
 		const style = document.createElement("style");
 		// pip styling needs to be injected here instead of separate files
 		style.textContent = `
@@ -21,31 +29,55 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				bottom: 24px;
 				right: 24px;
 				z-index: 2147483647;
-				padding: 12px 16px;
-				border-radius: 20px;
-				border: none;
-				background: #4f46e5;
-				color: white;
-				font-family: sans-serif;
+				padding: 12px 20px 11px;
+				border-radius: 18px;
+				border: 3px solid #3b2a12;
+				background: linear-gradient(180deg, #ffb446 0%, #f49a28 100%);
+				color: #20180f;
+				font-family: "Lilita One", "Trebuchet MS", "Arial Rounded MT Bold", "Segoe UI", sans-serif;
 				font-size: 16px;
+				font-weight: 800;
+				letter-spacing: 0.1px;
 				cursor: pointer;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+				box-shadow:
+					0 5px 0 #3b2a12,
+					0 10px 18px rgba(0, 0, 0, 0.28);
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				line-height: 1;
-				gap: 6px;
+				gap: 10px;
+				transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.15s ease;
 			}
 			.pip-launch:hover {
-				background: #4338ca;
+				filter: brightness(1.04);
+				transform: translateY(-1px);
+				box-shadow:
+					0 4px 0 #3b2a12,
+					0 8px 14px rgba(0, 0, 0, 0.24);
 			}
-			.pip-launch svg {margin-top: -4px;}
+			.pip-launch:active {
+				transform: translateY(4px);
+				box-shadow:
+					0 1px 0 #3b2a12,
+					0 3px 8px rgba(0, 0, 0, 0.22);
+			}
+			.pip-launch-icon {
+				width: 22px;
+				height: 22px;
+				display: block;
+				flex: 0 0 auto;
+			}
+			.pip-launch-label {
+				display: inline-block;
+				margin-top: 1px;
+			}
 		`;
 		document.head.appendChild(style);
 
 		const btn = document.createElement("button");
 		btn.className = "pip-launch";
-		btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#ff7d04" stroke="#000000" stroke-width="60"><path d="M180-475q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Zm109-189q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29Zm240 0q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29Zm251 189q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM266-75q-45 0-75.5-34.5T160-191q0-52 35.5-91t70.5-77q29-31 50-67.5t50-68.5q22-26 51-43t63-17q34 0 63 16t51 42q28 32 49.5 69t50.5 69q35 38 70.5 77t35.5 91q0 47-30.5 81.5T694-75q-54 0-107-9t-107-9q-54 0-107 9t-107 9Z"/></svg> Open Mini Display`;
+		btn.innerHTML = `<svg class="pip-launch-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#20180f" stroke="#20180f" stroke-width="24" aria-hidden="true"><path d="M180-475q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29Zm109-189q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29Zm240 0q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29Zm251 189q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM266-75q-45 0-75.5-34.5T160-191q0-52 35.5-91t70.5-77q29-31 50-67.5t50-68.5q22-26 51-43t63-17q34 0 63 16t51 42q28 32 49.5 69t50.5 69q35 38 70.5 77t35.5 91q0 47-30.5 81.5T694-75q-54 0-107-9t-107-9q-54 0-107 9t-107 9Z"/></svg><span class="pip-launch-label">Open Mini Display</span>`;
 
 		btn.addEventListener("click", () => {
 			btn.remove();
