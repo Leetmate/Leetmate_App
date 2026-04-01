@@ -325,15 +325,14 @@
         // New users coming from sign-up: keep "Choose your starter Pet" CTA.
         choosePetBtn.textContent = 'Choose your starter Pet';
         choosePetBtn.addEventListener('click', function () {
-          // Placeholder navigation to starter pet selection screen.
-          // Wire this up once the starter pet screen exists.
-          window.location.href = '../auth-signup/index.html';
+          // Redirect to the starter pet selection screen.
+          window.location.href = '../auth-starters/index.html';
         });
       } else {
-        // Existing users signing in: send them to the pet home screen.
-        choosePetBtn.textContent = 'Go to Home';
+        // After a successful LeetCode connection, continue to starter pet selection.
+        choosePetBtn.textContent = 'Go to Starter Pet';
         choosePetBtn.addEventListener('click', function () {
-          window.location.href = '../home/index.html';
+          window.location.href = '../auth-starters/index.html';
         });
       }
     }

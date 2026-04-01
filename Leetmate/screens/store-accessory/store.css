@@ -1,47 +1,478 @@
-/* Store Screen Layout */
+/* Store Screen Styles - Wood Shop Aesthetic Transformation */
 @import url("../../styles/layout.css");
+@import url("../../styles/top-banner.css");
+
+:root {
+  --color-wood-dark: #3E2723;
+  --color-wood-medium: #5D4037;
+  --color-wood-base: #8D6E63;
+  --color-wood-light: #BCAAA4;
+  --color-wood-warm: #D7CCC8;
+  --color-wood-cream: #EDE0D4;
+  --color-header-bg: #d6d0c5;
+  --shadow-wood: 0 6px 0 #3E2723;
+}
 
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
+  background-color: var(--color-wood-warm) !important;
+  color: var(--color-wood-dark) !important;
 }
 
-/* STORE CONTAINER */
+/* Fix scrolling override */
+.popup-content--scroll {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* Subtle plank background effect */
 .store-card {
-  --screen-banner-bg: #c4b5d6;
-  --screen-banner-offset-top: 16px;
-  --screen-banner-offset-x: 16px;
   width: 100%;
   max-width: 380px;
-  min-height: 520px;
-  margin: 0 auto;
-  padding: 16px;
-  background: #EBE5F0; /* slightly purple tone */
-  border-radius: 0;
-  border: none;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  padding: 12px;
   box-sizing: border-box;
+  gap: 5px; 
+  position: relative;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 40px,
+    rgba(0, 0, 0, 0.02) 40px,
+    rgba(0, 0, 0, 0.02) 41px
+  );
 }
 
-/* STORE CONTENT BLOCK */
-.store-content {
-  flex: 1 1 auto;
+/* APP-NATIVE HEADER BAR */
+.store-card .screen-banner {
+  background: var(--color-header-bg);
+  border-bottom: 4px solid var(--color-wood-dark);
+  margin: -12px -12px 10px -12px; /* Reduced bottom margin from 16px */
+  padding: 10px 16px;
+  border-radius: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.store-card .screen-banner__title {
+  color: var(--color-wood-dark);
+  font-family: 'Lilita One', cursive;
+  font-size: 28px;
+  letter-spacing: 0.8px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.screen-banner__left,
+.screen-banner__center,
+.screen-banner__right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.screen-banner__left { justify-content: flex-start; }
+.screen-banner__center { justify-content: center; }
+.screen-banner__right { justify-content: flex-end; }
+
+/* Coins Display - Premium Wood-Shop Variant */
+.coins-display {
+  background: rgba(62, 39, 35, 0.9);
+  backdrop-filter: blur(4px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  padding: 3px 6px 3px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #FFD700;
+  font-family: 'Lilita One', sans-serif;
+  font-size: 16px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.add-coins-btn {
+  background: var(--color-wood-base);
+  border: 2px solid var(--color-wood-dark);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  margin-left: 4px;
+  box-shadow: 0 2px 0 var(--color-wood-dark);
+  transition: all 0.1s;
+}
+
+.add-coins-btn:hover { background: var(--color-wood-light); transform: scale(1.1); }
+.add-coins-btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--color-wood-dark); }
+
+.coins-display .coin-icon {
+  width: 20px;
+  height: auto;
+}
+
+/* Menu Button */
+.menu-btn {
+  background: var(--color-wood-warm);
+  border: 3px solid var(--color-wood-dark);
+  border-radius: 12px;
+  width: 42px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 0 var(--color-wood-dark);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.menu-btn:hover { background: var(--color-wood-light); }
+.menu-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--color-wood-dark); }
+
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  filter: contrast(1.2); /* Ensure crisp dark icon */
+}
+
+/* Promotional Banner - Premium Shop Sign Aesthetic */
+.promo-banner {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)), url("../../assets/backgrounds/storeBanner.png");
+  background-size: cover;
+  background-position: center;
+  border: 5px solid var(--color-wood-dark);
+  border-radius: 24px;
+  padding: 16px 14px;
+  box-shadow: 0 8px 0 var(--color-wood-dark), inset 0 0 20px rgba(0,0,0,0.05);
+  position: relative;
+  margin-top: 4px;
+  margin-bottom: 15px; /* Preserved User change */
+  overflow: hidden;
+}
+
+/* Corner Nails Class-based Positioning */
+.banner-nail {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #2a1a17;
+  border-radius: 50%;
+  box-shadow: inset -2px -2px 0 rgba(0,0,0,0.4);
+  z-index: 5;
+}
+
+.banner-nail.tl { top: 10px; left: 10px; }
+.banner-nail.tr { top: 10px; right: 10px; }
+.banner-nail.bl { bottom: 10px; left: 10px; }
+.banner-nail.br { bottom: 10px; right: 10px; }
+
+/* Sparkles Animation */
+.promo-banner .sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.promo-banner .sparkles::before,
+.promo-banner .sparkles::after {
+  content: '✦';
+  position: absolute;
+  color: #FFF;
+  font-size: 14px;
+  text-shadow: 0 0 8px #FFD700;
+  animation: banner-sparkle 3s infinite ease-in-out;
+  opacity: 0;
+}
+
+.promo-banner .sparkles::before { top: 15%; left: 10%; animation-delay: 0.5s; }
+.promo-banner .sparkles::after { bottom: 20%; right: 15%; animation-delay: 1.5s; }
+
+@keyframes banner-sparkle {
+  0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+}
+
+.promo-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.banner-pet-wrap {
+  width: 63px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: floatShop 4s ease-in-out infinite;
+}
+
+.banner-pet-wrap:nth-child(3) { animation-delay: 2s; }
+
+.banner-pet {
+  width: 63px;
+  height: 48px;
+  background-repeat: no-repeat;
+  background-size: 252px 48px;
+  image-rendering: pixelated;
+  animation: pet-idle 0.8s steps(1) infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+}
+
+.CubicFox { background-image: url("../../assets/spritesheets/CubicFox.png"); }
+.CubicCat { background-image: url("../../assets/spritesheets/CubicCat.png"); }
+
+@keyframes pet-idle {
+  0%, 100% { background-position: 0 0; }
+  50% { background-position: -126px 0; }
+}
+
+@keyframes floatShop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Promotional Text - Golden Plaque Style */
+.unlock-all-btn {
+  background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
+  border: 4px solid #3E2723; /* Matching wood shop border */
+  border-radius: 12px; /* Less round, more plaque-like */
+  padding: 10px 18px;
+  font-family: 'Lilita One', cursive;
+  font-size: 15px;
+  color: #2a1a17; /* High contrast dark brown */
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  box-shadow: 
+    0 4px 0 #2a1a17, 
+    inset 0 1px 1px rgba(255,255,255,0.2),
+    0 8px 15px rgba(0,0,0,0.3);
+  flex: 1;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+  letter-spacing: 0.5px;
+}
+
+.shiny-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -150%;
+  width: 60%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-25deg);
+  animation: stone-shine 7s infinite ease-in-out;
+}
+
+@keyframes stone-shine {
+  0% { left: -150%; }
+  15% { left: 250%; }
+  100% { left: 250%; }
+}
+
+/* Category Navigation - Wooden Sign Style */
+.category-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  background: linear-gradient(to bottom, var(--color-wood-base) 0%, var(--color-wood-medium) 100%);
+  border: 4px solid var(--color-wood-dark);
+  border-radius: 18px;
+  height: 56px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 0 var(--color-wood-dark);
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover { background: var(--color-wood-medium); transform: translateY(-2px); box-shadow: 0 7px 0 var(--color-wood-dark); }
+
+.tab-btn.active {
+  background: linear-gradient(to bottom, var(--color-wood-warm) 0%, var(--color-wood-light) 100%);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--color-wood-dark);
+}
+
+.tab-icon-frame {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-img-main {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+}
+
+/* Item Grid - Wood Plank Aesthetic */
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding-bottom: 50px;
+}
+
+.store-item-card {
+  background: linear-gradient(135deg, var(--color-wood-cream) 0%, #E7D7C1 100%);
+  border: 4px solid var(--color-wood-dark);
+  border-radius: 24px;
+  padding: 24px 12px 14px 12px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background: linear-gradient(#DCEAF5, #E5DCF5); /* playful gradient */
-  border: 4px solid #111;
-  border-radius: 28px;
-  padding: 16px;
-  margin: 0;
-  min-height: 250px;
-  text-align: center;
+  gap: 20px;
+  cursor: pointer;
+  box-shadow: var(--shadow-wood);
+  transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
+
+.store-item-card:hover {
+  transform: translateY(-8px);
+  filter: brightness(1.05);
+  box-shadow: 0 14px 0 var(--color-wood-dark), 0 12px 24px rgba(0,0,0,0.25);
+}
+
+.item-visual-box {
+  width: 72px;
+  height: 72px;
+  background: #FFF;
+  border: 3px solid var(--color-wood-dark);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden; /* Prevent bleed */
+}
+
+.item-image {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+/* Pet Thumbnail (Sprite-based) */
+.pet-thumb {
+  width: 63px; /* 21px * 3 scale */
+  height: 48px; /* 16px * 3 scale */
+  background-size: 252px 48px; /* EXACTLY 4 frames * 63px total width */
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+.item-price-tag {
+  background: var(--color-wood-dark);
+  border: 2px solid var(--color-wood-medium);
+  border-radius: 14px;
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Lilita One', cursive;
+  font-size: 17px;
+  color: #FFD700;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+
+.coin-mini {
+  width: 20px;
+  height: auto;
+}
+
+/* CUSTOM WOOD SCROLLBAR */
+.popup-content--scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.popup-content--scroll::-webkit-scrollbar-track {
+  background: rgba(62, 39, 35, 0.05);
+  margin-top: 10px;
+}
+
+.popup-content--scroll::-webkit-scrollbar-thumb {
+  background: var(--color-wood-base);
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px var(--color-wood-dark);
+}
+
+.popup-content--scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-wood-medium);
+}
+.store-item-card.owned .item-visual-box {
+  filter: blur(1.5px) grayscale(0.4);
+  opacity: 0.8;
+  position: relative;
+}
+
+.store-item-card.owned .item-visual-box::after {
+  content: 'OWNED';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-wood-dark);
+  font-family: 'Lilita One', cursive;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-wood-dark);
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.store-item-card.owned .item-price-tag {
+  background: #4ade80 !important; /* Success green */
+  border-color: #22c55e !important;
+  color: #fff !important;
+}
+
+.store-item-card.locked .item-visual-box {
+  filter: grayscale(0.8) sepia(0.3) brightness(0.9); /* Warm grayscale */
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.store-item-card.locked .item-price-tag {
+  background: linear-gradient(180deg, #FDE68A 0%, #F59E0B 100%) !important; /* Gold gradient */
+  border-color: #B45309 !important; /* Hard wood / dark gold border */
+  color: #78350F !important; /* Dark brown text */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+.store-item-card.locked:hover {
+  transform: none;
+  box-shadow: 2px 4px 0 rgba(0,0,0,0.1);
+}
+
