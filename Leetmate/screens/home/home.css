@@ -55,7 +55,7 @@ body {
 
   /* Soft shadow + inner glow for default state */
   box-shadow: 0 2px 8px rgba(44, 36, 25, 0.08),
-              inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 
   cursor: pointer;
   transition: transform 0.1s ease;
@@ -68,16 +68,24 @@ body {
   left: -100%;
   width: 55%;
   height: 100%;
-  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
   transform: skewX(-25deg);
   animation: shine-card 3s infinite;
   pointer-events: none;
 }
 
 @keyframes shine-card {
-  0% { left: -100%; }
-  20% { left: 200%; }
-  100% { left: 200%; }
+  0% {
+    left: -100%;
+  }
+
+  20% {
+    left: 200%;
+  }
+
+  100% {
+    left: 200%;
+  }
 }
 
 .leetcode-icon {
@@ -190,7 +198,7 @@ body {
   background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 40%, #ebe4d9 100%);
   border-color: #2c2419;
   box-shadow: 0 2px 8px rgba(44, 36, 25, 0.08),
-              inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .leetcode-card.completed .leetcode-view.view-alt {
@@ -352,9 +360,23 @@ body {
   animation: coinPop 700ms ease forwards;
 }
 
-.coin1 { left: 10px; top: -5px; animation-delay: 0ms; }
-.coin2 { left: 25px; top: -10px; animation-delay: 90ms; }
-.coin3 { left: 40px; top: -5px; animation-delay: 180ms; }
+.coin1 {
+  left: 10px;
+  top: -5px;
+  animation-delay: 0ms;
+}
+
+.coin2 {
+  left: 25px;
+  top: -10px;
+  animation-delay: 90ms;
+}
+
+.coin3 {
+  left: 40px;
+  top: -5px;
+  animation-delay: 180ms;
+}
 
 .coin-reward-popup {
   position: fixed;
@@ -375,7 +397,7 @@ body {
   z-index: 9999;
   left: 0;
   top: 0;
-  animation: coinFly 800ms cubic-bezier(.22,.68,.43,.99) forwards;
+  animation: coinFly 800ms cubic-bezier(.22, .68, .43, .99) forwards;
 }
 
 .coin-bounce {
@@ -383,15 +405,31 @@ body {
 }
 
 @keyframes reward-pop {
-  0% { transform: scale(1) rotate(0deg);}
-  30% { transform: scale(1.5) rotate(-10deg);}
-  60% { transform: scale(1.25) rotate(10deg);}
-  100% { transform: scale(1) rotate(0deg);}
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  30% {
+    transform: scale(1.5) rotate(-10deg);
+  }
+
+  60% {
+    transform: scale(1.25) rotate(10deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 @keyframes rewardFade {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes coinPop {
@@ -399,10 +437,12 @@ body {
     opacity: 0;
     transform: translateY(0) scale(0.5);
   }
+
   30% {
     opacity: 1;
     transform: translateY(-10px) scale(1.2);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-30px) scale(1);
@@ -414,10 +454,12 @@ body {
     transform: translateY(0px) scale(0.8);
     opacity: 0;
   }
+
   25% {
     transform: translateY(-10px) scale(1.2);
     opacity: 1;
   }
+
   100% {
     transform: translateY(-40px) scale(1);
     opacity: 0;
@@ -429,10 +471,12 @@ body {
     transform: translate(0px, 0px) scale(1);
     opacity: 1;
   }
+
   70% {
     transform: translate(calc(var(--dx) * 0.8), calc(var(--dy) * 0.8)) scale(0.9);
     opacity: 1;
   }
+
   100% {
     transform: translate(var(--dx), var(--dy)) scale(0.35);
     opacity: 0;
@@ -440,10 +484,21 @@ body {
 }
 
 @keyframes coinBounce {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.35); }
-  70% { transform: scale(0.9); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.35);
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* PET DISPLAY CARD */
@@ -463,8 +518,8 @@ body {
   overflow: hidden;
 
   /* Ambient scene lighting/depth */
-  box-shadow: inset 0 -40px 60px rgba(0, 0, 0, 0.2), 
-              inset 0 20px 40px rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 -40px 60px rgba(0, 0, 0, 0.2),
+    inset 0 20px 40px rgba(255, 255, 255, 0.1);
 }
 
 .pet-card::before {
@@ -474,9 +529,11 @@ body {
   background-image: url("../../assets/backgrounds/bg_home.png");
   background-size: cover;
   background-position: center calc(100% + 40px);
-  opacity: 0.7; /* 70% opacity for background image */
+  opacity: 0.7;
+  /* 70% opacity for background image */
   pointer-events: none;
 }
+
 /* Top Row: Coins + Minimize btn */
 .pet-top {
   position: absolute;
@@ -499,7 +556,8 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #FFD700; /* Gold color for text */
+  color: #FFD700;
+  /* Gold color for text */
   font-family: 'Lilita One', sans-serif;
   font-size: 15px;
   -webkit-text-stroke: 0.5px #111;
@@ -543,12 +601,14 @@ body {
   top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.85); /* Brighter for visibility */
+  background: rgba(255, 255, 255, 0.85);
+  /* Brighter for visibility */
   backdrop-filter: blur(8px);
   min-height: 44px;
   padding: 5px 20px;
   border-radius: 24px;
-  color: #3b2b1a; /* Darker brown for contrast */
+  color: #3b2b1a;
+  /* Darker brown for contrast */
   text-align: center;
   border: 2px solid #D6D0C5;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -594,7 +654,7 @@ body.hidden-on-load .popup-layout {
   aspect-ratio: 21 / 16;
   background-repeat: no-repeat;
   image-rendering: pixelated;
-  
+
   /* Add floor shadow */
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
   z-index: 2;
@@ -612,7 +672,7 @@ body.hidden-on-load .popup-layout {
   image-rendering: pixelated;
   object-fit: contain;
   transform-origin: center bottom;
-  animation: home-egg-idle 1.8s ease-in-out infinite;
+  animation: home-egg-idle 6s ease-in-out infinite;
   filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28));
   z-index: 2;
 }
@@ -626,18 +686,43 @@ body.hidden-on-load .popup-layout {
 
 
 @keyframes home-egg-idle {
-  0%, 100% {
-    transform: translateY(0);
+
+  0%,
+  100%,
+  15%,
+  100% {
+    transform: rotate(0deg) translateY(0);
   }
-  50% {
-    transform: translateY(-6px);
+
+  3% {
+    transform: rotate(-6deg) translateY(-1px);
+  }
+
+  6% {
+    transform: rotate(6deg) translateY(-1px);
+  }
+
+  9% {
+    transform: rotate(-3deg) translateY(-2px);
+  }
+
+  12% {
+    transform: rotate(3deg) translateY(-2px);
   }
 }
 
 @keyframes home-pet-idle {
-  0% { background-position: 0% 0%; }
-  50% { background-position: 33.33% 0%; }
-  100% { background-position: 0% 0%; }
+  0% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 33.33% 0%;
+  }
+
+  100% {
+    background-position: 0% 0%;
+  }
 }
 
 /* STATUS BAR */
@@ -654,7 +739,7 @@ body.hidden-on-load .popup-layout {
   text-align: center;
 }
 
-.status-col { 
+.status-col {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -677,7 +762,7 @@ body.hidden-on-load .popup-layout {
   flex: 1.3;
 }
 
-.hearts-text, 
+.hearts-text,
 .streak-text,
 .streak-count,
 .level-text {
@@ -735,17 +820,37 @@ body.hidden-on-load .popup-layout {
   opacity: 0.65;
   display: none;
 }
+
 /* XP */
 .level-text.level-up {
   animation: animateLevelUp 1500ms;
 }
 
 @keyframes animateLevelUp {
-  0%    {transform: scale(1);     color: white;}
-  25%   {transform: scale(1.25);  color: rgb(40, 255, 40);}
-  65%   {transform: scale(0.90);  color: white;}
-  85%   {transform: scale(1.05);  color: white;}
-  100%  {transform: scale(1);     color: white;}
+  0% {
+    transform: scale(1);
+    color: white;
+  }
+
+  25% {
+    transform: scale(1.25);
+    color: rgb(40, 255, 40);
+  }
+
+  65% {
+    transform: scale(0.90);
+    color: white;
+  }
+
+  85% {
+    transform: scale(1.05);
+    color: white;
+  }
+
+  100% {
+    transform: scale(1);
+    color: white;
+  }
 }
 
 .xp-bar {
@@ -795,11 +900,25 @@ body.hidden-on-load .popup-layout {
 }
 
 @keyframes ice-shiver {
-  0% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(-1px) rotate(-1deg); }
-  50% { transform: translateX(1px) rotate(1deg); }
-  75% { transform: translateX(-1px) rotate(-1deg); }
-  100% { transform: translateX(0) rotate(0deg); }
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateX(-1px) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateX(1px) rotate(1deg);
+  }
+
+  75% {
+    transform: translateX(-1px) rotate(-1deg);
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
 }
 
 /* Hearts beating animation */
@@ -813,24 +932,47 @@ body.hidden-on-load .popup-layout {
 .hearts span {
   display: inline-block;
   animation: heart-beat 1.5s infinite ease-in-out;
-  
+
   /* Outline effect for empty/faded hearts */
-  text-shadow: 
-    0 0 0 2px #111,   /* hard border */
-    0 1px 3px rgba(0, 0, 0, 0.3); /* soft shadow */
+  text-shadow:
+    0 0 0 2px #111,
+    /* hard border */
+    0 1px 3px rgba(0, 0, 0, 0.3);
+  /* soft shadow */
 }
 
 
 /* Add delays to make hearts beat in sequence */
-.hearts span:nth-baby(1) { animation-delay: 0.0s; }
-.hearts span:nth-baby(2) { animation-delay: 0.1s; }
-.hearts span:nth-baby(3) { animation-delay: 0.2s; }
-.hearts span:nth-baby(4) { animation-delay: 0.3s; }
-.hearts span:nth-baby(5) { animation-delay: 0.4s; }
+.hearts span:nth-baby(1) {
+  animation-delay: 0.0s;
+}
+
+.hearts span:nth-baby(2) {
+  animation-delay: 0.1s;
+}
+
+.hearts span:nth-baby(3) {
+  animation-delay: 0.2s;
+}
+
+.hearts span:nth-baby(4) {
+  animation-delay: 0.3s;
+}
+
+.hearts span:nth-baby(5) {
+  animation-delay: 0.4s;
+}
 
 @keyframes heart-beat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 /* Full hearts -> portion adjusted based on calculation */
@@ -842,7 +984,7 @@ body.hidden-on-load .popup-layout {
 }
 
 /* Empty hearts -> underneath the full hearts */
-.bottom-hearts{
+.bottom-hearts {
   position: absolute;
   top: 0;
   left: 0;
@@ -859,10 +1001,21 @@ body.hidden-on-load .popup-layout {
 }
 
 @keyframes heartBreak {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.4) rotate(-10deg); }
-  60% { transform: scale(1.2) rotate(10deg); }
-  100% { transform: scale(0.8); }
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(1.4) rotate(-10deg);
+  }
+
+  60% {
+    transform: scale(1.2) rotate(10deg);
+  }
+
+  100% {
+    transform: scale(0.8);
+  }
 }
 
 /* Heart gain animation */
@@ -871,21 +1024,32 @@ body.hidden-on-load .popup-layout {
 }
 
 @keyframes heartGain {
-  0% { transform: scale(0.6); }
-  40% { transform: scale(1.4); }
-  70% { transform: scale(0.8); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.6);
+  }
+
+  40% {
+    transform: scale(1.4);
+  }
+
+  70% {
+    transform: scale(0.8);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Existing Button Animations */
 .premium-btn:hover,
 .minimize-btn:hover:not(:disabled) {
   cursor: pointer;
-  transform: scale(1.1) !important; /* Override pulse animation scale on hover */
+  transform: scale(1.1) !important;
+  /* Override pulse animation scale on hover */
 }
 
 .premium-btn:active,
 .minimize-btn:active:not(:disabled) {
   transform: scale(0.9) !important;
 }
-
