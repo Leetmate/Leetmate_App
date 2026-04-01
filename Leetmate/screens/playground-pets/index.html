@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leetmate - Pets</title>
+  <link rel="stylesheet" href="../../styles/layout.css" />
+  <link rel="stylesheet" href="../../styles/top-banner.css" />
+  <link rel="stylesheet" href="../../styles/menu-nav.css" />
+  <link rel="stylesheet" href="playground-pets.css" />
+</head>
+
+<body>
+  <div class="popup-layout">
+    <div class="popup-content">
+      <div class="pets-card">
+        <div class="screen-banner">
+          <div class="screen-banner__left">
+            <button type="button" class="pets-back-btn" id="pets-back-btn" aria-label="Back to playground">
+              &#9664;
+            </button>
+          </div>
+          <div class="screen-banner__center">
+            <h1 class="screen-banner__title">Pets</h1>
+          </div>
+          <div class="screen-banner__right">
+            <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false"
+              aria-controls="nav-drawer" aria-label="Open menu">
+              <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+            </button>
+          </div>
+        </div>
+
+        <div class="pets-content">
+          <p class="pets-loading" id="pets-loading">Loading...</p>
+          <h2 class="pets-current-name" id="pets-current-name"></h2>
+          <section class="pets-carousel" aria-label="Owned pets">
+            <div class="pets-slot pets-slot--side pets-slot--left" id="pet-slot-left" aria-hidden="true">
+              <div class="pets-slot-sprite"></div>
+              <img class="pets-slot-egg hidden" alt="" />
+            </div>
+
+            <div class="pets-slot pets-slot--center" id="pet-slot-center">
+              <div class="pets-slot-sprite"></div>
+              <img class="pets-slot-egg hidden" alt="" />
+            </div>
+
+            <div class="pets-slot pets-slot--side pets-slot--right" id="pet-slot-right" aria-hidden="true">
+              <div class="pets-slot-sprite"></div>
+              <img class="pets-slot-egg hidden" alt="" />
+            </div>
+          </section>
+
+          <div class="pets-controls">
+            <button type="button" class="pets-arrow-btn" id="pets-prev-btn" aria-label="Previous pet">
+              <img src="../../assets/icons/arrow.svg" class="pets-arrow-icon pets-arrow-icon--left" alt="" />
+            </button>
+            <button type="button" class="pets-arrow-btn" id="pets-next-btn" aria-label="Next pet">
+              <img src="../../assets/icons/arrow.svg" class="pets-arrow-icon" alt="" />
+            </button>
+          </div>
+
+          <button type="button" class="pets-select-btn" id="pets-select-btn">
+            Select
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pets-modal-overlay hidden" id="pets-modal-overlay">
+    <div class="pets-modal" role="dialog" aria-modal="true" aria-labelledby="pets-modal-title">
+      <div class="pets-modal-header">
+        <h2 id="pets-modal-title">Pet Details</h2>
+        <button type="button" class="pets-modal-close" id="pets-modal-close" aria-label="Close pet details">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="pets-modal-body">
+        <h3 class="pets-modal-name" id="pets-modal-name">Pet Name</h3>
+        <p class="pets-modal-age">Age: <span id="pets-modal-age">0d</span></p>
+
+        <div class="pets-modal-stats">
+          <p><span>HP</span><strong id="pets-stat-hp">0</strong></p>
+          <p><span>ATK</span><strong id="pets-stat-atk">0</strong></p>
+          <p><span>DEF</span><strong id="pets-stat-def">0</strong></p>
+          <p><span>SP ATK</span><strong id="pets-stat-spatk">0</strong></p>
+          <p><span>SP DEF</span><strong id="pets-stat-spdef">0</strong></p>
+          <p><span>SPD</span><strong id="pets-stat-spd">0</strong></p>
+        </div>
+
+        <button type="button" class="pets-modal-confirm" id="pets-modal-confirm">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../features/shared/menu-nav.js"></script>
+  <script src="../../features/shared/storage-helper.js"></script>
+  <script src="../../scripts/firebase-bundle.js"></script>
+  <script src="../../scripts/firebase-config.js"></script>
+  <script src="../../features/pet/pet-change.js"></script>
+  <script src="../../scripts/auth-gate.js"></script>
+  <script src="../../tests/pet-test.js"></script>
+  <script src="playground-pets.js"></script>
+</body>
+
+</html>

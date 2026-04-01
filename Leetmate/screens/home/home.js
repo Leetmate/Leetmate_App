@@ -5,12 +5,27 @@ function hasFirebase() {
   return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
 }
 
+function setHomeLoading(isLoading, text) {
+  const overlay = document.getElementById("loading-overlay");
+  const label = document.getElementById("loading-text");
+  if (!overlay) return;
+
+  if (label && text) {
+    label.textContent = text;
+  }
+
+  overlay.classList.toggle("hidden", !isLoading);
+  document.body.classList.toggle("hidden-on-load", isLoading);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   if (!hasFirebase()) {
     console.warn("Firebase not available on this page.");
+    setHomeLoading(false);
     return;
   }
 
+  setHomeLoading(true, "Loading Home...");
   updateXPSectionUI();
   updateCoinsUI();
 
@@ -28,58 +43,69 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged(async (user) => {
     if (!user) return;
 
-    currentUid = user.uid;
+    try {
+      currentUid = user.uid;
 
-    await storageSet({ uid: currentUid });
-    window.__leetmateAuth = { db, uid: currentUid };
+      await storageSet({ uid: currentUid });
+      window.__leetmateAuth = { db, uid: currentUid };
 
-    // Load static UI state
-    loadLeetCodeUsernameFromFirestore(db, currentUid);
+      // Load static UI state
+      loadLeetCodeUsernameFromFirestore(db, currentUid);
 
-		// default card to load
-		setupLeetCodeCard(db, currentUid, {
-			solved: false,
-			claimableCount: 0,
-			claimableCoins: 0,
-			claimableXp: 0,
-			claimableIds: [],
-			includesFirstSumbission: false,
-		});
+  		// default card to load
+  		setupLeetCodeCard(db, currentUid, {
+  			solved: false,
+  			claimableCount: 0,
+  			claimableCoins: 0,
+  			claimableXp: 0,
+  			claimableIds: [],
+  			includesFirstSumbission: false,
+  		});
 
-		const initalRewardsPromise = refreshRewardsCard(db, currentUid);
-		const syncedRewardsPromise = syncPendingSubmissionsToFirestore(db, currentUid)
-			.then(() => refreshRewardsCard(db, currentUid));
-		
-		// just changed to load all these in parallel
-		await Promise.all([
-			loadXPFromFirestore(db, currentUid),
-			loadCoinsFromFirestore(db, currentUid),
-			loadHappinessFromFirestore(db, currentUid),
-		]);
+  		const initalRewardsPromise = refreshRewardsCard(db, currentUid);
+  		const syncedRewardsPromise = syncPendingSubmissionsToFirestore(db, currentUid)
+  			.then(() => refreshRewardsCard(db, currentUid));
+  		
+  		// just changed to load all these in parallel
+  		await Promise.all([
+  			loadXPFromFirestore(db, currentUid),
+  			loadCoinsFromFirestore(db, currentUid),
+  			loadHappinessFromFirestore(db, currentUid),
+  		]);
 
-		await Promise.all([
-			updateXPSectionUI(),
-			updateCoinsUI(),
-			// i think load happiness already calls update hearts ui
-		])
+  		await Promise.all([
+  			updateXPSectionUI(),
+  			updateCoinsUI(),
+  			// i think load happiness already calls update hearts ui
+  		]);
 
-    startHappinessDecayTimer();
+      startHappinessDecayTimer();
 
-		await initalRewardsPromise;
-    // Sync submissions before rewards/streak evaluation
+  		await initalRewardsPromise;
+      // Sync submissions before rewards/streak evaluation
 
-    const latestProgressDate = await loadLatestProgressDate(db, currentUid);
-    const today = getTodayString();
-    const solvedToday = latestProgressDate === today;
+      const latestProgressDate = await loadLatestProgressDate(db, currentUid);
+      const today = getTodayString();
+      const solvedToday = latestProgressDate === today;
 
-    if (solvedToday) {
-      await storageSet({ leetmate_last_progress_date: today });
+      if (solvedToday) {
+        await storageSet({ leetmate_last_progress_date: today });
+      }
+  		
+  		await Promise.all([
+  			syncedRewardsPromise,
+  			updateStreakOnLoad(db, currentUid, solvedToday)
+  		]);
+  		
+  		// Load active pet
+      if (typeof loadActivePetFromFirestore === "function") {
+        await loadActivePetFromFirestore(db, currentUid);
+      }
+    } catch (error) {
+      console.error("Home failed to finish loading:", error);
+    } finally {
+      setHomeLoading(false);
     }
-		
-		await Promise.all([
-			syncedRewardsPromise,
-			updateStreakOnLoad(db, currentUid, solvedToday)
-		]);
   });
 
   // Refresh reward card whenever user returns to the extension
@@ -153,7 +179,12 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
 }
 
 /* Minimize window */
-document.querySelector(".minimize-btn").addEventListener("click", () => {
+document.querySelector(".minimize-btn").addEventListener("click", async () => {
+  const { activePetStage, leetmate_happiness } = await storageGet(["activePetStage", "leetmate_happiness"]);
+  const normalizedStage = (activePetStage || "").toLowerCase();
+  if (!["baby", "adult"].includes(normalizedStage) || (leetmate_happiness ?? 100) <= 0) {
+    return;
+  }
   chrome.runtime.sendMessage({ type: "openPip" });
   window.close();
 });

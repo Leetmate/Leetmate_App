@@ -1,4 +1,12 @@
+.auth-content {
+  align-items: center;
+}
+
 .signin-card {
+  width: min(100%, 308px);
+  height: auto;
+  min-height: 368px;
+  align-self: center;
   padding: var(--space-4) var(--space-5) var(--space-4);
   gap: var(--space-4);
 }
@@ -6,6 +14,15 @@
 .signin-title-main {
   margin: 0 0 var(--space-4);
   font-size: var(--font-size-xl);
+}
+
+.signin-form {
+  gap: var(--space-3);
+}
+
+.signin-card .auth-actions {
+  margin-top: auto;
+  transform: translateY(-10px);
 }
 
 .signin-btn-primary {
