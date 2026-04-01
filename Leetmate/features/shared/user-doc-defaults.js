@@ -98,6 +98,7 @@
 
   window.LeetmateUserDoc = {
     createUserDoc: createUserDoc,
+    ensureUserDoc: ensureUserDoc,
     PET_SCHEMA: PET_SCHEMA
   };
 })();

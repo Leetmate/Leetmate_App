@@ -117,6 +117,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.visibilityState !== "visible") return;
     await refreshAfterProgressSync();
   });
+
+  // Easy mode: keep decay timer in sync if the toggle changes on Settings (same profile).
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.onChanged) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== "local" || !changes.leetmate_easy_mode) return;
+      const on = changes.leetmate_easy_mode.newValue;
+      if (on) {
+        if (typeof stopHappinessDecayTimer === "function") stopHappinessDecayTimer();
+      } else if (typeof startHappinessDecayTimer === "function") {
+        startHappinessDecayTimer();
+        return;
+      }
+      if (typeof updateHeartsUI === "function") updateHeartsUI();
+    });
+  }
 });
 
 /**
