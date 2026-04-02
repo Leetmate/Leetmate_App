@@ -102,6 +102,13 @@ body {
     filter 0.15s;
 }
 
+.clip-avatar {
+  width: 75px;
+  height: 75px;
+  object-fit: none;
+  object-position: -10px 0px;
+}
+
 .profile-avatar-btn:hover .profile-avatar,
 .username-btn:hover .username {
   transform: scale(1.03);
