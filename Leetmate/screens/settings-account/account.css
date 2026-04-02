@@ -106,7 +106,8 @@ body {
   width: 75px;
   height: 75px;
   object-fit: none;
-  object-position: -10px 0px;
+  object-position: 0px 0px;
+  
 }
 
 .profile-avatar-btn:hover .profile-avatar,

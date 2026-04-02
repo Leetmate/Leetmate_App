@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteBtn = document.getElementById("delete-btn");
 
   const profileAvatar = document.getElementById("profile-avatar");
+  const profileImg = document.getElementById("avatar_img");
   const usernameBtn = document.getElementById("username-btn");
   const usernameDisplay = document.getElementById("username-display");
   const emailDisplay = document.getElementById("email-display");
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set values once Firebase confirms who is loged in 
   let currentUser = null;   // Firebase Auth user
   let userRef = null;       // Firestore document reference (users/{uid})
+  let petRef = null;
 
   // --- Navigation ----
   // Back button logic (in header)
@@ -163,33 +165,57 @@ document.addEventListener("DOMContentLoaded", () => {
       const doc = await userRef.get();
 
       if (doc.exists) {
-        const data = doc.data();
-
-        // Use stored username or if cannot find, use default placeholders 
-        const username = data.username || data.leetcodeUsername || "USERNAME_001";
-        const email = data.email || currentUser.email || "No email";
-        const color = data.profileColor || "#d9d9d9";
         
-        //get the right image for the active pet
-        /*const activePetId = data.activePetId || "na";
-        let imageName = "";
-        const petData = data.collection("pets").get().then((doc2) => {
-          if (doc2.exists) {
-            console.log("Document data:", doc2.data());
-          } else {
-              // doc.data() will be undefined in this case
-              console.log("No such document!");
-          }
-        })*/
+        const data = doc.data();
+        
+        //await doc.collection("pets").doc(data.activePetId);
+        petRef = db.collection("users").doc(data.uid).collection("pets").doc(data.activePetId);
+        const petDoc = await petRef.get();
 
-        // Update UI 
-        usernameDisplay.textContent = `${username} ✏️`;
-        emailDisplay.textContent = email;
-        profileAvatar.style.backgroundColor = color;
-      } else {
-        // Fallback if no document exists 
-        usernameDisplay.textContent = "USERNAME_001 ✏️";
-        emailDisplay.textContent = currentUser.email || "No email";
+        if (petDoc.exists) {
+          const petData = petDoc.data();
+
+          // Use stored username or if cannot find, use default placeholders 
+          const username = data.username || data.leetcodeUsername || "USERNAME_001";
+          const email = data.email || currentUser.email || "No email";
+          const color = data.profileColor || "#d9d9d9";
+
+          //get info for the pet display
+          const petRef = petData.petRef || "Cat";
+          const petStage = petData.stage || "NotEgg";
+          let petPath = "../../assets";
+
+          //create the path for the pet image
+          /*if (petStage == "Egg") {
+            petPath = "../../assets/Eggs/Cubic"+petRef+"Egg.png";
+            //"../../assets/spritesheets/CubicFoxAdult.png"
+          }
+          alert(petPath);*/
+
+          //get the right image for the active pet
+          /*const activePetId = data.activePetId || "na";
+          let imageName = "";
+          const petData = data.collection("pets").get().then((doc2) => {
+            if (doc2.exists) {
+              console.log("Document data:", doc2.data());
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+          })*/
+
+          // Update UI 
+          usernameDisplay.textContent = `${username} ✏️`;
+          emailDisplay.textContent = email;
+          profileAvatar.style.backgroundColor = color;
+          profileImg.src = "../../assets/spritesheets/CubicFoxAdult.png";
+          //profileImg.src = "petPath";
+        } else {
+          // Fallback if no document exists 
+          usernameDisplay.textContent = "USERNAME_001 ✏️";
+          emailDisplay.textContent = currentUser.email || "No email";
+          profileAvatar.style.backgroundColor = "#d9d9d9";
+        }
       }
     } catch (error) {
       console.error("Error loading user profile:", error);
@@ -340,6 +366,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
     currentUser = user;
     userRef = db.collection("users").doc(user.uid);
+    //petRef = db.collection("users").doc(user.uid).collection("pets").doc(user.activePetId);
+
+    //testing alerts
+    //alert(user.activePetId);
   
     await currentUser.reload();             // refresh auth data
     await loadUserProfile();                // load Firestore data
