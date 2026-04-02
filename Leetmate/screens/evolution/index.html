@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pet Evolution</title>
+  <link rel="stylesheet" href="../../styles/layout.css" />
+  <link rel="stylesheet" href="../../styles/top-banner.css" />
+  <link rel="stylesheet" href="./evolution.css" />
+</head>
+<body>
+  <div class="evolution-screen">
+    <div id="top-banner" class="screen-banner evolution-top-banner hidden">
+      <div class="screen-banner__left"></div>
+      <div class="screen-banner__center">
+        <h1 class="screen-banner__title">Your pet evolved!</h1>
+      </div>
+      <div class="screen-banner__right"></div>
+    </div>
+
+    <div class="evolution-wrap">
+      <div class="evolution-glow"></div>
+      <div class="evolution-ring"></div>
+
+      <div class="spark spark-1"></div>
+      <div class="spark spark-2"></div>
+      <div class="spark spark-3"></div>
+      <div class="spark spark-4"></div>
+      <div class="spark spark-5"></div>
+      <div class="spark spark-6"></div>
+
+      <div class="egg-stage" id="egg-stage">
+        <img id="active-pet-egg" class="home-hero-egg" alt="Pet stage" />
+        <div id="active-from-pet" class="home-hero-pet evolution-from-pet hidden stage-baby"></div>
+      </div>
+      
+      <div id="active-pet" class="home-hero-pet hidden stage-baby"></div>
+
+      <div id="active-pet" class="home-hero-pet hidden stage-baby"></div>
+    </div>
+
+    <div id="bottom-banner" class="evolution-bottom-banner hidden">
+      <button id="home-btn" class="evolution-action-btn evolution-action-btn-secondary">
+        Return to home
+      </button>
+      <button id="replay-btn" class="evolution-action-btn">
+        Replay animation
+      </button>
+    </div>
+  </div>
+
+  <script src="../../scripts/firebase-bundle.js"></script>
+  <script src="../../scripts/firebase-config.js"></script>
+  <script src="./evolution.js"></script>
+</body>
+</html>

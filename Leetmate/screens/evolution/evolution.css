@@ -1,0 +1,355 @@
+@import url("../../styles/layout.css");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-image: url('../../assets/backgrounds/bg_star.gif');
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.evolution-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.evolution-top-banner {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 20;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.evolution-wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 110px auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* background glow behind the pet */
+.evolution-glow {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle,
+      rgba(255, 245, 198, 0.98) 0%,
+      rgba(255, 219, 132, 0.82) 24%,
+      rgba(255, 184, 83, 0.46) 50%,
+      rgba(255, 140, 38, 0.18) 72%,
+      transparent 100%);
+  filter: blur(8px);
+  opacity: 0.75;
+  transform: scale(0.92);
+  animation: glow-pulse 1.8s ease-in-out infinite;
+  z-index: 0;
+}
+
+.evolution-ring {
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 223, 154, 0.42);
+  box-shadow:
+    0 0 18px rgba(255, 213, 116, 0.4),
+    0 0 36px rgba(255, 169, 62, 0.22);
+  animation: ring-spin 7s linear infinite;
+  z-index: 0;
+}
+
+.spark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle, #fff7d1 0%, #ffd58c 55%, rgba(255,255,255,0) 100%);
+  box-shadow: 0 0 10px rgba(255, 214, 143, 0.85);
+  opacity: 0.85;
+  z-index: 1;
+  animation: spark-float 2.4s ease-in-out infinite;
+}
+
+.spark-1 { top: 36px; left: 48px; animation-delay: 0s; }
+.spark-2 { top: 54px; right: 42px; animation-delay: 0.4s; }
+.spark-3 { top: 118px; left: 20px; animation-delay: 0.8s; }
+.spark-4 { top: 140px; right: 18px; animation-delay: 1.2s; }
+.spark-5 { bottom: 34px; left: 56px; animation-delay: 1.6s; }
+.spark-6 { bottom: 40px; right: 58px; animation-delay: 2s; }
+
+/* egg -> baby */
+.egg-stage {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.home-hero-egg {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  transform-origin: center bottom;
+  filter:
+    drop-shadow(0 0 16px rgba(255, 232, 157, 0.32))
+    drop-shadow(0 0 32px rgba(214, 146, 255, 0.24));
+  z-index: 3;
+}
+
+.home-hero-pet {
+  width: 188px;
+  aspect-ratio: 21 / 16;
+  background-repeat: no-repeat;
+  background-position: 0% 0%;
+  image-rendering: pixelated;
+  z-index: 4;
+  transform-origin: center bottom;
+  transform: translateY(-10px) scale(1.2);
+  filter:
+    drop-shadow(0 0 12px rgba(255, 210, 255, 0.28))
+    drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+}
+
+.home-hero-pet.stage-baby {
+  background-size: 700% 100%;
+  background-position: 0% 0%;
+}
+
+.egg-stage.hatching .home-hero-egg {
+  animation:
+    egg-shake 0.30s ease-in-out 6,
+    egg-pop 0.45s ease-out 1.35s forwards;
+}
+
+.home-hero-pet.hatch-appear {
+  animation:
+    baby-pop 0.55s ease-out,
+    baby-animation 2.4s steps(1) infinite 0.55s;
+}
+
+.evolution-wrap.is-hatching .evolution-glow {
+  animation:
+    glow-pulse 1.8s ease-in-out infinite,
+    glow-burst 1.5s ease-out 1;
+}
+
+.evolution-wrap.is-hatching .evolution-ring {
+  animation:
+    ring-spin 7s linear infinite,
+    ring-burst 1.5s ease-out 1;
+}
+
+.evolution-wrap.is-hatching .spark {
+  animation:
+    spark-float 2.4s ease-in-out infinite,
+    spark-burst 1.1s ease-out 1;
+}
+
+/* baby -> adult */
+.evolution-from-pet {
+    position: absolute;
+    width: 188px;
+    aspect-ratio: 21 / 16;
+    background-repeat: no-repeat;
+    background-size: 700% 100%;
+    background-position: 0% 0%;
+    image-rendering: pixelated;
+    transform-origin: center bottom;
+    transform: translateY(-10px) scale(1.2);
+    z-index: 4;
+    filter:
+      drop-shadow(0 0 12px rgba(255, 210, 180, 0.28))
+      drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+  }
+  
+  .egg-stage.evolving-child .evolution-from-pet {
+    animation: child-stretch-pop 1.1s ease-in-out forwards;
+  }
+  
+  @keyframes child-stretch-pop {
+    0% {
+      opacity: 1;
+      transform: translateY(-10px) scale(1.2, 1.2);
+      filter: brightness(1);
+    }
+    20% {
+      opacity: 1;
+      transform: translateY(-6px) scale(1.1, 1.35);
+      filter: brightness(1.08);
+    }
+    45% {
+      opacity: 1;
+      transform: translateY(-14px) scale(1.28, 0.92);
+      filter: brightness(1.15);
+    }
+    70% {
+      opacity: 1;
+      transform: translateY(-18px) scale(1.42, 1.42);
+      filter: brightness(1.35);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-24px) scale(1.75, 1.75);
+      filter: brightness(1.9);
+    }
+  }
+
+.evolution-bottom-banner {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 20;
+  display: flex;
+  gap: 12px;
+}
+
+.evolution-action-btn {
+  flex: 1;
+  min-height: 48px;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #241535;
+  background: linear-gradient(135deg, #ffe7a8, #ffcb6b);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.evolution-action-btn-secondary {
+  background: linear-gradient(135deg, #fff5d6, #efd9a2);
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes glow-burst {
+  0% { filter: blur(8px) brightness(1); }
+  50% { filter: blur(20px) brightness(1.5); }
+  100% { filter: blur(8px) brightness(1); }
+}
+
+@keyframes ring-spin {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes ring-burst {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+@keyframes spark-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.18);
+    opacity: 1;
+  }
+}
+
+@keyframes spark-burst {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(2); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes egg-shake {
+  0% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-6px) rotate(-7deg); }
+  40% { transform: translateX(6px) rotate(7deg); }
+  60% { transform: translateX(-5px) rotate(-5deg); }
+  80% { transform: translateX(5px) rotate(5deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes egg-pop {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.12);
+    filter: brightness(2.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.75);
+    filter: brightness(2.8);
+  }
+}
+
+@keyframes baby-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.35);
+    filter: brightness(2.4);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.6);
+    filter: brightness(1.4);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.5);
+    filter: brightness(1);
+  }
+}
+
+@keyframes baby-animation {
+  0%   { background-position: 0% 0%; }
+  16%  { background-position: 33.33% 0%; }
+  33%  { background-position: 0% 0%; }
+  34%  { background-position: 0% 0%; }
+  50%  { background-position: 33.33% 0%; }
+  66%  { background-position: 0% 0%; }
+  76%  { background-position: 66.66% 0%; }
+  88%  { background-position: 83.33% 0%; }
+  100% { background-position: 66.66% 0%; }
+}
