@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
             petPath = "../../assets/Eggs/Cubic"+petRef+"Egg.png";
             //"../../assets/spritesheets/CubicFoxAdult.png"
           }
-          alert(petPath);
+          //alert(petPath);
 
           //get the right image for the active pet
           /*const activePetId = data.activePetId || "na";
