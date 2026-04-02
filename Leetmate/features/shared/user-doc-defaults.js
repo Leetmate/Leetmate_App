@@ -50,6 +50,7 @@
       xp: 0, // level is derived from XP: level = floor(xp/100) + 1
       level: 1,
       coins: 0,
+      savedHappiness: null,
 			trophy: 0,
 			premium: false,
 			lastFedTime: null,
@@ -73,8 +74,31 @@
     };
   }
 
+  function ensureUserDoc(db, uid, email, username) {
+    if (!db) return Promise.reject(new Error('Firestore not loaded'));
+
+    var userRef = db.collection('users').doc(uid);
+    return userRef.get().then(function (snap) {
+      if (snap.exists) {
+        var data = snap.data() || {};
+        if (!Object.prototype.hasOwnProperty.call(data, 'savedHappiness')) {
+          return userRef.set(
+            {
+              savedHappiness: null,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            },
+            { merge: true }
+          );
+        }
+        return Promise.resolve();
+      }
+      return userRef.set(createUserDoc(uid, email, username));
+    });
+  }
+
   window.LeetmateUserDoc = {
     createUserDoc: createUserDoc,
+    ensureUserDoc: ensureUserDoc,
     PET_SCHEMA: PET_SCHEMA
   };
 })();

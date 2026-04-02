@@ -25,6 +25,8 @@
 
 const HAPPINESS_STORAGE_KEY = "leetmate_happiness";
 const LAST_FED_KEY          = "leetmate_last_fed";
+const EASY_MODE_KEY         = "leetmate_easy_mode";
+const EASY_HAPPINESS_SNAPSHOT_KEY = "leetmate_happiness_easy_snapshot";
 const DECAY_INTERVAL_MS     = 8 * 60 * 60 * 1000; // 8 hours
 const TOTAL_HEARTS          = 5;
 let heartPercent = 100; 
@@ -75,6 +77,13 @@ function calculateHappinessFromFedTime(lastFedTime) {
   return Math.max(0, 100 - decayAmount);
 }
 
+function lastFedTimeMsFromHappinessPercent(happinessPercent, referenceTimeMs = Date.now()) {
+  const H = Math.max(0, Math.min(100, Number(happinessPercent)));
+  const decay = 100 - H;
+  const elapsed = (decay / 20) * DECAY_INTERVAL_MS;
+  return referenceTimeMs - elapsed;
+}
+
 // ── Local storage read/write ──────────────────────────────────────────────────
 
 async function getLocalHappiness() {
@@ -100,15 +109,32 @@ async function setLocalLastFedTime(timestamp) {
 let _decayTimerInterval = null;
 
 /**
+ * Stops the periodic happiness UI refresh (used when Easy mode is on).
+ */
+function stopHappinessDecayTimer() {
+  if (_decayTimerInterval) {
+    clearInterval(_decayTimerInterval);
+    _decayTimerInterval = null;
+  }
+}
+
+/**
  * Starts a 1-minute interval that recalculates happiness from lastFedTime
  * and refreshes the hearts UI. Does NOT write to storage or Firestore —
  * lastFedTime is the source of truth, so no writes are needed between feeds.
  *
  * Call once after auth. Safe to call again — clears any previous timer first.
+ * If Easy mode is on, refreshes once and does not start an interval (decay paused).
  */
 async function startHappinessDecayTimer() {
-  if (_decayTimerInterval) clearInterval(_decayTimerInterval);
+  stopHappinessDecayTimer();
   await updateHeartsUI(); // immediate refresh now
+
+  const { [EASY_MODE_KEY]: easyOn } = await storageGet([EASY_MODE_KEY]);
+  if (easyOn) {
+    console.log("Happiness decay paused (Easy mode).");
+    return;
+  }
 
   _decayTimerInterval = setInterval(async () => {
     await updateHeartsUI();
@@ -132,14 +158,16 @@ async function feedPet(db, uid, regenPercent = 15) {
   // Add food regen, cap at 100
   const newHappiness = Math.min(100, currHappiness + regenPercent);
 
-  // Convert happiness back into "how long ago pet was effectively fed"
-  const decay = 100 - newHappiness;
-  const elapsed = (decay / 20) * DECAY_INTERVAL_MS;
-  const newLastFedTime = Date.now() - elapsed;
+  const newLastFedTime = lastFedTimeMsFromHappinessPercent(newHappiness, Date.now());
 
   // Save locally first so UI updates immediately
   await setLocalLastFedTime(newLastFedTime);
   await setLocalHappiness(newHappiness);
+
+  const easyStore = await storageGet([EASY_MODE_KEY]);
+  if (easyStore[EASY_MODE_KEY]) {
+    await storageSet({ [EASY_HAPPINESS_SNAPSHOT_KEY]: newHappiness });
+  }
 
   await updateHeartsUI();
 
@@ -168,8 +196,24 @@ function setupFeedButton(db, uid) {
  * Does NOT write happiness to storage — reads lastFedTime, computes on the fly.
  */
 async function updateHeartsUI() {
-  const lastFedTime   = await getLocalLastFedTime();
-  const happinessPerc = calculateHappinessFromFedTime(lastFedTime);
+  const easyFlags = await storageGet([
+    EASY_MODE_KEY,
+    EASY_HAPPINESS_SNAPSHOT_KEY,
+    HAPPINESS_STORAGE_KEY,
+  ]);
+
+  let happinessPerc;
+  if (easyFlags[EASY_MODE_KEY]) {
+    const snap = easyFlags[EASY_HAPPINESS_SNAPSHOT_KEY];
+    const cached = easyFlags[HAPPINESS_STORAGE_KEY];
+    const raw = snap != null ? snap : cached;
+    happinessPerc =
+      typeof raw === "number" && Number.isFinite(raw) ? raw : Number(raw);
+    if (!Number.isFinite(happinessPerc)) happinessPerc = 100;
+  } else {
+    const lastFedTime = await getLocalLastFedTime();
+    happinessPerc = calculateHappinessFromFedTime(lastFedTime);
+  }
 
   // Store how many FULL hearts we had before update 
   // e.g. heartPercent = 100 -> prevWhole = 5 
@@ -266,6 +310,12 @@ async function saveHappinessToFirestore(db, uid, happiness, lastFedTimeMs) {
  * and syncs both to Chrome storage. Never trusts the stored happiness field.
  */
 async function loadHappinessFromFirestore(db, uid) {
+  const easyFlags = await storageGet([EASY_MODE_KEY]);
+  if (easyFlags[EASY_MODE_KEY]) {
+    await updateHeartsUI();
+    return;
+  }
+
   return db
     .collection("users")
     .doc(uid)
@@ -286,3 +336,10 @@ async function loadHappinessFromFirestore(db, uid) {
     })
     .catch((e) => console.error("loadHappinessFromFirestore failed:", e));
 }
+
+// Expose decay helpers for other screens (e.g. Settings easy-mode). `const` above is not global.
+window.LeetmateHappinessDecay = {
+  calculateHappinessFromFedTime,
+  lastFedTimeMsFromHappinessPercent,
+  DECAY_INTERVAL_MS,
+};
