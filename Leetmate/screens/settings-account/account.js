@@ -186,11 +186,11 @@ document.addEventListener("DOMContentLoaded", () => {
           let petPath = "../../assets";
 
           //create the path for the pet image
-          /*if (petStage == "Egg") {
+          if (petStage == "Egg") {
             petPath = "../../assets/Eggs/Cubic"+petRef+"Egg.png";
             //"../../assets/spritesheets/CubicFoxAdult.png"
           }
-          alert(petPath);*/
+          alert(petPath);
 
           //get the right image for the active pet
           /*const activePetId = data.activePetId || "na";
@@ -208,8 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
           usernameDisplay.textContent = `${username} ✏️`;
           emailDisplay.textContent = email;
           profileAvatar.style.backgroundColor = color;
-          profileImg.src = "../../assets/spritesheets/CubicFoxAdult.png";
-          //profileImg.src = "petPath";
+          //profileImg.src = "../../assets/spritesheets/CubicFoxAdult.png";
+          profileImg.src = petPath;
         } else {
           // Fallback if no document exists 
           usernameDisplay.textContent = "USERNAME_001 ✏️";
