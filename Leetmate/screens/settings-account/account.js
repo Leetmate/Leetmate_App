@@ -169,6 +169,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const username = data.username || data.leetcodeUsername || "USERNAME_001";
         const email = data.email || currentUser.email || "No email";
         const color = data.profileColor || "#d9d9d9";
+        
+        //get the right image for the active pet
+        /*const activePetId = data.activePetId || "na";
+        let imageName = "";
+        const petData = data.collection("pets").get().then((doc2) => {
+          if (doc2.exists) {
+            console.log("Document data:", doc2.data());
+          } else {
+              // doc.data() will be undefined in this case
+              console.log("No such document!");
+          }
+        })*/
 
         // Update UI 
         usernameDisplay.textContent = `${username} ✏️`;
