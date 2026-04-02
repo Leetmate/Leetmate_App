@@ -7,7 +7,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  background-image: url('../../assets/backgrounds/bg_star.gif');
+  background-image: url('../../assets/backgrounds/bg_stars.gif');
   background-size: cover;
   background-attachment: fixed;
 }
@@ -63,18 +63,6 @@ body {
   z-index: 0;
 }
 
-.evolution-ring {
-  position: absolute;
-  width: 230px;
-  height: 230px;
-  border-radius: 999px;
-  border: 3px solid rgba(255, 223, 154, 0.42);
-  box-shadow:
-    0 0 18px rgba(255, 213, 116, 0.4),
-    0 0 36px rgba(255, 169, 62, 0.22);
-  animation: ring-spin 7s linear infinite;
-  z-index: 0;
-}
 
 .spark {
   position: absolute;
