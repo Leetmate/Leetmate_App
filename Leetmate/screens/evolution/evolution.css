@@ -7,7 +7,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  background-image: url('../../assets/backgrounds/bg_stars.gif');
+  background-image: url('../../assets/backgrounds/bg_star.gif');
   background-size: cover;
   background-attachment: fixed;
 }
