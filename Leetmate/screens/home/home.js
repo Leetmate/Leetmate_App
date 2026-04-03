@@ -97,9 +97,30 @@ document.addEventListener("DOMContentLoaded", () => {
   			updateStreakOnLoad(db, currentUid, solvedToday)
   		]);
   		
-  		// Load active pet
+  		// Load active pet (sync any midnight age bumps to Firestore subcollection first)
+      if (typeof syncPendingPetAgeToFirestore === "function") {
+        await syncPendingPetAgeToFirestore(db, currentUid);
+      }
       if (typeof loadActivePetFromFirestore === "function") {
         await loadActivePetFromFirestore(db, currentUid);
+      }
+
+      if (typeof LeetmateEvolutionNotify !== "undefined" && LeetmateEvolutionNotify.consumeEventForPetId) {
+        const { activePetId } = await storageGet(["activePetId"]);
+        const evolutionEvent = await LeetmateEvolutionNotify.consumeEventForPetId(activePetId);
+        if (evolutionEvent) {
+          try {
+            sessionStorage.setItem(
+              "leetmate_evolution_payload",
+              JSON.stringify(evolutionEvent)
+            );
+          } catch (_) {}
+          setHomeLoading(false);
+          window.location.replace(
+            chrome.runtime.getURL("screens/evolution/index.html")
+          );
+          return;
+        }
       }
     } catch (error) {
       console.error("Home failed to finish loading:", error);

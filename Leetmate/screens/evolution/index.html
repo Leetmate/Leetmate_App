@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate — Evolution</title>
+    <link rel="stylesheet" href="../../styles/layout.css" />
+  </head>
+  <body class="hidden-on-load">
+    <div class="popup-layout">
+      <div class="popup-content" style="padding: 1rem; max-width: 22rem; margin: 0 auto">
+        <h1 style="font-size: 1.25rem; margin-bottom: 0.5rem">Evolution</h1>
+        <p id="evolution-message" style="margin: 0 0 1rem; line-height: 1.4; color: #333"></p>
+        <pre
+          id="evolution-debug"
+          style="font-size: 11px; background: #f4f4f4; padding: 0.5rem; overflow: auto; max-height: 8rem"
+        ></pre>
+        <button type="button" id="evolution-continue" style="margin-top: 1rem; padding: 0.4rem 0.8rem">
+          Continue to Home
+        </button>
+      </div>
+    </div>
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="evolution.js"></script>
+    <script src="../../scripts/auth-gate.js"></script>
+  </body>
+</html>
