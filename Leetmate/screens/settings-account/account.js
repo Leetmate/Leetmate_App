@@ -124,15 +124,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //TODO: Deleting the Account
 
+  // create helper function: delete subcollection
+  async function deleteSubcollectionDocs(subcollectionName) {
+    try {
+      const subcollectionRef = db.collection(`users/${currentUser.uid}/${subcollectionName}`);
+      const snapshot = await subcollectionRef.get();
+
+      if (snapshot.empty) {
+        console.log(`No documents found in "users/${currentUser.uid}/${subcollectionName}"`);
+        return;
+      }
+
+      //batch delete
+      const batch = db.batch();
+      snapshot.forEach(doc => {
+        batch.delete(doc.ref);
+        //batch.update(doc.ref, {"order": 2});
+      });
+
+      await batch.commit();
+      console.log(`Deleted ${snapshot.size()} documents from users/${currentUser.uid}/${subcollectionName}`);
+    } catch (error) {
+      console.error("Error deleting subcollection:", error);
+    }
+  }
+
   function deleteUser() {
     //testing that the button is being clicked
     //alert("delete account button pressed");
+    
+    //delete subcollections
+    (async () => {
+      await deleteSubcollectionDocs("leetcodeProgress");
+    })();
 
-    /*db.collection("users").doc(currentUser.uid).delete().then(() => {
-      //deletes the user's document
-    }).catch((error) => {
-      console.error("Error removing user document: ", error);
-    });*/
+    (async () => {
+      await deleteSubcollectionDocs("pets");
+    })();
     
     //NOTE: this deletes the user, but it doesn't delete the user's document so the data just sits there
     currentUser.delete().then(() => {
@@ -149,7 +177,16 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error removing user document: ", error);
     });
 
+    //delete entry in leetcodeAccountClaims
+    /*db.collection("leetcodeAccountClaims").doc(currentUser.leetcode.username).delete().then(() => {
+      //deletes the document
+    }).catch((error) => {
+      console.error("Error removing leetcodeAccountClaims document: ", error);
+    });*/
+
     window.location.href = "../start/index.html";
+
+    //alert(`${currentUser.leetcode.username}`);
   }
 
   confirmDeleteBtn.addEventListener("click", function() {
