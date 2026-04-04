@@ -118,7 +118,8 @@ function resetEvolutionState() {
     if (!evolutionWrap || !eggStage || !eggEl || !fromPetSprite || !petSprite) {
       return null;
     }
-  
+    resetEvolutionDialog();
+
     topBanner?.classList.add('hidden');
     bottomBanner?.classList.add('hidden');
   
@@ -147,6 +148,54 @@ function resetEvolutionState() {
       topBanner,
       bottomBanner
     };
+}
+
+let typewriterTimeout = null;
+
+function resetEvolutionDialog() {
+    const dialog = document.getElementById('evolution-dialog');
+    const dialogText = document.getElementById('evolution-dialog-text');
+
+    if (typewriterTimeout) {
+      clearTimeout(typewriterTimeout);
+      typewriterTimeout = null;
+    }
+
+    dialog?.classList.add('hidden');
+    dialog?.classList.remove('typing');
+
+    if (dialogText) {
+      dialogText.textContent = '';
+    }
+}
+
+function typeEvolutionDialog(message, speed = 28) {
+    const dialog = document.getElementById('evolution-dialog');
+    const dialogText = document.getElementById('evolution-dialog-text');
+
+    if (!dialog || !dialogText) {
+      return;
+    }
+
+    dialog.classList.remove('hidden');
+    dialog.classList.add('typing');
+    dialogText.textContent = '';
+
+    let index = 0;
+
+    function step() {
+      dialogText.textContent = message.slice(0, index);
+      index += 1;
+
+      if (index <= message.length) {
+        typewriterTimeout = setTimeout(step, speed);
+      } else {
+        dialog.classList.remove('typing');
+        typewriterTimeout = null;
+      }
+    }
+
+    step();
 }
   
 function playEvolutionAnimation(petType, activeStage = 'egg') {
@@ -201,6 +250,13 @@ function playEvolutionAnimation(petType, activeStage = 'egg') {
       topBanner?.classList.remove('hidden');
       bottomBanner?.classList.remove('hidden');
     }, 2200);
+
+    setTimeout(() => {
+      typeEvolutionDialog(
+        'Congrats, your pet became stronger! All stats +5.',
+        28
+      );
+    }, 2550);
 }
   
 function setupButtons() {
