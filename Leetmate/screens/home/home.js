@@ -97,9 +97,30 @@ document.addEventListener("DOMContentLoaded", () => {
   			updateStreakOnLoad(db, currentUid, solvedToday)
   		]);
   		
-  		// Load active pet
+  		// Load active pet (sync any midnight age bumps to Firestore subcollection first)
+      if (typeof syncPendingPetAgeToFirestore === "function") {
+        await syncPendingPetAgeToFirestore(db, currentUid);
+      }
       if (typeof loadActivePetFromFirestore === "function") {
         await loadActivePetFromFirestore(db, currentUid);
+      }
+
+      if (typeof LeetmateEvolutionNotify !== "undefined" && LeetmateEvolutionNotify.consumeEventForPetId) {
+        const { activePetId } = await storageGet(["activePetId"]);
+        const evolutionEvent = await LeetmateEvolutionNotify.consumeEventForPetId(activePetId);
+        if (evolutionEvent) {
+          try {
+            sessionStorage.setItem(
+              "leetmate_evolution_payload",
+              JSON.stringify(evolutionEvent)
+            );
+          } catch (_) {}
+          setHomeLoading(false);
+          window.location.replace(
+            chrome.runtime.getURL("screens/evolution/index.html")
+          );
+          return;
+        }
       }
     } catch (error) {
       console.error("Home failed to finish loading:", error);
@@ -117,6 +138,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.visibilityState !== "visible") return;
     await refreshAfterProgressSync();
   });
+
+  // Easy mode: keep decay timer in sync if the toggle changes on Settings (same profile).
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.onChanged) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== "local" || !changes.leetmate_easy_mode) return;
+      const on = changes.leetmate_easy_mode.newValue;
+      if (on) {
+        if (typeof stopHappinessDecayTimer === "function") stopHappinessDecayTimer();
+      } else if (typeof startHappinessDecayTimer === "function") {
+        startHappinessDecayTimer();
+        return;
+      }
+      if (typeof updateHeartsUI === "function") updateHeartsUI();
+    });
+  }
 });
 
 /**

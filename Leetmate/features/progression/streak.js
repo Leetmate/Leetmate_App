@@ -188,10 +188,6 @@ async function runDailyStreakCheck() {
       leetmate_last_streak_date: updated.streakLastUpdated,
       leetmate_streak_freeze_end: updated.streakFreezeEnd ?? null,
     });
-		if (typeof firebase !== "undefined" && firebase.firestore) {
-			const db = firebase.firestore();
-			await saveStreakData(db, uid, updated);
-		}
 
     console.log("Streak reset at midnight:", updated);
 

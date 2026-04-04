@@ -23,7 +23,7 @@ body {
 .popup-content {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  /* padding: 16px; */
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -37,8 +37,8 @@ body {
   max-width: 100% !important;
   margin: 0;
   background: #fdf5e6; /* Soft cream card color from signin */
-  border: 4px solid #3b2b1a; /* Dark brown border */
-  border-radius: 28px;
+  /* border: 4px solid #3b2b1a; */
+  /* border-radius: 28px; */
   padding: 24px 20px 20px;
   display: flex;
   flex-direction: column;
@@ -77,6 +77,69 @@ body {
   color: #5c4327;
 }
 
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.settings-toggle-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #3b2b1a;
+}
+
+.settings-toggle-wrap {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.settings-toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-toggle-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 3px solid #3b2b1a;
+  background: #dbc399;
+  transition: background 0.2s ease;
+}
+
+.settings-toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 4px;
+  top: 3px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid #3b2b1a;
+  transition: transform 0.2s ease;
+}
+
+.settings-toggle-input:checked + .settings-toggle-slider {
+  background: #7bc96f;
+}
+
+.settings-toggle-input:checked + .settings-toggle-slider::before {
+  transform: translateX(21px);
+}
+
+.settings-toggle-input:focus-visible + .settings-toggle-slider {
+  outline: 2px solid #5c4327;
+  outline-offset: 2px;
+}
+
 .settings-btn-primary {
   width: 100%;
   padding: 14px;
@@ -104,4 +167,23 @@ body {
 .settings-btn-danger {
   background: #e57373;
   color: white;
+}
+
+.settings-btn-secondary {
+  width: 80%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 3px solid #3b2b1a;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #ffe7b9;
+  box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.2s;
+  display: block;
+  margin: 0 auto;
+}
+
+.settings-btn-secondary:hover {
+  filter: brightness(1.05);
 }
