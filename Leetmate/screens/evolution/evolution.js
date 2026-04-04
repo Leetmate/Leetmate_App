@@ -253,7 +253,7 @@ function playEvolutionAnimation(petType, activeStage = 'egg') {
 
     setTimeout(() => {
       typeEvolutionDialog(
-        'Congrats, your pet became stronger! All stats +5.',
+        'Congrats, your pet is stronger now! All stats +5.',
         28
       );
     }, 2550);
