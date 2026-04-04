@@ -21,6 +21,8 @@
         '      <button type="button" class="nav-menu-btn" id="community-btn">Community</button>',
         '      <button type="button" class="nav-menu-btn" id="activity-btn">Activity</button>',
         '      <button type="button" class="nav-menu-btn" id="settings-btn">Settings</button>',
+                // TODO: Remove after testing
+        '      <button type="button" class="nav-menu-btn" id="evolution-btn">Evolution</button>', 
         '    </nav>',
         '  </div>',
         '</div>'
@@ -109,7 +111,9 @@
       'home-btn': '../home/index.html',
       'playground-btn': '../playground-main/index.html',
       'settings-btn': '../settings-main/index.html',
-      'store-btn': '../store-accessory/index.html'
+      'store-btn': '../store-accessory/index.html',
+      // TODO: Remove after testing
+      'evolution-btn': '../evolution/index.html' 
     };
 
     Object.keys(routes).forEach(function (id) {
