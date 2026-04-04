@@ -49,8 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
       await storageSet({ uid: currentUid });
       window.__leetmateAuth = { db, uid: currentUid };
 
-      // Load static UI state
-      loadLeetCodeUsernameFromFirestore(db, currentUid);
+      // Restore LeetCode username into chrome.storage (needed by leetcode.com content script)
+      await loadLeetCodeUsernameFromFirestore(db, currentUid);
 
   		// default card to load
   		setupLeetCodeCard(db, currentUid, {
