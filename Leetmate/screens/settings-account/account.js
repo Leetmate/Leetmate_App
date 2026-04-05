@@ -237,14 +237,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
           //get info for the pet display
           const petRef = petData.petRef || "Cat";
-          const petStage = petData.stage || "NotEgg";
+          const petStage = petData.stage || "Adult";
           let petPath = "../../assets";
 
           //create the path for the pet image
-          if (petStage == "Egg") {
+          if (petStage == "Egg" || petStage == "egg") 
+            {
             petPath = "../../assets/Eggs/Cubic"+petRef+"Egg.png";
             //"../../assets/spritesheets/CubicFoxAdult.png"
+            if(!profileImg.classList.contains("egg")) 
+              {
+              profileImg.classList.toggle("adult");
+              profileImg.classList.toggle("egg");
+            }
           }
+          else if (petStage == "Baby" || petStage == "baby" || petStage == "Adult" || petStage == "adult")
+          {
+            if (petStage == "Baby" || petStage == "baby")
+            {
+              petPath = "../../assets/spritesheets/Cubic"+petRef+"Baby.png";
+            }
+            if (petStage == "Adult" || petStage == "adult")
+            {
+              petPath = "../../assets/spritesheets/Cubic"+petRef+"Adult.png";
+            }
+
+            if(!profileImg.classList.contains("adult")) 
+              {
+              profileImg.classList.toggle("egg");
+              profileImg.classList.toggle("adult");
+            }
+          }
+
           //alert(petPath);
 
           //get the right image for the active pet

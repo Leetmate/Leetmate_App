@@ -102,13 +102,19 @@ body {
     filter 0.15s;
 }
 
-.clip-avatar {
-  width: 95px;
-  height: 95px;
-  object-fit: contain;
+.clip-avatar.adult {
   object-position: 0px 0px;
+  /*this is good for spritesheets*/
+  /*cuts: top right bottom left*/
+  clip-path: inset(0 85% 0 0);
+}
+
+.clip-avatar.egg {
+  object-position: 0px 0px;
+  height: 100px;
+  width: 100px;
   position: relative;
-  left: -7px;
+  left: -9px;
 }
 
 .profile-avatar-btn:hover .profile-avatar,
