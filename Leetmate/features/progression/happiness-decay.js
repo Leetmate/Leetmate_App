@@ -312,6 +312,29 @@ async function saveHappinessToFirestore(db, uid, happiness, lastFedTimeMs) {
 async function loadHappinessFromFirestore(db, uid) {
   const easyFlags = await storageGet([EASY_MODE_KEY]);
   if (easyFlags[EASY_MODE_KEY]) {
+    // Easy mode freezes hearts from local snapshot; still merge Firestore savedHappiness when present
+    // so edits in console / another client show up after refocus.
+    try {
+      const snap = await db.collection("users").doc(uid).get();
+      if (snap.exists) {
+        const v = snap.data().savedHappiness;
+        if (v != null) {
+          const H =
+            typeof v === "number" && Number.isFinite(v)
+              ? v
+              : parseFloat(v);
+          if (Number.isFinite(H)) {
+            const clamped = Math.max(0, Math.min(100, H));
+            await storageSet({
+              [HAPPINESS_STORAGE_KEY]: clamped,
+              [EASY_HAPPINESS_SNAPSHOT_KEY]: clamped,
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.error("loadHappinessFromFirestore (easy mode) failed:", e);
+    }
     await updateHeartsUI();
     return;
   }

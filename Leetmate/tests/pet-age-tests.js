@@ -1,49 +1,21 @@
-// ── Dev helpers (Home console only) ───────────────────────────────────────────
-// Requires: storage-helper, streak.js, pet-evolution.js, pet-age.js,
-//           evolution-notify.js (Home script order).
+// ── Dev helpers (Home console, signed in) ─────────────────────────────────────
 //
-// Evolution screen (Egg → Baby at age 3):
-//   Home only redirects if the queued event’s petId matches storage activePetId.
-//   Presets that use id "demo-pet-1" will NOT open screens/evolution — use:
-//     await petAgeTest.runEvolutionScreenTest()
-//   (Load Home once while signed in so activePetId is set, then run in DevTools.)
+// Scripted demos (Firestore + storage + midnight job):
+//   await petAgeTest.demoEggToBabyEvolution()
+//     Egg age 2, last rollover = yesterday, happiness > 0 → job → Baby + reload → evolution screen
+//   await petAgeTest.demoBabySkippedWhenUnhappy()
+//     Baby age 9, yesterday rollover, happiness = 0 → job does nothing (no age/stage change)
+//   await petAgeTest.demoBabyToAdultEvolution()
+//     Baby age 9, yesterday rollover, happiness > 0 → job → Adult + reload → evolution screen
 //
-// Other examples:
-//   await petAgeTest.presetAllowsJob(); await petAgeTest.runMidnightJob()  // logs only (demo id)
-//   await petAgeTest.presetBabyAlmostAdult(); await petAgeTest.runMidnightJob()
+// Low-level:
+//   await petAgeTest.setActivePet({ age, stage })
+//   await petAgeTest.syncFromFirestore()
+//   await petAgeTest.runMidnightJob()
 //   petAgeTest.previewEvolutionAtAge(2, "Egg")
-//   await petAgeTest.status()
 
 if (typeof window !== "undefined") {
   window.petAgeTest = {
-    _basePet(overrides) {
-      return Object.assign(
-        {
-          id: "demo-pet-1",
-          petRef: "Cat",
-          customName: "",
-          stats: null,
-          createdTimestampMs: null
-        },
-        overrides
-      );
-    },
-
-    /** Egg at age 2 → one midnight tick hits baby threshold (3). */
-    _demoPetEggAlmostBaby() {
-      return this._basePet({ stage: "Egg", age: 2, adjustedDays: 0 });
-    },
-
-    /** Baby at age 9 → one tick hits adult threshold (10). */
-    _demoPetBabyAlmostAdult() {
-      return this._basePet({ stage: "Baby", age: 9, adjustedDays: 0 });
-    },
-
-    /** In-between baby (no stage change on +1 age). */
-    _demoPetBabyMid() {
-      return this._basePet({ stage: "Baby", age: 7, adjustedDays: 0 });
-    },
-
     _yesterdayCa() {
       const d = new Date();
       d.setDate(d.getDate() - 1);
@@ -63,137 +35,262 @@ if (typeof window !== "undefined") {
       );
     },
 
-    /** Sets happiness 0 + yesterday rollover so canUpdatePetAge() is false. */
-    async presetBlockedByHappiness() {
-      const pet = this._demoPetEggAlmostBaby();
-      await storageSet({
-        uid: "demo-local-uid",
-        leetmate_happiness: 0,
-        leetmate_pet_age_last_rollover: this._yesterdayCa(),
-        ownedPetsSnapshot: [pet],
-        activePetId: pet.id,
-        leetmate_pet_age_pending_firestore_sync: false
-      });
-      console.log(
-        "Pet age: happiness=0, lastRollover=yesterday — job should skip (canUpdatePetAge false)."
-      );
-      this._logEvolutionLine(pet, "snapshot ");
-    },
-
-    /** Egg age 2 + happiness — one job should give age 3 + Baby. */
-    async presetAllowsJob() {
-      const pet = this._demoPetEggAlmostBaby();
-      await storageSet({
-        uid: "demo-local-uid",
-        leetmate_happiness: 100,
-        leetmate_pet_age_last_rollover: this._yesterdayCa(),
-        ownedPetsSnapshot: [pet],
-        activePetId: pet.id,
-        leetmate_pet_age_pending_firestore_sync: false
-      });
-      console.log(
-        "Pet age: Egg @ age 2 — runMidnightJob should → age 3, stage Baby (see thresholds on LeetmatePetEvolution)."
-      );
-      this._logEvolutionLine(pet, "before job ");
-    },
-
-    /** Baby age 9 — one job should give age 10 + Adult. */
-    async presetBabyAlmostAdult() {
-      const pet = this._demoPetBabyAlmostAdult();
-      await storageSet({
-        uid: "demo-local-uid",
-        leetmate_happiness: 100,
-        leetmate_pet_age_last_rollover: this._yesterdayCa(),
-        ownedPetsSnapshot: [pet],
-        activePetId: pet.id,
-        leetmate_pet_age_pending_firestore_sync: false
-      });
-      console.log(
-        "Pet age: Baby @ age 9 — runMidnightJob should → age 10, stage Adult."
-      );
-      this._logEvolutionLine(pet, "before job ");
-    },
-
-    async setHappiness(value) {
-      await storageSet({ leetmate_happiness: value });
-      console.log("leetmate_happiness set to:", value);
+    /**
+     * @returns {{ db: firebase.firestore.Firestore, uid: string } | null}
+     */
+    async _authDb() {
+      if (typeof firebase === "undefined" || !firebase.auth || !firebase.firestore) {
+        console.warn("petAgeTest: Firebase not available.");
+        return null;
+      }
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        console.warn("petAgeTest: Sign in on Home first.");
+        return null;
+      }
+      return { db: firebase.firestore(), uid: user.uid };
     },
 
     /**
-     * Sets YOUR active pet (from storage) to Egg @ age 2 + yesterday rollover so one job hits age 3 / Baby.
-     * Does not change Firestore until the next Home load syncs pending pet data.
+     * Reads activePetId from the user document (source of truth).
      */
-    async presetEggAlmostBabyForActivePet() {
-      const snap = await storageGet([
-        "activePetId",
-        "activePetSnapshot",
-        "ownedPetsSnapshot",
-        "uid"
-      ]);
-      const id = snap.activePetId;
+    async _getActivePetId(db, uid) {
+      const userSnap = await db.collection("users").doc(uid).get();
+      if (!userSnap.exists) {
+        console.warn("petAgeTest: User document missing.");
+        return null;
+      }
+      const id = userSnap.data().activePetId;
       if (!id) {
-        console.warn(
-          "No activePetId in storage. Open Home once while signed in (pet loads) then try again."
-        );
+        console.warn("petAgeTest: No activePetId on user document.");
+        return null;
+      }
+      return id;
+    },
+
+    /**
+     * Merge fields onto the active pet in Firestore, clear pending-age override,
+     * reload pet list + Home UI from Firestore.
+     *
+     * @param {Partial<{ age: number, stage: string, adjustedDays: number, customName: string }>} fields
+     */
+    async setActivePet(fields) {
+      const ctx = await this._authDb();
+      if (!ctx) return false;
+
+      const petId = await this._getActivePetId(ctx.db, ctx.uid);
+      if (!petId) return false;
+
+      const patch = Object.fromEntries(
+        Object.entries(fields).filter(([, v]) => v !== undefined)
+      );
+      if (Object.keys(patch).length === 0) {
+        console.warn("petAgeTest.setActivePet: no fields to write.");
         return false;
       }
-      const ref =
-        snap.activePetSnapshot?.petRef ||
-        (Array.isArray(snap.ownedPetsSnapshot) ? snap.ownedPetsSnapshot[0]?.petRef : null) ||
-        "Cat";
-      const pet = this._basePet({
-        id,
-        petRef: ref,
-        stage: "Egg",
-        age: 2,
-        adjustedDays: 0
-      });
-      const payload = {
-        leetmate_happiness: 100,
-        leetmate_pet_age_last_rollover: this._yesterdayCa(),
-        ownedPetsSnapshot: [pet],
-        activePetId: id,
-        leetmate_pet_age_pending_firestore_sync: false
-      };
-      if (snap.uid) payload.uid = snap.uid;
-      await storageSet(payload);
-      console.log(
-        "Preset for YOUR active pet (Egg, age 2). Next: await petAgeTest.runMidnightJob() then reload Home, or runEvolutionScreenTest()."
-      );
-      this._logEvolutionLine(pet, "before job ");
+
+      if (patch.stage !== undefined && patch.ableToBattle === undefined) {
+        patch.ableToBattle = String(patch.stage).toLowerCase() === "adult";
+      }
+
+      const FieldValue = firebase.firestore.FieldValue;
+      await ctx.db
+        .collection("users")
+        .doc(ctx.uid)
+        .collection("pets")
+        .doc(petId)
+        .set(
+          {
+            ...patch,
+            updatedAt: FieldValue.serverTimestamp()
+          },
+          { merge: true }
+        );
+
+      if (typeof storageSet === "function") {
+        await storageSet({ leetmate_pet_age_pending_firestore_sync: false });
+      }
+
+      if (typeof loadActivePetFromFirestore === "function") {
+        await loadActivePetFromFirestore(ctx.db, ctx.uid);
+      } else {
+        console.warn("petAgeTest: loadActivePetFromFirestore not defined — reload Home.");
+      }
+
+      console.log("petAgeTest: Firestore active pet updated + UI refreshed:", patch);
+      return true;
+    },
+
+    /** Pull all pets from Firestore into storage and refresh the Home pet UI. */
+    async syncFromFirestore() {
+      const ctx = await this._authDb();
+      if (!ctx) return false;
+      if (typeof storageSet === "function") {
+        await storageSet({ leetmate_pet_age_pending_firestore_sync: false });
+      }
+      if (typeof loadActivePetFromFirestore === "function") {
+        await loadActivePetFromFirestore(ctx.db, ctx.uid);
+        console.log("petAgeTest: synced from Firestore.");
+        return true;
+      }
+      console.warn("petAgeTest: loadActivePetFromFirestore missing.");
+      return false;
+    },
+
+    /** Preset: Egg @ age 2 (one midnight tick → Baby if rollover allows). */
+    eggAlmostBaby() {
+      return this.setActivePet({ age: 2, stage: "Egg", adjustedDays: 0 });
+    },
+
+    /** Preset: Baby @ age 9 (one tick → Adult). */
+    babyAlmostAdult() {
+      return this.setActivePet({ age: 9, stage: "Baby", adjustedDays: 0 });
+    },
+
+    /** Local happiness (midnight job skips when ≤ 0, if lastRollover is already set). */
+    async setHappiness(value) {
+      await storageSet({ leetmate_happiness: value });
+      console.log("leetmate_happiness:", value);
+    },
+
+    /** Clear queued evolution toasts so demos start clean. */
+    async clearEvolutionQueue() {
+      await storageSet({ leetmate_evolution_queue: [] });
+      console.log("petAgeTest: leetmate_evolution_queue cleared.");
+    },
+
+    /**
+     * After runMidnightPetAgeJob: reload Home if an evolution event exists for the active pet.
+     * @returns {Promise<boolean>} true if reload was triggered
+     */
+    async _reloadHomeIfEvolutionQueuedForActivePet() {
+      const { activePetId } = await storageGet(["activePetId"]);
+      const notify = typeof LeetmateEvolutionNotify !== "undefined" ? LeetmateEvolutionNotify : null;
+      if (!notify?.peekEvolutionQueue || !activePetId) {
+        console.warn("petAgeTest: cannot peek evolution queue or no activePetId.");
+        return false;
+      }
+      const q = await notify.peekEvolutionQueue();
+      const evt = (q || []).find((e) => e && e.petId === activePetId);
+      console.log("leetmate_evolution_queue (active pet):", evt || "(none)");
+      if (!evt) {
+        return false;
+      }
+      console.log("Reloading Home → evolution screen…");
+      window.location.reload();
       return true;
     },
 
     /**
-     * End-to-end: preset active pet → midnight job (queues evolution) → reload Home → redirects to screens/evolution.
+     * Demo 1 — Egg @ age 2, rollover yesterday, happiness > 0 → age 3 Baby + evolution screen.
      */
-    async runEvolutionScreenTest() {
-      const ok = await this.presetEggAlmostBabyForActivePet();
-      if (!ok) return;
+    async demoEggToBabyEvolution() {
+      console.group("petAgeTest.demoEggToBabyEvolution");
+      await this.clearEvolutionQueue();
+      const ok = await this.eggAlmostBaby();
+      if (!ok) {
+        console.groupEnd();
+        return;
+      }
+      await storageSet({
+        leetmate_happiness: 100,
+        leetmate_pet_age_last_rollover: this._yesterdayCa()
+      });
+      console.log("Setup: Egg age 2, lastRollover=yesterday, happiness=100 → runMidnightPetAgeJob");
+      await runMidnightPetAgeJob();
+      const reloaded = await this._reloadHomeIfEvolutionQueuedForActivePet();
+      if (!reloaded) {
+        console.warn(
+          "No evolution queued — job may have skipped (uid / rollover / happiness). Run petAgeTest.status()."
+        );
+      }
+      console.groupEnd();
+    },
+
+    /**
+     * Demo 2 — Baby @ age 9, rollover yesterday, happiness = 0 → job must not run (no change).
+     */
+    async demoBabySkippedWhenUnhappy() {
+      console.group("petAgeTest.demoBabySkippedWhenUnhappy");
+      await this.clearEvolutionQueue();
+      const ok = await this.babyAlmostAdult();
+      if (!ok) {
+        console.groupEnd();
+        return;
+      }
+      const yesterdayStr = this._yesterdayCa();
+      const before = await storageGet(["ownedPetsSnapshot", "activePetId"]);
+      const pets0 = Array.isArray(before.ownedPetsSnapshot) ? before.ownedPetsSnapshot : [];
+      const a0 = pets0.find((p) => p && p.id === before.activePetId) || pets0[0];
+
+      await storageSet({
+        leetmate_happiness: 0,
+        leetmate_pet_age_last_rollover: yesterdayStr
+      });
+      console.log("Setup: Baby age 9, lastRollover=yesterday, happiness=0 → runMidnightPetAgeJob (expect skip)");
 
       await runMidnightPetAgeJob();
 
-      const notify = typeof LeetmateEvolutionNotify !== "undefined" ? LeetmateEvolutionNotify : null;
-      if (notify && notify.peekEvolutionQueue) {
-        const q = await notify.peekEvolutionQueue();
-        console.log("leetmate_evolution_queue after job:", q);
-        if (!q.length) {
-          console.warn(
-            "Queue empty — job may have skipped (happiness / rollover / uid). Check petAgeTest.status()."
-          );
-          return;
-        }
-      }
+      const after = await storageGet(["ownedPetsSnapshot", "leetmate_pet_age_last_rollover"]);
+      const pets1 = Array.isArray(after.ownedPetsSnapshot) ? after.ownedPetsSnapshot : [];
+      const a1 = pets1.find((p) => p && p.id === before.activePetId) || pets1[0];
 
-      console.log(
-        "Reloading Home… You should land on screens/evolution (then Continue returns to Home). This will sync age/stage to Firestore."
-      );
-      window.location.reload();
+      const sameAge = a0?.age === a1?.age;
+      const sameStage = String(a0?.stage || "") === String(a1?.stage || "");
+      // If the job had run, rollover would advance to today — it must stay the value we set.
+      const rolloverStillYesterday =
+        after.leetmate_pet_age_last_rollover === yesterdayStr;
+
+      if (sameAge && sameStage && rolloverStillYesterday) {
+        console.log(
+          "OK: Pet unchanged and rollover still yesterday — job correctly skipped when happiness ≤ 0."
+        );
+      } else {
+        console.warn("Unexpected: pet or rollover changed despite happiness 0.", {
+          beforePet: { age: a0?.age, stage: a0?.stage },
+          afterPet: { age: a1?.age, stage: a1?.stage },
+          expectedRollover: yesterdayStr,
+          actualRollover: after.leetmate_pet_age_last_rollover,
+          rolloverStillYesterday
+        });
+      }
+      console.groupEnd();
+    },
+
+    /**
+     * Demo 3 — Baby @ age 9, rollover yesterday, happiness > 0 → age 10 Adult + evolution screen.
+     */
+    async demoBabyToAdultEvolution() {
+      console.group("petAgeTest.demoBabyToAdultEvolution");
+      await this.clearEvolutionQueue();
+      const ok = await this.babyAlmostAdult();
+      if (!ok) {
+        console.groupEnd();
+        return;
+      }
+      await storageSet({
+        leetmate_happiness: 100,
+        leetmate_pet_age_last_rollover: this._yesterdayCa()
+      });
+      console.log("Setup: Baby age 9, lastRollover=yesterday, happiness=100 → runMidnightPetAgeJob");
+      await runMidnightPetAgeJob();
+      const reloaded = await this._reloadHomeIfEvolutionQueuedForActivePet();
+      if (!reloaded) {
+        console.warn(
+          "No evolution queued — job may have skipped. Run petAgeTest.status()."
+        );
+      }
+      console.groupEnd();
+    },
+
+    /** @deprecated Use demoEggToBabyEvolution() */
+    async runEvolutionScreenTest() {
+      return this.demoEggToBabyEvolution();
     },
 
     async peekEvolutionQueue() {
       const notify = typeof LeetmateEvolutionNotify !== "undefined" ? LeetmateEvolutionNotify : null;
-      if (!notify || !notify.peekEvolutionQueue) {
+      if (!notify?.peekEvolutionQueue) {
         console.warn("LeetmateEvolutionNotify not loaded.");
         return;
       }
@@ -202,10 +299,6 @@ if (typeof window !== "undefined") {
       return q;
     },
 
-    /**
-     * Console-only preview using LeetmatePetEvolution (no storage).
-     * Example: petAgeTest.previewEvolutionAtAge(2, "Egg")
-     */
     previewEvolutionAtAge(age, stage = "Egg", adjustedDays = 0) {
       const ev = LeetmatePetEvolution;
       if (!ev) {
@@ -228,29 +321,23 @@ if (typeof window !== "undefined") {
     },
 
     async runMidnightJob() {
-      const before = await storageGet(["ownedPetsSnapshot"]);
-      const p0 = Array.isArray(before.ownedPetsSnapshot) ? before.ownedPetsSnapshot[0] : null;
+      const before = await storageGet(["ownedPetsSnapshot", "activePetId"]);
+      const pets = Array.isArray(before.ownedPetsSnapshot) ? before.ownedPetsSnapshot : [];
+      const active = pets.find((p) => p && p.id === before.activePetId) || pets[0];
 
       console.group("runMidnightPetAgeJob");
-      this._logEvolutionLine(p0, "before ");
+      this._logEvolutionLine(active, "before ");
 
       await runMidnightPetAgeJob();
 
-      const after = await storageGet(["ownedPetsSnapshot"]);
-      const p1 = Array.isArray(after.ownedPetsSnapshot) ? after.ownedPetsSnapshot[0] : null;
-      this._logEvolutionLine(p1, "after  ");
+      const afterSnap = await storageGet(["ownedPetsSnapshot", "activePetId"]);
+      const pets2 = Array.isArray(afterSnap.ownedPetsSnapshot) ? afterSnap.ownedPetsSnapshot : [];
+      const active2 = pets2.find((p) => p && p.id === afterSnap.activePetId) || pets2[0];
+      this._logEvolutionLine(active2, "after  ");
 
-      const beforeAge = p0?.age;
-      const afterAge = p1?.age;
-      const beforeStage = p0?.stage;
-      const afterStage = p1?.stage;
-
-      console.log(`summary: age ${beforeAge} → ${afterAge}, stage "${beforeStage}" → "${afterStage}"`);
-      if (beforeAge === afterAge && beforeStage === afterStage) {
-        console.log("No change (job skipped or no pets).");
-      } else if (beforeStage !== afterStage) {
-        console.log("Stage changed (LeetmatePetEvolution.applyEvolutionToPets in pet-age job).");
-      }
+      console.log(
+        `active pet: age ${active?.age} → ${active2?.age}, stage "${active?.stage}" → "${active2?.stage}"`
+      );
       console.groupEnd();
     },
 
@@ -263,29 +350,29 @@ if (typeof window !== "undefined") {
         "ownedPetsSnapshot",
         "activePetId"
       ]);
-      const p0 = Array.isArray(snap.ownedPetsSnapshot) ? snap.ownedPetsSnapshot[0] : null;
+      const pets = Array.isArray(snap.ownedPetsSnapshot) ? snap.ownedPetsSnapshot : [];
+      const active = pets.find((p) => p && p.id === snap.activePetId) || pets[0];
 
-      console.group("Pet age (storage + evolution)");
-      console.log("uid:", snap.uid);
-      console.log("leetmate_happiness:", snap.leetmate_happiness);
-      console.log("leetmate_pet_age_last_rollover:", snap.leetmate_pet_age_last_rollover);
-      console.log("today (getTodayString):", getTodayString());
-      console.log("leetmate_pet_age_pending_firestore_sync:", snap.leetmate_pet_age_pending_firestore_sync);
+      console.group("petAgeTest.status (chrome.storage)");
       console.log("activePetId:", snap.activePetId);
-      if (p0) {
-        console.log("ownedPetsSnapshot[0]:", {
-          stage: p0.stage,
-          age: p0.age,
-          adjustedDays: p0.adjustedDays ?? 0
+      console.log("happiness:", snap.leetmate_happiness, "| lastRollover:", snap.leetmate_pet_age_last_rollover);
+      console.log("today:", typeof getTodayString === "function" ? getTodayString() : "(n/a)");
+      console.log("pending_firestore_sync:", snap.leetmate_pet_age_pending_firestore_sync);
+      if (active) {
+        console.log("active snapshot:", {
+          stage: active.stage,
+          age: active.age,
+          adjustedDays: active.adjustedDays ?? 0
         });
         if (typeof LeetmatePetEvolution !== "undefined") {
           const ev = LeetmatePetEvolution;
-          console.log("effectiveEvolutionAge:", ev.effectiveEvolutionAge(p0));
-          console.log("nextStageFromPet (for current age):", ev.nextStageFromPet(p0));
+          console.log("effectiveEvolutionAge:", ev.effectiveEvolutionAge(active));
+          console.log("nextStageFromPet:", ev.nextStageFromPet(active));
         }
       } else {
-        console.log("ownedPetsSnapshot[0]: (none)");
+        console.log("active snapshot: (none — run await petAgeTest.syncFromFirestore())");
       }
+      console.log("Tip: await petAgeTest.setActivePet({ age, stage }) to write Firestore + refresh UI.");
       console.groupEnd();
     }
   };

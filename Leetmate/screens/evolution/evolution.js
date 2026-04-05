@@ -21,6 +21,31 @@ let activePetContext = {
     activeStage: null
 };
   
+function redirectToHome() {
+    const homeUrl =
+        typeof chrome !== 'undefined' && chrome.runtime?.getURL
+            ? chrome.runtime.getURL('screens/home/index.html')
+            : '../../screens/home/index.html';
+    window.location.replace(homeUrl);
+}
+
+function evolutionStagesMatch(a, b) {
+    return String(a || '').toLowerCase() === String(b || '').toLowerCase();
+}
+
+function readEvolutionSessionPayload() {
+    try {
+        const raw = sessionStorage.getItem('leetmate_evolution_payload');
+        if (!raw) return null;
+        const o = JSON.parse(raw);
+        if (!o || typeof o.petId !== 'string' || !o.petId) return null;
+        if (o.fromStage == null || o.toStage == null) return null;
+        return o;
+    } catch {
+        return null;
+    }
+}
+
 function getEvolutionStages(activeStage = 'egg') {
     const normalizedStage = String(activeStage || 'egg').toLowerCase();
   
@@ -90,7 +115,38 @@ async function loadActivePetForEvolution() {
       return null;
     }
   
-    const petData = petSnap.data();
+    let petData = petSnap.data();
+
+    if (typeof storageGet === 'function') {
+        const { leetmate_pet_age_pending_firestore_sync, ownedPetsSnapshot } =
+            await storageGet([
+                'leetmate_pet_age_pending_firestore_sync',
+                'ownedPetsSnapshot'
+            ]);
+        if (
+            leetmate_pet_age_pending_firestore_sync &&
+            Array.isArray(ownedPetsSnapshot)
+        ) {
+            const local = ownedPetsSnapshot.find((p) => p && p.id === activePetId);
+            if (local) {
+                const localAge =
+                    typeof local.age === 'number' && Number.isFinite(local.age)
+                        ? local.age
+                        : null;
+                const remoteAge =
+                    typeof petData.age === 'number' && Number.isFinite(petData.age)
+                        ? petData.age
+                        : 0;
+                if (localAge !== null && localAge > remoteAge) {
+                    petData = { ...petData, age: localAge };
+                    if (local.stage) {
+                        petData = { ...petData, stage: local.stage };
+                    }
+                }
+            }
+        }
+    }
+
     const petType = petData.petRef;
     const activeStage = petData.stage || 'egg';
   
@@ -100,6 +156,7 @@ async function loadActivePetForEvolution() {
     }
   
     return {
+      petId: activePetId,
       petType,
       activeStage,
       petData
@@ -287,20 +344,61 @@ function setupButtons() {
 window.addEventListener('load', async () => {
     setupButtons();
     try {
-      const activePet = await loadActivePetForEvolution();
-      if (!activePet) {
+      const payload = readEvolutionSessionPayload();
+      if (!payload) {
+        redirectToHome();
         return;
       }
-  
-      activePetContext.petType = activePet.petType;
-      activePetContext.activeStage = activePet.activeStage;
-  
-      playEvolutionAnimation(
-        activePetContext.petType,
-        activePetContext.activeStage
-      );
+
+      const activePet = await loadActivePetForEvolution();
+      if (!activePet) {
+        redirectToHome();
+        return;
+      }
+
+      if (payload.petId !== activePet.petId) {
+        redirectToHome();
+        return;
+      }
+
+      if (!evolutionStagesMatch(activePet.activeStage, payload.toStage)) {
+        redirectToHome();
+        return;
+      }
+
+      const petType = payload.petRef || activePet.petType;
+      if (!petType || !PET_ASSETS[petType]) {
+        redirectToHome();
+        return;
+      }
+
+      if (
+        payload.petRef &&
+        activePet.petType &&
+        !evolutionStagesMatch(payload.petRef, activePet.petType)
+      ) {
+        redirectToHome();
+        return;
+      }
+
+      if (
+        typeof LeetmateEvolutionNotify !== 'undefined' &&
+        LeetmateEvolutionNotify.consumeEventForPetId
+      ) {
+        await LeetmateEvolutionNotify.consumeEventForPetId(payload.petId);
+      }
+
+      try {
+        sessionStorage.removeItem('leetmate_evolution_payload');
+      } catch (_) {}
+
+      activePetContext.petType = petType;
+      activePetContext.activeStage = payload.fromStage;
+
+      playEvolutionAnimation(petType, payload.fromStage);
     } catch (error) {
       console.error('Failed to load active pet for evolution:', error);
+      redirectToHome();
     }
 });
 

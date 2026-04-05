@@ -7,6 +7,11 @@
 function normalizePetSnapshot(pet) {
     if (!pet) return null;
     const age = typeof pet.age === 'number' && Number.isFinite(pet.age) ? pet.age : 0;
+    const stageStr = String(pet.stage || '').toLowerCase();
+    const ableToBattle =
+        typeof pet.ableToBattle === 'boolean'
+            ? pet.ableToBattle
+            : stageStr === 'adult';
     return {
         id: pet.id ?? null,
         petRef: pet.petRef || null,
@@ -15,7 +20,8 @@ function normalizePetSnapshot(pet) {
         age,
         adjustedDays: pet.adjustedDays || 0,
         stats: pet.stats || null,
-        createdTimestampMs: pet.createdTimestampMs ?? null
+        createdTimestampMs: pet.createdTimestampMs ?? null,
+        ableToBattle
     };
 }
 
@@ -113,10 +119,14 @@ async function syncPendingPetAgeToFirestore(db, uid) {
         await Promise.all(
             ownedPetsSnapshot.map((pet) => {
                 if (!pet || !pet.id) return Promise.resolve();
+                const adult = String(pet.stage || '').toLowerCase() === 'adult';
+                const ableToBattle =
+                    typeof pet.ableToBattle === 'boolean' ? pet.ableToBattle : adult;
                 return userRef.collection('pets').doc(pet.id).set(
                     {
                         age: pet.age,
                         stage: pet.stage,
+                        ableToBattle,
                         updatedAt: FieldValue.serverTimestamp()
                     },
                     { merge: true }

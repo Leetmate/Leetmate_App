@@ -33,13 +33,18 @@
       return window.LeetmatePetUI.toCachedPetData(pet, pet.id || null);
     }
 
+    const adult = String(pet.stage || "").toLowerCase() === "adult";
+    const ableToBattle =
+      typeof pet.ableToBattle === "boolean" ? pet.ableToBattle : adult;
     return {
       id: pet.id || null,
       petRef: pet.petRef || null,
       stage: pet.stage || null,
       customName: pet.customName || "",
+      age: typeof pet.age === "number" && Number.isFinite(pet.age) ? pet.age : 0,
       adjustedDays: pet.adjustedDays || 0,
       stats: pet.stats || null,
+      ableToBattle,
       createdTimestampMs:
         typeof pet.createdTimestamp?.toMillis === "function"
           ? pet.createdTimestamp.toMillis()
