@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentUser = null;   // Firebase Auth user
   let userRef = null;       // Firestore document reference (users/{uid})
   let petRef = null;
+  let leetcodeUsername = null;
 
   // --- Navigation ----
   // Back button logic (in header)
@@ -143,15 +144,27 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       await batch.commit();
-      console.log(`Deleted ${snapshot.size()} documents from users/${currentUser.uid}/${subcollectionName}`);
+      //console.log(`Deleted ${snapshot.size()} documents from users/${currentUser.uid}/${subcollectionName}`);
     } catch (error) {
       console.error("Error deleting subcollection:", error);
     }
   }
 
+  //helper function to store value
+  function storeUN(un) {
+    leetcodeUsername = un;
+  }
+
   function deleteUser() {
     //testing that the button is being clicked
     //alert("delete account button pressed");
+
+    // this deletes leetcodeAccountClaims
+    db.collection("leetcodeAccountClaims").doc(leetcodeUsername).delete().then(() => {
+      //deletes the document
+    }).catch((error) => {
+      console.error("Error removing leetcodeAccountClaims document: ", error);
+    });
     
     //delete subcollections
     (async () => {
@@ -162,6 +175,13 @@ document.addEventListener("DOMContentLoaded", () => {
       await deleteSubcollectionDocs("pets");
     })();
     
+    //deletes the user's document too
+    db.collection("users").doc(currentUser.uid).delete().then(() => {
+      //deletes the user's document
+    }).catch((error) => {
+      console.error("Error removing user document: ", error);
+    });
+
     //NOTE: this deletes the user, but it doesn't delete the user's document so the data just sits there
     currentUser.delete().then(() => {
       //deletes user auth
@@ -170,23 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error deleting user profile:", error);
     });
 
-    //deletes the user's document too
-    db.collection("users").doc(currentUser.uid).delete().then(() => {
-      //deletes the user's document
-    }).catch((error) => {
-      console.error("Error removing user document: ", error);
-    });
-
-    //delete entry in leetcodeAccountClaims
-    /*db.collection("leetcodeAccountClaims").doc(currentUser.leetcode.username).delete().then(() => {
-      //deletes the document
-    }).catch((error) => {
-      console.error("Error removing leetcodeAccountClaims document: ", error);
-    });*/
-
-    window.location.href = "../start/index.html";
-
-    //alert(`${currentUser.leetcode.username}`);
+    //window.location.href = "../start/index.html";
   }
 
   confirmDeleteBtn.addEventListener("click", function() {
@@ -199,6 +203,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!currentUser || !userRef) return;
 
     try {
+      //to get the leetcode account name
+      db.collection("users")
+      .doc(currentUser.uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          let lcusername = data.leetcode.username;
+          storeUN(lcusername);
+          //console.log("Leetcode ID:", data.leetcode.username); // Access nested field
+          //alert(data.leetcode.username);
+        }
+      });      
+      
       const doc = await userRef.get();
 
       if (doc.exists) {
