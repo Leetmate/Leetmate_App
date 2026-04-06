@@ -175,6 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
       await deleteSubcollectionDocs("pets");
     })();
     
+		(async () => {
+      await deleteSubcollectionDocs("inventory");
+    })();
     //deletes the user's document too
     db.collection("users").doc(currentUser.uid).delete().then(() => {
       //deletes the user's document
