@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cancelDeleteBtn.addEventListener("click", closeDeleteModal);
   }
 
-  //TODO: Deleting the Account
+  //---- Deleting the Account ----
 
   // create helper function: delete subcollection
   async function deleteSubcollectionDocs(subcollectionName) {
@@ -316,18 +316,59 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const usernameRules = /^[A-Za-z0-9_]{3,20}$/;
+    if (!usernameRules.test(newUsername)) {
+      alert("Username must be 3-20 characters and contain only letters, numbers, or underscores.");
+      return;
+    }
+  
     try {
-      // Update Firestore document 
-      await userRef.set(
-        {
-          username: newUsername,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        // don't overwrite other fields 
-        { merge: true } 
-      );
+      // Get user's old username 
+      const userSnap = await userRef.get();
+      const userData = userSnap.data() || {};
+      const oldUsername = userData.username || "";
+  
+      // Create pointer to new username   usernames/{newUsername}
+      const newUsernameRef = db.collection("usernames").doc(newUsername);
 
-      // Update UI
+      // Create pointer to old username if have   usernames/{oldUsername}
+      const oldUsernameRef = oldUsername
+        ? db.collection("usernames").doc(oldUsername)
+        : null;
+  
+      // Run everything atomically (all or nothing)
+      await db.runTransaction(async (transaction) => {
+
+        // Check if new username is already taken
+        const newUsernameDoc = await transaction.get(newUsernameRef);
+        if (newUsernameDoc.exists) {
+          const ownerUid = newUsernameDoc.data().uid;
+
+          // If the owner of that username is not the current user -> stop
+          if (ownerUid !== currentUser.uid) {
+            throw new Error("That username is already taken.");
+          }
+        }
+  
+        // Update usernames collection
+        transaction.set(newUsernameRef, {
+          uid: currentUser.uid,
+          username: newUsername, 
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+  
+        // Update user's document 
+        transaction.update(userRef, {
+          username: newUsername,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+  
+        // Delete old username in usernames collection 
+        if (oldUsernameRef && oldUsername !== newUsername) {
+          transaction.delete(oldUsernameRef);
+        }
+      });
+  
       usernameDisplay.textContent = `${newUsername} ✏️`;
       closeUsernameModal();
       alert("Username updated successfully.");
