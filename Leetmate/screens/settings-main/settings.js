@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await storageSet({
                         uid: null,
                         leetcodeUsername: null,
+                        leetmate_leetcode_username: null,
                         leetmate_easy_mode: false,
                         leetmate_happiness_easy_snapshot: null,
                     });

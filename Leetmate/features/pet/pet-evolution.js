@@ -37,12 +37,17 @@
 
     /**
      * Returns a new pet object with `stage` set from evolution rules, or the same reference if unchanged.
+     * Sets `ableToBattle` true only when the new stage is Adult (false for Egg/Baby).
      */
     function evolvePetStage(pet) {
         if (!pet || typeof pet !== 'object') return pet;
         var next = nextStageFromPet(pet);
         if (sameStageLabel(pet.stage, next)) return pet;
-        return Object.assign({}, pet, { stage: next });
+        var patch = {
+            stage: next,
+            ableToBattle: sameStageLabel(next, 'Adult')
+        };
+        return Object.assign({}, pet, patch);
     }
 
     function applyEvolutionToPets(pets) {

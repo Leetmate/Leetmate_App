@@ -49,6 +49,9 @@ function toCachedPetData(petData, petId = null) {
 
     const age =
         typeof petData.age === 'number' && Number.isFinite(petData.age) ? petData.age : 0;
+    const adult = String(petData.stage || '').toLowerCase() === 'adult';
+    const ableToBattle =
+        typeof petData.ableToBattle === 'boolean' ? petData.ableToBattle : adult;
     return {
         id: petId ?? petData.id ?? null,
         petRef: petData.petRef || null,
@@ -57,7 +60,8 @@ function toCachedPetData(petData, petId = null) {
         age,
         adjustedDays: petData.adjustedDays || 0,
         stats: petData.stats || null,
-        createdTimestampMs: getCreatedTimestampMs(petData)
+        createdTimestampMs: getCreatedTimestampMs(petData),
+        ableToBattle
     };
 }
 
@@ -108,11 +112,13 @@ async function loadActivePetFromFirestore(db, uid) {
                 const localAge = typeof local.age === 'number' && Number.isFinite(local.age) ? local.age : null;
                 const remoteAge =
                     typeof petData.age === 'number' && Number.isFinite(petData.age) ? petData.age : 0;
+                // Only prefer local age/stage when local is ahead (midnight job not synced yet).
+                // If ages match, keep Firestore so manual pet doc fixes are not overwritten.
                 if (localAge !== null && localAge > remoteAge) {
                     petData = { ...petData, age: localAge };
-                }
-                if (local.stage) {
-                    petData = { ...petData, stage: local.stage };
+                    if (local.stage) {
+                        petData = { ...petData, stage: local.stage };
+                    }
                 }
             }
         }
