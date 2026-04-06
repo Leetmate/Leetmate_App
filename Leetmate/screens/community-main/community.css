@@ -63,14 +63,14 @@ body {
 
 .community-menu-btn {
   width: 100%;
-  max-width: 320px;
+  max-width: 280px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 18px;
-  padding: 18px 22px;
-  min-height: 76px;
-  font-size: 26px;
+  padding: 14px 20px;
+  min-height: 70px;
+  font-size: 28px;
   font-family: "Lilita One", sans-serif;
   letter-spacing: 1px;
   color: #221d17;

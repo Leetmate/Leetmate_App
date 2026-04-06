@@ -18,7 +18,18 @@
 
         <!-- HEADER -->
         <div class="setting-header">
-          <button type="button" class="back-arrow-btn" id="back-btn">←</button>
+          <button
+            type="button"
+            class="menu-btn"
+            id="back-btn"
+            aria-label="Back to account"
+          >
+            <img
+              src="../../assets/icons/back-arrow.png"
+              class="menu-icon"
+              alt=""
+            />
+          </button>
           <h1 class="setting-title">Profile Color</h1>
           <button
             type="button"
@@ -49,6 +60,7 @@
   </div>
 
   <!-- Scripts -->
+  <script src="../../scripts/background-music.js"></script>
   <script src="../../features/shared/menu-nav.js"></script>
   <script src="../../scripts/firebase-bundle.js"></script>
   <script src="../../scripts/firebase-config.js"></script>
