@@ -114,12 +114,14 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error updating profile color:", error);
       alert(error.message || "Failed to update profile color.");
     }
+    backBtn.click();
   }
 
   //when clicking update, the selected color is set in firebase
   updateBtn.addEventListener("click", function() {
     //alert("button clicked");
     updateProfileColor();
+    //window.location.href = "index.html";
   });
   
   auth.onAuthStateChanged(async (user) => {
