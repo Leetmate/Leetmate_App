@@ -38,6 +38,31 @@
               <p style="margin: 0; font-size: 14px;">Email: [User Email]</p>
             </div>
 
+            <div class="settings-section">
+              <label class="settings-toggle-row" for="easy-mode-toggle">
+                <span class="settings-toggle-title">Easy mode</span>
+                <span class="settings-toggle-wrap">
+                  <input type="checkbox" id="easy-mode-toggle" class="settings-toggle-input" />
+                  <span class="settings-toggle-slider" aria-hidden="true"></span>
+                </span>
+              </label>
+            </div>
+
+            <button 
+              type="button" 
+              class="settings-btn-secondary" 
+              id="notif-btn"
+            >
+              Notifications
+            </button>
+            <button 
+              type="button" 
+              class="settings-btn-secondary" 
+              id="acc-info-btn"
+            >
+              Account Information
+            </button>
+
             <button
               type="button"
               class="settings-btn-primary settings-btn-danger"
@@ -56,6 +81,8 @@
     <script src="../../features/progression/xp.js"></script>
     <script src="../../features/progression/streak.js"></script>
     <script src="../../features/shared/storage-helper.js"></script>
+    <script src="../../features/progression/happiness-decay.js"></script>
+    <script src="../../features/progression/easy-mode.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
     <script src="settings.js"></script>
   </body>
