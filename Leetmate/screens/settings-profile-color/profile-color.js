@@ -1,7 +1,21 @@
 // Color picker 
 const colors = [
-    "#FF6B6B", "#4ECDC4", "#1A535C",
-    "#FFD166", "#6A4C93", "#00BBF9"
+  "#ffb5da", // pink
+  "#FFADAD", // pastel red
+  "#FF3B30", // red
+  "#FFD6A5", // pastel orange
+  "#FF9500", // orange
+  "#FDFFB6", // pastel yellow
+  "#FFD60A", // yellow
+  "#CAFFBF", // pastel green
+  "#34C759", // green
+  "#00C7BE", // teal
+  "#A0C4FF", // pastel blue
+  "#0A84FF", // blue
+  "#5E5CE6", // indigo
+  "#BF5AF2", // purple
+  "#ede2d8", // gray
+
 ];
   
 const grid = document.getElementById("color-grid");
@@ -108,18 +122,20 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       //update the ui
-      colorDisplay.background = newColor;
+      colorDisplay.style.background = newColor;
     }
     catch (error) {
       console.error("Error updating profile color:", error);
       alert(error.message || "Failed to update profile color.");
     }
+    backBtn.click();
   }
 
   //when clicking update, the selected color is set in firebase
   updateBtn.addEventListener("click", function() {
     //alert("button clicked");
     updateProfileColor();
+    //window.location.href = "index.html";
   });
   
   auth.onAuthStateChanged(async (user) => {

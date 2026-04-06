@@ -56,7 +56,9 @@
                 id="profile-avatar-btn"
                 aria-label="Change profile color"
               >
-                <div class="profile-avatar" id="profile-avatar"></div>
+                <div class="profile-avatar" id="profile-avatar">
+                  <img src="../../assets/icons/Pet.png" alt="Placeholder Image of Pet" class="clip-avatar adult" id="avatar_img">
+                </div>
               </button>
 
               <button
@@ -137,7 +139,7 @@
             <div class="danger-zone">
               <div class="danger-header">Danger Zone</div>
 
-              <button type="button" class="delete-btn">
+              <button type="button" class="delete-btn" id="delete-btn">
                 Delete Account
               </button>
             </div>
@@ -184,7 +186,25 @@
       </div>
     </div>
 
-    <script src="../../scripts/background-music.js"></script>
+    <!-- Delete Account Modal -->
+     <div class="delete-modal hidden" id="delete-modal">
+      <div class="delete-modal__overlay" id="delete_modal__overlay" aria-hidden="true"></div>
+      <div class="delete-modal__card" role="dialogue" aria-modal="true" aria-labelledby="delete-modal-title">
+        <h2 id="delete-modal-title" class="delete_modal__title">
+          Are you sure you want to delete your account? This action cannot be undone.
+        </h2>
+        
+        <div class="username-modal__actions">
+          <button type="button" class="cancel-delete-btn" id="cancel-delete-btn">
+            Cancel
+          </button>
+          <button type="button" class="confirm-delete-btn" id="confirm-delete-btn">
+            Delete
+          </button>
+      </div>
+      
+     </div>
+
     <script src="../../features/shared/menu-nav.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
@@ -192,6 +212,7 @@
     <script src="../../features/progression/streak.js"></script>
     <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
+    <script src="../../features/pet/pet-loader.js"></script>
     <script src="account.js"></script>
   </body>
 </html>
