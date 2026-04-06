@@ -1,14 +1,3 @@
-// Dev helpers (Home console, signed in)
-//
-// Usage:
-//   await demo.stage("Egg")
-//   await demo.stage("Baby")
-//   await demo.stage("Adult")
-//   await demo.nextDay()
-//   await demo.feed()
-//   await demo.addPets()
-//   await demo.reset()
-
 (function () {
   "use strict";
 
@@ -59,6 +48,32 @@
   async function refreshHearts(db, uid) {
     await requireFn("loadHappinessFromFirestore", window.loadHappinessFromFirestore)(db, uid);
     await requireFn("updateHeartsUI", window.updateHeartsUI)();
+  }
+
+  async function refreshXP(db, uid) {
+    if (typeof window.loadXPFromFirestore === "function") {
+      await window.loadXPFromFirestore(db, uid);
+    }
+
+    if (typeof window.updateXPSectionUI === "function") {
+      await window.updateXPSectionUI();
+    }
+  }
+
+  function parseNonNegativeInt(value, label) {
+    const parsed = Number(value);
+    if (!Number.isInteger(parsed) || parsed < 0) {
+      throw new Error(`demo.${label} expects an integer >= 0.`);
+    }
+    return parsed;
+  }
+
+  function parsePositiveInt(value, label) {
+    const parsed = Number(value);
+    if (!Number.isInteger(parsed) || parsed < 1) {
+      throw new Error(`demo.${label} expects an integer >= 1.`);
+    }
+    return parsed;
   }
 
   async function redirectToEvolutionIfQueued() {
@@ -121,6 +136,58 @@
 
     await refreshHomePet(db, uid);
     console.log(`demo.stage: active pet set to ${stageValue}.`);
+    return true;
+  }
+
+  async function setLevel(nextLevel) {
+    const level = parsePositiveInt(nextLevel, "setLevel");
+    const { db, uid } = await getAuthContext();
+
+    await db.collection("users").doc(uid).set(
+      {
+        level,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    if (typeof window.setLevel === "function") {
+      await window.setLevel(level);
+    } else if (typeof storageSet === "function") {
+      await storageSet({ leetmate_level: level });
+    }
+
+    await refreshXP(db, uid);
+
+    console.log(`demo.setLevel: user level set to ${level}.`);
+    return true;
+  }
+
+  async function setAge(nextAge) {
+    const age = parseNonNegativeInt(nextAge, "setAge");
+    const { db, uid } = await getAuthContext();
+    const activePetId = await getActivePetId(db, uid);
+
+    await db
+      .collection("users")
+      .doc(uid)
+      .collection("pets")
+      .doc(activePetId)
+      .set(
+        {
+          age,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+    if (typeof storageSet === "function") {
+      await storageSet({ leetmate_pet_age_pending_firestore_sync: false });
+    }
+
+    await refreshHomePet(db, uid);
+
+    console.log(`demo.setAge: active pet age set to ${age}.`);
     return true;
   }
 
@@ -357,6 +424,8 @@
 
   window.demo = {
     stage,
+    setLevel,
+    setAge,
     nextDay,
     feed,
     addPets,

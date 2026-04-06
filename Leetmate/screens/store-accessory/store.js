@@ -164,9 +164,9 @@
       }
 
       if (selectedItem.category === 'pets') {
-        ownedPetRefs.add(selectedItem.id);
+        await fetchOwnedPets(activeDb, activeUid);
       } else if (selectedItem.category === 'accessory') {
-        ownedAccessoryIds.add(selectedItem.id);
+        await fetchOwnedAccessories(activeDb, activeUid);
       }
 
       if (typeof updateCoinsUI === 'function') {

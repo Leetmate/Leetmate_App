@@ -90,39 +90,39 @@
     const userRef = db.collection("users").doc(uid);
     const petsRef = userRef.collection("pets");
     const newPetRef = petsRef.doc();
+    const [userSnap, petsSnap] = await Promise.all([
+      userRef.get(),
+      petsRef.where("petRef", "==", item.petRef || item.id).limit(1).get(),
+    ]);
 
-    return db.runTransaction(async (tx) => {
-      const [userSnap, petsSnap] = await Promise.all([
-        tx.get(userRef),
-        tx.get(petsRef.where("petRef", "==", item.petRef || item.id).limit(1)),
-      ]);
+    const currentCoins = Number(userSnap.data()?.coins ?? 0);
+    if (currentCoins < item.price) {
+      throw new Error("Not enough coins");
+    }
 
-      const currentCoins = Number(userSnap.data()?.coins ?? 0);
-      if (currentCoins < item.price) {
-        throw new Error("Not enough coins");
-      }
+    if (!petsSnap.empty) {
+      throw new Error("Pet already owned");
+    }
 
-      if (!petsSnap.empty) {
-        throw new Error("Pet already owned");
-      }
-
-      tx.set(newPetRef, getPetDocData(item));
-      tx.set(
-        userRef,
-        {
-          coins: currentCoins - item.price,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-      return {
-        itemId: item.id,
-        category: item.category,
+    const batch = db.batch();
+    batch.set(newPetRef, getPetDocData(item));
+    batch.set(
+      userRef,
+      {
         coins: currentCoins - item.price,
-        petId: newPetRef.id,
-      };
-    });
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    await batch.commit();
+
+    return {
+      itemId: item.id,
+      category: item.category,
+      coins: currentCoins - item.price,
+      petId: newPetRef.id,
+    };
   }
 
   async function purchaseStoreItem({ db, uid, category, itemId }) {
