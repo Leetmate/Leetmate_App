@@ -13,7 +13,7 @@ body {
 
 /* COMMUNITY CONTAINER */
 .community-card {
-  --screen-banner-bg: #c5d6c5;
+  --screen-banner-bg: #d6d0c5;
   --screen-banner-offset-top: 16px;
   --screen-banner-offset-x: 16px;
   width: 100%;
@@ -21,7 +21,7 @@ body {
   min-height: 520px;
   margin: 0 auto;
   padding: 16px;
-  background: #EAF0EA; /* slightly different green tone */
+  background: #EEEAE1; /* match Home container tint */
   border-radius: 0;
   border: none;
   display: flex;
@@ -35,13 +35,115 @@ body {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: stretch;
   align-items: center;
-  background: linear-gradient(#DCEAF5, #F5DCE0); /* playful gradient */
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+    url("../../assets/backgrounds/bg_arena.png");
+  background-size: cover;
+  background-position: center;
   border: 4px solid #111;
   border-radius: 28px;
-  padding: 16px;
+  padding: 12px;
   margin: 0;
   min-height: 250px;
   text-align: center;
+}
+
+/* Buttons stack */
+.community-menu {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 auto;
+  justify-content: space-evenly;
+  gap: 0;
+}
+
+.community-menu-btn {
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  padding: 14px 20px;
+  min-height: 70px;
+  font-size: 28px;
+  font-family: "Lilita One", sans-serif;
+  letter-spacing: 1px;
+  color: #221d17;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: linear-gradient(to bottom, #fdf4e7 0%, #f0d5ae 100%);
+  border: 4px solid #111;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #111; /* 3D effect matching theme */
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.2s ease;
+  -webkit-text-stroke: 0px #111;
+  text-transform: none;
+}
+
+.community-menu-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: all 0.5s ease;
+  pointer-events: none;
+}
+
+.community-menu-btn:hover,
+.community-menu-btn:focus-visible {
+  background: linear-gradient(to bottom, #fdfaf5 0%, #eecb9a 100%);
+  transform: translateY(-4px); /* Lift up */
+  box-shadow: 0 10px 0 #111; /* Deepen shadow */
+  outline: none;
+}
+
+.community-menu-btn:hover::after {
+  animation: shine 0.6s ease-out;
+}
+
+.community-menu-btn:active {
+  transform: translateY(6px); /* Push down into screen */
+  box-shadow: 0 0px 0 #111; /* Flatten shadow completely */
+  background: linear-gradient(to bottom, #f0d5ae 0%, #e2c26b 100%);
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+.community-menu-btn__icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  display: block;
+  image-rendering: pixelated;
+  flex: 0 0 auto;
+}
+
+.community-menu-btn__label {
+  line-height: 1;
+  text-align: left;
 }

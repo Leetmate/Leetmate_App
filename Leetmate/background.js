@@ -14,7 +14,10 @@
  */
 importScripts(
 	"features/shared/storage-helper.js",
-	"features/progression/streak.js"
+	"features/progression/streak.js",
+	"features/pet/pet-evolution.js",
+	"features/pet/evolution-notify.js",
+	"features/pet/pet-age.js"
 );
 (function () {
 	'use strict';
@@ -60,6 +63,7 @@ importScripts(
 		if (alarm.name !== "dailyStreakCheck") return;
 		console.log("Leetmate: daily streak alarm fired.");
 		await runDailyStreakCheck();
+		await runMidnightPetAgeJob();
 	});
 
 	function getNextAlarmTime() {

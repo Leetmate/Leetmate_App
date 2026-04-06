@@ -72,14 +72,21 @@ function getActivePetSpritePath(petType, petStage) {
 function toCachedPetData(petData, petId = null) {
     if (!petData) return null;
 
+    const age =
+        typeof petData.age === 'number' && Number.isFinite(petData.age) ? petData.age : 0;
+    const adult = String(petData.stage || '').toLowerCase() === 'adult';
+    const ableToBattle =
+        typeof petData.ableToBattle === 'boolean' ? petData.ableToBattle : adult;
     return {
         id: petId ?? petData.id ?? null,
         petRef: petData.petRef || null,
         stage: petData.stage || null,
         customName: petData.customName || '',
+        age,
         adjustedDays: petData.adjustedDays || 0,
         stats: petData.stats || null,
-        createdTimestampMs: getCreatedTimestampMs(petData)
+        createdTimestampMs: getCreatedTimestampMs(petData),
+        ableToBattle
     };
 }
 
@@ -103,31 +110,54 @@ async function loadActivePetFromFirestore(db, uid) {
     
     const petRef = userRef.collection('pets').doc(activePetId);
     const petSnap = await petRef.get();
-    
-    // Sync activePetData to storage for background.js (PIP)
-    let allPetsSnap = null;
+
+    if (!petSnap.exists) {
+        console.warn('Active pet document not found in subcollection.');
+        if (typeof storageSet === 'function') {
+            await storageSet({
+                activePetId,
+                activePetType: null,
+                activePetStage: null,
+                activePetSpritePath: null
+            });
+        }
+        return;
+    }
+
+    let petData = petSnap.data();
+    // Pending midnight job: prefer newer local age and stage until Firestore sync completes.
+    if (typeof storageGet === 'function') {
+        const { leetmate_pet_age_pending_firestore_sync, ownedPetsSnapshot } = await storageGet([
+            'leetmate_pet_age_pending_firestore_sync',
+            'ownedPetsSnapshot'
+        ]);
+        if (leetmate_pet_age_pending_firestore_sync && Array.isArray(ownedPetsSnapshot)) {
+            const local = ownedPetsSnapshot.find((p) => p && p.id === activePetId);
+            if (local) {
+                const localAge = typeof local.age === 'number' && Number.isFinite(local.age) ? local.age : null;
+                const remoteAge =
+                    typeof petData.age === 'number' && Number.isFinite(petData.age) ? petData.age : 0;
+                // Only prefer local age/stage when local is ahead (midnight job not synced yet).
+                // If ages match, keep Firestore so manual pet doc fixes are not overwritten.
+                if (localAge !== null && localAge > remoteAge) {
+                    petData = { ...petData, age: localAge };
+                    if (local.stage) {
+                        petData = { ...petData, stage: local.stage };
+                    }
+                }
+            }
+        }
+    }
 
     if (typeof storageSet === 'function') {
-        allPetsSnap = await userRef.collection('pets').get();
-        const activePetData = petSnap.exists ? petSnap.data() : null;
-        const petType = activePetData?.petRef || null;
-        const petStage = activePetData?.stage || null;
-        await storageSet({ 
+        const allPetsSnap = await userRef.collection('pets').get();
+        const petType = petData?.petRef || null;
+        const petStage = petData?.stage || null;
+        await storageSet({
             activePetId,
             activePetType: petType,
             activePetStage: petStage,
-            activePetSpritePath: getActivePetSpritePath(petType, petStage)
-        });
-    }
-    
-    if (!petSnap.exists) {
-        console.warn('Active pet document not found in subcollection.');
-        return;
-    }
-    
-    const petData = petSnap.data();
-    if (typeof storageSet === 'function') {
-        await storageSet({
+            activePetSpritePath: getActivePetSpritePath(petType, petStage),
             activePetSnapshot: toCachedPetData(petData, activePetId),
             ownedPetsSnapshot: allPetsSnap
                 ? allPetsSnap.docs.map((doc) => toCachedPetData(doc.data(), doc.id))
@@ -183,12 +213,11 @@ function updatePetUI(petData) {
     petSprite.style.animation = 'none';
     petSprite.style.willChange = 'transform, background-position';
     
-    // Set Pet Age
-    const created = getCreatedTimestampMs(petData) || Date.now();
+    // Set Pet Age (Firestore `age`, advanced at daily roll; optional adjustedDays offset)
+    const storedAge =
+        typeof petData.age === 'number' && Number.isFinite(petData.age) ? petData.age : 0;
     const adjusted = petData.adjustedDays || 0;
-    const diffMs = Date.now() - created;
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const totalAge = diffDays + adjusted;
+    const totalAge = Math.max(0, storedAge + adjusted);
     petAgeDisplay.textContent = `${totalAge}d`;
 
     applyPetVisualState();
@@ -262,3 +291,11 @@ window.LeetmatePetUI = {
     loadActivePetFromStorage,
     toCachedPetData
 };
+
+// Background pet-age job (and others) update activePetSnapshot in chrome.storage — refresh UI without reload.
+if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {
+    chrome.storage.onChanged.addListener(function (changes, area) {
+        if (area !== 'local' || !changes.activePetSnapshot) return;
+        loadActivePetFromStorage().catch(function () {});
+    });
+}

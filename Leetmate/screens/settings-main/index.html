@@ -33,29 +33,147 @@
           </div>
 
           <div class="settings-content">
-            <div class="settings-section">
-              <h2 class="settings-section-title">Account Details</h2>
-              <p style="margin: 0; font-size: 14px;">Email: [User Email]</p>
+            <div class="settings-body-spread">
+              <div class="settings-section settings-easy-section">
+                <div class="settings-easy-row">
+                  <span class="settings-easy-leading">
+                    <label class="settings-easy-label" for="easy-mode-toggle">
+                      <span class="settings-easy-icon-wrap" aria-hidden="true">
+                        <img
+                          src="../../assets/icons/paw.svg"
+                          class="settings-easy-icon"
+                          width="16"
+                          height="16"
+                          alt=""
+                        />
+                      </span>
+                      <span class="settings-easy-title">Easy mode</span>
+                    </label>
+                    <button
+                      type="button"
+                      class="settings-easy-info-btn"
+                      id="easy-mode-info-btn"
+                      aria-label="What does Easy mode do?"
+                    >
+                      <img
+                        src="../../assets/icons/info.svg"
+                        class="settings-easy-info-icon"
+                        width="20"
+                        height="20"
+                        alt=""
+                      />
+                    </button>
+                  </span>
+                  <label class="settings-toggle-wrap">
+                    <input type="checkbox" id="easy-mode-toggle" class="settings-toggle-input" />
+                    <span class="settings-toggle-slider" aria-hidden="true"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings-section settings-volume-section">
+                <div class="settings-volume-row">
+                  <button
+                    type="button"
+                    class="settings-volume-mute"
+                    id="music-mute-btn"
+                    aria-label="Mute background music"
+                    aria-pressed="false"
+                  >
+                    <img
+                      id="music-volume-icon"
+                      src="../../assets/icons/sound.png"
+                      class="settings-volume-icon"
+                      width="36"
+                      height="36"
+                      alt=""
+                    />
+                  </button>
+                  <input
+                    type="range"
+                    id="music-volume-slider"
+                    class="settings-volume-slider"
+                    min="0"
+                    max="100"
+                    value="14"
+                    aria-label="Background music volume"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="settings-btn-secondary"
+                id="notif-btn"
+              >
+                Notifications
+              </button>
+              <button
+                type="button"
+                class="settings-btn-secondary"
+                id="acc-info-btn"
+              >
+                Account Information
+              </button>
             </div>
 
-            <button
-              type="button"
-              class="settings-btn-primary settings-btn-danger"
-              id="signout-btn"
-            >
-              Sign Out
-            </button>
+            <div class="settings-footer">
+              <button
+                type="button"
+                class="settings-btn-primary settings-btn-danger"
+                id="signout-btn"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
+    <div
+      id="easy-mode-info-modal"
+      class="settings-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="easy-mode-info-title"
+      hidden
+    >
+      <div class="settings-modal__backdrop" tabindex="-1" aria-hidden="true"></div>
+      <div class="settings-modal__panel">
+        <button
+          type="button"
+          class="settings-modal__close"
+          id="easy-mode-info-close"
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <h2 id="easy-mode-info-title" class="settings-modal__title">Easy Mode</h2>
+        <div class="settings-modal__body">
+          <p class="settings-modal__lead">Your pet stays happy, no feeding needed.</p>
+          <p class="settings-modal__subhead">Keep playing as usual:</p>
+          <ul class="settings-modal__list">
+            <li>Maintain your streak</li>
+            <li>Earn XP and coins</li>
+            <li>Watch your pet grow</li>
+          </ul>
+          <p class="settings-modal__foot">
+            Turn this on anytime for a more relaxed experience.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../scripts/background-music.js"></script>
     <script src="../../features/shared/menu-nav.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
     <script src="../../features/progression/xp.js"></script>
     <script src="../../features/progression/streak.js"></script>
     <script src="../../features/shared/storage-helper.js"></script>
+    <script src="../../features/progression/happiness-decay.js"></script>
+    <script src="../../features/progression/easy-mode.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
     <script src="settings.js"></script>
   </body>

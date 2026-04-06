@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="community.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
   </head>
-  <body>
+  <body data-music-zone="community">
     <div class="popup-layout">
       <div class="popup-content">
         <div class="community-card">
@@ -33,21 +33,58 @@
           </div>
 
           <div class="community-content">
-            <p
-              style="color: #111; font-family: 'Lilita One', cursive; font-size: 20px;"
-            >
-              Community content goes here...
-            </p>
+            <div class="community-menu" role="navigation" aria-label="Community sections">
+              <button
+                type="button"
+                class="community-menu-btn"
+                id="multiplayer-btn"
+              >
+                <img
+                  src="../../assets/icons/swords.png"
+                  class="community-menu-btn__icon"
+                  alt=""
+                />
+                <span class="community-menu-btn__label">Multiplayer</span>
+              </button>
+
+              <button
+                type="button"
+                class="community-menu-btn"
+                id="leaderboard-btn"
+              >
+                <img
+                  src="../../assets/icons/trophy.png"
+                  class="community-menu-btn__icon"
+                  alt=""
+                />
+                <span class="community-menu-btn__label">Leaderboard</span>
+              </button>
+
+              <button
+                type="button"
+                class="community-menu-btn"
+                id="friends-btn"
+              >
+                <img
+                  src="../../assets/icons/friends.png"
+                  class="community-menu-btn__icon"
+                  alt=""
+                />
+                <span class="community-menu-btn__label">Friends</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
+    <script src="../../scripts/background-music.js"></script>
     <script src="../../features/shared/menu-nav.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
     <script src="../../features/progression/xp.js"></script>
     <script src="../../features/progression/streak.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
+    <script src="./community.js"></script>
   </body>
 </html>
