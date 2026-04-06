@@ -18,6 +18,31 @@ const PET_ASSETS = {
         egg: '../../assets/eggs/CubicFoxEgg.png',
         baby: '../../assets/spritesheets/CubicFoxBaby.png',
         adult: '../../assets/spritesheets/CubicFoxAdult.png'
+    },
+		Fish: {
+        egg: '../../assets/eggs/CubicFishEgg.png',
+        baby: '../../assets/spritesheets/CubicFishBaby.png',
+        adult: '../../assets/spritesheets/CubicFishAdult.png'
+    },
+    Frog: {
+        egg: '../../assets/eggs/CubicFrogEgg.png',
+        baby: '../../assets/spritesheets/CubicFrogBaby.png',
+        adult: '../../assets/spritesheets/CubicFrogAdult.png'
+    },
+    Wolf: {
+        egg: '../../assets/eggs/CubicWolfEgg.png',
+        baby: '../../assets/spritesheets/CubicWolfBaby.png',
+        adult: '../../assets/spritesheets/CubicWolfAdult.png'
+    },
+    Giraffe: {
+        egg: '../../assets/eggs/CubicGiraffeEgg.png',
+        baby: '../../assets/spritesheets/CubicGiraffeBaby.png',
+        adult: '../../assets/spritesheets/CubicGiraffeAdult.png'
+    },
+    MicoLeaoDourado: {
+        egg: '../../assets/eggs/CubicMicoLeaoDouradoEgg.png',
+        baby: '../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png',
+        adult: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png'
     }
 };
 

@@ -29,22 +29,7 @@
 
   // turn pet into snapshot in extension storage
   function toCachedPetData(pet) {
-    if (window.LeetmatePetUI && typeof window.LeetmatePetUI.toCachedPetData === "function") {
-      return window.LeetmatePetUI.toCachedPetData(pet, pet.id || null);
-    }
-
-    return {
-      id: pet.id || null,
-      petRef: pet.petRef || null,
-      stage: pet.stage || null,
-      customName: pet.customName || "",
-      adjustedDays: pet.adjustedDays || 0,
-      stats: pet.stats || null,
-      createdTimestampMs:
-        typeof pet.createdTimestamp?.toMillis === "function"
-          ? pet.createdTimestamp.toMillis()
-          : pet.createdTimestampMs || pet.createdTimestamp || null
-    };
+    return window.LeetmatePetUI.toCachedPetData(pet, pet.id || null);
   }
 
   function getActivePetSpritePath(pet) {
@@ -186,8 +171,6 @@
 
   // rebuild the carousel from cached storage 
   function renderCachedCarousel() {
-    if (typeof storageGet !== "function") return Promise.resolve(false);
-
     const { prevBtn, nextBtn } = getEls();
     if (!prevBtn || !nextBtn) return Promise.resolve(false);
 
@@ -205,8 +188,6 @@
   }
 
   function renderCachedCenterPet() {
-    if (typeof storageGet !== "function") return Promise.resolve(false);
-
     const { centerSlot, currentName } = getEls();
     if (!centerSlot || !currentName) return Promise.resolve(false);
 
@@ -263,17 +244,15 @@
       { merge: true }
     );
 
-    if (typeof storageSet === "function") {
-      await storageSet({
-        // mirror that change into storage so home, playground, and pip update right away
-        activePetId: selectedPet.id,
-        activePetType: selectedPet.petRef || null,
-        activePetStage: selectedPet.stage || null,
-        activePetSpritePath: getActivePetSpritePath(selectedPet),
-        activePetSnapshot: toCachedPetData(selectedPet),
-        ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet))
-      });
-    }
+    await storageSet({
+      // mirror that change into storage so home, playground, and pip update right away
+      activePetId: selectedPet.id,
+      activePetType: selectedPet.petRef || null,
+      activePetStage: selectedPet.stage || null,
+      activePetSpritePath: getActivePetSpritePath(selectedPet),
+      activePetSnapshot: toCachedPetData(selectedPet),
+      ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet))
+    });
 
     closeModal();
     renderCarousel();
@@ -298,18 +277,16 @@
 
     if (pets.length === 0) return;
 
-    if (typeof storageSet === "function") {
-      const activePet = pets.find((pet) => pet.id === activePetId) || pets[0];
+    const activePet = pets.find((pet) => pet.id === activePetId) || pets[0];
 
-      await storageSet({
-        ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet)),
-        activePetId: activePet?.id || activePetId || null,
-        activePetType: activePet?.petRef || null,
-        activePetStage: activePet?.stage || null,
-        activePetSpritePath: getActivePetSpritePath(activePet),
-        activePetSnapshot: activePet ? toCachedPetData(activePet) : null,
-      });
-    }
+    await storageSet({
+      ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet)),
+      activePetId: activePet?.id || activePetId || null,
+      activePetType: activePet?.petRef || null,
+      activePetStage: activePet?.stage || null,
+      activePetSpritePath: getActivePetSpritePath(activePet),
+      activePetSnapshot: activePet ? toCachedPetData(activePet) : null,
+    });
 
     const activeIndex = pets.findIndex((pet) => pet.id === activePetId);
     currentIndex = activeIndex >= 0 ? activeIndex : 0;
