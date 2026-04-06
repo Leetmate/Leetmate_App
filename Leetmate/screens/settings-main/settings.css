@@ -91,13 +91,6 @@ body {
   padding: 16px;
 }
 
-.settings-section-title {
-  margin: 0 0 12px 0;
-  font-size: 16px;
-  font-weight: 800;
-  color: #5c4327;
-}
-
 .settings-easy-section {
   padding: 18px 16px;
   background: linear-gradient(135deg, #fff9e8 0%, #ffe8b8 42%, #fff4dc 100%);
