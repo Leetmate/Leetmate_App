@@ -224,7 +224,12 @@
       }
     };
 
-    return userRef.set(payload, { merge: true });
+    return userRef.set(payload, { merge: true }).then(function () {
+      var u = profile.username;
+      if (u && chrome && chrome.storage && chrome.storage.local) {
+        chrome.storage.local.set({ leetcodeUsername: u });
+      }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function () {

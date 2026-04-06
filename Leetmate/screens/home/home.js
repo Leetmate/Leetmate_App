@@ -40,6 +40,21 @@ document.addEventListener("DOMContentLoaded", () => {
     await refreshRewardsCard(db, currentUid);
   }
 
+  /** Re-pull pet + happiness from Firestore when the user returns (Firestore edits otherwise stay stale). */
+  async function refreshPetAndHappinessFromFirestore() {
+    if (!currentUid) return;
+
+    if (typeof loadHappinessFromFirestore === "function") {
+      await loadHappinessFromFirestore(db, currentUid);
+    }
+    if (typeof syncPendingPetAgeToFirestore === "function") {
+      await syncPendingPetAgeToFirestore(db, currentUid);
+    }
+    if (typeof loadActivePetFromFirestore === "function") {
+      await loadActivePetFromFirestore(db, currentUid);
+    }
+  }
+
   auth.onAuthStateChanged(async (user) => {
     if (!user) return;
 
@@ -49,8 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
       await storageSet({ uid: currentUid });
       window.__leetmateAuth = { db, uid: currentUid };
 
-      // Load static UI state
-      loadLeetCodeUsernameFromFirestore(db, currentUid);
+      // Restore LeetCode username into chrome.storage (needed by leetcode.com content script)
+      await loadLeetCodeUsernameFromFirestore(db, currentUid);
 
   		// default card to load
   		setupLeetCodeCard(db, currentUid, {
@@ -97,9 +112,33 @@ document.addEventListener("DOMContentLoaded", () => {
   			updateStreakOnLoad(db, currentUid, solvedToday)
   		]);
   		
-  		// Load active pet
+  		// Load active pet (sync any midnight age bumps to Firestore subcollection first)
+      if (typeof syncPendingPetAgeToFirestore === "function") {
+        await syncPendingPetAgeToFirestore(db, currentUid);
+      }
       if (typeof loadActivePetFromFirestore === "function") {
         await loadActivePetFromFirestore(db, currentUid);
+      }
+
+      if (typeof LeetmateEvolutionNotify !== "undefined" && LeetmateEvolutionNotify.peekEvolutionQueue) {
+        const { activePetId } = await storageGet(["activePetId"]);
+        const queue = await LeetmateEvolutionNotify.peekEvolutionQueue();
+        const evolutionEvent = (queue || []).find(
+          (e) => e && e.petId === activePetId
+        );
+        if (evolutionEvent) {
+          try {
+            sessionStorage.setItem(
+              "leetmate_evolution_payload",
+              JSON.stringify(evolutionEvent)
+            );
+          } catch (_) {}
+          setHomeLoading(false);
+          window.location.replace(
+            chrome.runtime.getURL("screens/evolution/index.html")
+          );
+          return;
+        }
       }
     } catch (error) {
       console.error("Home failed to finish loading:", error);
@@ -108,14 +147,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Refresh reward card whenever user returns to the extension
+  // Refresh rewards + pet/happiness when user returns (Firestore is not realtime in the popup)
   window.addEventListener("focus", async () => {
     await refreshAfterProgressSync();
+    await refreshPetAndHappinessFromFirestore();
   });
 
   document.addEventListener("visibilitychange", async () => {
     if (document.visibilityState !== "visible") return;
     await refreshAfterProgressSync();
+    await refreshPetAndHappinessFromFirestore();
   });
 
   // Easy mode: keep decay timer in sync if the toggle changes on Settings (same profile).
