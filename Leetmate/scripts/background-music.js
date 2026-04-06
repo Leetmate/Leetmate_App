@@ -1,5 +1,5 @@
 /**
- * Subtle looped background music per zone.
+ * Subtle looped background music per zone. Same zone across screens resumes mid-track.
  * Volume and mute persist via chrome.storage (leetmate_music_volume, leetmate_music_muted).
  */
 (function () {
@@ -12,6 +12,7 @@
 
   var STORAGE_VOLUME = "leetmate_music_volume";
   var STORAGE_MUTED = "leetmate_music_muted";
+  var SESSION_KEY = "leetmate_bg_music_session_v1";
   var DEFAULT_VOLUME = 0.14;
 
   var zone = document.body && document.body.dataset.musicZone;
@@ -22,6 +23,35 @@
   var audio = new Audio(src);
   audio.loop = true;
   audio.preload = "auto";
+
+  var snapshot = null;
+  try {
+    snapshot = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+  } catch (e) {
+    snapshot = null;
+  }
+
+  var resumeSameTrack =
+    snapshot &&
+    snapshot.zone === zone &&
+    typeof snapshot.currentTime === "number" &&
+    !isNaN(snapshot.currentTime);
+
+  function persistSession() {
+    try {
+      sessionStorage.setItem(
+        SESSION_KEY,
+        JSON.stringify({
+          zone: zone,
+          currentTime: audio.currentTime,
+          paused: audio.paused,
+        })
+      );
+    } catch (e) {}
+  }
+
+  window.addEventListener("pagehide", persistSession);
+  window.addEventListener("beforeunload", persistSession);
 
   function clamp01(x) {
     if (typeof x !== "number" || isNaN(x)) return DEFAULT_VOLUME;
@@ -63,20 +93,42 @@
     if (p && typeof p.catch === "function") p.catch(function () {});
   }
 
+  function whenMetadataReady(cb) {
+    if (audio.readyState >= 1) {
+      cb();
+    } else {
+      audio.addEventListener("loadedmetadata", cb, { once: true });
+    }
+  }
+
   audio.addEventListener("error", function () {
     /* eslint-disable no-console */
     console.warn("Background music failed to load:", src);
   });
 
   loadPrefsAndApply(function () {
-    audio.play().catch(function () {
-      function unlockOnce() {
-        document.removeEventListener("pointerdown", unlockOnce);
-        document.removeEventListener("keydown", unlockOnce);
-        tryPlay();
+    whenMetadataReady(function () {
+      if (resumeSameTrack && snapshot) {
+        var t = snapshot.currentTime;
+        if (isFinite(audio.duration) && audio.duration > 0) {
+          t = Math.min(t, Math.max(0, audio.duration - 0.05));
+        }
+        audio.currentTime = t;
       }
-      document.addEventListener("pointerdown", unlockOnce);
-      document.addEventListener("keydown", unlockOnce);
+
+      if (resumeSameTrack && snapshot && snapshot.paused) {
+        return;
+      }
+
+      audio.play().catch(function () {
+        function unlockOnce() {
+          document.removeEventListener("pointerdown", unlockOnce);
+          document.removeEventListener("keydown", unlockOnce);
+          tryPlay();
+        }
+        document.addEventListener("pointerdown", unlockOnce);
+        document.addEventListener("keydown", unlockOnce);
+      });
     });
   });
 })();
