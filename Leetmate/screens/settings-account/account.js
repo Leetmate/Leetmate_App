@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
           //create the path for the pet image
           if (petStage == "Egg" || petStage == "egg") 
             {
-            petPath = "../../assets/Eggs/Cubic"+petRef+"Egg.png";
+            petPath = "../../assets/eggs/Cubic"+petRef+"Egg.png";
             //"../../assets/spritesheets/CubicFoxAdult.png"
             if(!profileImg.classList.contains("egg")) 
               {
