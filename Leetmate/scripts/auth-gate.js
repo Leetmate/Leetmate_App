@@ -48,8 +48,14 @@
                     db.collection('users').doc(user.uid).get().then(function(snap) {
                         var data = snap.exists ? snap.data() : {};
                         if (!data.activePetId) {
-                            // No pet chosen yet, send to starters
-                            window.location.replace('../auth-starters/index.html');
+                            // Only Home should bounce directly into starter selection.
+                            // Other protected screens should route back to Home first so
+                            // the user does not get dropped into onboarding unexpectedly.
+                            if (window.location.pathname.indexOf('/home/') !== -1) {
+                                window.location.replace('../auth-starters/index.html');
+                            } else {
+                                window.location.replace('../home/index.html');
+                            }
                         } else {
                             // Pet found. 
                             // HOME screening: pet-loader.js will handle the reveal after sprite is ready.

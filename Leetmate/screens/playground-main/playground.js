@@ -8,6 +8,7 @@
     return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
   }
 
+	// get all element we need
   function getRenameElements() {
     return {
       openBtn: document.querySelector(".playground-rename-btn"),
@@ -44,6 +45,7 @@
       return;
     }
 
+		// write new name to firestore
     const userRef = activeDb.collection("users").doc(activeUid);
     const userSnap = await userRef.get();
     if (!userSnap.exists) return;
@@ -80,9 +82,7 @@
       });
     }
 
-    if (typeof loadActivePetFromFirestore === "function") {
-      await loadActivePetFromFirestore(activeDb, activeUid);
-    }
+    await loadActivePetFromFirestore(activeDb, activeUid);
 
     closeRenameModal();
   }
@@ -95,12 +95,14 @@
     closeBtn.addEventListener("click", closeRenameModal);
     confirmBtn.addEventListener("click", confirmRename);
 
+		// outside clicking closes
     overlay.addEventListener("click", (event) => {
       if (event.target === overlay) {
         closeRenameModal();
       }
     });
 
+		// allows keyboard inputs
     input.addEventListener("keydown", async (event) => {
       if (event.key === "Escape") {
         closeRenameModal();
@@ -121,20 +123,14 @@
 
     setupRenameModal();
 
-    if (
-      window.LeetmatePetUI &&
-      typeof window.LeetmatePetUI.loadActivePetFromStorage === "function"
-    ) {
-      window.LeetmatePetUI.loadActivePetFromStorage().catch((error) => {
-        console.warn("Playground could not load cached pet state:", error);
-      });
-    }
+		// read from snapshot in extension storage first
+    window.LeetmatePetUI.loadActivePetFromStorage().catch((error) => {
+      console.warn("Playground could not load cached pet state:", error);
+    });
 
-    if (typeof updateHeartsUI === "function") {
-      updateHeartsUI().catch((error) => {
-        console.warn("Playground could not load cached happiness:", error);
-      });
-    }
+    updateHeartsUI().catch((error) => {
+      console.warn("Playground could not load cached happiness:", error);
+    });
 
     if (!hasFirebase()) {
       console.warn("Firebase not available on playground.");
@@ -151,17 +147,11 @@
       try {
         activeUid = user.uid;
 
-        if (typeof loadHappinessFromFirestore === "function") {
-          await loadHappinessFromFirestore(db, user.uid);
-        }
+        await loadHappinessFromFirestore(db, user.uid);
 
-        if (typeof loadActivePetFromFirestore === "function") {
-          await loadActivePetFromFirestore(db, user.uid);
-        }
+        await loadActivePetFromFirestore(db, user.uid);
 
-        if (typeof startHappinessDecayTimer === "function") {
-          await startHappinessDecayTimer();
-        }
+        await startHappinessDecayTimer();
       } catch (error) {
         console.error("Playground failed to load pet state:", error);
       }
