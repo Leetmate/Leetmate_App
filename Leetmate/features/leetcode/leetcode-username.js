@@ -1,5 +1,4 @@
-// Same key as leetcode-content.js and sign-out cleanup in settings.
-const LEETCODE_USERNAME_KEY = "leetcodeUsername";
+const LEETCODE_USERNAME_KEY = "leetmate_leetcode_username";
 
 async function getLeetCodeUsername() {
   const result = await storageGet(LEETCODE_USERNAME_KEY);
@@ -19,8 +18,8 @@ function normalizeUsername(value) {
 function usernameFromUserDoc(data) {
   if (!data) return null;
   return (
-    normalizeUsername(data.leetcodeUsername) ||
     normalizeUsername(data.leetcode && data.leetcode.username) ||
+    normalizeUsername(data.leetcodeUsername) ||
     null
   );
 }
@@ -68,7 +67,6 @@ async function loadLeetCodeUsernameFromFirestore(db, uid) {
       .collection("users")
       .doc(uid)
       .update({
-        leetcodeUsername: fresh,
         "leetcode.username": fresh,
         "leetcode.lastSyncedAt":
           firebase.firestore.FieldValue.serverTimestamp(),
@@ -88,7 +86,11 @@ async function saveLeetCodeUsernameToFirestore(db, uid, username) {
     .doc(uid)
     .set(
       {
-        leetcodeUsername: username,
+        leetcode: {
+          username,
+          connected: true,
+          lastSyncedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        },
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }

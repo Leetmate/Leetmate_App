@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let userRef = null;       // Firestore document reference (users/{uid})
   let petRef = null;
   let leetcodeUsername = null;
-  const USERNAME_EDIT_SUFFIX = ` ${String.fromCodePoint(0x270F, 0xFE0F)}`;
 
   // --- Navigation ----
   // Back button logic (in header)
@@ -76,8 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---- Username Modal ----
   // Remove pencil icon and trailing spaces in username text  
   function getCleanUsernameText() {
-    return usernameDisplay.textContent.replace(USERNAME_EDIT_SUFFIX, "").trim();
-  }
+    return usernameDisplay.textContent.replace(" ✏️", "").trim();
+}
   // Open modal and pre-fill with current username 
   function openUsernameModal() {
     usernameInput.value = getCleanUsernameText();
@@ -176,9 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
       await deleteSubcollectionDocs("pets");
     })();
     
-		(async () => {
-      await deleteSubcollectionDocs("inventory");
-    })();
     //deletes the user's document too
     db.collection("users").doc(currentUser.uid).delete().then(() => {
       //deletes the user's document
@@ -288,14 +284,14 @@ document.addEventListener("DOMContentLoaded", () => {
           })*/
 
           // Update UI 
-          usernameDisplay.textContent = `${username}${USERNAME_EDIT_SUFFIX}`;
+          usernameDisplay.textContent = `${username} ✏️`;
           emailDisplay.textContent = email;
           profileAvatar.style.backgroundColor = color;
           //profileImg.src = "../../assets/spritesheets/CubicFoxAdult.png";
           profileImg.src = petPath;
         } else {
           // Fallback if no document exists 
-          usernameDisplay.textContent = `USERNAME_001${USERNAME_EDIT_SUFFIX}`;
+          usernameDisplay.textContent = "USERNAME_001 ✏️";
           emailDisplay.textContent = currentUser.email || "No email";
           profileAvatar.style.backgroundColor = "#d9d9d9";
         }
@@ -353,11 +349,6 @@ document.addEventListener("DOMContentLoaded", () => {
             throw new Error("That username is already taken.");
           }
         }
-
-        const oldUsernameDoc =
-          oldUsernameRef && oldUsername !== newUsername
-            ? await transaction.get(oldUsernameRef)
-            : null;
   
         // Update usernames collection
         transaction.set(newUsernameRef, {
@@ -373,18 +364,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
   
         // Delete old username in usernames collection 
-        if (
-          oldUsernameRef &&
-          oldUsername !== newUsername &&
-          oldUsernameDoc &&
-          oldUsernameDoc.exists &&
-          oldUsernameDoc.data()?.uid === currentUser.uid
-        ) {
+        if (oldUsernameRef && oldUsername !== newUsername) {
           transaction.delete(oldUsernameRef);
         }
       });
   
-      usernameDisplay.textContent = `${newUsername}${USERNAME_EDIT_SUFFIX}`;
+      usernameDisplay.textContent = `${newUsername} ✏️`;
       closeUsernameModal();
       alert("Username updated successfully.");
 
@@ -577,4 +562,3 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
-

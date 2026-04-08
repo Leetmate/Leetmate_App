@@ -70,7 +70,7 @@
 			},
 
 			updatedAt: now,
-			createAt: now,
+			createdAt: now,
     };
   }
 
