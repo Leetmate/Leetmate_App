@@ -61,7 +61,8 @@
                 </div>
                 <div class="sparkles" aria-hidden="true"></div>
                 <div class="unlock-all-btn shiny-btn">
-                  Unlock All Pets & Items
+                  Unlock All<br>
+									Pets & Items
                 </div>
                 <div class="banner-pet-wrap">
                   <div class="banner-pet CubicCat"></div>
@@ -69,70 +70,102 @@
               </div>
             </section>
 
-            <!-- Category Navigation (Ancient Stone Tabs) -->
-            <nav class="category-tabs">
-              <button class="tab-btn active" data-category="clothing" title="Clothing">
-                <div class="tab-icon-frame">
-                   <img src="../../assets/icons/Accessory.png" class="tab-img-main" alt="" />
-                </div>
-              </button>
-              <button class="tab-btn" data-category="food" title="Food">
-                <div class="tab-icon-frame">
-                  <img src="../../assets/icons/Food.png" class="tab-img-main" alt="" />
-                </div>
-              </button>
-              <button class="tab-btn" data-category="pets" title="Pets">
-                <div class="tab-icon-frame">
-                  <img src="../../assets/icons/Pet.png" class="tab-img-main" alt="" />
-                </div>
-              </button>
-              <button class="tab-btn" data-category="special" title="Special">
-                <div class="tab-icon-frame">
-                   <img src="../../assets/icons/Special.png" class="tab-img-main" alt="" />
-                </div>
-              </button>
-            </nav>
+            <div class="store-scroll-area">
+              <!-- Category Navigation (Ancient Stone Tabs) -->
+              <nav class="category-tabs">
+                <button class="tab-btn active" data-category="accessory" title="Accessory">
+                  <div class="tab-icon-frame">
+                     <img src="../../assets/icons/playground_closet.png" class="tab-img-main" alt="" />
+                  </div>
+                </button>
+                <button class="tab-btn" data-category="food" title="Food">
+                  <div class="tab-icon-frame">
+                    <img src="../../assets/icons/Food.png" class="tab-img-main" alt="" />
+                  </div>
+                </button>
+                <button class="tab-btn" data-category="pets" title="Pets">
+                  <div class="tab-icon-frame">
+                    <img src="../../assets/icons/Pet.png" class="tab-img-main" alt="" />
+                  </div>
+                </button>
+                <button class="tab-btn" data-category="special" title="Special">
+                  <div class="tab-icon-frame">
+                     <img src="../../assets/icons/Special.png" class="tab-img-main" alt="" />
+                  </div>
+                </button>
+              </nav>
 
-            <!-- Item Grid (Premium Stone Cards) -->
-            <main class="store-grid">
-              <div class="store-item-card">
-                <div class="item-visual-box">
-                  <img src="../../assets/clothes/hat3.png" class="item-image" alt="Red Hat" />
+              <div class="store-grid-wrap">
+              <!-- Item Grid (Premium Stone Cards) -->
+              <main class="store-grid">
+                <div class="store-item-card">
+                  <div class="item-visual-box">
+                    <img src="../../assets/store/acc-greyhat.png" class="item-image" alt="Grey Hat" />
+                  </div>
+                  <div class="item-price-tag">
+                    <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                    <span>100</span>
+                  </div>
                 </div>
-                <div class="item-price-tag">
-                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
-                  <span>50</span>
+                <div class="store-item-card">
+                  <div class="item-visual-box">
+                    <img src="../../assets/store/acc-brownhat.png" class="item-image" alt="Brown Hat" />
+                  </div>
+                  <div class="item-price-tag">
+                    <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                    <span>100</span>
+                  </div>
                 </div>
+                <div class="store-item-card">
+                  <div class="item-visual-box">
+                     <img src="../../assets/store/acc-strawhat.png" class="item-image" alt="Straw Hat" />
+                  </div>
+                  <div class="item-price-tag">
+                    <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                    <span>120</span>
+                  </div>
+                </div>
+                <div class="store-item-card">
+                  <div class="item-visual-box">
+                     <img src="../../assets/store/acc-tophat.png" class="item-image" alt="Top Hat" />
+                  </div>
+                  <div class="item-price-tag">
+                    <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+                    <span>75</span>
+                  </div>
+                </div>
+              </main>
               </div>
-              <div class="store-item-card">
-                <div class="item-visual-box">
-                  <img src="../../assets/clothes/hat17.png" class="item-image" alt="Green Hat" />
-                </div>
-                <div class="item-price-tag">
-                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
-                  <span>100</span>
-                </div>
-              </div>
-              <div class="store-item-card">
-                <div class="item-visual-box">
-                   <img src="../../assets/clothes/hat19.png" class="item-image" alt="Top Hat" />
-                </div>
-                <div class="item-price-tag">
-                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
-                  <span>120</span>
-                </div>
-              </div>
-              <div class="store-item-card">
-                <div class="item-visual-box">
-                   <img src="../../assets/clothes/hat20.png" class="item-image" alt="Grey Hat" />
-                </div>
-                <div class="item-price-tag">
-                  <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
-                  <span>75</span>
-                </div>
-              </div>
-            </main>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="store-modal-overlay hidden" id="store-item-modal" aria-hidden="true">
+      <div class="store-modal-card" role="dialog" aria-modal="true" aria-labelledby="store-item-modal-title">
+        <button type="button" class="store-modal-close" id="store-item-modal-close" aria-label="Close store item popup">×</button>
+
+        <div class="store-modal-body">
+          <div class="store-modal-top">
+            <div class="store-modal-visual-box" id="store-item-modal-visual-box">
+              <img src="" class="store-modal-image hidden" id="store-item-modal-image" alt="" />
+              <div class="store-modal-pet-thumb hidden" id="store-item-modal-pet-thumb"></div>
+            </div>
+
+            <div class="store-modal-copy">
+              <h2 class="store-modal-title" id="store-item-modal-title">Item</h2>
+              <p class="store-modal-flavor hidden" id="store-item-modal-flavor"></p>
+            </div>
+          </div>
+
+          <p class="store-modal-description" id="store-item-modal-description"></p>
+
+          <button type="button" class="store-buy-btn" id="store-item-modal-buy-btn">
+            <span id="store-item-modal-buy-label">Buy</span>
+            <img src="../../assets/icons/coin.png" class="coin-mini" alt="" />
+            <span id="store-item-modal-price-value">0</span>
+          </button>
         </div>
       </div>
     </div>
@@ -143,8 +176,9 @@
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
     <script src="../../features/progression/coins.js"></script>
+    <script src="../../features/store/item-catalog.js"></script>
+    <script src="../../features/store/item-purchase.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
-    <script src="../../features/shared/alive.js"></script>
   <script src="store.js"></script>
   </body>
 </html>

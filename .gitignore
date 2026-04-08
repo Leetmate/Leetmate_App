@@ -3,7 +3,7 @@
 
 # Generated from .env – do not commit (use firebase-config.template.js as source)
 firebase-config.js
-
+firebase-bundle.js
 node_modules/
 
 # Mac OS Directory Meta Data

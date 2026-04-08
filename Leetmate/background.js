@@ -73,6 +73,10 @@ importScripts(
 	// pip needs this since it can't access the assets directly
 	// basic flow is: url > raw binary > base 64
 	async function assetToDataUrl(path) {
+		if (!/assets\/spritesheets\/Cubic.+(?:Baby|Adult)\.png$/.test(path)) {
+			throw new Error(`Leetmate: invalid PiP sprite path "${path}"`);
+		}
+
 		const response = await fetch(chrome.runtime.getURL(path));
 		const buffer = await response.arrayBuffer();
 		const base64String = new Uint8Array(buffer).toBase64();
@@ -91,8 +95,8 @@ importScripts(
 					const allTabs = win.tabs;
 					const activeTab = allTabs.find(tab => tab.active); // find active tab from array
 
-					const { activePetType, activePetStage, activePetSpritePath, leetmate_happiness } =
-						await storageGet(['activePetType', 'activePetStage', 'activePetSpritePath', 'leetmate_happiness']);
+					const { activePetType, activePetStage, leetmate_happiness } =
+						await storageGet(['activePetType', 'activePetStage', 'leetmate_happiness']);
 					if (!activePetType) {
 						console.warn("Leetmate: cannot open PiP without an active pet type.");
 						return;
@@ -107,10 +111,9 @@ importScripts(
 						return;
 					}
 					const petSpritePath =
-						activePetSpritePath ||
-						(normalizedStage === 'baby'
+						normalizedStage === 'baby'
 							? `assets/spritesheets/Cubic${activePetType}Baby.png`
-							: `assets/spritesheets/Cubic${activePetType}Adult.png`);
+							: `assets/spritesheets/Cubic${activePetType}Adult.png`;
 					const petDataUrl = await assetToDataUrl(petSpritePath);
 
 					chrome.scripting.executeScript(

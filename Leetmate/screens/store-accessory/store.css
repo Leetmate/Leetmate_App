@@ -1,13 +1,14 @@
 /* Store Screen Styles - Wood Shop Aesthetic Transformation */
 @import url("../../styles/layout.css");
 @import url("../../styles/top-banner.css");
+@import url("../../styles/theme.css");
 
 :root {
   --color-wood-dark: #3E2723;
   --color-wood-medium: #5D4037;
   --color-wood-base: #8D6E63;
   --color-wood-light: #BCAAA4;
-  --color-wood-warm: #D7CCC8;
+  --color-wood-warm: #d6d0c5;
   --color-wood-cream: #EDE0D4;
   --color-header-bg: #d6d0c5;
   --shadow-wood: 0 6px 0 #3E2723;
@@ -20,8 +21,7 @@ body {
 
 /* Fix scrolling override */
 .popup-content--scroll {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  overflow: hidden !important;
 }
 
 /* Subtle plank background effect */
@@ -29,11 +29,12 @@ body {
   width: 100%;
   max-width: 380px;
   min-height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 12px;
   box-sizing: border-box;
-  gap: 5px; 
+  gap: 0px; 
   position: relative;
   background-image: repeating-linear-gradient(
     90deg,
@@ -44,11 +45,36 @@ body {
   );
 }
 
+.store-main-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.store-scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+	padding-top: 4px;
+}
+
+.store-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.store-grid-wrap {
+  padding-bottom: 50px;
+}
+
 /* APP-NATIVE HEADER BAR */
 .store-card .screen-banner {
   background: var(--color-header-bg);
   border-bottom: 4px solid var(--color-wood-dark);
-  margin: -12px -12px 10px -12px; /* Reduced bottom margin from 16px */
+  margin: -12px -12px 0px -12px; /* Reduced bottom margin from 16px */
   padding: 10px 16px;
   border-radius: 0;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -81,7 +107,7 @@ body {
 
 /* Coins Display - Premium Wood-Shop Variant */
 .coins-display {
-  background: rgba(62, 39, 35, 0.9);
+  background: var(--color-accent);
   backdrop-filter: blur(4px);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50px;
@@ -89,7 +115,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #FFD700;
+  color: #ffdc13;
   font-family: 'Lilita One', sans-serif;
   font-size: 16px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
@@ -97,7 +123,7 @@ body {
 
 .add-coins-btn {
   background: var(--color-wood-base);
-  border: 2px solid var(--color-wood-dark);
+  border: 2px solid #111;
   border-radius: 50%;
   width: 22px;
   height: 22px;
@@ -119,6 +145,11 @@ body {
 .coins-display .coin-icon {
   width: 20px;
   height: auto;
+}
+
+#coin-count {
+  -webkit-text-stroke: 0.4px #3E2723;
+  text-shadow: 0 1px 0 rgba(62, 39, 35, 0.35);
 }
 
 /* Menu Button */
@@ -147,16 +178,14 @@ body {
 
 /* Promotional Banner - Premium Shop Sign Aesthetic */
 .promo-banner {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)), url("../../assets/backgrounds/storeBanner.png");
+  background-image: linear-gradient(rgba(255, 248, 236, 0.55), rgba(255, 248, 236, 0.55)), url("../../assets/backgrounds/bg_store-banner.jpg");
   background-size: cover;
-  background-position: center;
-  border: 5px solid var(--color-wood-dark);
+  background-position: center 20%;
+  border: 4px solid #111;
   border-radius: 24px;
-  padding: 16px 14px;
-  box-shadow: 0 8px 0 var(--color-wood-dark), inset 0 0 20px rgba(0,0,0,0.05);
+  padding: 8px 14px;
   position: relative;
-  margin-top: 4px;
-  margin-bottom: 15px; /* Preserved User change */
+  margin: 6px;
   overflow: hidden;
 }
 
@@ -165,7 +194,7 @@ body {
   position: absolute;
   width: 9px;
   height: 9px;
-  background: #2a1a17;
+  background: #111;
   border-radius: 50%;
   box-shadow: inset -2px -2px 0 rgba(0,0,0,0.4);
   z-index: 5;
@@ -246,27 +275,30 @@ body {
 
 /* Promotional Text - Golden Plaque Style */
 .unlock-all-btn {
-  background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
-  border: 4px solid #3E2723; /* Matching wood shop border */
-  border-radius: 12px; /* Less round, more plaque-like */
-  padding: 10px 18px;
-  font-family: 'Lilita One', cursive;
-  font-size: 15px;
-  color: #2a1a17; /* High contrast dark brown */
-  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
-  box-shadow: 
-    0 4px 0 #2a1a17, 
-    inset 0 1px 1px rgba(255,255,255,0.2),
-    0 8px 15px rgba(0,0,0,0.3);
-  flex: 1;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  pointer-events: none;
-  user-select: none;
-  z-index: 3;
-  letter-spacing: 0.5px;
+  background: linear-gradient(
+    to right,
+    #cfb98d 0%,
+    #ddc596 10%,
+    #efdfbf 24%,
+    #f7f0de 38%,
+    #fbf7ed 50%,
+    #f7f0de 62%,
+    #efdfbf 76%,
+    #ddc596 90%,
+    #cfb98d 100%
+  );
+  border: 3px solid #b89d5b;
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-family: "Lilita One", cursive;
+  font-size: 16px;
+	text-align: center;
+	line-height: 1;
+  color: #b89d5b;
+  text-shadow: none;
+  box-shadow: 0 0 10px rgba(184, 157, 91, 0.3);
 }
+
 
 .shiny-btn::after {
   content: '';
@@ -289,23 +321,31 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .tab-btn {
-  background: linear-gradient(to bottom, var(--color-wood-base) 0%, var(--color-wood-medium) 100%);
-  border: 4px solid var(--color-wood-dark);
+  background: var(--color-surface);
+  border: 3px solid #111;
   border-radius: 18px;
-  height: 56px;
+  height: 42px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 0 var(--color-wood-dark);
+  box-shadow: 0 3px 0 #111;
   transition: all 0.15s ease;
 }
 
-.tab-btn:hover { background: var(--color-wood-medium); transform: translateY(-2px); box-shadow: 0 7px 0 var(--color-wood-dark); }
+.tab-btn[data-category="accessory"] .tab-img-main {
+  max-height: 78%;
+}
+
+.tab-btn:hover { 
+	background: var(--color-wood-warm); 
+	transform: translateY(-2px); 
+	box-shadow: 0 7px 0 #111; 
+}
 
 .tab-btn.active {
   background: linear-gradient(to bottom, var(--color-wood-warm) 0%, var(--color-wood-light) 100%);
@@ -334,34 +374,33 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  padding-bottom: 50px;
 }
 
 .store-item-card {
-  background: linear-gradient(135deg, var(--color-wood-cream) 0%, #E7D7C1 100%);
-  border: 4px solid var(--color-wood-dark);
+  background: linear-gradient(135deg, var(--color-surface-2) 0%, #E7D7C1 100%);
+  border: 4px solid #111;
   border-radius: 24px;
-  padding: 24px 12px 14px 12px;
+  padding: 20px 10px 12px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
   cursor: pointer;
-  box-shadow: var(--shadow-wood);
+  box-shadow: #111;
   transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .store-item-card:hover {
   transform: translateY(-8px);
   filter: brightness(1.05);
-  box-shadow: 0 14px 0 var(--color-wood-dark), 0 12px 24px rgba(0,0,0,0.25);
+  box-shadow: 0 14px 0 #111, 0 12px 24px rgba(0,0,0,0.25);
 }
 
 .item-visual-box {
   width: 72px;
   height: 72px;
   background: #FFF;
-  border: 3px solid var(--color-wood-dark);
+  border: 3px solid #111;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -382,15 +421,15 @@ body {
 .pet-thumb {
   width: 63px; /* 21px * 3 scale */
   height: 48px; /* 16px * 3 scale */
-  background-size: 252px 48px; /* EXACTLY 4 frames * 63px total width */
-  background-position: 0 0;
+  background-size: 700% 100%; /* EXACTLY 4 frames * 63px total width */
+  background-position: -2px 0;
   background-repeat: no-repeat;
   image-rendering: pixelated;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
 }
 
 .item-price-tag {
-  background: var(--color-wood-dark);
+  background: var(--color-accent);
   border: 2px solid var(--color-wood-medium);
   border-radius: 14px;
   padding: 5px 16px;
@@ -399,7 +438,7 @@ body {
   gap: 8px;
   font-family: 'Lilita One', cursive;
   font-size: 17px;
-  color: #FFD700;
+  color: var(--color-text);
   box-shadow: 0 4px 0 rgba(0,0,0,0.2);
 }
 
@@ -408,8 +447,8 @@ body {
   height: auto;
 }
 
-/* CUSTOM WOOD SCROLLBAR */
-.popup-content--scroll::-webkit-scrollbar {
+/* CUSTOM WOOD SCROLLBAR (removed) */ 
+/* .popup-content--scroll::-webkit-scrollbar {
   width: 10px;
 }
 
@@ -428,7 +467,8 @@ body {
 
 .popup-content--scroll::-webkit-scrollbar-thumb:hover {
   background: var(--color-wood-medium);
-}
+} */
+ 
 .store-item-card.owned .item-visual-box {
   filter: blur(1.5px) grayscale(0.4);
   opacity: 0.8;
@@ -474,5 +514,189 @@ body {
 .store-item-card.locked:hover {
   transform: none;
   box-shadow: 2px 4px 0 rgba(0,0,0,0.1);
+}
+
+.store-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(34, 23, 18, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.store-modal-overlay.hidden {
+  display: none;
+}
+
+.store-modal-card {
+  width: min(320px, 100%);
+  background: #f5eee1;
+  border: 4px solid #111;
+  border-radius: 28px;
+  position: relative;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+}
+
+.store-modal-title {
+  margin: 0;
+  font-family: "Lilita One", cursive;
+  font-size: 30px;
+  line-height: 1;
+  color: #241d17;
+}
+
+.store-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #111;
+  font-family: "Lilita One", cursive;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.store-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 26px 22px 22px;
+}
+
+.store-modal-top {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  align-items: start;
+  gap: 16px;
+}
+
+.store-modal-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.store-modal-visual-box {
+  width: 92px;
+  height: 92px;
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.store-modal-image,
+.store-modal-pet-thumb {
+  display: block;
+}
+
+.store-modal-image.hidden,
+.store-modal-pet-thumb.hidden {
+  display: none;
+}
+
+.store-modal-image {
+  max-width: 82%;
+  max-height: 82%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+.store-modal-pet-thumb {
+  width: 63px;
+  height: 48px;
+  background-size: 700% 100%;
+  background-position: -2px 0;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+.store-modal-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 3px solid #111;
+  border-radius: 999px;
+  background: #f3d46f;
+  color: #241d17;
+  font-family: "Lilita One", cursive;
+  font-size: 20px;
+}
+
+.store-modal-flavor {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.25;
+  color: #5d4037;
+  font-style: italic;
+}
+
+.store-modal-flavor.hidden {
+  display: none;
+}
+
+.store-modal-description {
+  margin: 0;
+  min-height: 0;
+  font-size: 15px;
+  line-height: 1.35;
+  color: #3e2c22;
+}
+
+.store-modal-description.hidden {
+  display: none;
+}
+
+.store-buy-btn {
+  align-self: center;
+  min-width: 180px;
+  padding: 10px 20px;
+  border: 4px solid #111;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f0d889 0%, #e3bf53 100%);
+  color: #241d17;
+  font-family: "Lilita One", cursive;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(17, 17, 17, 0.18);
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.store-buy-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+  box-shadow: 0 6px 0 rgba(17, 17, 17, 0.18);
+}
+
+.store-buy-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(17, 17, 17, 0.18);
+}
+
+.store-buy-btn:disabled {
+  background: #d5cbbd;
+  color: #7b6f61;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
