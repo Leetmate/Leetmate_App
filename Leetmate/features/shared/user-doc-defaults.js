@@ -96,9 +96,35 @@
     });
   }
 
+  function ensureUsernameDoc(db, uid, username) {
+    if (!db) return Promise.reject(new Error("Firestore not loaded"));
+    if (!uid) return Promise.reject(new Error("Missing uid"));
+    if (!username) return Promise.reject(new Error("Missing username"));
+  
+    var usernameRef = db.collection("usernames").doc(username);
+  
+    return db.runTransaction(function (transaction) {
+      return transaction.get(usernameRef).then(function (snap) {
+        if (snap.exists) {
+          var data = snap.data() || {};
+          if (data.uid && data.uid !== uid) {
+            throw new Error("That username is already taken.");
+          }
+        }
+  
+        transaction.set(usernameRef, {
+          uid: uid,
+          username: username,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      });
+    });
+  }
+
   window.LeetmateUserDoc = {
     createUserDoc: createUserDoc,
     ensureUserDoc: ensureUserDoc,
+    ensureUsernameDoc: ensureUsernameDoc,
     PET_SCHEMA: PET_SCHEMA
   };
 })();
