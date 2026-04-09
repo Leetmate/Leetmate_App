@@ -92,7 +92,31 @@
         }
         return Promise.resolve();
       }
-      return userRef.set(createUserDoc(uid, email, username));
+
+      var now = firebase.firestore.FieldValue.serverTimestamp();
+      var batch = db.batch();
+
+      batch.set(userRef, createUserDoc(uid, email, username));
+
+      if (username) {
+        var usernameRef = db.collection('usernames').doc(username);
+        batch.set(usernameRef, {
+          uid: uid,
+          username: username,
+          createdAt: now
+        });
+      }
+
+      // Initialize friends subcollection with a meta doc.
+      // Firestore doesn't persist empty subcollections, so this placeholder
+      // ensures the subcollection exists and is queryable from the start.
+      var friendsMetaRef = db.collection('users').doc(uid).collection('friends').doc('_meta');
+      batch.set(friendsMetaRef, {
+        initializedAt: now,
+        version: 1
+      });
+
+      return batch.commit();
     });
   }
 
