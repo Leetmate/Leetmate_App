@@ -152,6 +152,11 @@
           showMessage(msgEl, 'Please enter a username.', true);
           return;
         }
+        var usernameRules = /^[A-Za-z0-9_]{3,20}$/;
+        if (!usernameRules.test(username)) {
+          showMessage(msgEl, 'Username must be 3–20 characters and contain only letters, numbers, or underscores.', true);
+          return;
+        }
         if (!password) {
           showMessage(msgEl, 'Please enter a password.', true);
           return;
@@ -172,7 +177,14 @@
         var loading = document.getElementById('loading-overlay');
         if (loading) loading.classList.remove('hidden');
 
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        // Check username availability BEFORE creating the Auth account
+        db.collection('usernames').doc(username).get()
+          .then(function (usernameSnap) {
+            if (usernameSnap.exists) {
+              throw { code: 'username-taken' };
+            }
+            return auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+          })
           .then(function () {
             return auth.createUserWithEmailAndPassword(email, password);
           })
@@ -186,7 +198,8 @@
             console.error('Firebase sign up error:', err);
 
             var msg = err.message || 'Sign up failed.';
-            if (err.code === 'auth/email-already-in-use') msg = 'This email is already in use.';
+            if (err.code === 'username-taken') msg = 'That username is already taken. Please choose another.';
+            else if (err.code === 'auth/email-already-in-use') msg = 'This email is already in use.';
             else if (err.code === 'auth/weak-password') msg = 'Password is too weak.';
             else if (err.code === 'auth/invalid-email') msg = 'Invalid email address.';
             else if (msg.startsWith('Firebase:')) {

@@ -89,7 +89,8 @@
   async function purchasePetItem(db, uid, item) {
     const userRef = db.collection("users").doc(uid);
     const petsRef = userRef.collection("pets");
-    const newPetRef = petsRef.doc();
+    const petDocId = `${item.petRef || item.id}_${crypto.randomUUID()}`;
+    const newPetRef = petsRef.doc(petDocId);
     const [userSnap, petsSnap] = await Promise.all([
       userRef.get(),
       petsRef.where("petRef", "==", item.petRef || item.id).limit(1).get(),

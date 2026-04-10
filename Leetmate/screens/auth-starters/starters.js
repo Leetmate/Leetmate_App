@@ -103,7 +103,7 @@
 
         const user = auth.currentUser;
         const pet = PETS[currentIndex];
-        const petId = `pet_${Date.now()}`;
+        const petId = `${pet.id}_${crypto.randomUUID()}`;
         
         elements.loading.classList.remove('hidden');
 
