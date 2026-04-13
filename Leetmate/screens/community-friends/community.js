@@ -39,6 +39,46 @@
   var addMsg          = document.getElementById('add-friend-msg');
   var addResults      = document.getElementById('add-friend-results');
 
+  // ── DOM refs – remove confirm modal ──────────────────
+  var removeModal     = document.getElementById('remove-confirm-modal');
+  var removeBackdrop  = document.getElementById('remove-confirm-backdrop');
+  var removeCancelBtn = document.getElementById('remove-confirm-cancel');
+  var removeOkBtn     = document.getElementById('remove-confirm-ok');
+  var removeNameEl    = document.getElementById('remove-confirm-name');
+
+  // Pending removal state
+  var pendingRemove   = null; // { friendUid, cardEl, removeBtn }
+
+  function openRemoveModal(friendUid, username, cardEl, removeBtn) {
+    if (!removeModal) return;
+    pendingRemove = { friendUid: friendUid, cardEl: cardEl, removeBtn: removeBtn };
+    if (removeNameEl) removeNameEl.textContent = username || 'this friend';
+    removeModal.classList.remove('hidden');
+  }
+
+  function closeRemoveModal() {
+    if (!removeModal) return;
+    removeModal.classList.add('hidden');
+    if (pendingRemove && pendingRemove.removeBtn) {
+      pendingRemove.removeBtn.disabled = false;
+    }
+    pendingRemove = null;
+  }
+
+  if (removeCancelBtn) removeCancelBtn.addEventListener('click', closeRemoveModal);
+  if (removeBackdrop)  removeBackdrop.addEventListener('click', closeRemoveModal);
+
+  if (removeOkBtn) {
+    removeOkBtn.addEventListener('click', function () {
+      if (!pendingRemove) return;
+      removeOkBtn.disabled = true;
+      var p = pendingRemove;
+      pendingRemove = null;
+      removeModal.classList.add('hidden');
+      removeFriend(p.friendUid, p.cardEl);
+    });
+  }
+
   // ── DOM refs – inbox modal ────────────────────────────
   var inboxModal      = document.getElementById('inbox-modal');
   var inboxBackdrop   = document.getElementById('inbox-backdrop');
@@ -111,6 +151,7 @@
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
+      if (removeModal && !removeModal.classList.contains('hidden')) closeRemoveModal();
       if (addModal && !addModal.classList.contains('hidden')) closeAddModal();
       if (inboxModal && !inboxModal.classList.contains('hidden')) closeInboxModal();
     }
@@ -198,7 +239,7 @@
     removeBtn.textContent = '✕';
     removeBtn.addEventListener('click', function () {
       removeBtn.disabled = true;
-      removeFriend(friendData.friendUid, li);
+      openRemoveModal(friendData.friendUid, friendData.username, li, removeBtn);
     });
 
     li.appendChild(avatar);
@@ -223,6 +264,7 @@
         console.error('Remove friend error:', err);
         var btn = cardEl ? cardEl.querySelector('.friend-card__remove-btn') : null;
         if (btn) btn.disabled = false;
+        if (removeOkBtn) removeOkBtn.disabled = false;
       });
   }
 

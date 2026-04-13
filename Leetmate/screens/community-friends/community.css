@@ -738,6 +738,59 @@ body {
   width: 320px;
 }
 
+/* ── REMOVE CONFIRM MODAL ──────────────────────────────── */
+.friends-modal__box--confirm {
+  width: 300px;
+  text-align: center;
+  gap: 14px;
+}
+
+.confirm-modal__emoji {
+  font-size: 42px;
+  line-height: 1;
+  animation: confirm-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes confirm-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.12); }
+}
+
+.confirm-modal__msg {
+  margin: 0;
+  font-size: 13px;
+  color: #5c4327;
+  line-height: 1.55;
+}
+
+.confirm-modal__msg strong {
+  color: #221d17;
+}
+
+.friends-modal__remove {
+  flex: 1;
+  padding: 10px 0;
+  font-family: "Lilita One", cursive;
+  font-size: 15px;
+  font-weight: 400;
+  border-radius: 14px;
+  border: 3px solid #111;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #f87171 0%, #dc2626 100%);
+  color: #fff;
+  box-shadow: 0 3px 0 #111;
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.friends-modal__remove:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 #111; filter: brightness(1.08); }
+.friends-modal__remove:active { transform: translateY(3px);  box-shadow: 0 0   0 #111; }
+.friends-modal__remove:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ── UTILITY ───────────────────────────────────────────── */
 .hidden {
   display: none !important;
