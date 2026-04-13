@@ -118,6 +118,20 @@
       </div>
     </div>
 
+    <!-- Remove Friend Confirmation Modal -->
+    <div class="friends-modal hidden" id="remove-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="remove-confirm-title">
+      <div class="friends-modal__backdrop" id="remove-confirm-backdrop"></div>
+      <div class="friends-modal__box friends-modal__box--confirm">
+        <div class="confirm-modal__emoji" aria-hidden="true">💔</div>
+        <h3 class="friends-modal__title" id="remove-confirm-title">Remove Friend?</h3>
+        <p class="confirm-modal__msg">Are you sure you want to remove <strong id="remove-confirm-name"></strong>? They'll no longer be on your friends list.</p>
+        <div class="friends-modal__actions">
+          <button type="button" class="friends-modal__cancel" id="remove-confirm-cancel">Cancel</button>
+          <button type="button" class="friends-modal__remove" id="remove-confirm-ok">Remove</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Inbox Modal -->
     <div class="friends-modal hidden" id="inbox-modal" role="dialog" aria-modal="true" aria-labelledby="inbox-modal-title">
       <div class="friends-modal__backdrop" id="inbox-backdrop"></div>
