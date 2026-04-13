@@ -76,40 +76,37 @@
 
   function ensureUserDoc(db, uid, email, username) {
     if (!db) return Promise.reject(new Error('Firestore not loaded'));
-
-    var userRef = db.collection('users').doc(uid);
-    return userRef.get().then(function (snap) {
-      if (snap.exists) {
-        var data = snap.data() || {};
-        if (!Object.prototype.hasOwnProperty.call(data, 'savedHappiness')) {
-          return userRef.set(
-            {
-              savedHappiness: null,
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            },
-            { merge: true }
-          );
-        }
-        return Promise.resolve();
-      }
-      return userRef.set(createUserDoc(uid, email, username));
-    });
-  }
-
-  function ensureUsernameDoc(db, uid, username) {
-    if (!db) return Promise.reject(new Error("Firestore not loaded"));
-    if (!uid) return Promise.reject(new Error("Missing uid"));
-    if (!username) return Promise.reject(new Error("Missing username"));
+    if (!uid) return Promise.reject(new Error('Missing uid'));
+    if (!username) return Promise.reject(new Error('Missing username'));
   
-    var usernameRef = db.collection("usernames").doc(username);
+    var userRef = db.collection('users').doc(uid);
+    var usernameRef = db.collection('usernames').doc(username);
   
     return db.runTransaction(function (transaction) {
-      return transaction.get(usernameRef).then(function (snap) {
-        if (snap.exists) {
-          var data = snap.data() || {};
-          if (data.uid && data.uid !== uid) {
-            throw new Error("That username is already taken.");
+      return Promise.all([
+        transaction.get(userRef),
+        transaction.get(usernameRef)
+      ]).then(function (results) {
+        var userSnap = results[0];
+        var usernameSnap = results[1];
+  
+        if (usernameSnap.exists) {
+          var usernameData = usernameSnap.data() || {};
+          if (usernameData.uid && usernameData.uid !== uid) {
+            throw new Error('That username is already taken.');
           }
+        }
+  
+        if (userSnap.exists) {
+          var userData = userSnap.data() || {};
+          if (!Object.prototype.hasOwnProperty.call(userData, 'savedHappiness')) {
+            transaction.set(userRef, {
+              savedHappiness: null,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+          }
+        } else {
+          transaction.set(userRef, createUserDoc(uid, email, username));
         }
   
         transaction.set(usernameRef, {
@@ -124,7 +121,6 @@
   window.LeetmateUserDoc = {
     createUserDoc: createUserDoc,
     ensureUserDoc: ensureUserDoc,
-    ensureUsernameDoc: ensureUsernameDoc,
     PET_SCHEMA: PET_SCHEMA
   };
 })();

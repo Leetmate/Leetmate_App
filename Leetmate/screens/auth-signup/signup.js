@@ -42,10 +42,7 @@
     sessionStorage.removeItem('signup-username');
     sessionStorage.removeItem('signup-accept');
 
-    return window.LeetmateUserDoc.ensureUsernameDoc(db, user.uid, nameToUse)
-    .then(function () {
-      return window.LeetmateUserDoc.ensureUserDoc(db, user.uid, email, nameToUse);
-    })
+    return window.LeetmateUserDoc.ensureUserDoc(db, user.uid, email, nameToUse)
     .then(function () {
       window.location.href = '../auth-leetcode/index.html?from=signup';
     });
