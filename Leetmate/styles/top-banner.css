@@ -1,4 +1,4 @@
-@import url("./theme.css");
+@import url("./themes.css");
 
 .screen-banner {
   background: var(--screen-banner-bg, #d6d0c5);

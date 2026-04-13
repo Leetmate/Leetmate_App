@@ -29,6 +29,25 @@ body {
   align-items: stretch;
 }
 
+/* Fix scrolling override */
+.popup-content--scroll {
+  overflow: hidden !important;
+}
+
+.account-scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+	padding-top: 4px;
+}
+
+.account-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
 .account-card {
   --screen-banner-bg: #d6d0c5;
   --screen-banner-offset-top: 24px;

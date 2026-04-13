@@ -76,47 +76,45 @@
 
   function ensureUserDoc(db, uid, email, username) {
     if (!db) return Promise.reject(new Error('Firestore not loaded'));
-
+    if (!uid) return Promise.reject(new Error('Missing uid'));
+    if (!username) return Promise.reject(new Error('Missing username'));
+  
     var userRef = db.collection('users').doc(uid);
-    return userRef.get().then(function (snap) {
-      if (snap.exists) {
-        var data = snap.data() || {};
-        if (!Object.prototype.hasOwnProperty.call(data, 'savedHappiness')) {
-          return userRef.set(
-            {
+    var usernameRef = db.collection('usernames').doc(username);
+  
+    return db.runTransaction(function (transaction) {
+      return Promise.all([
+        transaction.get(userRef),
+        transaction.get(usernameRef)
+      ]).then(function (results) {
+        var userSnap = results[0];
+        var usernameSnap = results[1];
+  
+        if (usernameSnap.exists) {
+          var usernameData = usernameSnap.data() || {};
+          if (usernameData.uid && usernameData.uid !== uid) {
+            throw new Error('That username is already taken.');
+          }
+        }
+  
+        if (userSnap.exists) {
+          var userData = userSnap.data() || {};
+          if (!Object.prototype.hasOwnProperty.call(userData, 'savedHappiness')) {
+            transaction.set(userRef, {
               savedHappiness: null,
               updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            },
-            { merge: true }
-          );
+            }, { merge: true });
+          }
+        } else {
+          transaction.set(userRef, createUserDoc(uid, email, username));
         }
-        return Promise.resolve();
-      }
-
-      var now = firebase.firestore.FieldValue.serverTimestamp();
-      var batch = db.batch();
-
-      batch.set(userRef, createUserDoc(uid, email, username));
-
-      if (username) {
-        var usernameRef = db.collection('usernames').doc(username);
-        batch.set(usernameRef, {
+  
+        transaction.set(usernameRef, {
           uid: uid,
           username: username,
-          createdAt: now
-        });
-      }
-
-      // Initialize friends subcollection with a meta doc.
-      // Firestore doesn't persist empty subcollections, so this placeholder
-      // ensures the subcollection exists and is queryable from the start.
-      var friendsMetaRef = db.collection('users').doc(uid).collection('friends').doc('_meta');
-      batch.set(friendsMetaRef, {
-        initializedAt: now,
-        version: 1
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
       });
-
-      return batch.commit();
     });
   }
 

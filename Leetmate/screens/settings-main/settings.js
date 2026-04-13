@@ -138,3 +138,10 @@ if (accountButton) {
         window.location.href = '/screens/settings-account/index.html';
     });
 }
+
+const themeSettingsButton = document.getElementById('theme-settings-btn');
+if (themeSettingsButton) {
+    themeSettingsButton.addEventListener('click', function () {
+        window.location.href = '/screens/settings-theme/index.html';
+    });
+}

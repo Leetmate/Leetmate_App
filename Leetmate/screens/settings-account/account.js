@@ -365,8 +365,9 @@ document.addEventListener("DOMContentLoaded", () => {
         transaction.set(newUsernameRef, {
           uid: currentUser.uid,
           username: newUsername, 
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+          createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+          { merge: true}
+        );
   
         // Update user's document 
         transaction.update(userRef, {
