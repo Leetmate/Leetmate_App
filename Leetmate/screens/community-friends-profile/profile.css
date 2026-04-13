@@ -1,0 +1,166 @@
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+  font-size: 14px;
+  background: #f4e0c6;
+  color: #3b2b1a;
+}
+
+.popup-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-content {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.friend-profile-card {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  background: #fdf5e6;
+  border: 4px solid #3b2b1a;
+  border-radius: 28px;
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+  flex: 1;
+  box-shadow: 0 8px 16px rgba(59, 43, 26, 0.15);
+}
+
+.friend-profile-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 44px;
+}
+
+.friend-profile-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  padding: 0 4px 2px;
+}
+
+.friend-profile-loading {
+  margin-top: 8px;
+  font-family: "Lilita One", cursive;
+  font-size: 18px;
+  color: #7c684f;
+}
+
+.friend-profile-loading.hidden {
+  display: none;
+}
+
+.friend-profile-username {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Lilita One", cursive;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: 0.4px;
+  color: #251d13;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 90px);
+  text-align: center;
+}
+
+.friend-profile-avatar {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 6px solid #3b2b1a;
+  background: #d9d9d9;
+  box-shadow: 0 6px 0 #3b2b1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friend-profile-avatar-img {
+  width: 112px;
+  height: 112px;
+  object-fit: cover;
+  object-position: 0 0;
+}
+
+.friend-profile-avatar-img.is-sprite {
+  clip-path: inset(0 85% 0 0);
+}
+
+.friend-profile-avatar-img.is-egg {
+  width: 98px;
+  height: 98px;
+  object-fit: contain;
+}
+
+.friend-stats-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.friend-stat-tile {
+  background: linear-gradient(to bottom, #fdf4e7 0%, #f0d5ae 100%);
+  border: 3px solid #3b2b1a;
+  border-radius: 16px;
+  box-shadow: 0 4px 0 #3b2b1a;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.friend-stat-label {
+  display: block;
+  font-family: "Lilita One", cursive;
+  font-size: 14px;
+  color: #7d5d36;
+}
+
+.friend-stat-value {
+  display: block;
+  margin-top: 3px;
+  font-family: "Lilita One", cursive;
+  font-size: 20px;
+  color: #251d13;
+}
+
+.friend-profile-error {
+  margin: 8px 10px 0;
+  padding: 10px;
+  text-align: center;
+  border: 3px solid #8b2f2f;
+  background: #fde6e6;
+  border-radius: 14px;
+  color: #8b2f2f;
+  font-weight: 700;
+}
+
+.hidden {
+  display: none !important;
+}
