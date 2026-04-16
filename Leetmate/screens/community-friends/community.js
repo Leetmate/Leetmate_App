@@ -175,9 +175,21 @@
     }
   }
 
+  function goToFriendProfile(friendData) {
+    var friendUid = friendData && friendData.friendUid ? String(friendData.friendUid) : '';
+    var targetUrl = '../community-friends-profile/index.html';
+    if (friendUid) {
+      targetUrl += '?uid=' + encodeURIComponent(friendUid);
+    }
+    window.location.href = targetUrl;
+  }
+
   function buildFriendCard(friendData) {
     var li = document.createElement('li');
     li.className = 'friend-card';
+    li.setAttribute('role', 'button');
+    li.setAttribute('tabindex', '0');
+    li.setAttribute('aria-label', 'Open profile for ' + (friendData.username || 'friend'));
 
     var avatar = document.createElement('div');
     avatar.className = 'friend-card__avatar';
@@ -228,7 +240,8 @@
 
     matchBtn.appendChild(matchIcon);
     matchBtn.appendChild(matchLabel);
-    matchBtn.addEventListener('click', function () {
+    matchBtn.addEventListener('click', function (event) {
+      event.stopPropagation();
       window.location.href = '../community-multiplayer/index.html';
     });
 
@@ -237,7 +250,8 @@
     removeBtn.className = 'friend-card__remove-btn';
     removeBtn.setAttribute('aria-label', 'Remove ' + (friendData.username || 'friend'));
     removeBtn.textContent = '✕';
-    removeBtn.addEventListener('click', function () {
+    removeBtn.addEventListener('click', function (event) {
+      event.stopPropagation();
       removeBtn.disabled = true;
       openRemoveModal(friendData.friendUid, friendData.username, li, removeBtn);
     });
@@ -246,6 +260,15 @@
     li.appendChild(info);
     li.appendChild(matchBtn);
     li.appendChild(removeBtn);
+    li.addEventListener('click', function () {
+      goToFriendProfile(friendData);
+    });
+    li.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        goToFriendProfile(friendData);
+      }
+    });
     return li;
   }
 
