@@ -7,7 +7,7 @@ body {
     Arial,
     sans-serif;
   font-size: 14px;
-  background: #f4e0c6;
+  background: #d6d0c5;
   color: #3b2b1a;
   margin: 0;
   min-height: 100vh;
@@ -32,12 +32,18 @@ body {
 }
 
 .friend-profile-card {
-  --profile-stack-gap: 28px;
+  --profile-stack-gap: 24px;
 
   width: 100%;
   max-width: 100%;
   margin: 0;
-  background: #fdf5e6;
+  background-color: #d6d0c5;
+  background-image:
+    linear-gradient(rgba(209, 202, 191, 0.75), rgba(209, 202, 191, 0.75)),
+    url("../../assets/backgrounds/bg_arena2.jpg");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
   border: 4px solid #3b2b1a;
   border-radius: 28px;
   padding: 12px 14px 14px;
@@ -115,18 +121,49 @@ body {
 .friend-profile-pet-name {
   margin: 0;
   max-width: 260px;
-  padding: 0;
+  min-width: 140px;
+  padding: 6px 16px;
   font-family: "Lilita One", cursive;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.2;
   letter-spacing: 0.3px;
   color: #251d13;
   text-align: center;
+  background: linear-gradient(to bottom, #f7eedc 0%, #efe0c6 100%);
+  border: 2px solid #3b2b1a;
+  border-radius: 8px;
+  box-shadow: 0 2px 0 rgba(59, 43, 26, 0.35);
+  position: relative;
+}
+
+.friend-profile-pet-name::before,
+.friend-profile-pet-name::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 14px;
+  background: #d8bf95;
+  border: 2px solid #3b2b1a;
+  transform: translateY(-50%);
+}
+
+.friend-profile-pet-name::before {
+  left: -8px;
+  border-right: 0;
+  border-radius: 4px 0 0 4px;
+}
+
+.friend-profile-pet-name::after {
+  right: -8px;
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
 }
 
 .friend-profile-pet-name--muted {
   color: #7a6a55;
   font-style: italic;
+  background: linear-gradient(to bottom, #eee7d8 0%, #e6dac6 100%);
 }
 
 .friend-profile-avatar {
