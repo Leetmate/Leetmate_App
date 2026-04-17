@@ -115,6 +115,15 @@
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
       });
+
+      // Initialize friends subcollection with a meta doc.
+      // Firestore doesn't persist empty subcollections, so this placeholder
+      // ensures the subcollection exists and is queryable from the start.
+      var friendsMetaRef = db.collection('users').doc(uid).collection('friends').doc('_meta');
+      batch.set(friendsMetaRef, {
+        initializedAt: now,
+        version: 1
+      });
     });
   }
 

@@ -155,46 +155,57 @@ document.addEventListener("DOMContentLoaded", () => {
     leetcodeUsername = un;
   }
 
-  function deleteUser() {
-    //testing that the button is being clicked
-    //alert("delete account button pressed");
+  async function deleteUser() {
+    const uid = currentUser.uid;
 
-    // this deletes leetcodeAccountClaims
-    db.collection("leetcodeAccountClaims").doc(leetcodeUsername).delete().then(() => {
-      //deletes the document
-    }).catch((error) => {
-      console.error("Error removing leetcodeAccountClaims document: ", error);
-    });
-    
-    //delete subcollections
-    (async () => {
+    // 1. Read what we need for cleanup while still authenticated
+    let appUsername = null;
+    try {
+      const userSnap = await db.collection("users").doc(uid).get();
+      appUsername = userSnap.exists ? (userSnap.data().username || null) : null;
+    } catch (e) {
+      console.error("Could not read user doc before deletion:", e);
+    }
+
+    // 2. Delete all Firestore data FIRST while the user is still authenticated.
+    //    Auth must still be valid for Firestore security rules to pass.
+    try {
       await deleteSubcollectionDocs("leetcodeProgress");
-    })();
-
-    (async () => {
       await deleteSubcollectionDocs("pets");
-    })();
-    
-    //deletes the user's document too
-    db.collection("users").doc(currentUser.uid).delete().then(() => {
-      //deletes the user's document
-    }).catch((error) => {
-      console.error("Error removing user document: ", error);
-    });
+      await deleteSubcollectionDocs("inventory");
+      await deleteSubcollectionDocs("friends");
+      await deleteSubcollectionDocs("friendRequests");
 
-    //NOTE: this deletes the user, but it doesn't delete the user's document so the data just sits there
-    currentUser.delete().then(() => {
-      //deletes user auth
-    }).catch((error) => {
-      //error
-      console.error("Error deleting user profile:", error);
-    });
+      if (leetcodeUsername) {
+        await db.collection("leetcodeAccountClaims").doc(leetcodeUsername).delete();
+      }
+      if (appUsername) {
+        await db.collection("usernames").doc(appUsername).delete();
+      }
+      await db.collection("users").doc(uid).delete();
+    } catch (error) {
+      console.error("Error deleting Firestore data:", error);
+      alert("Failed to delete account data. Please try again.");
+      return;
+    }
 
-    //window.location.href = "../start/index.html";
+    // 3. Delete the Firebase Auth account last
+    try {
+      await currentUser.delete();
+    } catch (error) {
+      if (error.code === "auth/requires-recent-login") {
+        alert("Your Firestore data has been removed. For security, sign out and sign back in, then delete again to remove the authentication account.");
+      } else {
+        console.error("Error deleting auth account:", error);
+        alert("Data deleted but the auth account could not be removed: " + error.message);
+      }
+    }
+
+    // Redirect regardless — Firestore data is gone
+    window.location.href = "../start/index.html";
   }
 
   confirmDeleteBtn.addEventListener("click", function() {
-    //alert("delete button clicked");
     deleteUser();
   });
 
@@ -243,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
           //create the path for the pet image
           if (petStage == "Egg" || petStage == "egg") 
             {
-            petPath = "../../assets/Eggs/Cubic"+petRef+"Egg.png";
+            petPath = "../../assets/eggs/Cubic"+petRef+"Egg.png";
             //"../../assets/spritesheets/CubicFoxAdult.png"
             if(!profileImg.classList.contains("egg")) 
               {
