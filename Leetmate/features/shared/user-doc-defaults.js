@@ -81,14 +81,17 @@
   
     var userRef = db.collection('users').doc(uid);
     var usernameRef = db.collection('usernames').doc(username);
+    var friendsMetaRef = db.collection('users').doc(uid).collection('friends').doc('_meta');
   
     return db.runTransaction(function (transaction) {
       return Promise.all([
         transaction.get(userRef),
-        transaction.get(usernameRef)
+        transaction.get(usernameRef),
+        transaction.get(friendsMetaRef)
       ]).then(function (results) {
         var userSnap = results[0];
         var usernameSnap = results[1];
+        var friendsMetaSnap = results[2];
   
         if (usernameSnap.exists) {
           var usernameData = usernameSnap.data() || {};
@@ -114,15 +117,16 @@
           username: username,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
-      });
-
-      // Initialize friends subcollection with a meta doc.
-      // Firestore doesn't persist empty subcollections, so this placeholder
-      // ensures the subcollection exists and is queryable from the start.
-      var friendsMetaRef = db.collection('users').doc(uid).collection('friends').doc('_meta');
-      batch.set(friendsMetaRef, {
-        initializedAt: now,
-        version: 1
+  
+        // Initialize friends subcollection with a meta doc only if it doesn't exist yet.
+        // Firestore doesn't persist empty subcollections, so this placeholder
+        // ensures the subcollection exists and is queryable from the start.
+        if (!friendsMetaSnap.exists) {
+          transaction.set(friendsMetaRef, {
+            initializedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            version: 1
+          });
+        }
       });
     });
   }
