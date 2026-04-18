@@ -1,0 +1,427 @@
+/* Color theme palettes + modal styles */
+
+/* =========================
+   Rainbow theme palettes
+   ========================= */
+
+   html[data-theme="color-red"] {
+    --color-bg: #fff0f3;
+    --color-surface: #fff8fa;
+    --color-surface-2: #ffd8df;
+    --color-surface-3: #f7b7c2;
+    --color-text: #6b3140;
+    --color-text-muted: #9a6370;
+    --color-text-soft: #824858;
+    --color-border: #b85f78;
+    --color-accent: #f4a3b8;
+    --color-accent-strong: #de6b8b;
+    --color-success-bg: #e7f6eb;
+    --color-success-text: #35735b;
+    --color-error-bg: #ffe1e6;
+    --color-error-text: #a64e68;
+    --shadow-card: 0 8px 18px rgba(184, 95, 120, 0.16);
+    --shadow-button: 0 4px 0 rgba(184, 95, 120, 0.26);
+    --shadow-soft: 0 3px 8px rgba(184, 95, 120, 0.14);
+    --shadow-hero: 0 4px 14px rgba(184, 95, 120, 0.2);
+    --focus-outline: 2px solid var(--color-accent-strong);
+    --focus-offset: 2px;
+    --color-wood-dark: #fff0f3;
+    --color-wood-medium: #ebb5c3;
+    --color-wood-base: #d98fa3;
+    --color-wood-light: #ffe3e9;
+    --color-wood-warm: #f7b7c2;
+    --color-wood-cream: #fff8fa;
+    --color-header-bg: #ffd8df;
+    --shadow-wood: 0 6px 0 #d9879d;
+    --color-shop-bg: #fff5f7;
+    --color-tier-border: rgba(184, 95, 120, 0.18);
+    --web-bg: #fff0f3;
+    --web-beige: #fff8fa;
+    --web-gold: #de6b8b;
+    --web-charcoal: #6b3140;
+}
+
+html[data-theme="color-orange"] {
+    --color-bg: #fff4ea;
+    --color-surface: #fffaf5;
+    --color-surface-2: #ffe0bf;
+    --color-surface-3: #f7c792;
+    --color-text: #6a431c;
+    --color-text-muted: #946945;
+    --color-text-soft: #7f5630;
+    --color-border: #bd7a35;
+    --color-accent: #ffbe7a;
+    --color-accent-strong: #ef9440;
+    --color-success-bg: #edf8e8;
+    --color-success-text: #437038;
+    --color-error-bg: #ffe4dc;
+    --color-error-text: #a65542;
+    --shadow-card: 0 8px 18px rgba(189, 122, 53, 0.18);
+    --shadow-button: 0 4px 0 rgba(189, 122, 53, 0.28);
+    --shadow-soft: 0 3px 8px rgba(189, 122, 53, 0.14);
+    --shadow-hero: 0 4px 14px rgba(189, 122, 53, 0.2);
+    --focus-outline: 2px solid var(--color-accent-strong);
+    --focus-offset: 2px;
+    --color-wood-dark: #fff4ea;
+    --color-wood-medium: #e6be96;
+    --color-wood-base: #cf9656;
+    --color-wood-light: #ffead5;
+    --color-wood-warm: #f7c792;
+    --color-wood-cream: #fffaf5;
+    --color-header-bg: #ffe0bf;
+    --shadow-wood: 0 6px 0 #d18d47;
+    --color-shop-bg: #fff7ef;
+    --color-tier-border: rgba(189, 122, 53, 0.18);
+    --web-bg: #fff4ea;
+    --web-beige: #fffaf5;
+    --web-gold: #ef9440;
+    --web-charcoal: #6a431c;
+}
+
+html[data-theme="color-gold"] {
+    --color-bg: #fff7df;
+    --color-surface: #fffdf4;
+    --color-surface-2: #f8e7af;
+    --color-surface-3: #efd58a;
+    --color-text: #4d3812;
+    --color-text-muted: #7d6535;
+    --color-text-soft: #684d1d;
+    --color-border: #8a6320;
+    --color-accent: #e4bf55;
+    --color-accent-strong: #c8921c;
+    --color-success-bg: #ecf7d8;
+    --color-success-text: #496b18;
+    --color-error-bg: #ffe0d6;
+    --color-error-text: #944638;
+    --shadow-card: 0 8px 18px rgba(138, 99, 32, 0.18);
+    --shadow-button: 0 4px 0 rgba(138, 99, 32, 0.28);
+    --shadow-soft: 0 3px 8px rgba(138, 99, 32, 0.14);
+    --shadow-hero: 0 4px 14px rgba(138, 99, 32, 0.2);
+    --focus-outline: 2px solid var(--color-accent-strong);
+    --focus-offset: 2px;
+    --color-wood-dark: #fff7df;
+    --color-wood-medium: #d8be7a;
+    --color-wood-base: #b89041;
+    --color-wood-light: #fff3ca;
+    --color-wood-warm: #efd58a;
+    --color-wood-cream: #fffdf4;
+    --color-header-bg: #f8e7af;
+    --shadow-wood: 0 6px 0 #c09232;
+    --color-shop-bg: #fff9e8;
+    --color-tier-border: rgba(138, 99, 32, 0.18);
+    --web-bg: #fff7df;
+    --web-beige: #fffdf4;
+    --web-gold: #c8921c;
+    --web-charcoal: #4d3812;
+}
+
+html[data-theme="color-green"] {
+    --color-bg: #ecfff3;
+    --color-surface: #f8fffb;
+    --color-surface-2: #d9fbe7;
+    --color-surface-3: #c2f5da;
+    --color-text: #2f5c45;
+    --color-text-muted: #6c907e;
+    --color-text-soft: #4a7a63;
+    --color-border: #5fa07d;
+    --color-accent: #9be5c0;
+    --color-accent-strong: #4fcf92;
+    --color-success-bg: #e2f7ea;
+    --color-success-text: #2e7252;
+    --color-error-bg: #ffe3ea;
+    --color-error-text: #9d4d68;
+    --shadow-card: 0 8px 18px rgba(70, 150, 110, 0.18);
+    --shadow-button: 0 4px 0 rgba(70, 150, 110, 0.28);
+    --shadow-soft: 0 3px 8px rgba(70, 150, 110, 0.14);
+    --shadow-hero: 0 4px 14px rgba(70, 150, 110, 0.2);
+    --focus-outline: 2px solid var(--color-accent-strong);
+    --focus-offset: 2px;
+    --color-wood-dark: #ecfff3;
+    --color-wood-medium: #b8e6cb;
+    --color-wood-base: #84c3a0;
+    --color-wood-light: #e2ffed;
+    --color-wood-warm: #c2f5da;
+    --color-wood-cream: #f8fffb;
+    --color-header-bg: #d9fbe7;
+    --shadow-wood: 0 6px 0 #93d1ae;
+    --color-shop-bg: #f2fff7;
+    --color-tier-border: rgba(95, 160, 125, 0.18);
+    --web-bg: #ecfff3;
+    --web-beige: #f8fffb;
+    --web-gold: #4fcf92;
+    --web-charcoal: #2f5c45;
+}
+
+html[data-theme="color-blue"] {
+    --color-bg: #eaf6ff;
+    --color-surface: #f7fbff;
+    --color-surface-2: #d6ecff;
+    --color-surface-3: #bfe2ff;
+    --color-text: #2b4a63;
+    --color-text-muted: #5f7f99;
+    --color-text-soft: #3f627d;
+    --color-border: #5a8bb5;
+    --color-accent: #9fd4ff;
+    --color-accent-strong: #5fb3f5;
+    --color-success-bg: #e0f4ea;
+    --color-success-text: #2e7252;
+    --color-error-bg: #ffe3ea;
+    --color-error-text: #9d4d68;
+    --shadow-card: 0 8px 18px rgba(80, 140, 190, 0.18);
+    --shadow-button: 0 4px 0 rgba(80, 140, 190, 0.28);
+    --shadow-soft: 0 3px 8px rgba(80, 140, 190, 0.14);
+    --shadow-hero: 0 4px 14px rgba(80, 140, 190, 0.2);
+    --focus-outline: 2px solid var(--color-accent-strong);
+    --focus-offset: 2px;
+    --color-wood-dark: #eaf6ff;
+    --color-wood-medium: #b7d8ee;
+    --color-wood-base: #88b6d5;
+    --color-wood-light: #e0f1ff;
+    --color-wood-warm: #bfe2ff;
+    --color-wood-cream: #f7fbff;
+    --color-header-bg: #d6ecff;
+    --shadow-wood: 0 6px 0 #8bb9dd;
+    --color-shop-bg: #f1f9ff;
+    --color-tier-border: rgba(90, 139, 181, 0.18);
+    --web-bg: #eaf6ff;
+    --web-beige: #f7fbff;
+    --web-gold: #5fb3f5;
+    --web-charcoal: #2b4a63;
+}
+
+html[data-theme="color-purple"] {
+    --color-bg: #f2ecff;
+    --color-surface: #fcf8ff;
+    --color-surface-2: #e6dbff;
+    --color-surface-3: #d4c5fb;
+    --color-text: #44335f;
+    --color-text-muted: #76648f;
+    --color-text-soft: #5f4a7d;
+    --color-border: #7356a5;
+    --color-accent: #b59cff;
+    --color-accent-strong: #8c68df;
+    --color-success-bg: #e0f4ea;
+    --color-success-text: #2e7252;
+    --color-error-bg: #ffe3ea;
+    --color-error-text: #9d4d68;
+    --shadow-card: 0 8px 18px rgba(97, 74, 134, 0.18);
+    --shadow-button: 0 4px 0 rgba(95, 74, 125, 0.28);
+    --shadow-soft: 0 3px 8px rgba(97, 74, 134, 0.14);
+    --shadow-hero: 0 4px 14px rgba(97, 74, 134, 0.2);
+    --focus-outline: 2px solid var(--color-accent-strong);
+    --focus-offset: 2px;
+    --color-wood-dark: #f4eeff;
+    --color-wood-medium: #c2b4e8;
+    --color-wood-base: #a996d8;
+    --color-wood-light: #efe7ff;
+    --color-wood-warm: #d8cbff;
+    --color-wood-cream: #fcf8ff;
+    --color-header-bg: #e6dbff;
+    --shadow-wood: 0 6px 0 #b49cde;
+    --color-shop-bg: #f7f1ff;
+    --color-tier-border: rgba(115, 86, 165, 0.18);
+    --web-bg: #f2ecff;
+    --web-beige: #fcf8ff;
+    --web-gold: #8c68df;
+    --web-charcoal: #44335f;
+}
+
+/* =========================
+   Shared theme application
+   ========================= */
+
+html[data-theme="color-red"] body,
+html[data-theme="color-orange"] body,
+html[data-theme="color-gold"] body,
+html[data-theme="color-green"] body,
+html[data-theme="color-blue"] body,
+html[data-theme="color-purple"] body {
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+}
+
+html[data-theme="color-red"] .home-card,
+html[data-theme="color-red"] .settings-card,
+html[data-theme="color-red"] .community-card,
+html[data-theme="color-red"] .activity-card,
+html[data-theme="color-red"] .playground-card,
+html[data-theme="color-red"] .pets-card,
+html[data-theme="color-red"] .notifications-card,
+html[data-theme="color-red"] .color-card,
+html[data-theme="color-red"] .account-card,
+html[data-theme="color-red"] .theme-card,
+html[data-theme="color-red"] .store-card,
+html[data-theme="color-orange"] .home-card,
+html[data-theme="color-orange"] .settings-card,
+html[data-theme="color-orange"] .community-card,
+html[data-theme="color-orange"] .activity-card,
+html[data-theme="color-orange"] .playground-card,
+html[data-theme="color-orange"] .pets-card,
+html[data-theme="color-orange"] .notifications-card,
+html[data-theme="color-orange"] .color-card,
+html[data-theme="color-orange"] .account-card,
+html[data-theme="color-orange"] .theme-card,
+html[data-theme="color-orange"] .store-card,
+html[data-theme="color-gold"] .home-card,
+html[data-theme="color-gold"] .settings-card,
+html[data-theme="color-gold"] .community-card,
+html[data-theme="color-gold"] .activity-card,
+html[data-theme="color-gold"] .playground-card,
+html[data-theme="color-gold"] .pets-card,
+html[data-theme="color-gold"] .notifications-card,
+html[data-theme="color-gold"] .color-card,
+html[data-theme="color-gold"] .account-card,
+html[data-theme="color-gold"] .theme-card,
+html[data-theme="color-gold"] .store-card,
+html[data-theme="color-green"] .home-card,
+html[data-theme="color-green"] .settings-card,
+html[data-theme="color-green"] .community-card,
+html[data-theme="color-green"] .activity-card,
+html[data-theme="color-green"] .playground-card,
+html[data-theme="color-green"] .pets-card,
+html[data-theme="color-green"] .notifications-card,
+html[data-theme="color-green"] .color-card,
+html[data-theme="color-green"] .account-card,
+html[data-theme="color-green"] .theme-card,
+html[data-theme="color-green"] .store-card,
+html[data-theme="color-blue"] .home-card,
+html[data-theme="color-blue"] .settings-card,
+html[data-theme="color-blue"] .community-card,
+html[data-theme="color-blue"] .activity-card,
+html[data-theme="color-blue"] .playground-card,
+html[data-theme="color-blue"] .pets-card,
+html[data-theme="color-blue"] .notifications-card,
+html[data-theme="color-blue"] .color-card,
+html[data-theme="color-blue"] .account-card,
+html[data-theme="color-blue"] .theme-card,
+html[data-theme="color-blue"] .store-card,
+html[data-theme="color-purple"] .home-card,
+html[data-theme="color-purple"] .settings-card,
+html[data-theme="color-purple"] .community-card,
+html[data-theme="color-purple"] .activity-card,
+html[data-theme="color-purple"] .playground-card,
+html[data-theme="color-purple"] .pets-card,
+html[data-theme="color-purple"] .notifications-card,
+html[data-theme="color-purple"] .color-card,
+html[data-theme="color-purple"] .account-card,
+html[data-theme="color-purple"] .theme-card,
+html[data-theme="color-purple"] .store-card {
+    --screen-banner-bg: var(--color-surface-2);
+    background: var(--color-surface) !important;
+    box-shadow: var(--shadow-card);
+}
+
+html[data-theme="color-red"] .starter-card,
+html[data-theme="color-orange"] .starter-card,
+html[data-theme="color-gold"] .starter-card,
+html[data-theme="color-green"] .starter-card,
+html[data-theme="color-blue"] .starter-card,
+html[data-theme="color-purple"] .starter-card {
+    background-color: var(--web-bg) !important;
+}
+
+/* =========================
+   Modal styles
+   ========================= */
+
+.color-theme-modal[hidden] {
+    display: none;
+}
+
+.color-theme-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+}
+
+.color-theme-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 17, 33, 0.45);
+    backdrop-filter: blur(2px);
+}
+
+.color-theme-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(360px, calc(100vw - 32px));
+    margin: 84px auto 0;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: var(--border-medium);
+    border-radius: 24px;
+    box-shadow: var(--shadow-card);
+    padding: 20px 18px 18px;
+}
+
+.color-theme-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: var(--border-thin);
+    background: var(--color-surface-2);
+    color: var(--color-text);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.color-theme-modal__title {
+    margin: 0 36px 6px 0;
+    font-size: 22px;
+    line-height: 1.2;
+}
+
+.color-theme-modal__subtitle {
+    margin: 0 0 16px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.color-theme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.color-swatch {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    border-radius: 18px;
+    border: 3px solid var(--color-border);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.color-swatch--red {
+    background: linear-gradient(135deg, #ffd9e3 0%, #f6b6c6 45%, #e68aa3 100%);
+}
+
+.color-swatch--orange {
+    background: linear-gradient(135deg, #ffe3c8 0%, #ffc48e 45%, #f2a45d 100%);
+}
+
+.color-swatch--gold {
+    background: linear-gradient(135deg, #fff2c4 0%, #f6d978 45%, #dca72b 100%);
+}
+
+.color-swatch--green {
+    background: linear-gradient(135deg, #dfffe9 0%, #bff5d6 45%, #9be5c0 100%);
+}
+
+.color-swatch--blue {
+    background: linear-gradient(135deg, #dff2ff 0%, #bfe4ff 45%, #9fd4ff 100%);
+}
+
+.color-swatch--purple {
+    background: linear-gradient(135deg, #e7ddff 0%, #d4c2ff 45%, #c1b0ff 100%);
+}
+
+body.color-theme-modal-open {
+    overflow: hidden;
+}

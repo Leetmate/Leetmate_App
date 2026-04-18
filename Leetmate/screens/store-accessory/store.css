@@ -1,7 +1,7 @@
 /* Store Screen Styles - Wood Shop Aesthetic Transformation */
 @import url("../../styles/layout.css");
 @import url("../../styles/top-banner.css");
-@import url("../../styles/themes.css");
+@import url("../../styles/theme.css");
 
 :root {
   --color-wood-dark: #3E2723;
