@@ -1,34 +1,6 @@
 /* Friends Screen Layout */
 @import url("../../styles/layout.css");
 
-:root{
-  --color-comm-fri-card-banner-bg: #D6D0C5;
-  --color-comm-fri-card-bg: #EEEAE1;
-  --color-comm-fri-fri-card: #221D17;
-  --color-comm-fri-fri-card-bg1: #FDF4E7;
-  --color-comm-fri-fri-card-bg2: #F0D5AE;
-  --color-comm-fri-black1: #111;
-  --color-comm-fri-white: #FFF;
-  --color-comm-fri-fri-trophy: #5C4327;
-  --color-comm-fri-fri-match-bg1: #5DBA5A;
-  --color-comm-fri-fri-match-bg2: #3D8C3A;
-  --color-comm-fri-fri-empty-bg1: #DCEAF5;
-  --color-comm-fri-fri-empty-bg2: #F5DCE0;
-  --color-comm-fri-fri-empty-text: #3B2B1A;
-  --color-comm-fri-fri-empty-sub: #7A6A55;
-  --color-comm-fri-fri-load-dot-bg: #C4A87A;
-  --color-comm-fri-fri-inbox-badge: #E03C3C;
-  --color-comm-fri-fri-modal-bg: #FDF8F0;
-  --color-comm-fri-fri-modal-msg-err-bg: #FDE8E8;
-  --color-comm-fri-fri-modal-msg-err: #B91C1C;
-  --color-comm-fri-fri-modal-msg-err-border: #F87171;
-  --color-comm-fri-fri-modal-msg-success-bg: #D4F5D4;
-  --color-comm-fri-fri-modal-msg-success: #166534;
-  --color-comm-fri-fri-modal-msg-success-border: #4ADE80;
-  --color-comm-fri-fri-card-ava-bg: #E8DFC8;
-  --color-comm-fri-fri-modal-cancel: #E8D5B0;
-}
-
 body {
   font-family:
     system-ui,
@@ -41,7 +13,7 @@ body {
 
 /* ── CONTAINER ─────────────────────────────────────────── */
 .community-card {
-  --screen-banner-bg: var(--color-comm-fri-card-banner-bg);
+  --screen-banner-bg: #d6d0c5;
   --screen-banner-offset-top: 16px;
   --screen-banner-offset-x: 16px;
   width: 100%;
@@ -49,7 +21,7 @@ body {
   height: 100%;
   margin: 0 auto;
   padding: 16px;
-  background: var(--color-comm-fri-card-bg);
+  background: #eeeae1;
   border-radius: 0;
   border: none;
   display: flex;
@@ -73,7 +45,7 @@ body {
   font-family: "Lilita One", cursive;
   font-size: 22px;
   font-weight: 400;
-  color: var(--color-comm-fri-fri-card);
+  color: #221d17;
   text-align: center;
   letter-spacing: 0.5px;
 }
@@ -105,11 +77,11 @@ body {
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-card-bg1) 0%, var(--color-comm-fri-fri-card-bg2) 100%);
-  border: 4px solid var(--color-comm-fri-black1);
+  background: linear-gradient(to bottom, #fdf4e7 0%, #f0d5ae 100%);
+  border: 4px solid #111;
   border-radius: 20px;
-  box-shadow: 0 4px 0 var(--color-comm-fri-black1);
-  cursor: default;
+  box-shadow: 0 4px 0 #111;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -117,7 +89,17 @@ body {
 
 .friend-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 6px 0 #111;
+}
+
+.friend-card:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #111;
+}
+
+.friend-card:focus-visible {
+  outline: 3px solid #5dba5a;
+  outline-offset: 2px;
 }
 
 /* Sprite avatar box */
@@ -125,9 +107,9 @@ body {
   flex: 0 0 auto;
   width: 52px;
   height: 52px;
-  border: 3px solid var(--color-comm-fri-black1);
+  border: 3px solid #111;
   border-radius: 12px;
-  background-color: var(--color-comm-fri-fri-card-ava-bg);
+  background-color: #e8dfc8;
   background-repeat: no-repeat;
   background-size: 700% auto;
   background-position: 0% 0%;
@@ -157,7 +139,7 @@ body {
   font-family: "Lilita One", cursive;
   font-size: 16px;
   font-weight: 400;
-  color: var(--color-comm-fri-fri-card);
+  color: #221d17;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -180,7 +162,7 @@ body {
 .friend-card__trophy-count {
   font-family: "Lilita One", cursive;
   font-size: 14px;
-  color: var(--color-comm-fri-fri-trophy);
+  color: #5c4327;
   line-height: 1;
 }
 
@@ -194,11 +176,11 @@ body {
   font-family: "Lilita One", cursive;
   font-size: 13px;
   font-weight: 400;
-  color: var(--color-comm-fri-white);
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-match-bg1) 0%, var(--color-comm-fri-fri-match-bg2) 100%);
-  border: 3px solid var(--color-comm-fri-black1);
+  color: #fff;
+  background: linear-gradient(to bottom, #5dba5a 0%, #3d8c3a 100%);
+  border: 3px solid #111;
   border-radius: 14px;
-  box-shadow: 0 3px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 3px 0 #111;
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
   white-space: nowrap;
@@ -207,13 +189,13 @@ body {
 
 .friend-card__match-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 5px 0 #111;
   filter: brightness(1.08);
 }
 
 .friend-card__match-btn:active {
   transform: translateY(3px);
-  box-shadow: 0 0px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 0px 0 #111;
 }
 
 .friend-card__match-icon {
@@ -231,8 +213,8 @@ body {
   justify-content: center;
   gap: 8px;
   padding: 16px;
-  background: linear-gradient(160deg, var(--color-comm-fri-fri-empty-bg1) 0%, var(--color-comm-fri-fri-empty-bg2) 100%);
-  border: 4px solid var(--color-comm-fri-black1);
+  background: linear-gradient(160deg, #dceaf5 0%, #f5dce0 100%);
+  border: 4px solid #111;
   border-radius: 24px;
 }
 
@@ -248,19 +230,19 @@ body {
   margin: 0;
   font-family: "Lilita One", cursive;
   font-size: 18px;
-  color: var(--color-comm-fri-fri-empty-text);
+  color: #3b2b1a;
   letter-spacing: 0.3px;
 }
 
 .friends-empty__sub {
   margin: 0;
   font-size: 13px;
-  color: var(--color-comm-fri-fri-empty-sub);
+  color: #7a6a55;
   text-align: center;
 }
 
 .friends-empty__sub strong {
-  color: var(--color-comm-fri-fri-empty-text);
+  color: #3b2b1a;
 }
 
 /* ── LOADING STATE ─────────────────────────────────────── */
@@ -275,8 +257,8 @@ body {
 .friends-loading__dot {
   width: 10px;
   height: 10px;
-  background: var(--color-comm-fri-fri-load-dot-bg);
-  border: 2px solid var(--color-comm-fri-black1);
+  background: #c4a87a;
+  border: 2px solid #111;
   border-radius: 50%;
   animation: friends-dot-bounce 1s infinite ease-in-out;
 }
@@ -311,20 +293,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-card-bg1) 0%, var(--color-comm-fri-fri-card-bg2) 100%);
-  border: 4px solid var(--color-comm-fri-black1);
+  background: linear-gradient(to bottom, #fdf4e7 0%, #f0d5ae 100%);
+  border: 4px solid #111;
   border-radius: 16px;
-  box-shadow: 0 4px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 4px 0 #111;
 }
 
 .friends-footer__inbox:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 6px 0 #111;
 }
 
 .friends-footer__inbox:active {
   transform: translateY(4px);
-  box-shadow: 0 0 0 var(--color-comm-fri-black1);
+  box-shadow: 0 0 0 #111;
 }
 
 .friends-footer__icon {
@@ -342,12 +324,12 @@ body {
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
-  background: var(--color-comm-fri-fri-inbox-badge);
-  border: 2px solid var(--color-comm-fri-black1);
+  background: #e03c3c;
+  border: 2px solid #111;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 700;
-  color: var(--color-comm-fri-white);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -361,27 +343,27 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-match-bg1) 0%, var(--color-comm-fri-fri-match-bg2) 100%);
-  border: 4px solid var(--color-comm-fri-black1);
+  background: linear-gradient(to bottom, #5dba5a 0%, #3d8c3a 100%);
+  border: 4px solid #111;
   border-radius: 50%;
-  box-shadow: 0 4px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 4px 0 #111;
 }
 
 .friends-footer__add:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 6px 0 #111;
   filter: brightness(1.08);
 }
 
 .friends-footer__add:active {
   transform: translateY(4px);
-  box-shadow: 0 0 0 var(--color-comm-fri-black1);
+  box-shadow: 0 0 0 #111;
 }
 
 .friends-footer__plus {
   font-size: 28px;
   font-weight: 700;
-  color: var(--color-comm-fri-white);
+  color: #fff;
   line-height: 1;
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.25);
 }
@@ -406,10 +388,10 @@ body {
   position: relative;
   z-index: 1;
   width: 320px;
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-card-bg1) 0%, var(--color-comm-fri-fri-card-bg2) 100%);
-  border: 4px solid var(--color-comm-fri-black1);
+  background: linear-gradient(to bottom, #fdf4e7 0%, #f0d5ae 100%);
+  border: 4px solid #111;
   border-radius: 24px;
-  box-shadow: 0 8px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 8px 0 #111;
   padding: 22px 20px 20px;
   display: flex;
   flex-direction: column;
@@ -421,7 +403,7 @@ body {
   font-family: "Lilita One", cursive;
   font-size: 22px;
   font-weight: 400;
-  color: var(--color-comm-fri-fri-card);
+  color: #221d17;
   text-align: center;
   letter-spacing: 0.4px;
 }
@@ -429,7 +411,7 @@ body {
 .friends-modal__sub {
   margin: 0;
   font-size: 13px;
-  color: var(--color-comm-fri-fri-empty-sub);
+  color: #7a6a55;
   text-align: center;
 }
 
@@ -438,9 +420,9 @@ body {
   padding: 10px 14px;
   font-size: 15px;
   font-family: inherit;
-  color: var(--color-comm-fri-fri-card);
-  background: var(--color-comm-fri-fri-modal-bg);
-  border: 3px solid var(--color-comm-fri-black1);
+  color: #221d17;
+  background: #fdf8f0;
+  border: 3px solid #111;
   border-radius: 14px;
   box-sizing: border-box;
   outline: none;
@@ -448,8 +430,8 @@ body {
 }
 
 .friends-modal__input:focus {
-  border-color: var(--color-comm-fri-fri-match-bg1);
-  background: var(--color-comm-fri-white);
+  border-color: #5dba5a;
+  background: #fff;
 }
 
 .friends-modal__msg {
@@ -462,15 +444,15 @@ body {
 }
 
 .friends-modal__msg--error {
-  background: var(--color-comm-fri-fri-modal-msg-err-bg);
-  color: var(--color-comm-fri-fri-modal-msg-err);
-  border: 2px solid var(--color-comm-fri-fri-modal-msg-err-border);
+  background: #fde8e8;
+  color: #b91c1c;
+  border: 2px solid #f87171;
 }
 
 .friends-modal__msg--success {
-  background: var(--color-comm-fri-fri-modal-msg-success-bg);
-  color: var(--color-comm-fri-fri-modal-msg-success);
-  border: 2px solid var(--color-comm-fri-fri-modal-msg-success-border);
+  background: #d4f5d4;
+  color: #166534;
+  border: 2px solid #4ade80;
 }
 
 .friends-modal__actions {
@@ -486,29 +468,29 @@ body {
   font-size: 15px;
   font-weight: 400;
   border-radius: 14px;
-  border: 3px solid var(--color-comm-fri-black1);
+  border: 3px solid #111;
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .friends-modal__cancel {
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-card-bg1) 0%, var(--color-comm-fri-fri-modal-cancel) 100%);
-  color: var(--color-comm-fri-fri-empty-text);
-  box-shadow: 0 3px 0 var(--color-comm-fri-black1);
+  background: linear-gradient(to bottom, #fdf4e7 0%, #e8d5b0 100%);
+  color: #3b2b1a;
+  box-shadow: 0 3px 0 #111;
 }
 
-.friends-modal__cancel:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 var(--color-comm-fri-black1); }
-.friends-modal__cancel:active { transform: translateY(3px);  box-shadow: 0 0   0 var(--color-comm-fri-black1); }
+.friends-modal__cancel:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 #111; }
+.friends-modal__cancel:active { transform: translateY(3px);  box-shadow: 0 0   0 #111; }
 
 .friends-modal__send {
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-match-bg1) 0%, var(--color-comm-fri-fri-match-bg2) 100%);
-  color: var(--color-comm-fri-white);
-  box-shadow: 0 3px 0 var(--color-comm-fri-black1);
+  background: linear-gradient(to bottom, #5dba5a 0%, #3d8c3a 100%);
+  color: #fff;
+  box-shadow: 0 3px 0 #111;
   -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.25);
 }
 
-.friends-modal__send:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 var(--color-comm-fri-black1); filter: brightness(1.08); }
-.friends-modal__send:active { transform: translateY(3px);  box-shadow: 0 0   0 var(--color-comm-fri-black1); }
+.friends-modal__send:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 #111; filter: brightness(1.08); }
+.friends-modal__send:active { transform: translateY(3px);  box-shadow: 0 0   0 #111; }
 .friends-modal__send:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -525,26 +507,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-comm-fri-fri-modal-cancel);
-  border: 3px solid var(--color-comm-fri-black1);
+  background: #e8d5b0;
+  border: 3px solid #111;
   border-radius: 50%;
   font-size: 12px;
   font-weight: 700;
-  color: var(--color-comm-fri-fri-empty-text);
+  color: #3b2b1a;
   cursor: pointer;
-  box-shadow: 0 2px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 2px 0 #111;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
   line-height: 1;
 }
 
 .friends-modal__close:hover {
   transform: translateY(-1px);
-  box-shadow: 0 3px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 3px 0 #111;
 }
 
 .friends-modal__close:active {
   transform: translateY(2px);
-  box-shadow: 0 0 0 var(--color-comm-fri-black1);
+  box-shadow: 0 0 0 #111;
 }
 
 /* ── SEARCH WRAPPER ────────────────────────────────────── */
@@ -559,7 +541,7 @@ body {
   left: 11px;
   width: 16px;
   height: 16px;
-  color: var(--color-comm-fri-fri-empty-sub);
+  color: #7a6a55;
   pointer-events: none;
   flex-shrink: 0;
 }
@@ -592,19 +574,19 @@ body {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-card-bg1) 0%, var(--color-comm-fri-fri-card-bg2) 100%);
-  border: 3px solid var(--color-comm-fri-black1);
+  background: linear-gradient(to bottom, #fdf4e7 0%, #f0d5ae 100%);
+  border: 3px solid #111;
   border-radius: 16px;
-  box-shadow: 0 3px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 3px 0 #111;
 }
 
 .inbox-card__avatar {
   flex: 0 0 auto;
   width: 44px;
   height: 44px;
-  border: 3px solid var(--color-comm-fri-black1);
+  border: 3px solid #111;
   border-radius: 10px;
-  background-color: var(--color-comm-fri-fri-card-ava-bg);
+  background-color: #e8dfc8;
   background-repeat: no-repeat;
   background-size: 700% auto;
   background-position: 0% 0%;
@@ -627,7 +609,7 @@ body {
   font-family: "Lilita One", cursive;
   font-size: 15px;
   font-weight: 400;
-  color: var(--color-comm-fri-fri-card);
+  color: #221d17;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -648,37 +630,46 @@ body {
 .inbox-card__trophy-count {
   font-family: "Lilita One", cursive;
   font-size: 13px;
-  color: var(--color-comm-fri-fri-trophy);
+  color: #5c4327;
   line-height: 1;
 }
 
 .inbox-card__accept-btn,
+.inbox-card__reject-btn,
 .inbox-card__request-btn {
   flex: 0 0 auto;
   padding: 7px 10px;
   font-family: "Lilita One", cursive;
   font-size: 13px;
   font-weight: 400;
-  border: 3px solid var(--color-comm-fri-black1);
+  border: 3px solid #111;
   border-radius: 12px;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 3px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 3px 0 #111;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-  background: linear-gradient(to bottom, var(--color-comm-fri-fri-card-bg1) 0%, var(--color-comm-fri-fri-modal-cancel) 100%);
-  color: var(--color-comm-fri-fri-empty-text);
+  background: linear-gradient(to bottom, #fdf4e7 0%, #e8d5b0 100%);
+  color: #3b2b1a;
 }
 
 .inbox-card__accept-btn:hover,
+.inbox-card__reject-btn:hover,
 .inbox-card__request-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 4px 0 #111;
 }
 
 .inbox-card__accept-btn:active,
+.inbox-card__reject-btn:active,
 .inbox-card__request-btn:active {
   transform: translateY(3px);
-  box-shadow: 0 0 0 var(--color-comm-fri-black1);
+  box-shadow: 0 0 0 #111;
+}
+
+.inbox-card__reject-btn {
+  background: linear-gradient(to bottom, #f87171 0%, #dc2626 100%);
+  color: #fff;
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.2);
 }
 
 .inbox-card__request-btn {
@@ -688,11 +679,50 @@ body {
 }
 
 .inbox-card__accept-btn:disabled,
+.inbox-card__reject-btn:disabled,
 .inbox-card__request-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 2px 0 var(--color-comm-fri-black1);
+  box-shadow: 0 2px 0 #111;
+}
+
+/* ── FRIEND CARD REMOVE BUTTON ─────────────────────────── */
+.friend-card__remove-btn {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #f87171 0%, #dc2626 100%);
+  border: 3px solid #111;
+  border-radius: 10px;
+  box-shadow: 0 3px 0 #111;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.2);
+}
+
+.friend-card__remove-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #111;
+  filter: brightness(1.08);
+}
+
+.friend-card__remove-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0px 0 #111;
+}
+
+.friend-card__remove-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 0 #111;
 }
 
 /* ── INBOX EMPTY / LOADING ─────────────────────────────── */
@@ -701,7 +731,7 @@ body {
   padding: 16px 0 4px;
   text-align: center;
   font-size: 13px;
-  color: var(--color-comm-fri-fri-empty-sub);
+  color: #7a6a55;
   font-style: italic;
 }
 
@@ -716,6 +746,59 @@ body {
 /* Inbox box matches add-friend modal width */
 .friends-modal__box--inbox {
   width: 320px;
+}
+
+/* ── REMOVE CONFIRM MODAL ──────────────────────────────── */
+.friends-modal__box--confirm {
+  width: 300px;
+  text-align: center;
+  gap: 14px;
+}
+
+.confirm-modal__emoji {
+  font-size: 42px;
+  line-height: 1;
+  animation: confirm-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes confirm-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.12); }
+}
+
+.confirm-modal__msg {
+  margin: 0;
+  font-size: 13px;
+  color: #5c4327;
+  line-height: 1.55;
+}
+
+.confirm-modal__msg strong {
+  color: #221d17;
+}
+
+.friends-modal__remove {
+  flex: 1;
+  padding: 10px 0;
+  font-family: "Lilita One", cursive;
+  font-size: 15px;
+  font-weight: 400;
+  border-radius: 14px;
+  border: 3px solid #111;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #f87171 0%, #dc2626 100%);
+  color: #fff;
+  box-shadow: 0 3px 0 #111;
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.friends-modal__remove:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 #111; filter: brightness(1.08); }
+.friends-modal__remove:active { transform: translateY(3px);  box-shadow: 0 0   0 #111; }
+.friends-modal__remove:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ── UTILITY ───────────────────────────────────────────── */

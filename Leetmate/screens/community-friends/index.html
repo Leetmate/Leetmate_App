@@ -3,8 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="../../scripts/theme-init.js"></script>
-    <title>Leetmate - Community</title>
+    <script src="../../features/shared/theme-init.js"></script>
+    <title>Leetmate - Friends</title>
+    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+    <link rel="stylesheet" href="../../styles/color-theme.css">
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="community.css" />
@@ -14,19 +16,17 @@
     <div class="popup-layout">
       <div class="popup-content">
         <div class="community-card">
+
+          <!-- Top Banner -->
           <div class="screen-banner">
             <div class="screen-banner__left">
               <button
                 type="button"
                 class="menu-btn"
                 id="community-back-btn"
-                aria-label="Back to community menu"
+                aria-label="Back to community"
               >
-                <img
-                  src="../../assets/icons/back-arrow.png"
-                  class="menu-icon"
-                  alt=""
-                />
+                <img src="../../assets/icons/back-arrow.png" class="menu-icon" alt="" />
               </button>
             </div>
             <div class="screen-banner__center">
@@ -46,14 +46,108 @@
             </div>
           </div>
 
-          <div class="community-content">
-            <p
-              style="color: #111; font-family: 'Lilita One', cursive; font-size: 20px;"
-            >
-              Friends content goes here...
-            </p>
+          <!-- Friends Body -->
+          <div class="friends-body">
+            <h2 class="friends-heading">All Friends</h2>
+
+            <!-- Loading state -->
+            <div class="friends-loading" id="friends-loading" aria-live="polite">
+              <span class="friends-loading__dot"></span>
+              <span class="friends-loading__dot"></span>
+              <span class="friends-loading__dot"></span>
+            </div>
+
+            <!-- Friend list -->
+            <ul class="friends-list hidden" id="friends-list" role="list" aria-label="Friends list">
+              <!-- JS renders cards here -->
+            </ul>
+
+            <!-- Empty state -->
+            <div class="friends-empty hidden" id="friends-empty" aria-live="polite">
+              <img src="../../assets/icons/friends.png" class="friends-empty__icon" alt="" />
+              <p class="friends-empty__text">No friends yet!</p>
+              <p class="friends-empty__sub">Tap <strong>+</strong> to find someone.</p>
+            </div>
           </div>
+
+          <!-- Footer action bar -->
+          <div class="friends-footer">
+            <button
+              type="button"
+              class="friends-footer__btn friends-footer__inbox"
+              id="inbox-btn"
+              aria-label="Friend requests inbox"
+            >
+              <img src="../../assets/icons/inbox.png" class="friends-footer__icon" alt="" />
+              <span class="friends-inbox-badge hidden" id="inbox-badge">0</span>
+            </button>
+
+            <button
+              type="button"
+              class="friends-footer__btn friends-footer__add"
+              id="add-friend-btn"
+              aria-label="Add a friend"
+            >
+              <span class="friends-footer__plus" aria-hidden="true">+</span>
+            </button>
+          </div>
+
         </div>
+      </div>
+    </div>
+
+    <!-- Add Friend Modal -->
+    <div class="friends-modal hidden" id="add-friend-modal" role="dialog" aria-modal="true" aria-labelledby="add-friend-modal-title">
+      <div class="friends-modal__backdrop" id="add-friend-backdrop"></div>
+      <div class="friends-modal__box">
+        <button type="button" class="friends-modal__close" id="add-friend-close-btn" aria-label="Close">✕</button>
+        <h3 class="friends-modal__title" id="add-friend-modal-title">Add Friend</h3>
+        <div class="friends-search-wrap">
+          <svg class="friends-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>
+          </svg>
+          <input
+            type="text"
+            class="friends-modal__input friends-modal__input--search"
+            id="add-friend-input"
+            placeholder="Username"
+            maxlength="20"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+        <p class="friends-modal__msg hidden" id="add-friend-msg" aria-live="polite"></p>
+        <ul class="friends-search-results" id="add-friend-results" role="list" aria-label="Search results"></ul>
+      </div>
+    </div>
+
+    <!-- Remove Friend Confirmation Modal -->
+    <div class="friends-modal hidden" id="remove-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="remove-confirm-title">
+      <div class="friends-modal__backdrop" id="remove-confirm-backdrop"></div>
+      <div class="friends-modal__box friends-modal__box--confirm">
+        <div class="confirm-modal__emoji" aria-hidden="true">💔</div>
+        <h3 class="friends-modal__title" id="remove-confirm-title">Remove Friend?</h3>
+        <p class="confirm-modal__msg">Are you sure you want to remove <strong id="remove-confirm-name"></strong>? They'll no longer be on your friends list.</p>
+        <div class="friends-modal__actions">
+          <button type="button" class="friends-modal__cancel" id="remove-confirm-cancel">Cancel</button>
+          <button type="button" class="friends-modal__remove" id="remove-confirm-ok">Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inbox Modal -->
+    <div class="friends-modal hidden" id="inbox-modal" role="dialog" aria-modal="true" aria-labelledby="inbox-modal-title">
+      <div class="friends-modal__backdrop" id="inbox-backdrop"></div>
+      <div class="friends-modal__box friends-modal__box--inbox">
+        <button type="button" class="friends-modal__close" id="inbox-close-btn" aria-label="Close">✕</button>
+        <h3 class="friends-modal__title" id="inbox-modal-title">Friend Requests</h3>
+        <div class="inbox-loading hidden" id="inbox-loading">
+          <span class="friends-loading__dot"></span>
+          <span class="friends-loading__dot"></span>
+          <span class="friends-loading__dot"></span>
+        </div>
+        <ul class="friends-search-results" id="inbox-list" role="list" aria-label="Friend requests"></ul>
+        <p class="inbox-empty hidden" id="inbox-empty">No pending requests</p>
       </div>
     </div>
 

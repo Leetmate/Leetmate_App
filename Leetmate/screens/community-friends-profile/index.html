@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leetmate - Friend Profile</title>
+    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+    <link rel="stylesheet" href="../../styles/color-theme.css">
+    <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="../../styles/menu-nav.css" />
+    <link rel="stylesheet" href="profile.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
+  </head>
+  <body data-music-zone="community">
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="friend-profile-card">
+          <div class="friend-profile-header">
+            <button
+              type="button"
+              class="menu-btn"
+              id="friend-profile-back-btn"
+              aria-label="Back to friends list"
+            >
+              <img src="../../assets/icons/back-arrow.png" class="menu-icon" alt="" />
+            </button>
+            <h1 class="friend-profile-username" id="friend-profile-username">Loading...</h1>
+          </div>
+          <div class="friend-profile-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../scripts/background-music.js"></script>
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../scripts/auth-gate.js"></script>
+    <script src="./profile.js"></script>
+  </body>
+</html>

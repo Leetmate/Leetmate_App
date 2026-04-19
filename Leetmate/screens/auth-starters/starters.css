@@ -3,7 +3,7 @@
  * Features "wiggle" hatching animations and fixed modal scaling.
  */
 
-@import url("../../styles/themes.css");
+@import url("../../styles/theme.css");
 
 :root {
     --web-bg: #F9F7F2;

@@ -39,6 +39,46 @@
   var addMsg          = document.getElementById('add-friend-msg');
   var addResults      = document.getElementById('add-friend-results');
 
+  // ── DOM refs – remove confirm modal ──────────────────
+  var removeModal     = document.getElementById('remove-confirm-modal');
+  var removeBackdrop  = document.getElementById('remove-confirm-backdrop');
+  var removeCancelBtn = document.getElementById('remove-confirm-cancel');
+  var removeOkBtn     = document.getElementById('remove-confirm-ok');
+  var removeNameEl    = document.getElementById('remove-confirm-name');
+
+  // Pending removal state
+  var pendingRemove   = null; // { friendUid, cardEl, removeBtn }
+
+  function openRemoveModal(friendUid, username, cardEl, removeBtn) {
+    if (!removeModal) return;
+    pendingRemove = { friendUid: friendUid, cardEl: cardEl, removeBtn: removeBtn };
+    if (removeNameEl) removeNameEl.textContent = username || 'this friend';
+    removeModal.classList.remove('hidden');
+  }
+
+  function closeRemoveModal() {
+    if (!removeModal) return;
+    removeModal.classList.add('hidden');
+    if (pendingRemove && pendingRemove.removeBtn) {
+      pendingRemove.removeBtn.disabled = false;
+    }
+    pendingRemove = null;
+  }
+
+  if (removeCancelBtn) removeCancelBtn.addEventListener('click', closeRemoveModal);
+  if (removeBackdrop)  removeBackdrop.addEventListener('click', closeRemoveModal);
+
+  if (removeOkBtn) {
+    removeOkBtn.addEventListener('click', function () {
+      if (!pendingRemove) return;
+      removeOkBtn.disabled = true;
+      var p = pendingRemove;
+      pendingRemove = null;
+      removeModal.classList.add('hidden');
+      removeFriend(p.friendUid, p.cardEl);
+    });
+  }
+
   // ── DOM refs – inbox modal ────────────────────────────
   var inboxModal      = document.getElementById('inbox-modal');
   var inboxBackdrop   = document.getElementById('inbox-backdrop');
@@ -111,6 +151,7 @@
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
+      if (removeModal && !removeModal.classList.contains('hidden')) closeRemoveModal();
       if (addModal && !addModal.classList.contains('hidden')) closeAddModal();
       if (inboxModal && !inboxModal.classList.contains('hidden')) closeInboxModal();
     }
@@ -134,9 +175,21 @@
     }
   }
 
+  function goToFriendProfile(friendData) {
+    var friendUid = friendData && friendData.friendUid ? String(friendData.friendUid) : '';
+    var targetUrl = '../community-friends-profile/index.html';
+    if (friendUid) {
+      targetUrl += '?uid=' + encodeURIComponent(friendUid);
+    }
+    window.location.href = targetUrl;
+  }
+
   function buildFriendCard(friendData) {
     var li = document.createElement('li');
     li.className = 'friend-card';
+    li.setAttribute('role', 'button');
+    li.setAttribute('tabindex', '0');
+    li.setAttribute('aria-label', 'Open profile for ' + (friendData.username || 'friend'));
 
     var avatar = document.createElement('div');
     avatar.className = 'friend-card__avatar';
@@ -187,14 +240,55 @@
 
     matchBtn.appendChild(matchIcon);
     matchBtn.appendChild(matchLabel);
-    matchBtn.addEventListener('click', function () {
+    matchBtn.addEventListener('click', function (event) {
+      event.stopPropagation();
       window.location.href = '../community-multiplayer/index.html';
+    });
+
+    var removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'friend-card__remove-btn';
+    removeBtn.setAttribute('aria-label', 'Remove ' + (friendData.username || 'friend'));
+    removeBtn.textContent = '✕';
+    removeBtn.addEventListener('click', function (event) {
+      event.stopPropagation();
+      removeBtn.disabled = true;
+      openRemoveModal(friendData.friendUid, friendData.username, li, removeBtn);
     });
 
     li.appendChild(avatar);
     li.appendChild(info);
     li.appendChild(matchBtn);
+    li.appendChild(removeBtn);
+    li.addEventListener('click', function () {
+      goToFriendProfile(friendData);
+    });
+    li.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        goToFriendProfile(friendData);
+      }
+    });
     return li;
+  }
+
+  function removeFriend(friendUid, cardEl) {
+    var currentUid = auth.currentUser.uid;
+    var batch = db.batch();
+    batch.delete(db.collection('users').doc(currentUid).collection('friends').doc(friendUid));
+    batch.delete(db.collection('users').doc(friendUid).collection('friends').doc(currentUid));
+    batch.commit()
+      .then(function () {
+        delete friendUidSet[friendUid];
+        if (cardEl) cardEl.remove();
+        if (friendsList && friendsList.children.length === 0) showList(false);
+      })
+      .catch(function (err) {
+        console.error('Remove friend error:', err);
+        var btn = cardEl ? cardEl.querySelector('.friend-card__remove-btn') : null;
+        if (btn) btn.disabled = false;
+        if (removeOkBtn) removeOkBtn.disabled = false;
+      });
   }
 
   // ── Load friends ──────────────────────────────────────
@@ -316,20 +410,47 @@
     info.appendChild(name);
     info.appendChild(trophyDiv);
 
+    var rejectBtn = document.createElement('button');
+    rejectBtn.type = 'button';
+    rejectBtn.className = 'inbox-card__reject-btn';
+    rejectBtn.textContent = 'Reject';
+    rejectBtn.addEventListener('click', function () {
+      rejectBtn.disabled = true;
+      rejectRequest(currentUid, reqData._id, li);
+    });
+
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'inbox-card__accept-btn';
     btn.textContent = 'Accept';
     btn.addEventListener('click', function () {
       btn.disabled = true;
+      rejectBtn.disabled = true;
       btn.textContent = '...';
       acceptRequest(currentUid, reqData, li);
     });
 
     li.appendChild(avatar);
     li.appendChild(info);
+    li.appendChild(rejectBtn);
     li.appendChild(btn);
     return li;
+  }
+
+  function rejectRequest(currentUid, requestId, cardEl) {
+    db.collection('users').doc(currentUid).collection('friendRequests').doc(requestId).delete()
+      .then(function () {
+        if (cardEl) cardEl.remove();
+        if (inboxList && inboxList.children.length === 0 && inboxEmptyEl) {
+          inboxEmptyEl.classList.remove('hidden');
+        }
+        loadBadge(currentUid);
+      })
+      .catch(function (err) {
+        console.error('Reject request error:', err);
+        var btn = cardEl ? cardEl.querySelector('.inbox-card__reject-btn') : null;
+        if (btn) btn.disabled = false;
+      });
   }
 
   function acceptRequest(currentUid, reqData, cardEl) {

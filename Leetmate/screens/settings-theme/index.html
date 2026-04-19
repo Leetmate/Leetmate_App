@@ -3,11 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="../../scripts/theme-init.js"></script>
+    <script src="../../features/shared/theme-init.js"></script>
     <title>Leetmate - Settings - Theme</title>
+    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+    <link rel="stylesheet" href="../../styles/color-theme.css" />
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="color-theme.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
   </head>
   <body>
@@ -33,9 +36,7 @@
             </div>
           </div>
 
-          <!-- Main content -->
           <div class="theme-content">
-            <!-- Default theme button -->
             <button
               type="button"
               class="theme-option1 theme-option-text"
@@ -45,7 +46,6 @@
               🏠 &nbsp;&nbsp; Default &nbsp;&nbsp;&nbsp;
             </button>
 
-            <!-- Dark theme button -->
             <button
               type="button"
               class="theme-option2 theme-option-text"
@@ -55,14 +55,91 @@
               🌙 &nbsp;&nbsp; Dark &nbsp;&nbsp;&nbsp;
             </button>
 
-            <!-- Color theme button -->
-            <div class="theme-option3 theme-option-text"> 🌈 &nbsp;&nbsp; Color &nbsp;&nbsp;&nbsp; </div>
+            <button
+              type="button"
+              class="theme-option3 theme-option-text"
+              id="theme-color-btn"
+              aria-label="Choose a color theme for all screens"
+            >
+              🌈 &nbsp;&nbsp; Color &nbsp;&nbsp;&nbsp;
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- <script src="../../scripts/background-music.js"></script> -->
+    <div class="color-theme-modal" id="color-theme-modal" hidden>
+      <div class="color-theme-modal__backdrop" data-close-color-modal></div>
+      <div
+        class="color-theme-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="color-theme-modal-title"
+      >
+        <button
+          type="button"
+          class="color-theme-modal__close"
+          id="color-theme-close-btn"
+          aria-label="Close color theme picker"
+        >
+          ×
+        </button>
+
+        <h2 class="color-theme-modal__title" id="color-theme-modal-title">Choose a color theme</h2>
+        <p class="color-theme-modal__subtitle">Apply a palette to every screen.</p>
+
+        <div class="color-theme-grid" role="list" aria-label="Rainbow color theme options">
+          <button
+            type="button"
+            class="color-swatch color-swatch--red"
+            data-color-theme="color-red"
+            aria-label="Apply pastel red theme"
+            title="Pastel Red"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--orange"
+            data-color-theme="color-orange"
+            aria-label="Apply pastel orange theme"
+            title="Pastel Orange"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--gold"
+            data-color-theme="color-gold"
+            aria-label="Apply premium gold theme"
+            title="Premium Gold"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--green"
+            data-color-theme="color-green"
+            aria-label="Apply pastel green theme"
+            title="Pastel Green"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--blue"
+            data-color-theme="color-blue"
+            aria-label="Apply pastel blue theme"
+            title="Pastel Blue"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--purple"
+            data-color-theme="color-purple"
+            aria-label="Apply pastel purple theme"
+            title="Pastel Purple"
+          ></button>
+        </div>
+      </div>
+    </div>
+
     <script src="../../features/shared/menu-nav.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
