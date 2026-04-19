@@ -1,5 +1,11 @@
 /* Notification Screen Layout */
 
+:root{
+  --color-set-notif-body-bg: #F4E0C6;
+  --color-set-notif-body: #3B2B1A;
+  --color-set-notif-card-bg: #FDF5E6;
+}
+
 body {
   font-family:
     system-ui,
@@ -9,8 +15,8 @@ body {
     Arial,
     sans-serif;
   font-size: 14px;
-  background: #f4e0c6; /* Warm background matching signin */
-  color: #3b2b1a;      /* Dark brown text for better contrast */
+  background: var(--color-set-notif-body-bg); /* Warm background matching signin */
+  color: var(--color-set-notif-body);      /* Dark brown text for better contrast */
 }
 
 .popup-layout {
@@ -32,8 +38,8 @@ body {
   width: 100% !important;
   max-width: 100% !important;
   margin: 0;
-  background: #fdf5e6; /* Soft cream card color from signin */
-  border: 4px solid #3b2b1a; /* Dark brown border */
+  background: var(--color-set-notif-card-bg); /* Soft cream card color from signin */
+  border: 4px solid var(--color-set-notif-body); /* Dark brown border */
   border-radius: 28px;
   padding: 14px 16px 16px;
   display: flex;
@@ -58,7 +64,7 @@ body {
   font-size: 24px;
   font-weight: 900;
   line-height: 1;
-  color: #3b2b1a;
+  color: var(--color-set-notif-body);
 }
 
 .notifications-content {
