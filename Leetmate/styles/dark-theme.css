@@ -83,7 +83,6 @@ html[data-theme="dark"] {
     --color-pg-pets-pets-modal-age: var(--color-text-muted);
     --color-pet-name: var(--color-text);
 
-    
     /* account.css */
     --color-set-acc-body: var(--color-text);
     --color-set-acc-acc-card-bg: var(--color-surface);
@@ -176,6 +175,17 @@ html[data-theme="dark"] {
     --color-comm-main-comm-menu-btn-bg5: var(--color-accent-strong);
     --color-comm-main-comm-menu-btn: var(--color-text);
     --color-comm-main-black: var(--color-text);
+
+    /* menu-nav.css */
+    --color-menu-preview-bg: var(--color-bg);
+    --color-nav-drawer-bg: var(--color-surface);
+    --color-nav-black: var(--color-border);
+    --color-nav-menu-btn-bg: var(--color-surface-2);
+    --color-nav-menu-btn-bg2: var(--color-surface-3); 
+    --color-nav-close-btn-bg: var(--color-surface-3); 
+    --color-nav-menu-btn-active: var(--color-accent);
+    --color-nav-menu-btn-active-after: var(--color-accent-strong);
+    --color-nav-white: var(--color-text);
 }
   
 html[data-theme="dark"] body {
@@ -192,7 +202,8 @@ html[data-theme="dark"] .notifications-card,
 html[data-theme="dark"] .color-card,
 html[data-theme="dark"] .account-card,
 html[data-theme="dark"] .theme-card,
-html[data-theme="dark"] .store-card {
+html[data-theme="dark"] .store-card 
+html[data-theme="dark"] .nav-drawer {
     --screen-banner-bg: var(--color-surface-2);
     background: var(--color-surface) !important;
     box-shadow: var(--shadow-card);
