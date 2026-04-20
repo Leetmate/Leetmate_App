@@ -1,0 +1,132 @@
+.item-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+}
+
+.item-inventory-card {
+  flex: 0 0 140px;
+  position: relative;
+  margin-top: 8px;
+  border: 4px solid #111;
+  border-radius: 20px;
+  background: linear-gradient(to bottom, #f6ead2 0%, #efd6ab 100%);
+  box-shadow: 0 4px 0 rgba(17, 17, 17, 0.18);
+  padding: 20px 10px 10px;
+  height: 140px;
+  min-height: 140px;
+}
+
+.item-status-pill {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 96px;
+  height: 24px;
+  padding: 0 14px;
+  border: 4px solid #111;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, #fdf4e7 0%, #f0d5ae 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Lilita One", sans-serif;
+  font-size: 14px;
+  color: #221d17;
+  white-space: nowrap;
+}
+
+.item-grid-wrap {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 0;
+  scrollbar-width: none;
+}
+
+.item-grid-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 8px;
+  min-height: 100%;
+  max-height: none;
+  align-content: start;
+  overflow: visible;
+  padding-top: 0;
+  padding-right: 2px;
+  transform: translateY(-4px);
+}
+
+.item-slot {
+  position: relative;
+  min-height: 48px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  overflow: visible;
+}
+
+.item-slot:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+.item-slot-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  transform-origin: center bottom;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.item-slot:hover .item-slot-img,
+.item-slot:focus-visible .item-slot-img {
+  transform: translateY(-2px) scale(1.06);
+  filter: brightness(1.08) drop-shadow(0 2px 0 rgba(17, 17, 17, 0.22));
+}
+
+.item-slot-count {
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  border: 2px solid #111;
+  background: #fff7e7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Lilita One", sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  color: #2c2419;
+}
+
+.item-empty {
+  margin: 0;
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  color: #5a4b38;
+}
+
+.item-empty.hidden {
+  display: none;
+}

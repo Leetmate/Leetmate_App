@@ -8,111 +8,6 @@
     return typeof firebase !== "undefined" && firebase.auth && firebase.firestore;
   }
 
-	// get all element we need
-  function getRenameElements() {
-    return {
-      openBtn: document.querySelector(".playground-rename-btn"),
-      overlay: document.getElementById("rename-modal-overlay"),
-      closeBtn: document.getElementById("rename-modal-close"),
-      confirmBtn: document.getElementById("rename-modal-confirm"),
-      input: document.getElementById("rename-input"),
-      nameDisplay: document.getElementById("pet-name-display")
-    };
-  }
-
-  function openRenameModal() {
-    const { overlay, input, nameDisplay } = getRenameElements();
-    if (!overlay || !input || !nameDisplay) return;
-
-    input.value = nameDisplay.textContent.trim();
-    overlay.classList.remove("hidden");
-    window.requestAnimationFrame(() => input.focus());
-  }
-
-  function closeRenameModal() {
-    const { overlay } = getRenameElements();
-    if (!overlay) return;
-    overlay.classList.add("hidden");
-  }
-
-  async function confirmRename() {
-    const { input } = getRenameElements();
-    if (!input || !activeDb || !activeUid) return;
-
-    const nextName = input.value.trim();
-    if (!nextName) {
-      input.focus();
-      return;
-    }
-
-		// write new name to firestore
-    const userRef = activeDb.collection("users").doc(activeUid);
-    const userSnap = await userRef.get();
-    if (!userSnap.exists) return;
-
-    const activePetId = userSnap.data().activePetId;
-    if (!activePetId) return;
-
-    await userRef.collection("pets").doc(activePetId).set(
-      { customName: nextName },
-      { merge: true }
-    );
-
-    if (typeof storageGet === "function" && typeof storageSet === "function") {
-      // update snapshots so Playground/Home show the new name
-      const { activePetSnapshot, ownedPetsSnapshot } = await storageGet([
-        "activePetSnapshot",
-        "ownedPetsSnapshot",
-      ]);
-
-      const nextSnapshot =
-        activePetSnapshot
-          ? { ...activePetSnapshot, customName: nextName }
-          : null;
-
-      const nextOwnedPets = Array.isArray(ownedPetsSnapshot)
-        ? ownedPetsSnapshot.map((pet) =>
-            pet?.id === activePetId ? { ...pet, customName: nextName } : pet
-          )
-        : ownedPetsSnapshot;
-
-      await storageSet({
-        activePetSnapshot: nextSnapshot,
-        ownedPetsSnapshot: nextOwnedPets,
-      });
-    }
-
-    await loadActivePetFromFirestore(activeDb, activeUid);
-
-    closeRenameModal();
-  }
-
-  function setupRenameModal() {
-    const { openBtn, overlay, closeBtn, confirmBtn, input } = getRenameElements();
-    if (!openBtn || !overlay || !closeBtn || !confirmBtn || !input) return;
-
-    openBtn.addEventListener("click", openRenameModal);
-    closeBtn.addEventListener("click", closeRenameModal);
-    confirmBtn.addEventListener("click", confirmRename);
-
-		// outside clicking closes
-    overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) {
-        closeRenameModal();
-      }
-    });
-
-		// allows keyboard inputs
-    input.addEventListener("keydown", async (event) => {
-      if (event.key === "Escape") {
-        closeRenameModal();
-      } else if (event.key === "Enter") {
-        event.preventDefault();
-        await confirmRename();
-      }
-    });
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
     const petsBtn = document.getElementById("playground-pets-btn");
     if (petsBtn) {
@@ -121,7 +16,24 @@
       });
     }
 
-    setupRenameModal();
+    const foodBtn = document.getElementById("playground-food-btn");
+    if (foodBtn) {
+      foodBtn.addEventListener("click", () => {
+        window.location.href = "../playground-food/index.html";
+      });
+    }
+		
+    const itemsBtn = document.getElementById("playground-items-btn");
+    if (itemsBtn) {
+      itemsBtn.addEventListener("click", () => {
+        window.location.href = "../playground-items/index.html";
+      });
+    }
+
+    window.LeetmatePetRename.setupRenameModal({
+      getDb: () => activeDb,
+      getUid: () => activeUid,
+    });
 
 		// read from snapshot in extension storage first
     window.LeetmatePetUI.loadActivePetFromStorage().catch((error) => {
