@@ -21,7 +21,7 @@
       "js": ["features/leetcode/leetcode-content.js", "features/shared/storage-helper.js"]
     }
   ],
-  "permissions": ["storage", "notifications", "alarms", "tabs", "cookies", "webNavigation", "scripting", "activeTab"],
+  "permissions": ["storage", "notifications", "alarms", "tabs", "cookies", "webNavigation", "scripting"],
 	"web_accessible_resources": [
 		{
 			"resources": [

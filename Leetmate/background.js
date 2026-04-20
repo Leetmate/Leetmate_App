@@ -12,19 +12,13 @@
  *   visits/solutions and grant coins or increase happiness.
  * - Badge: chrome.action.setBadgeText / setBadgeBackgroundColor to show streak or happiness on the icon.
  */
-
-//NOTE: temporarily removing this because it just doesn't work (and no file seems to be using it)
-
 importScripts(
 	"features/shared/storage-helper.js",
 	"features/progression/streak.js",
 	"features/pet/pet-evolution.js",
 	"features/pet/evolution-notify.js",
-	"features/pet/pet-age.js",
-	"screens/settings-notifications/notifications.js"
+	"features/pet/pet-age.js"
 );
-
-
 (function () {
 	'use strict';
 
@@ -94,10 +88,6 @@ importScripts(
 	chrome.runtime.onMessage.addListener((message) => { // gets message from pip or home to minimize or restore
 
 		if (message.type === "openPip") {
-
-			//debugging
-			//alert("background msg received");
-
 			chrome.windows.getLastFocused(
 				{ populate: true, windowTypes: ["normal"] }, // gets all the tabs in window, ignore popups/dev
 
@@ -147,92 +137,42 @@ importScripts(
 		}
 	})
 
-	// ── 4. Timer Based Notification ─────────────────────────────────────────────────────────
-	let time = 5; //5 seconds for testing
-	let countdown;
-	function startTimeNotif() {
-		console.log("timer starting");
-		//alert("Timer Start!");
-		//this starts the timer to give popup notification in 24 hours (for testing this will be set to 5 seconds)
-		time = 5; //making sure the timer starts with the right time (modify for heart based)
-		clearInterval(countdown);
-		countdown = setInterval(() => {
-			if (time > 0) {
-				console.log("timer:", time);
-				time--; //the process of time
-			} else {
-				//time 0 means the notif should appear
-				completeTimer();
-			}
-		}, 1000);
-	}
-
-	//----------------------->
+	//------------------------Notifications-------------------------
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-		if (message.action !== "startNotificationTimer") return;
+        if (message.action !== "startNotificationTimer") return;
+      
+        console.log("Leetmate: startNotificationTimer received.");
+      
+        chrome.notifications.create({
+          type: "basic",
+          iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
+          title: "Button works",
+          message: "The click reached background.js",
+          priority: 2
+        });
+      
+        chrome.alarms.create("leetmate-reminder", {
+          delayInMinutes: 0.5
+        });
+      
+        sendResponse({ ok: true });
+        // no return true here
+      });
 
-		console.log("Leetmate: startNotificationTimer received.");
-
-		chrome.notifications.create({
-			type: "basic",
-			iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
-			title: "Button works",
-			message: "The click reached background.js",
-			priority: 2
-		});
-
-		chrome.alarms.create("leetmate-reminder", {
-			delayInMinutes: 0.5
-		});
-
-		sendResponse({ ok: true });
-		// no return true here
-	});
-
-	chrome.alarms.onAlarm.addListener((alarm) => {
-		if (alarm.name !== "leetmate-reminder") return;
-
-		console.log("Leetmate: reminder alarm fired.");
-
-		chrome.notifications.create({
-			type: "basic",
-			iconUrl: "assets/icons/leetmate128.png",
-			title: "It's time!",
-			message: "Make sure to check your leetmate!",
-			requireInteraction: true,
-			priority: 2
-		});
-	});
-	//----------------------------->
-
-	// function to trigger notification
-	function completeTimer() {
-		clearInterval(countdown); //stop the countdown
-		//reset timer (testing = 5 seconds, real = 24 hours)
-		let time = 5;
-
-		//trigger notification
-		chrome.notifications.create({
-			type: 'basic',
-			iconUrl: chrome.runtime.getURL('assets/icons/leetmate128.png'),
-			title: "It's time!",
-			message: 'Make sure to check your leetmate!',
-			requireInteraction: true, //notif stays until user dismisses it,
-			priority: 2
-		});
-	}
-
-
-	//this works but i need it to be event based. this only works if extension is open the whole time
-	/*const notifButton = document.getElementById('test-timer');
-	if (notifButton) {
-		notifButton.addEventListener('click', function () {
-			//alert("button clicked");
-			startTimeNotif();
-		});
-	}*/
-
-	//___________________________________
+    chrome.alarms.onAlarm.addListener((alarm) => {
+        if (alarm.name !== "leetmate-reminder") return;
+      
+        console.log("Leetmate: reminder alarm fired.");
+      
+        chrome.notifications.create({
+          type: "basic",
+          iconUrl: "assets/icons/leetmate128.png",
+          title: "It's time!",
+          message: "Make sure to check your leetmate!",
+          requireInteraction: true,
+          priority: 2
+          });
+    });
 
 
 	// Dummy listener to prevent "Receiving end does not exist" errors
