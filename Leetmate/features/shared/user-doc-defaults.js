@@ -77,56 +77,68 @@
   function ensureUserDoc(db, uid, email, username) {
     if (!db) return Promise.reject(new Error('Firestore not loaded'));
     if (!uid) return Promise.reject(new Error('Missing uid'));
-    if (!username) return Promise.reject(new Error('Missing username'));
   
     var userRef = db.collection('users').doc(uid);
-    var usernameRef = db.collection('usernames').doc(username);
     var friendsMetaRef = db.collection('users').doc(uid).collection('friends').doc('_meta');
   
     return db.runTransaction(function (transaction) {
       return Promise.all([
         transaction.get(userRef),
-        transaction.get(usernameRef),
         transaction.get(friendsMetaRef)
       ]).then(function (results) {
         var userSnap = results[0];
-        var usernameSnap = results[1];
-        var friendsMetaSnap = results[2];
-  
-        if (usernameSnap.exists) {
-          var usernameData = usernameSnap.data() || {};
-          if (usernameData.uid && usernameData.uid !== uid) {
-            throw new Error('That username is already taken.');
-          }
-        }
+        var friendsMetaSnap = results[1];
   
         if (userSnap.exists) {
           var userData = userSnap.data() || {};
+  
           if (!Object.prototype.hasOwnProperty.call(userData, 'savedHappiness')) {
             transaction.set(userRef, {
               savedHappiness: null,
               updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
           }
-        } else {
-          transaction.set(userRef, createUserDoc(uid, email, username));
+  
+          if (!friendsMetaSnap.exists) {
+            transaction.set(friendsMetaRef, {
+              initializedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              version: 1
+            });
+          }
+  
+          return;
         }
   
-        transaction.set(usernameRef, {
-          uid: uid,
-          username: username,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-  
-        // Initialize friends subcollection with a meta doc only if it doesn't exist yet.
-        // Firestore doesn't persist empty subcollections, so this placeholder
-        // ensures the subcollection exists and is queryable from the start.
-        if (!friendsMetaSnap.exists) {
-          transaction.set(friendsMetaRef, {
-            initializedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            version: 1
-          });
+        if (!username) {
+          throw new Error('Missing username');
         }
+  
+        var canonicalUsername = String(username).trim();
+        var usernameRef = db.collection('usernames').doc(canonicalUsername);
+  
+        return transaction.get(usernameRef).then(function (usernameSnap) {
+          if (usernameSnap.exists) {
+            var usernameData = usernameSnap.data() || {};
+            if (usernameData.uid && usernameData.uid !== uid) {
+              throw new Error('That username is already taken.');
+            }
+          }
+  
+          transaction.set(userRef, createUserDoc(uid, email, canonicalUsername));
+  
+          transaction.set(usernameRef, {
+            uid: uid,
+            username: canonicalUsername,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+  
+          if (!friendsMetaSnap.exists) {
+            transaction.set(friendsMetaRef, {
+              initializedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              version: 1
+            });
+          }
+        });
       });
     });
   }
