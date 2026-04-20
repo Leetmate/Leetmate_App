@@ -85,7 +85,7 @@ button.theme-option-text {
     justify-content: center;
 
     border-radius: 16px;
-    border: 3px solid var(--color-option-text);
+    border: 3px solid var(--color-border);
     background: linear-gradient(
         270deg,
         #F1E0BF,
@@ -113,7 +113,7 @@ button.theme-option-text {
     justify-content: center;
 
     border-radius: 16px;
-    border: 3px solid var(--color-option-text);
+    border: 3px solid var(--color-border);
     background: linear-gradient(
         270deg,
         #6B6D75,
@@ -142,7 +142,7 @@ button.theme-option-text {
     justify-content: center;
 
     border-radius: 16px;
-    border: 3px solid var(--color-option-text);
+    border: 3px solid var(--color-border);
     background: linear-gradient(
         90deg,
         #FFB3BA,

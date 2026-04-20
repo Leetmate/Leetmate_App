@@ -31,6 +31,7 @@
   --color-store-acce-promo-text-shadow: #FFD700;
   --color-store-acce-store-modal: #241D17;
   --color-store-acce-store-modal-desc: #3E2C22;
+  --color-store-tab-btn-bg: var(--color-surface);
 }
 
 body {
@@ -344,7 +345,7 @@ body {
 }
 
 .tab-btn {
-  background: var(--color-surface);
+  background: var(--color-store-tab-btn-bg);
   border: 3px solid var(--color-store-acce-black);
   border-radius: 18px;
   height: 42px;

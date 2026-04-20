@@ -35,10 +35,11 @@ html[data-theme="dark"] {
     --color-act-content-border: var(--color-border);
 
     /* home.css */
-    --color-home-lc-card-bg1: var(--color-surface);
+    --color-home-lc-card-bg1: var(--color-accent);
     --color-home-lc-card-bg2: var(--color-surface-2);
-    --color-home-lc-card-bg3: var(--color-surface-3);
+    --color-home-lc-card-bg3: var(--color-accent);
     --color-home-lc-card-border: var(--color-border);
+    --color-home-lc-card-header: var(--color-text-muted);
     --color-home-lc-default-subtext: var(--color-text-muted);
     --color-home-lc-default-reward: var(--color-text-soft);
     --color-home-lc-default-reward-xp: var(--color-success-text);
@@ -57,7 +58,9 @@ html[data-theme="dark"] {
 
     --color-home-coin-reward-popup: var(--color-accent-strong);
     --color-home-pet-name: var(--color-text);
-    --color-home-status-bar: var(--color-surface-2);
+    --color-home-status-bar-bg1: var(--color-accent);
+    --color-home-status-bar-bg2: var(--color-surface-2);
+    --color-home-status-bar-bg3: var(--color-accent);
     --color-home-xp-bar: var(--color-surface-3);
     --color-home-lc-card-complete-border: var(--color-border);
     --color-home-black: var(--color-text);
@@ -65,14 +68,14 @@ html[data-theme="dark"] {
     --color-home-status-text-border: var(--color-surface);
 
     /* playground.css */
-    --color-pg-main-pg-pet-name-bg: var(--color-surface-2);
+    --color-pg-main-pg-pet-name-bg: var(--color-accent);
     --color-pg-main-pg-pet-name-bg2: var(--color-text);
-    --color-pg-main-pg-pet-name-bg3: var(--color-text-muted);
-
-    --color-pg-main-pg-nav-btn-bg1: var(--color-surface);
-    --color-pg-main-pg-modal-confirm: var(--color-surface-2);
+    --color-pg-main-pg-pet-name-bg3: var(--color-text);
+    --color-pg-main-pg-nav-btn-bg1: var(--color-accent);
+    --color-pg-main-pg-nav-btn-bg2: var(--color-surface-3);
     --color-pg-main-pg-nav-label: var(--color-text);
-
+    --color-nav-btn-border: var(--color-text);
+    --color-pg-main-pg-modal-confirm: var(--color-surface-2);
     --color-pg-main-white: var(--color-surface);
     --color-pg-main-black: var(--color-text);
     
@@ -85,12 +88,13 @@ html[data-theme="dark"] {
 
     /* account.css */
     --color-set-acc-body: var(--color-text);
+    --color-set-acc-body-bg: var(--color-accent);
     --color-set-acc-acc-card-bg: var(--color-surface);
     --color-set-acc-profile-avatar: var(--color-surface-3);
     --color-set-acc-btn-outline: var(--color-accent-strong);
-    --color-set-acc-username-bg: var(--color-accent);
+    --color-set-acc-username-bg: var(--color-text-soft);
     --color-set-acc-email: var(--color-text-muted);
-    --color-set-acc-accordian-header-bg: var(--color-surface-2);
+    --color-set-acc-accordian-header-bg: var(--color-accent);
     --color-set-acc-input-bg: var(--color-surface);
     --color-set-acc-update-btn: var(--color-success-text);
     --color-set-acc-confirm-delete-btn-bg: var(--color-error-text);
@@ -115,7 +119,7 @@ html[data-theme="dark"] {
     --color-set-main-set-vol-slider: var(--color-surface-3);
     --color-set-main-set-btn-primary-bg: var(--color-accent);
     --color-set-main-set-btn-danger: var(--color-error-text);
-    --color-set-main-set-btn-secondary: var(--color-surface-2);
+    --color-set-main-set-btn-secondary: linear-gradient(135deg, var(--color-accent) 0%, var(--color-surface-3) 40%, var(--color-accent) 100%);
     --color-set-main-set-modal-panel: var(--color-surface);
     --color-set-main-white: var(--color-surface);
 
@@ -129,17 +133,21 @@ html[data-theme="dark"] {
     --color-set-prof-color-black: var(--color-text);
 
     /* store.css */
-    --color-wood-dark: #e8e6e3;
+    --color-header-bg: #2f3139;
+    --color-wood-dark: var(--color-border);
     --color-wood-medium: #8a7f72;
     --color-wood-base: #6d6358;
-    --color-wood-light: #4a4540;
-    --color-wood-warm: #25262b;
+    /* active store tab gradient */
+    --color-wood-warm: #8a7f72;
+    --color-wood-light: var(--color-surface-3);
+    /* default store tabs */
+    --color-store-tab-btn-bg: var(--color-accent);    
+   
     --color-wood-cream: #2f3139;
-    --color-header-bg: #2f3139;
     --shadow-wood: 0 6px 0 #1a1b1f;
     --color-store-acce-coins-display: var(--color-accent-strong);
     --color-store-acce-unlock-all-btn: var(--color-border);
-    --color-store-acce-store-item-card-bg2: var(--color-surface-2);
+    --color-store-acce-store-item-card-bg2: var(--color-accent);
     --color-store-acce-store-item-card-owned-bg: var(--color-success-text);
     --color-store-acce-store-item-card-owned-border: var(--color-success-text);
     --color-store-acce-store-item-card-locked-bg1: var(--color-surface-2);
@@ -160,31 +168,35 @@ html[data-theme="dark"] {
 
     /* store-coins.css */
     --color-store-coins-back-btn-bg: var(--color-surface);
-    --color-store-coins-back-btn: var(--color-text);
+    --color-store-coins-back-btn: var(--color-border);
     --color-store-coins-display: var(--color-accent-strong);
     --color-store-coins-white: var(--color-surface);
-    --color-store-coins-black: var(--color-text);
+    --color-store-coins-black: var(--color-border);
     --color-shop-bg: #2a2b32;
     --color-tier-border: rgba(232, 230, 227, 0.15);
 
     /* community.css */
-    --color-comm-main-comm-menu-btn-bg1: var(--color-surface);
-    --color-comm-main-comm-menu-btn-bg2: var(--color-surface-2);
-    --color-comm-main-comm-menu-btn-bg3: var(--color-surface);
+    --color-comm-main-comm-menu-btn-bg1: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg2: var(--color-surface-3);
+    --color-comm-main-comm-menu-btn-bg3: var(--color-accent);
     --color-comm-main-comm-menu-btn-bg4: var(--color-accent);
-    --color-comm-main-comm-menu-btn-bg5: var(--color-accent-strong);
+    --color-comm-main-comm-menu-btn-bg5: var(--color-accent);
     --color-comm-main-comm-menu-btn: var(--color-text);
-    --color-comm-main-black: var(--color-text);
+    --color-comm-main-black: var(--color-surface);
+    --color-friends-empty-bg1: var(--color-text-muted);
+    --color-friends-empty-bg2: var(--color-surface-3);
+    --color-friends-request-bg1: var(--color-text-muted);
+    --color-friends-request-bg2: var(--color-text-muted);
 
     /* menu-nav.css */
     --color-menu-preview-bg: var(--color-bg);
     --color-nav-drawer-bg: var(--color-surface);
     --color-nav-black: var(--color-border);
-    --color-nav-menu-btn-bg: var(--color-surface-2);
-    --color-nav-menu-btn-bg2: var(--color-surface-3); 
+    --color-nav-menu-btn-bg: var(--color-surface-3);
+    --color-nav-menu-btn-bg2: var(--color-accent); 
     --color-nav-close-btn-bg: var(--color-surface-3); 
     --color-nav-menu-btn-active: var(--color-accent);
-    --color-nav-menu-btn-active-after: var(--color-accent-strong);
+    --color-nav-menu-btn-active-after: var(--color-accent);
     --color-nav-white: var(--color-text);
 }
   
