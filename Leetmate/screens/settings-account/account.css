@@ -4,7 +4,6 @@
 :root{
   --color-set-acc-body-bg: #F4E0C6;
   --color-set-acc-body: #3B2B1A;
-  --color-set-acc-acc-card-banner-bg: #D6D0C5;
   --color-set-acc-acc-card-bg: #EEEAE1;
   --color-set-acc-profile-avatar: #D9D9D9;
   --color-set-acc-btn-outline: #D0B27A;
@@ -68,7 +67,7 @@ body {
 }
 
 .account-card {
-  --screen-banner-bg: var(--color-set-acc-acc-card-banner-bg);
+  --screen-banner-bg: var(--color-header-bg);
   --screen-banner-offset-top: 24px;
   --screen-banner-offset-x: 20px;
 
@@ -208,6 +207,7 @@ body {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  color: var(--color-text);
 }
 
 .accordion-header:hover {
@@ -341,8 +341,8 @@ body {
   margin-top: 10px;
   padding: 12px;
   border-radius: 18px;
-  border: 3px solid var(--color-set-acc-confirm-delete-btn-bg);
-  background: var(--color-set-acc-confirm-delete-btn-bg);
+  border: 3px solid var(--color-border);
+  background: var(--color-error-bg);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -351,7 +351,7 @@ body {
 .danger-header {
   font-size: 13px;
   font-weight: 900;
-  color: var(--color-set-acc-confirm-delete-btn-bg);
+  color: var(--color-text);
 }
 
 .delete-btn {
@@ -360,9 +360,9 @@ body {
   border-radius: 12px;
   font-size: 14px;
   font-weight: 800;
-  background: var(--color-set-acc-delete-btn-bg);
+  background: #d96b6b;
   color: white;
-  border: 3px solid var(--color-set-acc-body);
+  border: 3px solid #3b221a;
   box-shadow: 0 4px 0 rgba(59, 43, 26, 0.3);
   cursor: pointer;
 }

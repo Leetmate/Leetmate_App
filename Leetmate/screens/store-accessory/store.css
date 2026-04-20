@@ -10,7 +10,6 @@
   --color-wood-light: #BCAAA4;
   --color-wood-warm: #d6d0c5;
   --color-wood-cream: #EDE0D4;
-  --color-header-bg: #d6d0c5;
   --shadow-wood: 0 6px 0 #3E2723;
   --color-store-acce-coins-display: #FFDC13;
   --color-store-acce-unlock-all-btn: #B89D5B;
@@ -93,7 +92,7 @@ body {
 /* APP-NATIVE HEADER BAR */
 .store-card .screen-banner {
   background: var(--color-header-bg);
-  border-bottom: 4px solid var(--color-wood-dark);
+  border-bottom: 4px solid var(--color-border);
   margin: -12px -12px 0px -12px; /* Reduced bottom margin from 16px */
   padding: 10px 16px;
   border-radius: 0;
@@ -104,7 +103,7 @@ body {
 }
 
 .store-card .screen-banner__title {
-  color: var(--color-wood-dark);
+  color: var(--color-text);
   font-family: 'Lilita One', cursive;
   font-size: 28px;
   letter-spacing: 0.8px;

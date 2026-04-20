@@ -1,7 +1,4 @@
-/* Pastel color theme 
-   - Global variables (--color-bg, --color-surface, etc.) define the theme palette
-   - Screen variables (--color-home-*, --color-store-*) define each screen's default design
-*/
+/* Pastel color theme */
 
 /* Default colors are defined per screen.
 Theme files swap those values based on the active data-theme. */
@@ -9,7 +6,8 @@ Theme files swap those values based on the active data-theme. */
 /* styles/theme.css (shared) */ 
 html[data-theme="color-red"] {
     --color-bg: #fff0f3;
-    --color-surface: #fff8fa;
+    --color-header-bg:#ffd8df;
+    --color-surface: #fae8ed;
     --color-surface-2: #ffd8df;
     --color-surface-3: #f7b7c2;
     --color-text: #6b3140;
@@ -34,19 +32,15 @@ html[data-theme="color-red"] {
     --color-wood-light: #ffe3e9;
     --color-wood-warm: #f7b7c2;
     --color-wood-cream: #fff8fa;
-    --color-header-bg: #ffd8df;
     --shadow-wood: 0 6px 0 #d9879d;
     --color-shop-bg: #fff5f7;
     --color-tier-border: rgba(184, 95, 120, 0.18);
-    --web-bg: #fff0f3;
-    --web-beige: #fff8fa;
-    --web-gold: #de6b8b;
-    --web-charcoal: #6b3140;
 }
 
 html[data-theme="color-orange"] {
     --color-bg: #fff4ea;
-    --color-surface: #fffaf5;
+    --color-header-bg:#ffe0bf;
+    --color-surface: #fcf2e9;
     --color-surface-2: #ffe0bf;
     --color-surface-3: #f7c792;
     --color-text: #6a431c;
@@ -71,19 +65,15 @@ html[data-theme="color-orange"] {
     --color-wood-light: #ffead5;
     --color-wood-warm: #f7c792;
     --color-wood-cream: #fffaf5;
-    --color-header-bg: #ffe0bf;
     --shadow-wood: 0 6px 0 #d18d47;
     --color-shop-bg: #fff7ef;
     --color-tier-border: rgba(189, 122, 53, 0.18);
-    --web-bg: #fff4ea;
-    --web-beige: #fffaf5;
-    --web-gold: #ef9440;
-    --web-charcoal: #6a431c;
 }
 
 html[data-theme="color-gold"] {
     --color-bg: #fff7df;
-    --color-surface: #fffdf4;
+    --color-header-bg:#f8e7af;
+    --color-surface: #fbf8e8;
     --color-surface-2: #f8e7af;
     --color-surface-3: #efd58a;
     --color-text: #4d3812;
@@ -108,19 +98,15 @@ html[data-theme="color-gold"] {
     --color-wood-light: #fff3ca;
     --color-wood-warm: #efd58a;
     --color-wood-cream: #fffdf4;
-    --color-header-bg: #f8e7af;
     --shadow-wood: 0 6px 0 #c09232;
     --color-shop-bg: #fff9e8;
     --color-tier-border: rgba(138, 99, 32, 0.18);
-    --web-bg: #fff7df;
-    --web-beige: #fffdf4;
-    --web-gold: #c8921c;
-    --web-charcoal: #4d3812;
 }
 
 html[data-theme="color-green"] {
     --color-bg: #ecfff3;
-    --color-surface: #f8fffb;
+    --color-header-bg:#d9fbe7;
+    --color-surface: #edfef4;
     --color-surface-2: #d9fbe7;
     --color-surface-3: #c2f5da;
     --color-text: #2f5c45;
@@ -145,19 +131,15 @@ html[data-theme="color-green"] {
     --color-wood-light: #e2ffed;
     --color-wood-warm: #c2f5da;
     --color-wood-cream: #f8fffb;
-    --color-header-bg: #d9fbe7;
     --shadow-wood: 0 6px 0 #93d1ae;
     --color-shop-bg: #f2fff7;
     --color-tier-border: rgba(95, 160, 125, 0.18);
-    --web-bg: #ecfff3;
-    --web-beige: #f8fffb;
-    --web-gold: #4fcf92;
-    --web-charcoal: #2f5c45;
 }
 
 html[data-theme="color-blue"] {
     --color-bg: #eaf6ff;
-    --color-surface: #f7fbff;
+    --color-header-bg:#d6ecff;
+    --color-surface: #edf3f9;
     --color-surface-2: #d6ecff;
     --color-surface-3: #bfe2ff;
     --color-text: #2b4a63;
@@ -182,19 +164,15 @@ html[data-theme="color-blue"] {
     --color-wood-light: #e0f1ff;
     --color-wood-warm: #bfe2ff;
     --color-wood-cream: #f7fbff;
-    --color-header-bg: #d6ecff;
     --shadow-wood: 0 6px 0 #8bb9dd;
     --color-shop-bg: #f1f9ff;
     --color-tier-border: rgba(90, 139, 181, 0.18);
-    --web-bg: #eaf6ff;
-    --web-beige: #f7fbff;
-    --web-gold: #5fb3f5;
-    --web-charcoal: #2b4a63;
 }
 
 html[data-theme="color-purple"] {
     --color-bg: #f2ecff;
-    --color-surface: #fcf8ff;
+    --color-header-bg:#e6dbff;
+    --color-surface: #f7edfe;
     --color-surface-2: #e6dbff;
     --color-surface-3: #d4c5fb;
     --color-text: #44335f;
@@ -219,16 +197,12 @@ html[data-theme="color-purple"] {
     --color-wood-light: #efe7ff;
     --color-wood-warm: #d8cbff;
     --color-wood-cream: #fcf8ff;
-    --color-header-bg: #e6dbff;
     --shadow-wood: 0 6px 0 #b49cde;
     --color-shop-bg: #f7f1ff;
     --color-tier-border: rgba(115, 86, 165, 0.18);
-    --web-bg: #f2ecff;
-    --web-beige: #fcf8ff;
-    --web-gold: #8c68df;
-    --web-charcoal: #44335f;
 }
 
+/* Colors unique in default screens (cannot be globally grouped) */ 
 html[data-theme="color-red"],
 html[data-theme="color-orange"],
 html[data-theme="color-gold"],
@@ -236,15 +210,11 @@ html[data-theme="color-green"],
 html[data-theme="color-blue"],
 html[data-theme="color-purple"] {
     /* activity.css */
-    --color-act-banner-bg: var(--color-surface-2);
-    --color-act-card-bg: var(--color-surface);
     --color-act-content-bg1: var(--color-surface-2);
     --color-act-content-bg2: var(--color-surface-3);
     --color-act-content-border: var(--color-border);
 
     /* home.css */
-    --color-home-banner-bg: var(--color-surface-2);
-    --color-home-bg: var(--color-bg);
     --color-home-lc-card-bg1: var(--color-surface);
     --color-home-lc-card-bg2: var(--color-surface-2);
     --color-home-lc-card-bg3: var(--color-surface-3);
@@ -262,40 +232,31 @@ html[data-theme="color-purple"] {
     --color-home-lc-claim-btn-bg2: var(--color-accent);
     --color-home-lc-claim-btn-bg3: var(--color-accent-strong);
     --color-home-lc-claim-btn-box-shadow: var(--color-border);
-    --color-home-coin-reward-popup: var(--color-accent-strong);
     --color-home-pet-name: var(--color-text);
     --color-home-status-bar: var(--color-surface-2);
     --color-home-xp-bar: var(--color-surface-3);
     --color-home-lc-card-complete-border: var(--color-border);
     --color-home-black: var(--color-text);
+    --color-home-status-text: var(--color-bg);
+    --color-home-status-text-border: var(--color-text);
 
     /* playground.css */
-    --color-pg-main-body: var(--color-bg);
-    --color-pg-main-pg-card-banner-bg: var(--color-surface-2);
-    --color-pg-main-pg-card-bg: var(--color-surface);
-    --color-pg-main-pg-pet-name-bg: var(--color-accent);
+    --color-pg-main-pg-pet-name-bg: var(--color-surface-2);
     --color-pg-main-pg-pet-name-bg2: var(--color-text);
     --color-pg-main-pg-pet-name-bg3: var(--color-text-muted);
     --color-pg-main-pg-nav-btn-bg1: var(--color-surface);
     --color-pg-main-pg-modal-confirm: var(--color-accent);
     --color-pg-main-pg-nav-label: var(--color-text);
-    --color-pg-main-white: var(--color-surface);
-    --color-pg-main-black: var(--color-text);
 
     /* playground-pets.css */
-    --color-pg-pets-body-bg: var(--color-bg);
     --color-pg-pets-pets-loading: var(--color-text);
-    --color-pg-pets-pets-card-banner-bg: var(--color-surface-2);
     --color-pg-pets-pets-select-btn-bg: var(--color-accent);
     --color-pg-pets-pets-select-btn: var(--color-text);
     --color-pg-pets-pets-modal-age: var(--color-text-muted);
-    --color-pg-pets-white: var(--color-surface);
-    --color-pg-pets-black: var(--color-text);
+    --color-pet-name: var(--color-surface-2);
 
     /* account.css */
-    --color-set-acc-body-bg: var(--color-bg);
     --color-set-acc-body: var(--color-text);
-    --color-set-acc-acc-card-banner-bg: var(--color-surface-2);
     --color-set-acc-acc-card-bg: var(--color-surface);
     --color-set-acc-profile-avatar: var(--color-surface-3);
     --color-set-acc-btn-outline: var(--color-accent-strong);
@@ -311,14 +272,10 @@ html[data-theme="color-purple"] {
     --color-set-acc-cancel-btn: var(--color-surface-2);
 
     /* settings.css */
-    --color-set-main-body-bg: var(--color-bg);
-    --color-set-main-body: var(--color-text);
     --color-set-main-set-card: var(--color-surface);
     --color-set-main-set-easy-sec-bg1: var(--color-surface);
     --color-set-main-set-easy-sec-bg2: var(--color-surface-2);
     --color-set-main-set-easy-sec-bg3: var(--color-surface-3);
-    --color-set-main-set-easy-sec-checked-bg1: var(--color-success-bg);
-    --color-set-main-set-easy-sec-checked-bg2: var(--color-success-text);
     --color-set-main-set-easy-info-btn: var(--color-accent-strong);
     --color-set-main-set-easy-icon-wrap-bg1: var(--color-surface-2);
     --color-set-main-set-easy-icon-wrap-bg2: var(--color-accent);
@@ -331,7 +288,10 @@ html[data-theme="color-purple"] {
     --color-set-main-set-modal-panel: var(--color-surface);
     --color-set-main-white: var(--color-surface);
 
-    /* profile-color.css */
+    /* settings-theme.css */
+    --color-option-text: var(--color-text);
+
+    /* settings-profile-color.css */
     --color-set-prof-color-set-title: var(--color-text);
     --color-set-prof-color-prof-avatar-bg: var(--color-surface-3);
     --color-set-prof-color-color-card-bg: var(--color-surface-2);
@@ -358,86 +318,37 @@ html[data-theme="color-purple"] {
     --color-store-coins-display: var(--color-accent-strong);
     --color-store-coins-white: var(--color-surface);
     --color-store-coins-black: var(--color-text);
+
+    /* community.css */
+    --color-comm-main-comm-menu-btn-bg1: var(--color-surface);
+    --color-comm-main-comm-menu-btn-bg2: var(--color-surface-2);
+    --color-comm-main-comm-menu-btn-bg3: var(--color-surface);
+    --color-comm-main-comm-menu-btn-bg4: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg5: var(--color-accent-strong);
+    --color-comm-main-comm-menu-btn: var(--color-text);
+    --color-comm-main-black: var(--color-text);
 }
 
-/* Shared theme application */
-html[data-theme="color-red"] body,
-html[data-theme="color-orange"] body,
-html[data-theme="color-gold"] body,
-html[data-theme="color-green"] body,
-html[data-theme="color-blue"] body,
-html[data-theme="color-purple"] body {
+/* Apply theme to all screens */
+html[data-theme^="color-"] body {
     background-color: var(--color-bg) !important;
     color: var(--color-text) !important;
 }
 
-html[data-theme="color-red"] .home-card,
-html[data-theme="color-red"] .settings-card,
-html[data-theme="color-red"] .community-card,
-html[data-theme="color-red"] .activity-card,
-html[data-theme="color-red"] .playground-card,
-html[data-theme="color-red"] .pets-card,
-html[data-theme="color-red"] .notifications-card,
-html[data-theme="color-red"] .color-card,
-html[data-theme="color-red"] .account-card,
-html[data-theme="color-red"] .theme-card,
-html[data-theme="color-red"] .store-card,
-html[data-theme="color-orange"] .home-card,
-html[data-theme="color-orange"] .settings-card,
-html[data-theme="color-orange"] .community-card,
-html[data-theme="color-orange"] .activity-card,
-html[data-theme="color-orange"] .playground-card,
-html[data-theme="color-orange"] .pets-card,
-html[data-theme="color-orange"] .notifications-card,
-html[data-theme="color-orange"] .color-card,
-html[data-theme="color-orange"] .account-card,
-html[data-theme="color-orange"] .theme-card,
-html[data-theme="color-orange"] .store-card,
-html[data-theme="color-gold"] .home-card,
-html[data-theme="color-gold"] .settings-card,
-html[data-theme="color-gold"] .community-card,
-html[data-theme="color-gold"] .activity-card,
-html[data-theme="color-gold"] .playground-card,
-html[data-theme="color-gold"] .pets-card,
-html[data-theme="color-gold"] .notifications-card,
-html[data-theme="color-gold"] .color-card,
-html[data-theme="color-gold"] .account-card,
-html[data-theme="color-gold"] .theme-card,
-html[data-theme="color-gold"] .store-card,
-html[data-theme="color-green"] .home-card,
-html[data-theme="color-green"] .settings-card,
-html[data-theme="color-green"] .community-card,
-html[data-theme="color-green"] .activity-card,
-html[data-theme="color-green"] .playground-card,
-html[data-theme="color-green"] .pets-card,
-html[data-theme="color-green"] .notifications-card,
-html[data-theme="color-green"] .color-card,
-html[data-theme="color-green"] .account-card,
-html[data-theme="color-green"] .theme-card,
-html[data-theme="color-green"] .store-card,
-html[data-theme="color-blue"] .home-card,
-html[data-theme="color-blue"] .settings-card,
-html[data-theme="color-blue"] .community-card,
-html[data-theme="color-blue"] .activity-card,
-html[data-theme="color-blue"] .playground-card,
-html[data-theme="color-blue"] .pets-card,
-html[data-theme="color-blue"] .notifications-card,
-html[data-theme="color-blue"] .color-card,
-html[data-theme="color-blue"] .account-card,
-html[data-theme="color-blue"] .theme-card,
-html[data-theme="color-blue"] .store-card,
-html[data-theme="color-purple"] .home-card,
-html[data-theme="color-purple"] .settings-card,
-html[data-theme="color-purple"] .community-card,
-html[data-theme="color-purple"] .activity-card,
-html[data-theme="color-purple"] .playground-card,
-html[data-theme="color-purple"] .pets-card,
-html[data-theme="color-purple"] .notifications-card,
-html[data-theme="color-purple"] .color-card,
-html[data-theme="color-purple"] .account-card,
-html[data-theme="color-purple"] .theme-card,
-html[data-theme="color-purple"] .store-card {
-    --screen-banner-bg: var(--color-surface-2);
+html[data-theme^="color-"] .home-card,
+html[data-theme^="color-"] .settings-card,
+html[data-theme^="color-"] .activity-card,
+html[data-theme^="color-"] .playground-card,
+html[data-theme^="color-"] .notifications-card,
+html[data-theme^="color-"] .color-card,
+html[data-theme^="color-"] .account-card,
+html[data-theme^="color-"] .theme-card,
+html[data-theme^="color-"] .store-card {
     background: var(--color-surface) !important;
     box-shadow: var(--shadow-card);
+}
+
+html[data-theme^="color-"] .community-card,
+html[data-theme^="color-"] .pets-card {
+    --screen-banner-bg: var(--color-surface-2);
 }

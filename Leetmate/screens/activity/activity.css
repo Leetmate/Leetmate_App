@@ -2,8 +2,6 @@
 @import url("../../styles/layout.css");
 
 :root {
-  --color-act-banner-bg: #C5CDD6;
-  --color-act-card-bg: #EAEBF0;
   --color-act-content-bg1: #BFD1DF;
   --color-act-content-bg2: #DCEAF5;
   --color-act-content-border: #111;
@@ -21,7 +19,7 @@ body {
 
 /* ACTIVITY CONTAINER */
 .activity-card {
-  --screen-banner-bg: var(--color-act-banner-bg);
+  --screen-banner-bg: var(--color-header-bg);
   --screen-banner-offset-top: 16px;
   --screen-banner-offset-x: 16px;
   width: 100%;
@@ -29,7 +27,7 @@ body {
   min-height: 520px;
   margin: 0 auto;
   padding: 16px;
-  background: var(--color-act-card-bg); /* slightly different cool tone */
+  background: var(--color-bg);
   border-radius: 0;
   border: none;
   display: flex;

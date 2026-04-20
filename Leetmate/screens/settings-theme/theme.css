@@ -1,6 +1,9 @@
 /* Settings Screen Layout */
 @import url("../../styles/layout.css");
 
+:root {
+    --color-option-text: #3b2b1a;
+}
 body {
     font-family:
     system-ui,
@@ -29,7 +32,7 @@ body {
 }
 
 .theme-card {
-    --screen-banner-bg: var(--color-surface-2);
+    --screen-banner-bg: var(--color-header-bg);
     --screen-banner-offset-top: 24px;
     --screen-banner-offset-x: 20px;
     width: 100% !important;
@@ -64,7 +67,7 @@ body {
     font-size: 24px;
     font-weight: bold;
     align-items: center;
-    color: var(--color-text);
+    color: var(--color-option-text);
 }
 
 button.theme-option-text {
@@ -82,7 +85,7 @@ button.theme-option-text {
     justify-content: center;
 
     border-radius: 16px;
-    border: 3px solid var(--color-border);
+    border: 3px solid var(--color-option-text);
     background: linear-gradient(
         270deg,
         #F1E0BF,
@@ -110,7 +113,7 @@ button.theme-option-text {
     justify-content: center;
 
     border-radius: 16px;
-    border: 3px solid var(--color-border);
+    border: 3px solid var(--color-option-text);
     background: linear-gradient(
         270deg,
         #6B6D75,
@@ -139,7 +142,7 @@ button.theme-option-text {
     justify-content: center;
 
     border-radius: 16px;
-    border: 3px solid var(--color-border);
+    border: 3px solid var(--color-option-text);
     background: linear-gradient(
         90deg,
         #FFB3BA,
