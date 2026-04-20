@@ -30,6 +30,20 @@
     return dateKey >= startKey && dateKey <= endKey;
   }
 
+  function dateKeyToDate(dateKey) {
+    const parsed = parseDateKey(dateKey);
+    if (!parsed) return null;
+    return new Date(parsed.year, parsed.month - 1, parsed.day);
+  }
+
+  function addDaysToDateKey(dateKey, dayDelta) {
+    const parsedDate = dateKeyToDate(dateKey);
+    if (!parsedDate) return null;
+    const shiftedDate = new Date(parsedDate);
+    shiftedDate.setDate(shiftedDate.getDate() + dayDelta);
+    return toDateKey(shiftedDate);
+  }
+
   function getMonthStart(date) {
     return new Date(date.getFullYear(), date.getMonth(), 1);
   }
@@ -54,15 +68,15 @@
     }
   }
 
-  function applyFreezeOverlay(dayCell, cellDate, freezeRange) {
-    if (!freezeRange || !freezeRange.isActive) return;
+  function applyFreezeOverlay(dayCell, cellDate, freezeDateSet) {
+    if (!freezeDateSet || !(freezeDateSet instanceof Set)) return;
     const cellKey = toDateKey(cellDate);
-    if (isDateKeyInRange(cellKey, freezeRange.startKey, freezeRange.endKey)) {
+    if (freezeDateSet.has(cellKey)) {
       dayCell.classList.add("has-freeze");
     }
   }
 
-  function renderMonth(viewMonth, progressDateSet, freezeRange) {
+  function renderMonth(viewMonth, progressDateSet, freezeDateSet) {
     const year = viewMonth.getFullYear();
     const month = viewMonth.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -93,7 +107,7 @@
         dayCell.classList.add("is-today");
       }
       applyProgressBorder(dayCell, cellDate, progressDateSet);
-      applyFreezeOverlay(dayCell, cellDate, freezeRange);
+      applyFreezeOverlay(dayCell, cellDate, freezeDateSet);
 
       calendarGridEl.appendChild(dayCell);
     }
@@ -110,11 +124,11 @@
     }
   }
 
-  function setupNavigation(months, startIndex, progressDateSet, freezeRange) {
+  function setupNavigation(months, startIndex, progressDateSet, freezeDateSet) {
     const state = { index: startIndex };
 
     function update() {
-      renderMonth(months[state.index], progressDateSet, freezeRange);
+      renderMonth(months[state.index], progressDateSet, freezeDateSet);
       prevBtn.disabled = state.index === 0;
       nextBtn.disabled = state.index === months.length - 1;
     }
@@ -200,36 +214,50 @@
     }
   }
 
-  async function loadStreakFreezeRange() {
+  function buildDateKeyRangeSet(startKey, endKey) {
+    if (!startKey || !endKey || startKey > endKey) return new Set();
+    const keys = new Set();
+    let cursorKey = startKey;
+    while (cursorKey && cursorKey <= endKey) {
+      keys.add(cursorKey);
+      cursorKey = addDaysToDateKey(cursorKey, 1);
+    }
+    return keys;
+  }
+
+  async function loadStreakFreezeDateSet() {
     try {
-      if (typeof storageGet !== "function") return null;
-      if (!window.firebase || !firebase.firestore) return null;
+      if (typeof storageGet !== "function") return new Set();
+      if (!window.firebase || !firebase.firestore) return new Set();
 
       const { uid } = await storageGet("uid");
-      if (!uid) return null;
+      if (!uid) return new Set();
 
       const db = firebase.firestore();
       const snap = await db.collection("users").doc(uid).get();
-      if (!snap.exists) return null;
+      if (!snap.exists) return new Set();
 
       const data = snap.data() || {};
       const freezeEndRaw = data.streakFreezeEnd;
-      if (!freezeEndRaw || typeof freezeEndRaw !== "string") return null;
+      if (!freezeEndRaw || typeof freezeEndRaw !== "string") return new Set();
+      if (!parseDateKey(freezeEndRaw)) return new Set();
 
       const todayKey = toDateKey(new Date());
-      if (!parseDateKey(freezeEndRaw)) return null;
+      const freezeStartRaw = data.streakFreezeStart;
+      let freezeStartKey = parseDateKey(freezeStartRaw) ? freezeStartRaw : null;
 
-      // Only show freeze icons when freeze is active today.
-      if (freezeEndRaw < todayKey) return null;
+      // Backward compatibility for users without streakFreezeStart persisted yet.
+      if (!freezeStartKey) {
+        freezeStartKey = freezeEndRaw >= todayKey ? todayKey : addDaysToDateKey(freezeEndRaw, -1);
+      }
 
-      return {
-        isActive: true,
-        startKey: todayKey,
-        endKey: freezeEndRaw,
-      };
+      if (!freezeStartKey) return new Set();
+      if (freezeStartKey > freezeEndRaw) return new Set();
+
+      return buildDateKeyRangeSet(freezeStartKey, freezeEndRaw);
     } catch (error) {
-      console.warn("Activity: failed to load streak freeze range.", error);
-      return null;
+      console.warn("Activity: failed to load streak freeze dates.", error);
+      return new Set();
     }
   }
 
@@ -239,7 +267,7 @@
     const startMonth = getMonthStart(createdAt || now);
     const endMonth = getMonthStart(addMonths(now, 1));
     const progressDateSet = await loadProgressDateSet(startMonth, endMonth);
-    const freezeRange = await loadStreakFreezeRange();
+    const freezeDateSet = await loadStreakFreezeDateSet();
 
     const months = [];
     let cursor = new Date(startMonth);
@@ -250,7 +278,7 @@
 
     let startIndex = months.length - 2;
     if (startIndex < 0) startIndex = 0;
-    setupNavigation(months, startIndex, progressDateSet, freezeRange);
+    setupNavigation(months, startIndex, progressDateSet, freezeDateSet);
     await loadStreakCount();
   }
 

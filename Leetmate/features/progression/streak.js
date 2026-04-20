@@ -10,12 +10,14 @@ async function loadStreakData(db, uid) {
 
     const streakData = {
       streak: typeof data.streak === "number" ? data.streak : 0,
+      streakFreezeStart: data.streakFreezeStart || null,
       streakFreezeEnd: data.streakFreezeEnd || null,
       streakLastUpdated: data.streakLastUpdated || null,
     };
     await storageSet({
       leetmate_streak: streakData.streak,
       leetmate_last_streak_date: streakData.streakLastUpdated ?? null,
+      leetmate_streak_freeze_start: streakData.streakFreezeStart ?? null,
       leetmate_streak_freeze_end: streakData.streakFreezeEnd ?? null,
     });
 
@@ -31,6 +33,7 @@ async function saveStreakData(db, uid, streakData) {
   await storageSet({
     leetmate_streak: streakData.streak,
     leetmate_last_streak_date: streakData.streakLastUpdated ?? null,
+    leetmate_streak_freeze_start: streakData.streakFreezeStart ?? null,
     leetmate_streak_freeze_end: streakData.streakFreezeEnd ?? null,
   });
 
@@ -40,6 +43,7 @@ async function saveStreakData(db, uid, streakData) {
   .set(
     {
       streak: streakData.streak,
+      streakFreezeStart: streakData.streakFreezeStart,
       streakFreezeEnd: streakData.streakFreezeEnd,
       streakLastUpdated: streakData.streakLastUpdated || null,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -72,7 +76,8 @@ function isStreakFreezeActive(streakData) {
 
 function activateStreakFreeze(streakData, durationDays) {
   const today = new Date();
-  today.setDate(today.getDate() + durationDays);
+  const freezeStart = getTodayString();
+  today.setDate(today.getDate() + Math.max(0, durationDays - 1));
 
   const freezeEnd = today.toLocaleDateString("en-CA", {
     timeZone: "America/Los_Angeles"
@@ -80,6 +85,7 @@ function activateStreakFreeze(streakData, durationDays) {
 
   return {
     streak: streakData.streak,
+    streakFreezeStart: freezeStart,
     streakFreezeEnd: freezeEnd
   }
 }
@@ -87,6 +93,7 @@ function activateStreakFreeze(streakData, durationDays) {
 function clearStreakFreeze(streakData) {
   return {
     streak: streakData.streak,
+    streakFreezeStart: null,
     streakFreezeEnd: null
   }
 }
@@ -94,6 +101,7 @@ function clearStreakFreeze(streakData) {
 function incrementStreak(streakData){
   return {
     streak: streakData.streak + 1,
+    streakFreezeStart: streakData.streakFreezeStart,
     streakFreezeEnd: streakData.streakFreezeEnd
   }
 }
@@ -101,6 +109,7 @@ function incrementStreak(streakData){
 function resetStreak(streakData) {
   return {
     streak: 0, // adjust according to leetcode implementation?
+    streakFreezeStart: streakData.streakFreezeStart,
     streakFreezeEnd: streakData.streakFreezeEnd
   }
 }
@@ -162,34 +171,46 @@ async function runDailyStreakCheck() {
     }
 
     // Didn't solve today → reset streak to 0
-    const { leetmate_streak, leetmate_last_streak_date, leetmate_streak_freeze_end }
+    const { leetmate_streak, leetmate_last_streak_date, leetmate_streak_freeze_start, leetmate_streak_freeze_end }
       = await storageGet([
           "leetmate_streak",
           "leetmate_last_streak_date",
+          "leetmate_streak_freeze_start",
           "leetmate_streak_freeze_end"
         ]);
 
     const streakData = {
       streak: leetmate_streak ?? 0,
       streakLastUpdated: leetmate_last_streak_date ?? null,
+      streakFreezeStart: leetmate_streak_freeze_start ?? null,
       streakFreezeEnd: leetmate_streak_freeze_end ?? null,
     };
 
-    // Check freeze before resetting
-    const updated = isStreakFreezeActive(streakData)
-      ? streakData                  // freeze active → preserve streak
-      : resetStreak(streakData);    // no freeze → reset to 0
+    const freezeActive = isStreakFreezeActive(streakData);
+    // Freeze active → keep current streak count, otherwise reset to 0.
+    const updated = freezeActive
+      ? { ...streakData }
+      : resetStreak(streakData);
 
     updated.streakLastUpdated = today;
 
-    // Save to chrome storage
-    await storageSet({
-      leetmate_streak: updated.streak,
-      leetmate_last_streak_date: updated.streakLastUpdated,
-      leetmate_streak_freeze_end: updated.streakFreezeEnd ?? null,
-    });
+    if (window.firebase && firebase.firestore) {
+      const db = firebase.firestore();
+      await saveStreakData(db, uid, updated);
+    } else {
+      await storageSet({
+        leetmate_streak: updated.streak,
+        leetmate_last_streak_date: updated.streakLastUpdated,
+        leetmate_streak_freeze_start: updated.streakFreezeStart ?? null,
+        leetmate_streak_freeze_end: updated.streakFreezeEnd ?? null,
+      });
+    }
 
-    console.log("Streak reset at midnight:", updated);
+    if (freezeActive) {
+      console.log("Freeze active at midnight: streak preserved and date updated.", updated);
+    } else {
+      console.log("Streak reset at midnight:", updated);
+    }
 
   } catch (e) {
     console.error("runDailyStreakCheck failed:", e);
@@ -270,16 +291,19 @@ if (typeof window !== "undefined") {
       const {
         leetmate_streak,
         leetmate_last_streak_date,
+        leetmate_streak_freeze_start,
         leetmate_streak_freeze_end,
       } = await storageGet([
         "leetmate_streak",
         "leetmate_last_streak_date",
+        "leetmate_streak_freeze_start",
         "leetmate_streak_freeze_end",
       ]);
 
       const updated = {
         streak: leetmate_streak ?? 0,
         streakLastUpdated: leetmate_last_streak_date ?? null,
+        streakFreezeStart: leetmate_streak_freeze_start ?? null,
         streakFreezeEnd: leetmate_streak_freeze_end ?? null,
       };
 

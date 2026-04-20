@@ -198,10 +198,12 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
   const {
     leetmate_streak,
     leetmate_last_streak_date,
+    leetmate_streak_freeze_start,
     leetmate_streak_freeze_end,
   } = await storageGet([
     "leetmate_streak",
     "leetmate_last_streak_date",
+    "leetmate_streak_freeze_start",
     "leetmate_streak_freeze_end",
   ]);
 
@@ -210,12 +212,14 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
     const fromStorage = {
       streak: leetmate_streak ?? 0,
       streakLastUpdated: leetmate_last_streak_date ?? null,
+      streakFreezeStart: leetmate_streak_freeze_start ?? null,
       streakFreezeEnd: leetmate_streak_freeze_end ?? null,
     };
 
     if (
       fromStorage.streak !== streakData.streak ||
       fromStorage.streakLastUpdated !== streakData.streakLastUpdated ||
+      fromStorage.streakFreezeStart !== streakData.streakFreezeStart ||
       fromStorage.streakFreezeEnd !== streakData.streakFreezeEnd
     ) {
       await saveStreakData(db, uid, fromStorage);

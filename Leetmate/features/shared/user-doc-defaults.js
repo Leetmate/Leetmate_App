@@ -55,6 +55,7 @@
 			premium: false,
 			lastFedTime: null,
       streak: 0,
+      streakFreezeStart: null,
       streakFreezeEnd: null,
 			equippedItemId: null,
 			settings: {
