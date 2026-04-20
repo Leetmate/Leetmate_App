@@ -12,6 +12,9 @@
  *   visits/solutions and grant coins or increase happiness.
  * - Badge: chrome.action.setBadgeText / setBadgeBackgroundColor to show streak or happiness on the icon.
  */
+
+//NOTE: temporarily removing this because it just doesn't work (and no file seems to be using it)
+/*
 importScripts(
 	"features/shared/storage-helper.js",
 	"features/progression/streak.js",
@@ -19,6 +22,8 @@ importScripts(
 	"features/pet/evolution-notify.js",
 	"features/pet/pet-age.js"
 );
+*/
+
 (function () {
 	'use strict';
 
@@ -136,6 +141,70 @@ importScripts(
 			})
 		}
 	})
+
+	// ── 4. Timer Based Notification ─────────────────────────────────────────────────────────
+	let time = 5; //5 seconds for testing
+	let countdown;
+	function startTimeNotif() {
+		alert("Timer Start!");
+		//this starts the timer to give popup notification in 24 hours (for testing this will be set to 5 seconds)
+		time = 5; //making sure the timer starts with the right time (modify for heart based)
+		clearInterval(countdown);
+		countdown = setInterval(() => {
+			if (time > 0) {
+				time--; //the process of time
+			} else {
+				//time 0 means the notif should appear
+				completeTimer();
+			}
+		}, 1000);
+	}
+
+	//listen for msgs from other scripts
+	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		//console.log("Message received in background:", message);
+		if (message.action === "startNotificationTimer") {
+			alert("got the msg");
+			startTimerNotif();
+			//sendResponse({reply:"True"});
+		}
+
+		//return true;
+	});
+
+	/*browser.runtime.onMessage.addListener(message => {
+		console.log("background: onMessage", message);
+		return PromiseRejectionEvent.resolve("Dummy response to keep the console quiet.");
+	})*/
+
+	// function to trigger notification
+	function completeTimer() {
+		clearInterval(countdown); //stop the countdown
+		//reset timer (testing = 5 seconds, real = 24 hours)
+		let time = 5;
+
+		//trigger notification
+		chrome.notifications.create({
+			type: 'basic',
+			iconUrl: chrome.runtime.getURL('assets/icons/leetmate128.png'),
+			title: "It's time!",
+			message: 'Make sure to check your leetmate!',
+			requireInteraction: true, //notif stays until user dismisses it,
+			priority: 2
+		});
+	}
+
+
+	//this works but i need it to be event based. this only works if extension is open the whole time
+	/*const notifButton = document.getElementById('test-timer');
+	if (notifButton) {
+		notifButton.addEventListener('click', function () {
+			//alert("button clicked");
+			startTimeNotif();
+		});
+	}*/
+
+	//___________________________________
 
 
 	// Dummy listener to prevent "Receiving end does not exist" errors
