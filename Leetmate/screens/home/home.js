@@ -106,6 +106,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (solvedToday) {
         await storageSet({ leetmate_last_progress_date: today });
       }
+
+      const { leetmate_last_streak_date } = await storageGet(["leetmate_last_streak_date"]);
+      if (
+        leetmate_last_streak_date !== today &&
+        typeof runDailyStreakCheck === "function"
+      ) {
+        await runDailyStreakCheck();
+      }
   		
   		await Promise.all([
   			syncedRewardsPromise,

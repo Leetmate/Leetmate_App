@@ -37,60 +37,61 @@ body {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 2px;
 }
 
 .activity-streak-card {
+  flex-shrink: 0;
   background: linear-gradient(180deg, #f5eee1 0%, #ece4d3 100%);
-  border: 4px solid #17130f;
-  border-radius: 26px;
+  border: 3px solid #17130f;
+  border-radius: 22px;
   padding: 12px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   box-shadow:
     inset 0 2px 0 rgba(255, 255, 255, 0.6),
-    0 5px 0 #17130f,
-    0 10px 16px rgba(0, 0, 0, 0.14);
+    0 4px 0 #17130f,
+    0 9px 14px rgba(0, 0, 0, 0.12);
 }
 
 .activity-streak-title {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
   font-family: "Lilita One", system-ui, sans-serif;
   color: #2a241a;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.25px;
 }
 
 .activity-streak-display {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 }
 
 .streak-icon-wrap {
   position: relative;
-  width: 35px;
-  height: 35px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .activity-streak-icon {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   object-fit: contain;
 }
 
 .activity-streak-freeze {
   position: absolute;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   opacity: 0.65;
   display: none;
   animation: freeze-shiver 0.45s ease-in-out infinite;
@@ -98,16 +99,18 @@ body {
 
 .activity-streak-count {
   font-family: "Lilita One", system-ui, sans-serif;
-  font-size: 48px;
-  line-height: 0.9;
+  font-size: 35px;
+  line-height: 0.95;
   color: #14110d;
   text-shadow: 0 2px 0 #f9f5ec;
 }
 
 .activity-streak-subtext {
   margin: 0;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.25;
   color: #6d6354;
+  text-align: center;
 }
 
 .activity-calendar-card {
@@ -131,7 +134,7 @@ body {
 .activity-calendar-month {
   margin: 0;
   font-family: "Lilita One", system-ui, sans-serif;
-  font-size: 40px;
+  font-size: 30px;
   font-weight: 400;
   letter-spacing: 0.3px;
   color: #16130f;
@@ -175,21 +178,27 @@ body {
 }
 
 .activity-calendar-grid {
+  --calendar-week-rows: 6;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  min-height: 250px;
+  grid-template-rows: repeat(var(--calendar-week-rows), 1fr);
+  gap: 4px;
+  height: 192px;
+  min-height: 192px;
+  max-height: 192px;
 }
 
 .calendar-day {
   border: 2px solid transparent;
-  border-radius: 13px;
-  height: 34px;
+  border-radius: 9px;
+  min-height: 0;
+  height: 100%;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: "Lilita One", system-ui, sans-serif;
-  font-size: 24px;
+  font-size: 18px;
   color: #17130f;
 }
 
@@ -198,8 +207,43 @@ body {
 }
 
 .calendar-day.is-today {
+  /* border-color: #2a241a;
+  background: #eee4cd; */
+  color: red;
+}
+
+.calendar-day.has-progress {
   border-color: #2a241a;
-  background: #eee4cd;
+  background: #c3ebc6;
+}
+
+.calendar-day.has-progress.is-today {
+  border-color: #2f9a4a;
+  box-shadow: inset 0 0 0 1px #1d6f34;
+}
+
+.calendar-day.has-freeze::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+  background-image: url("../../assets/icons/streak_ice.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.calendar-day.has-freeze {
+  color: #17130f;
+}
+
+.calendar-day.has-freeze.is-today {
+  color: red;
 }
 
 .calendar-day.is-reward-preview {
