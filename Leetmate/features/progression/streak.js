@@ -37,7 +37,7 @@ async function saveStreakData(db, uid, streakData) {
     leetmate_streak_freeze_end: streakData.streakFreezeEnd ?? null,
   });
 
-  return db
+  const savePromise = db
   .collection("users")
   .doc(uid)
   .set(
@@ -52,7 +52,99 @@ async function saveStreakData(db, uid, streakData) {
   )
   .catch((e) => {
     console.error("saveStreakData failed: ", e);
-  })
+  });
+
+  await savePromise;
+  await saveStreakFreezeUsage(db, uid, streakData);
+  return savePromise;
+}
+
+function isValidDateKey(value) {
+  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+async function saveStreakFreezeUsage(db, uid, streakData) {
+  const startDate = streakData?.streakFreezeStart;
+  const endDate = streakData?.streakFreezeEnd;
+  if (!isValidDateKey(startDate) || !isValidDateKey(endDate)) return;
+  if (startDate > endDate) return;
+
+  const usageDocId = `${startDate}_${endDate}`;
+
+  try {
+    await db
+      .collection("users")
+      .doc(uid)
+      .collection("streakFreezeUsage")
+      .doc(usageDocId)
+      .set(
+        {
+          startDate,
+          endDate,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+  } catch (e) {
+    console.warn("saveStreakFreezeUsage subcollection write failed, using fallback:", e);
+    await saveStreakFreezeUsageFallback(db, uid, startDate, endDate);
+  }
+}
+
+async function saveStreakFreezeUsageFallback(db, uid, startDate, endDate) {
+  try {
+    await db
+      .collection("users")
+      .doc(uid)
+      .set(
+        {
+          streakFreezeUsageHistory: firebase.firestore.FieldValue.arrayUnion({
+            startDate,
+            endDate,
+          }),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+  } catch (fallbackError) {
+    console.error("saveStreakFreezeUsage fallback failed:", fallbackError);
+  }
+}
+
+async function deleteStreakFreezeUsage(db, uid, startDate, endDate) {
+  if (!isValidDateKey(startDate) || !isValidDateKey(endDate)) return;
+  if (startDate > endDate) return;
+
+  const usageDocId = `${startDate}_${endDate}`;
+
+  try {
+    await db
+      .collection("users")
+      .doc(uid)
+      .collection("streakFreezeUsage")
+      .doc(usageDocId)
+      .delete();
+  } catch (e) {
+    console.warn("deleteStreakFreezeUsage subcollection delete failed:", e);
+  }
+
+  try {
+    await db
+      .collection("users")
+      .doc(uid)
+      .set(
+        {
+          streakFreezeUsageHistory: firebase.firestore.FieldValue.arrayRemove({
+            startDate,
+            endDate,
+          }),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+  } catch (fallbackError) {
+    console.warn("deleteStreakFreezeUsage fallback remove failed:", fallbackError);
+  }
 }
 
 function getTodayString() {
@@ -240,6 +332,12 @@ if (typeof window !== "undefined") {
       if (!user) return console.warn("No signed-in user.");
 
       const data = await loadStreakData(db, user.uid);
+      await deleteStreakFreezeUsage(
+        db,
+        user.uid,
+        data?.streakFreezeStart,
+        data?.streakFreezeEnd
+      );
       const updated = clearStreakFreeze(data);
 
       await saveStreakData(db, user.uid, updated);

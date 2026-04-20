@@ -76,7 +76,7 @@
     }
   }
 
-  function renderMonth(viewMonth, progressDateSet, freezeDateSet) {
+  function renderMonth(viewMonth, progressDateSet, freezeDateSet, weeklyRewardsState, onWeeklyClaim) {
     const year = viewMonth.getFullYear();
     const month = viewMonth.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -108,6 +108,14 @@
       }
       applyProgressBorder(dayCell, cellDate, progressDateSet);
       applyFreezeOverlay(dayCell, cellDate, freezeDateSet);
+      if (typeof attachWeeklyRewardGift === "function") {
+        attachWeeklyRewardGift(
+          dayCell,
+          toDateKey(cellDate),
+          weeklyRewardsState,
+          onWeeklyClaim
+        );
+      }
 
       calendarGridEl.appendChild(dayCell);
     }
@@ -124,11 +132,24 @@
     }
   }
 
-  function setupNavigation(months, startIndex, progressDateSet, freezeDateSet) {
-    const state = { index: startIndex };
+  function setupNavigation(
+    months,
+    startIndex,
+    progressDateSet,
+    freezeDateSet,
+    weeklyRewardsState,
+    onWeeklyClaim
+  ) {
+    const state = { index: startIndex, weeklyRewardsState };
 
     function update() {
-      renderMonth(months[state.index], progressDateSet, freezeDateSet);
+      renderMonth(
+        months[state.index],
+        progressDateSet,
+        freezeDateSet,
+        state.weeklyRewardsState,
+        onWeeklyClaim
+      );
       prevBtn.disabled = state.index === 0;
       nextBtn.disabled = state.index === months.length - 1;
     }
@@ -148,6 +169,12 @@
     });
 
     update();
+    return {
+      setWeeklyRewardsState(nextWeeklyRewardsState) {
+        state.weeklyRewardsState = nextWeeklyRewardsState;
+      },
+      renderCurrentMonth: update,
+    };
   }
 
   async function getCreatedAtDate() {
@@ -225,7 +252,7 @@
     return keys;
   }
 
-  async function loadStreakFreezeDateSet() {
+  async function loadStreakFreezeDateSet(startMonth, endMonth) {
     try {
       if (typeof storageGet !== "function") return new Set();
       if (!window.firebase || !firebase.firestore) return new Set();
@@ -234,27 +261,75 @@
       if (!uid) return new Set();
 
       const db = firebase.firestore();
-      const snap = await db.collection("users").doc(uid).get();
-      if (!snap.exists) return new Set();
+      const freezeDateSet = new Set();
+      const rangeStartKey = toDateKey(new Date(startMonth.getFullYear(), startMonth.getMonth(), 1));
+      const rangeEndKey = toDateKey(new Date(endMonth.getFullYear(), endMonth.getMonth() + 1, 0));
+      const userSnap = await db.collection("users").doc(uid).get();
+      if (!userSnap.exists) return freezeDateSet;
 
-      const data = snap.data() || {};
+      const data = userSnap.data() || {};
       const freezeEndRaw = data.streakFreezeEnd;
-      if (!freezeEndRaw || typeof freezeEndRaw !== "string") return new Set();
-      if (!parseDateKey(freezeEndRaw)) return new Set();
+      if (freezeEndRaw && typeof freezeEndRaw === "string" && parseDateKey(freezeEndRaw)) {
+        const todayKey = toDateKey(new Date());
+        const freezeStartRaw = data.streakFreezeStart;
+        let freezeStartKey = parseDateKey(freezeStartRaw) ? freezeStartRaw : null;
 
-      const todayKey = toDateKey(new Date());
-      const freezeStartRaw = data.streakFreezeStart;
-      let freezeStartKey = parseDateKey(freezeStartRaw) ? freezeStartRaw : null;
+        // Backward compatibility for users without streakFreezeStart persisted yet.
+        if (!freezeStartKey) {
+          freezeStartKey = freezeEndRaw >= todayKey ? todayKey : addDaysToDateKey(freezeEndRaw, -1);
+        }
 
-      // Backward compatibility for users without streakFreezeStart persisted yet.
-      if (!freezeStartKey) {
-        freezeStartKey = freezeEndRaw >= todayKey ? todayKey : addDaysToDateKey(freezeEndRaw, -1);
+        if (freezeStartKey && freezeStartKey <= freezeEndRaw) {
+          const currentRangeStart = freezeStartKey < rangeStartKey ? rangeStartKey : freezeStartKey;
+          const currentRangeEnd = freezeEndRaw > rangeEndKey ? rangeEndKey : freezeEndRaw;
+          const currentRangeSet = buildDateKeyRangeSet(currentRangeStart, currentRangeEnd);
+          for (const key of currentRangeSet) freezeDateSet.add(key);
+        }
       }
 
-      if (!freezeStartKey) return new Set();
-      if (freezeStartKey > freezeEndRaw) return new Set();
+      // Fallback history source on user doc when subcollection writes are blocked by rules.
+      const usageHistory = Array.isArray(data.streakFreezeUsageHistory)
+        ? data.streakFreezeUsageHistory
+        : [];
+      usageHistory.forEach((usage) => {
+        const startDate = usage?.startDate;
+        const endDate = usage?.endDate;
+        if (!parseDateKey(startDate) || !parseDateKey(endDate)) return;
+        if (startDate > endDate) return;
+        if (endDate < rangeStartKey || startDate > rangeEndKey) return;
 
-      return buildDateKeyRangeSet(freezeStartKey, freezeEndRaw);
+        const overlapStart = startDate < rangeStartKey ? rangeStartKey : startDate;
+        const overlapEnd = endDate > rangeEndKey ? rangeEndKey : endDate;
+        const usageRange = buildDateKeyRangeSet(overlapStart, overlapEnd);
+        for (const key of usageRange) freezeDateSet.add(key);
+      });
+
+      // New source of truth for historical freeze usage
+      try {
+        const usageSnap = await db
+          .collection("users")
+          .doc(uid)
+          .collection("streakFreezeUsage")
+          .get();
+
+        usageSnap.forEach((doc) => {
+          const usage = doc.data() || {};
+          const startDate = usage.startDate;
+          const endDate = usage.endDate;
+          if (!parseDateKey(startDate) || !parseDateKey(endDate)) return;
+          if (startDate > endDate) return;
+          if (endDate < rangeStartKey || startDate > rangeEndKey) return;
+
+          const overlapStart = startDate < rangeStartKey ? rangeStartKey : startDate;
+          const overlapEnd = endDate > rangeEndKey ? rangeEndKey : endDate;
+          const usageRange = buildDateKeyRangeSet(overlapStart, overlapEnd);
+          for (const key of usageRange) freezeDateSet.add(key);
+        });
+      } catch (usageError) {
+        console.warn("Activity: unable to read streakFreezeUsage subcollection.", usageError);
+      }
+
+      return freezeDateSet;
     } catch (error) {
       console.warn("Activity: failed to load streak freeze dates.", error);
       return new Set();
@@ -267,7 +342,14 @@
     const startMonth = getMonthStart(createdAt || now);
     const endMonth = getMonthStart(addMonths(now, 1));
     const progressDateSet = await loadProgressDateSet(startMonth, endMonth);
-    const freezeDateSet = await loadStreakFreezeDateSet();
+    const freezeDateSet = await loadStreakFreezeDateSet(startMonth, endMonth);
+    const { uid } = typeof storageGet === "function" ? await storageGet("uid") : { uid: null };
+    const db = window.firebase && firebase.firestore ? firebase.firestore() : null;
+    let weeklyRewardsState = null;
+
+    if (typeof getWeeklyRewardsState === "function" && db && uid) {
+      weeklyRewardsState = await getWeeklyRewardsState(db, uid, progressDateSet);
+    }
 
     const months = [];
     let cursor = new Date(startMonth);
@@ -278,7 +360,35 @@
 
     let startIndex = months.length - 2;
     if (startIndex < 0) startIndex = 0;
-    setupNavigation(months, startIndex, progressDateSet, freezeDateSet);
+
+    let navigationController = null;
+
+    async function onWeeklyClaim(claimDateKey) {
+      if (
+        !db ||
+        !uid ||
+        !weeklyRewardsState ||
+        typeof claimWeeklyReward !== "function"
+      ) {
+        return;
+      }
+
+      const nextState = await claimWeeklyReward(db, uid, claimDateKey, weeklyRewardsState);
+      weeklyRewardsState = nextState;
+      if (navigationController) {
+        navigationController.setWeeklyRewardsState(nextState);
+        navigationController.renderCurrentMonth();
+      }
+    }
+
+    navigationController = setupNavigation(
+      months,
+      startIndex,
+      progressDateSet,
+      freezeDateSet,
+      weeklyRewardsState,
+      onWeeklyClaim
+    );
     await loadStreakCount();
   }
 
