@@ -1,7 +1,12 @@
 @import url("./theme.css");
 
+:root{
+  --color-top-screen-banner: #D6D0C5;
+  --color-top-premium: #B89D5B;
+}
+
 .screen-banner {
-  background: var(--screen-banner-bg, #d6d0c5);
+  background: var(--screen-banner-bg, var(--color-top-screen-banner));
   border-bottom: var(--border-thick);
   margin:
     calc(var(--screen-banner-offset-top, 16px) * -1) calc(var(--screen-banner-offset-x, 16px) * -1) 0;
@@ -49,11 +54,11 @@
       #edddbb,
       #e7ce9d,
       #cfb98d);
-  border: 3px solid #b89d5b;
+  border: 3px solid var(--color-top-premium);
   border-radius: 20px;
   padding: 6px 10px;
   font-weight: 700;
-  color: #b89d5b;
+  color: var(--color-top-premium);
   animation: premium-pulse 3s infinite ease-in-out;
   box-shadow: 0 0 10px rgba(184, 157, 91, 0.3);
 }
