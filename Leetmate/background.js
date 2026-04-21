@@ -22,6 +22,11 @@ importScripts(
 (function () {
 	'use strict';
 
+	//make service worker persistent
+	chrome.runtime.onInstalled.addListener(() => {
+		chrome.alarms.create("repeatTask", { periodInMinutes: 0.25 });
+	});
+
 	// Queue submissions from content script; Home will sync to Firestore when it loads
 	chrome.runtime.onMessage.addListener((message) => {
 		if (message.type === 'SAVE_LEETCODE_PROGRESS' && Array.isArray(message.payload) && message.payload.length > 0) {
@@ -56,6 +61,9 @@ importScripts(
 			});
 			console.log("Leetmate: daily streak alarm recreated on startup.");
 		}
+
+		//restart notif timer if needed as well
+		startNotifTimer();
 	});
 
 	// ── 3. Alarm handler ─────────────────────────────────────────────────────────
@@ -150,6 +158,8 @@ importScripts(
 	let curHealth = null;
 	let notifEnabled = null;
 	let calcSecs = 0;
+	let curTime = 0;
+	let assumedTime = 0;
 
 	async function loadLocalVars(cusVar, newVal) {
 		if (cusVar == "timerType") {
@@ -176,7 +186,8 @@ importScripts(
 		}
 	}
 
-	async function calculateTimer() {
+	//async function calculateTimer() {
+	async function startNotifTimer() {
 		await chrome.storage.local.get(["leetmate_notification_mode"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("timerType", result["leetmate_notification_mode"]);
@@ -202,7 +213,26 @@ importScripts(
 			loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
 		});
 
+		//calculations
 		doMath();
+		//for debugging: set the calcSecs to 10secs
+		//calcSecs = 10;
+
+		//start the timer
+		time = Date.now() + calcSecs * 1000; //set as calculation for actual time later
+		console.log(`assumedTime: ${assumedTime}; time: ${time}`);
+		clearInterval(countdown);
+		countdown = setInterval(() => {
+			remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
+
+			//Remove if not debugging timer. Causes clutter.
+			console.log(`Time left: ${remainingTime}s`);
+
+			if (remainingTime <= 0) {
+				clearInterval(countdown);
+				completeTimer();
+			}
+		}, 1000);
 	}
 
 	/*function getFromStorage(keys) {
@@ -250,41 +280,45 @@ importScripts(
 		//math for seconds to time
 		calcSecs = 0;
 		let periodTime = 0;
-		let assumedTime = 0;
+		assumedTime = 0;
 		if (timerType == "time") {
 
 			//figure out the math for when the time is 24 hr+
 			if (notifTime["period"] == "PM") {
 				periodTime = 12;
 			}
+			console.log(`periodTime: ${periodTime}`);
 
 			let assumedHour = Number(notifTime["hour"]);
 			let assumedMinute = Number(notifTime["minute"]);
 
-			if (assumedHour == 12)
-			{
-				if (notifTime["period"] == "AM")
-				{
-					assumedHour = 0;
+			if (assumedHour == 12) {
+				if (notifTime["period"] == "AM") {
+					assumedHour += 0;
 				}
-				else
-				{
+				else {
 					assumedHour = 12;
 				}
 			}
 
-			assumedTime = (periodTime + (assumedHour * 3600) + assumedMinute * 60); //seconds to reach a specific time in the day
+			assumedTime = (((periodTime + assumedHour) * 3600) + assumedMinute * 60); //seconds to reach a specific time in the day
+
+			//time zone is UTC+7
+			assumedTime = assumedTime + 25200;
+
 			console.log(`notifTime["period"]: ${notifTime["period"]}`);
 			console.log(`assumedHour: ${assumedHour}`)
 			console.log(`assumedMinute: ${assumedMinute}`)
 			console.log(`Time based alarm should run trigger at ${calcSecs}`);
 
-			let curTime = (Date.now() % 86400000); //current time in seconds of the day
+			curTime = (Date.now() % 86400000) / 1000; //current time in seconds of the day starting from midnight today UTC
 			console.log(`It is currently ${curTime}`);
 
-			let startDay = (Date.now()/86400000 - (Date.now()%86400000));
-			console.log(`It has been ${startDay} days since January 1, 1970.`);
-			calcSecs = assumedTime - curTime; //seconds until reading desired time
+			//let startDay = (Date.now() - Date.now()%86400000)/86400000; //trying to determine number of whole days since 1/1/1970
+			let startDay = (Date.now() - Date.now() % 86400000); //trying to determine number of whole days since 1/1/1970
+			console.log(`It has been ${startDay} milliseconds since January 1, 1970.`);
+			//console.log(`It has been ${startDay} milliseconds since midnight.`);
+			calcSecs = assumedTime - curTime; //
 			console.log(`calcSecs: ${calcSecs}`);
 
 			if (calcSecs < 0) {
@@ -301,21 +335,27 @@ importScripts(
 
 		//debugger to check math logic
 		if (timerType == "time") {
-			console.log(`Timer type is ${timerType}, the current time is ${(Date.now() * 1000)%86400} and alarm should trigger at ${assumedTime}.`);
+			console.log(`Timer type is ${timerType}, the current time is ${curTime} and alarm should trigger at ${assumedTime}.`);
 		}
 		else if (timerType == "health") {
 			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger at ${notifHealth * 20}.`);
 		}
 
 		//console.log(`Timer should run for ${calcSecs} seconds.`)
+		calcSecs = Math.trunc(calcSecs);
+		console.log(`calcSecs after Trunc: ${calcSecs}`);
+		//return calcSecs;
 	}
 
-	function startNotifTimer() {
+	/*async function startNotifTimer() {
 		console.log("Starting Timer!");
 
-		seconds = calculateTimer();
+		//await calculateTimer();
+		//calcSecs = 10;
+		await calculateTimer();
 
-		time = Date.now() + seconds * 1000; //set as calculation for actual time later
+		time = Date.now() + calcSecs * 1000; //set as calculation for actual time later
+		console.log(`assumedTime: ${assumedTime}; time: ${time}`);
 		clearInterval(countdown);
 		countdown = setInterval(() => {
 			remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
@@ -328,7 +368,7 @@ importScripts(
 				completeTimer();
 			}
 		}, 1000);
-	}
+	}*/
 
 	function completeTimer() {
 		//clearInterval(countdown); //stop countdown
@@ -358,6 +398,8 @@ importScripts(
 			//customTime = message.payload;
 			//console.log(`Number passed to timer: ${message.payload}`);
 
+			startNotifTimer();
+
 			console.log("Creating timer alarm!");
 			chrome.alarms.create("leetmate-reminder", {
 				delayInMinutes: 0
@@ -386,7 +428,12 @@ importScripts(
 
 	chrome.alarms.onAlarm.addListener((alarm) => {
 		if (alarm.name == "leetmate-reminder") {
-			startNotifTimer(customTime);
+			//await startNotifTimer();
+			/*event.waitUntil(
+				(async () => {
+					await startNotifTimer();
+				}) ()
+			);*/
 		}
 		else if (alarm.name == "stop-timer") {
 			console.log("Stop timer alarm heard.");
