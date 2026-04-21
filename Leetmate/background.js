@@ -138,41 +138,75 @@ importScripts(
 	})
 
 	//------------------------Notifications-------------------------
-	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.action !== "startNotificationTimer") return;
-      
-        console.log("Leetmate: startNotificationTimer received.");
-      
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
-          title: "Button works",
-          message: "The click reached background.js",
-          priority: 2
-        });
-      
-        chrome.alarms.create("leetmate-reminder", {
-          delayInMinutes: 0.5
-        });
-      
-        sendResponse({ ok: true });
-        // no return true here
-      });
+	let time = 0;
+	let countdown = null;
+	function startNotifTimer(seconds) {
+		console.log("Starting Timer!");
 
-    chrome.alarms.onAlarm.addListener((alarm) => {
-        if (alarm.name !== "leetmate-reminder") return;
-      
-        console.log("Leetmate: reminder alarm fired.");
-      
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: "assets/icons/leetmate128.png",
-          title: "It's time!",
-          message: "Make sure to check your leetmate!",
-          requireInteraction: true,
-          priority: 2
-          });
-    });
+		time = Date.now() + seconds * 1000; //set as calculation for actual time later
+		clearInterval(countdown);
+		countdown = setInterval(() => {
+			const remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
+			
+			console.log(`Time left: ${remainingTime}s`);
+
+			if (remainingTime <= 0)
+			{
+				clearInterval(countdown);
+				completeTimer();
+			}
+		}, 1000);
+	}
+
+	function completeTimer() {
+		//clearInterval(countdown); //stop countdown
+		chrome.notifications.create({
+			type: 'basic',
+			iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
+			title: 'Time is up!',
+			message: 'Have you done your daily Leetcode?',
+			requireInteraction: true, // The notification will stay until the user interacts with it
+			priority: 2
+		});
+	}
+
+	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		if (message.action !== "startNotificationTimer") return;
+
+		//console.log("Leetmate: startNotificationTimer received.");
+
+		/*chrome.notifications.create({
+		  type: "basic",
+		  iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
+		  title: "Button works",
+		  message: "The click reached background.js",
+		  priority: 2
+		});*/
+
+		chrome.alarms.create("leetmate-reminder", {
+			delayInMinutes: 0
+		});
+
+		sendResponse({ ok: true });
+		// no return true here
+	});
+
+	chrome.alarms.onAlarm.addListener((alarm) => {
+		if (alarm.name !== "leetmate-reminder") return;
+
+		//console.log("Leetmate: reminder alarm fired.");
+
+		/*chrome.notifications.create({
+		  type: "basic",
+		  iconUrl: "assets/icons/leetmate128.png",
+		  title: "It's time!",
+		  message: "Make sure to check your leetmate!",
+		  requireInteraction: true,
+		  priority: 2
+		  });*/
+
+		startNotifTimer(5);
+	});
 
 
 	// Dummy listener to prevent "Receiving end does not exist" errors
