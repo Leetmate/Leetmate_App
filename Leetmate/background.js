@@ -151,13 +151,15 @@ importScripts(
 	let notifEnabled = null;
 	let calcSecs = 0;
 
-	/*function loadLocalVars(cusVar, newVal) {
+	async function loadLocalVars(cusVar, newVal) {
 		if (cusVar == "timerType") {
 			timerType = newVal;
 			console.log(`timerType is: ${timerType}`);
 		}
 		else if (cusVar == "notifTime") {
-			notifTime = JSON.stringify(newVal, null, 2);
+			notifTime = JSON.parse(JSON.stringify(newVal, null, 2));
+			//notifTime = JSON.stringify(newVal, null, 2);
+			console.log(`notifTime is: ${notifTime}`);
 			console.log(`notifTime is: ${notifTime}`);
 		}
 		else if (cusVar == "notifHealth") {
@@ -169,41 +171,41 @@ importScripts(
 			console.log(`curHealth is: ${curHealth}`);
 		}
 		else if (cusVar == "notifEnabled") {
-			curHealth = newVal;
+			notifEnabled = newVal;
 			console.log(`notifEnabled is: ${notifEnabled}`);
 		}
 	}
 
-	function calculateTimer() {
-		chrome.storage.local.get(["leetmate_notification_mode"]).then((result) => {
+	async function calculateTimer() {
+		await chrome.storage.local.get(["leetmate_notification_mode"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("timerType", result["leetmate_notification_mode"]);
 		});
 
-		chrome.storage.local.get(["leetmate_notification_time"]).then((result) => {
+		await chrome.storage.local.get(["leetmate_notification_time"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("notifTime", result["leetmate_notification_time"]);
 		});
 
-		chrome.storage.local.get(["leetmate_health_notification_threshold"]).then((result) => {
+		await chrome.storage.local.get(["leetmate_health_notification_threshold"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("notifHealth", result["leetmate_health_notification_threshold"]);
 		});
 
-		chrome.storage.local.get(["leetmate_happiness"]).then((result) => {
+		await chrome.storage.local.get(["leetmate_happiness"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("curHealth", result["leetmate_happiness"]);
 		});
 
-		chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
+		await chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
 		});
 
 		doMath();
-	}*/
+	}
 
-	function getFromStorage(keys) {
+	/*function getFromStorage(keys) {
 		return new Promise((resolve, reject) => {
 			try {
 				chrome.storage.local.get(keys, (result) => {
@@ -232,27 +234,63 @@ importScripts(
 		} catch (error) {
 			console.error('Error getting storage data:', error);
 		}
-	}
+	}*/
 
 	function doMath() {
+		console.log("doMath() is running");
+
+		//debugger to check math
+		if (timerType == "time") {
+			console.log(`Timer type is ${timerType}, the current time is ${Date.now() * 1000} and alarm should trigger at ${notifTime["hour"]}.`);
+		}
+		else if (timerType == "health") {
+			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger at ${notifHealth * 20}.`);
+		}
+
 		//math for seconds to time
 		calcSecs = 0;
 		let periodTime = 0;
+		let assumedTime = 0;
 		if (timerType == "time") {
+
+			//figure out the math for when the time is 24 hr+
 			if (notifTime["period"] == "PM") {
-				periodTime = 10;
+				periodTime = 12;
 			}
-			calcSecs = (periodTime + Number(notifTime["hour"])) * 3600 + Number(notifTime["minute"]) * 60; //seconds to reach a specific time in the day
-			console.log(`Alarm should run trigger at ${calcSecs}`);
 
-			let curTime = (Date.now() % 86400000) * 1000; //current time in seconds of the day
-			console.log(`It is currently ${calcSecs}`);
+			let assumedHour = Number(notifTime["hour"]);
+			let assumedMinute = Number(notifTime["minute"]);
 
-			calcSecs = calcSecs - curTime; //seconds until reading desired time
+			if (assumedHour == 12)
+			{
+				if (notifTime["period"] == "AM")
+				{
+					assumedHour = 0;
+				}
+				else
+				{
+					assumedHour = 12;
+				}
+			}
+
+			assumedTime = (periodTime + (assumedHour * 3600) + assumedMinute * 60); //seconds to reach a specific time in the day
+			console.log(`notifTime["period"]: ${notifTime["period"]}`);
+			console.log(`assumedHour: ${assumedHour}`)
+			console.log(`assumedMinute: ${assumedMinute}`)
+			console.log(`Time based alarm should run trigger at ${calcSecs}`);
+
+			let curTime = (Date.now() % 86400000); //current time in seconds of the day
+			console.log(`It is currently ${curTime}`);
+
+			let startDay = (Date.now()/86400000 - (Date.now()%86400000));
+			console.log(`It has been ${startDay} days since January 1, 1970.`);
+			calcSecs = assumedTime - curTime; //seconds until reading desired time
+			console.log(`calcSecs: ${calcSecs}`);
 
 			if (calcSecs < 0) {
 				//if the time already passed, add a day
-				calcSecs = calcSecs + 86400;
+				//calcSecs = calcSecs + 86400;
+				calcSecs = Date.now() * 1000;
 			}
 		}
 		else if (timerType == "health") {
@@ -260,110 +298,119 @@ importScripts(
 			calcSecs = (curHealth * 1440) - (notifHealth * 20 * 1440);
 
 		}
-		console.log(`Timer should run for ${calcSecs} seconds.`)
+
+		//debugger to check math logic
+		if (timerType == "time") {
+			console.log(`Timer type is ${timerType}, the current time is ${(Date.now() * 1000)%86400} and alarm should trigger at ${assumedTime}.`);
+		}
+		else if (timerType == "health") {
+			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger at ${notifHealth * 20}.`);
+		}
+
+		//console.log(`Timer should run for ${calcSecs} seconds.`)
 	}
 
 	function startNotifTimer() {
-	console.log("Starting Timer!");
+		console.log("Starting Timer!");
 
-	seconds = calculateTimer();
+		seconds = calculateTimer();
 
-	time = Date.now() + seconds * 1000; //set as calculation for actual time later
-	clearInterval(countdown);
-	countdown = setInterval(() => {
-		remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
+		time = Date.now() + seconds * 1000; //set as calculation for actual time later
+		clearInterval(countdown);
+		countdown = setInterval(() => {
+			remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
 
-		//Remove if not debugging timer. Causes clutter.
-		console.log(`Time left: ${remainingTime}s`);
+			//Remove if not debugging timer. Causes clutter.
+			console.log(`Time left: ${remainingTime}s`);
 
-		if (remainingTime <= 0) {
-			clearInterval(countdown);
-			completeTimer();
+			if (remainingTime <= 0) {
+				clearInterval(countdown);
+				completeTimer();
+			}
+		}, 1000);
+	}
+
+	function completeTimer() {
+		//clearInterval(countdown); //stop countdown
+		chrome.notifications.create({
+			type: 'basic',
+			iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
+			title: 'Time is up!',
+			message: 'Have you done your daily Leetcode?',
+			requireInteraction: true, // The notification will stay until the user interacts with it
+			priority: 2
+		});
+	}
+
+	function stopTimer() {
+		console.log("Trying to stop timer!");
+		clearInterval(countdown);
+		time = 0;
+		remainingTime = 0;
+		if (timerType == "time" && notifEnabled == true) {
+			//if the timer is time based, it should restart the timer after ending (24 hours)
+			startNotifTimer()
 		}
-	}, 1000);
-}
+	}
 
-function completeTimer() {
-	//clearInterval(countdown); //stop countdown
-	chrome.notifications.create({
-		type: 'basic',
-		iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
-		title: 'Time is up!',
-		message: 'Have you done your daily Leetcode?',
-		requireInteraction: true, // The notification will stay until the user interacts with it
-		priority: 2
+	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		if (message.action == "startTimer") {
+			//customTime = message.payload;
+			//console.log(`Number passed to timer: ${message.payload}`);
+
+			console.log("Creating timer alarm!");
+			chrome.alarms.create("leetmate-reminder", {
+				delayInMinutes: 0
+			});
+		}
+		else if (message.action == "stopTimer") {
+			chrome.alarms.create("stop-timer", {
+				delayInMinutes: 0
+			});
+		}
+
+		//console.log("Leetmate: startNotificationTimer received.");
+
+		/*chrome.notifications.create({
+		  type: "basic",
+		  iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
+		  title: "Button works",
+		  message: "The click reached background.js",
+		  priority: 2
+		});*/
+
+		sendResponse({ ok: true });
+		// no return true here
+		return;
 	});
-}
 
-function stopTimer() {
-	console.log("Trying to stop timer!");
-	clearInterval(countdown);
-	time = 0;
-	remainingTime = 0;
-	if (timerType == "time" && notifEnabled == true) {
-		//if the timer is time based, it should restart the timer after ending (24 hours)
-		startNotifTimer()
-	}
-}
+	chrome.alarms.onAlarm.addListener((alarm) => {
+		if (alarm.name == "leetmate-reminder") {
+			startNotifTimer(customTime);
+		}
+		else if (alarm.name == "stop-timer") {
+			console.log("Stop timer alarm heard.");
+			stopTimer();
+		}
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	if (message.action == "startTimer") {
-		//customTime = message.payload;
-		//console.log(`Number passed to timer: ${message.payload}`);
+		//console.log("Leetmate: reminder alarm fired.");
 
-		console.log("Creating timer alarm!");
-		chrome.alarms.create("leetmate-reminder", {
-			delayInMinutes: 0
-		});
-	}
-	else if (message.action == "stopTimer") {
-		chrome.alarms.create("stop-timer", {
-			delayInMinutes: 0
-		});
-	}
+		/*chrome.notifications.create({
+		  type: "basic",
+		  iconUrl: "assets/icons/leetmate128.png",
+		  title: "It's time!",
+		  message: "Make sure to check your leetmate!",
+		  requireInteraction: true,
+		  priority: 2
+		  });*/
 
-	//console.log("Leetmate: startNotificationTimer received.");
-
-	/*chrome.notifications.create({
-	  type: "basic",
-	  iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
-	  title: "Button works",
-	  message: "The click reached background.js",
-	  priority: 2
-	});*/
-
-	sendResponse({ ok: true });
-	// no return true here
-	return;
-});
-
-chrome.alarms.onAlarm.addListener((alarm) => {
-	if (alarm.name == "leetmate-reminder") {
-		startNotifTimer(customTime);
-	}
-	else if (alarm.name == "stop-timer") {
-		console.log("Stop timer alarm heard.");
-		stopTimer();
-	}
-
-	//console.log("Leetmate: reminder alarm fired.");
-
-	/*chrome.notifications.create({
-	  type: "basic",
-	  iconUrl: "assets/icons/leetmate128.png",
-	  title: "It's time!",
-	  message: "Make sure to check your leetmate!",
-	  requireInteraction: true,
-	  priority: 2
-	  });*/
-
-	return;
-});
+		return;
+	});
 
 
-// Dummy listener to prevent "Receiving end does not exist" errors
-chrome.runtime.onConnect.addListener(() => { });
+	// Dummy listener to prevent "Receiving end does not exist" errors
+	chrome.runtime.onConnect.addListener(() => { });
 
 
-}) ();
+})();
 
