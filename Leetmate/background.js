@@ -140,18 +140,20 @@ importScripts(
 	//------------------------Notifications-------------------------
 	let time = 0;
 	let countdown = null;
+	let customTime = 0;
+	let remainingTime = 0;
 	function startNotifTimer(seconds) {
 		console.log("Starting Timer!");
 
 		time = Date.now() + seconds * 1000; //set as calculation for actual time later
 		clearInterval(countdown);
 		countdown = setInterval(() => {
-			const remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
-			
+			remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
+
+			//Remove if not debugging timer. Causes clutter.
 			console.log(`Time left: ${remainingTime}s`);
 
-			if (remainingTime <= 0)
-			{
+			if (remainingTime <= 0) {
 				clearInterval(countdown);
 				completeTimer();
 			}
@@ -170,8 +172,27 @@ importScripts(
 		});
 	}
 
+	function stopTimer() {
+		console.log("Trying to stop timer!");
+		clearInterval(countdown);
+		time = 0;
+		remainingTime = 0;
+	}
+
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-		if (message.action !== "startNotificationTimer") return;
+		if (message.action == "startNotificationTimer") {
+			customTime = message.payload;
+			console.log(`Number passed to timer: ${message.payload}`);
+
+			chrome.alarms.create("leetmate-reminder", {
+				delayInMinutes: 0
+			});
+		}
+		else if (message.action == "stopTimer") {
+			chrome.alarms.create("stop-timer", {
+				delayInMinutes: 0
+			});
+		}
 
 		//console.log("Leetmate: startNotificationTimer received.");
 
@@ -183,16 +204,20 @@ importScripts(
 		  priority: 2
 		});*/
 
-		chrome.alarms.create("leetmate-reminder", {
-			delayInMinutes: 0
-		});
-
 		sendResponse({ ok: true });
 		// no return true here
+		return;
 	});
 
 	chrome.alarms.onAlarm.addListener((alarm) => {
-		if (alarm.name !== "leetmate-reminder") return;
+		if (alarm.name == "leetmate-reminder") {
+			startNotifTimer(customTime);
+		}
+		else if (alarm.name == "stop-timer")
+		{
+			console.log("Stop timer alarm heard.");
+			stopTimer();
+		}
 
 		//console.log("Leetmate: reminder alarm fired.");
 
@@ -205,7 +230,7 @@ importScripts(
 		  priority: 2
 		  });*/
 
-		startNotifTimer(5);
+		return;
 	});
 
 
