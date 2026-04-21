@@ -2,7 +2,6 @@
 @import url("../../styles/layout.css");
 
 :root{
-  --color-comm-main-comm-card-banner-bg: #D6D0C5;
   --color-comm-main-comm-menu-btn-bg1: #FDF4E7;
   --color-comm-main-comm-menu-btn-bg2: #F0D5AE;
   --color-comm-main-comm-menu-btn-bg3: #FDFAF5;
@@ -24,7 +23,7 @@ body {
 
 /* COMMUNITY CONTAINER */
 .community-card {
-  --screen-banner-bg: var(--color-comm-main-comm-card-banner-bg);
+  --screen-banner-bg: var(--color-header-bg);
   --screen-banner-offset-top: 16px;
   --screen-banner-offset-x: 16px;
   width: 100%;

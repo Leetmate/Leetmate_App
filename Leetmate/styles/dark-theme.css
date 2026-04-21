@@ -1,24 +1,19 @@
-/* Dark mode 
-   - Global variables (--color-bg, --color-surface, etc.) define the theme palette
-   - Screen variables (--color-home-*, --color-store-*) define each screen's default design
-*/
+/* Dark mode */
 
 html[data-theme="dark"] {
-    /* Default colors are defined per screen.
-    Theme files swap those values based on the active data-theme. */
-
     /* styles/theme.css (shared) */ 
     --color-bg: #1e1f24;
+    --color-header-bg:#34353e;
     --color-surface: #2a2b32;
     --color-surface-2: #34353e;
     --color-surface-3: #3e404a;
   
     --color-text: #b3b3b3;
     --color-text-muted: #a9a49a;
-    --color-text-soft: #c9c4ba;
+    --color-text-soft: #95938f;
   
     --color-border: #5c5d66;
-    --color-accent: #9a855c;
+    --color-accent: #53514c;
     --color-accent-strong: #c9a227;
   
     --color-success-bg: #1e3d2f;
@@ -35,72 +30,70 @@ html[data-theme="dark"] {
     --focus-offset: 2px;
 
    /* activity.css */
-    --color-act-banner-bg: var(--color-surface-2);
-    --color-act-card-bg: var(--color-surface);
     --color-act-content-bg1: var(--color-surface-2);
     --color-act-content-bg2: var(--color-surface-3);
     --color-act-content-border: var(--color-border);
 
     /* home.css */
-    --color-home-banner-bg: var(--color-surface-2);
-    --color-home-bg: var(--color-bg);
-    --color-home-lc-card-bg1: var(--color-surface);
+    --color-home-lc-card-bg1: var(--color-accent);
     --color-home-lc-card-bg2: var(--color-surface-2);
-    --color-home-lc-card-bg3: var(--color-surface-3);
+    --color-home-lc-card-bg3: var(--color-accent);
     --color-home-lc-card-border: var(--color-border);
+    --color-home-lc-card-header: var(--color-text-muted);
     --color-home-lc-default-subtext: var(--color-text-muted);
     --color-home-lc-default-reward: var(--color-text-soft);
     --color-home-lc-default-reward-xp: var(--color-success-text);
     --color-home-lc-default-reward-coins: var(--color-accent-strong);
-    --color-home-lc-card-completed-bg1: var(--color-accent);
+
+    --color-home-lc-card-completed-bg1: var(--color-surface-2);
     --color-home-lc-card-completed-bg2: var(--color-surface-3);
     --color-home-lc-card-completed-bg3: var(--color-surface-2);
     --color-home-lc-alt-reward-xp: var(--color-success-text);
     --color-home-lc-alt-reward-coins: var(--color-accent-strong);
+
     --color-home-lc-claim-btn-bg1: var(--color-surface);
-    --color-home-lc-claim-btn-bg2: var(--color-accent);
-    --color-home-lc-claim-btn-bg3: var(--color-accent-strong);
+    --color-home-lc-claim-btn-bg2: var(--color-surface-2);
+    --color-home-lc-claim-btn-bg3: var(--color-accent);
     --color-home-lc-claim-btn-box-shadow: var(--color-border);
+
     --color-home-coin-reward-popup: var(--color-accent-strong);
     --color-home-pet-name: var(--color-text);
-    --color-home-status-bar: var(--color-surface-2);
+    --color-home-status-bar-bg1: var(--color-accent);
+    --color-home-status-bar-bg2: var(--color-surface-2);
+    --color-home-status-bar-bg3: var(--color-accent);
     --color-home-xp-bar: var(--color-surface-3);
     --color-home-lc-card-complete-border: var(--color-border);
     --color-home-black: var(--color-text);
+    --color-home-status-text: var(--color-text);
+    --color-home-status-text-border: var(--color-surface);
 
     /* playground.css */
-    --color-pg-main-body: var(--color-bg);
-    --color-pg-main-pg-card-banner-bg: var(--color-surface-2);
-    --color-pg-main-pg-card-bg: var(--color-surface);
     --color-pg-main-pg-pet-name-bg: var(--color-accent);
     --color-pg-main-pg-pet-name-bg2: var(--color-text);
-    --color-pg-main-pg-pet-name-bg3: var(--color-text-muted);
-    --color-pg-main-pg-nav-btn-bg1: var(--color-surface);
-    --color-pg-main-pg-modal-confirm: var(--color-accent);
+    --color-pg-main-pg-pet-name-bg3: var(--color-text);
+    --color-pg-main-pg-nav-btn-bg1: var(--color-accent);
+    --color-pg-main-pg-nav-btn-bg2: var(--color-surface-3);
     --color-pg-main-pg-nav-label: var(--color-text);
+    --color-nav-btn-border: var(--color-text-muted);
+    --color-pg-main-pg-modal-confirm: var(--color-surface-2);
     --color-pg-main-white: var(--color-surface);
     --color-pg-main-black: var(--color-text);
-
+    
     /* playground-pets.css */
-    --color-pg-pets-body-bg: var(--color-bg);
     --color-pg-pets-pets-loading: var(--color-text);
-    --color-pg-pets-pets-card-banner-bg: var(--color-surface-2);
     --color-pg-pets-pets-select-btn-bg: var(--color-accent);
     --color-pg-pets-pets-select-btn: var(--color-text);
     --color-pg-pets-pets-modal-age: var(--color-text-muted);
-    --color-pg-pets-white: var(--color-surface);
-    --color-pg-pets-black: var(--color-text);
+    --color-pet-name: var(--color-text);
 
     /* account.css */
-    --color-set-acc-body-bg: var(--color-bg);
     --color-set-acc-body: var(--color-text);
-    --color-set-acc-acc-card-banner-bg: var(--color-surface-2);
+    --color-set-acc-body-bg: var(--color-accent);
     --color-set-acc-acc-card-bg: var(--color-surface);
     --color-set-acc-profile-avatar: var(--color-surface-3);
     --color-set-acc-btn-outline: var(--color-accent-strong);
-    --color-set-acc-username-bg: var(--color-accent);
+    --color-set-acc-username-bg: var(--color-text-soft);
     --color-set-acc-email: var(--color-text-muted);
-    --color-set-acc-accordian-header-bg: var(--color-surface-2);
     --color-set-acc-input-bg: var(--color-surface);
     --color-set-acc-update-btn: var(--color-success-text);
     --color-set-acc-confirm-delete-btn-bg: var(--color-error-text);
@@ -110,44 +103,59 @@ html[data-theme="dark"] {
     --color-set-acc-cancel-btn: var(--color-surface-2);
 
     /* settings.css */
-    --color-set-main-body-bg: var(--color-bg);
     --color-set-main-body: var(--color-text);
     --color-set-main-set-card: var(--color-surface);
-    --color-set-main-set-easy-sec-bg1: var(--color-surface);
-    --color-set-main-set-easy-sec-bg2: var(--color-surface-2);
-    --color-set-main-set-easy-sec-bg3: var(--color-surface-3);
-    --color-set-main-set-easy-sec-checked-bg1: var(--color-success-bg);
-    --color-set-main-set-easy-sec-checked-bg2: var(--color-success-text);
-    --color-set-main-set-easy-info-btn: var(--color-accent-strong);
-    --color-set-main-set-easy-icon-wrap-bg1: var(--color-surface-2);
-    --color-set-main-set-easy-icon-wrap-bg2: var(--color-accent);
-    --color-set-main-set-easy-icon-wrap-bg3: var(--color-accent-strong);
-    --color-set-main-set-tog-slider: var(--color-surface-3);
     --color-set-main-set-vol-slider: var(--color-surface-3);
     --color-set-main-set-btn-primary-bg: var(--color-accent);
     --color-set-main-set-btn-danger: var(--color-error-text);
-    --color-set-main-set-btn-secondary: var(--color-surface-2);
+    --color-set-main-set-btn-secondary: linear-gradient(135deg, var(--color-accent) 0%, var(--color-surface-3) 40%, var(--color-accent) 100%);
     --color-set-main-set-modal-panel: var(--color-surface);
     --color-set-main-white: var(--color-surface);
 
-    /* profile-color.css */
+    /* settings.css & notifications.css for easy mode and reminders */
+    --color-set-toggle-banner-bg1: var(--color-surface);
+    --color-set-toggle-banner-bg2: var(--color-surface-2);
+    --color-set-toggle-banner-bg3: var(--color-surface-3);
+    --color-set-toggle-banner-checked-bg1: #24382e;
+    --color-set-toggle-banner-checked-bg2: #2f4a3c;
+    --color-set-toggle-info-btn: var(--color-accent-strong);
+    --color-set-easy-icon-bg1: var(--color-surface-2);
+    --color-set-easy-icon-bg2: var(--color-accent);
+    --color-set-easy-icon-bg3: var(--color-accent-strong);
+    --color-set-reminder-icon-bg1: var(--color-surface-2);
+    --color-set-reminder-icon-bg2: var(--color-accent);
+    --color-set-reminder-icon-bg3: var(--color-accent-strong);
+    --color-set-toggle-slider: var(--color-surface-3);
+
+    /* notifications.css */ 
+    --notif-surface: var(--color-surface-3);
+    --notif-surface-alt: var(--color-surface);
+
+    /* settings-theme.css */
+    --color-option-text: var(--color-surface-2);
+
+    /* settings-profile-color.css */
     --color-set-prof-color-set-title: var(--color-text);
     --color-set-prof-color-prof-avatar-bg: var(--color-surface-3);
     --color-set-prof-color-color-card-bg: var(--color-surface-2);
     --color-set-prof-color-black: var(--color-text);
 
     /* store.css */
-    --color-wood-dark: #e8e6e3;
+    --color-header-bg: #2f3139;
+    --color-wood-dark: var(--color-border);
     --color-wood-medium: #8a7f72;
     --color-wood-base: #6d6358;
-    --color-wood-light: #4a4540;
-    --color-wood-warm: #25262b;
+    /* active store tab gradient */
+    --color-wood-warm: #8a7f72;
+    --color-wood-light: var(--color-surface-3);
+    /* default store tabs */
+    --color-store-tab-btn-bg: var(--color-accent);    
+   
     --color-wood-cream: #2f3139;
-    --color-header-bg: #2f3139;
     --shadow-wood: 0 6px 0 #1a1b1f;
     --color-store-acce-coins-display: var(--color-accent-strong);
     --color-store-acce-unlock-all-btn: var(--color-border);
-    --color-store-acce-store-item-card-bg2: var(--color-surface-2);
+    --color-store-acce-store-item-card-bg2: var(--color-accent);
     --color-store-acce-store-item-card-owned-bg: var(--color-success-text);
     --color-store-acce-store-item-card-owned-border: var(--color-success-text);
     --color-store-acce-store-item-card-locked-bg1: var(--color-surface-2);
@@ -168,12 +176,36 @@ html[data-theme="dark"] {
 
     /* store-coins.css */
     --color-store-coins-back-btn-bg: var(--color-surface);
-    --color-store-coins-back-btn: var(--color-text);
+    --color-store-coins-back-btn: var(--color-border);
     --color-store-coins-display: var(--color-accent-strong);
     --color-store-coins-white: var(--color-surface);
-    --color-store-coins-black: var(--color-text);
+    --color-store-coins-black: var(--color-border);
     --color-shop-bg: #2a2b32;
     --color-tier-border: rgba(232, 230, 227, 0.15);
+
+    /* community.css */
+    --color-comm-main-comm-menu-btn-bg1: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg2: var(--color-surface-3);
+    --color-comm-main-comm-menu-btn-bg3: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg4: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg5: var(--color-accent);
+    --color-comm-main-comm-menu-btn: var(--color-text);
+    --color-comm-main-black: var(--color-surface);
+    --color-friends-empty-bg1: var(--color-text-muted);
+    --color-friends-empty-bg2: var(--color-surface-3);
+    --color-friends-request-bg1: var(--color-text-muted);
+    --color-friends-request-bg2: var(--color-text-muted);
+
+    /* menu-nav.css */
+    --color-menu-preview-bg: var(--color-bg);
+    --color-nav-drawer-bg: var(--color-surface);
+    --color-nav-black: var(--color-border);
+    --color-nav-menu-btn-bg: var(--color-surface-3);
+    --color-nav-menu-btn-bg2: var(--color-accent); 
+    --color-nav-close-btn-bg: var(--color-surface-3); 
+    --color-nav-menu-btn-active: var(--color-accent);
+    --color-nav-menu-btn-active-after: var(--color-accent);
+    --color-nav-white: var(--color-text);
 }
   
 html[data-theme="dark"] body {
@@ -181,27 +213,23 @@ html[data-theme="dark"] body {
     color: var(--color-text) !important;
 }
 
-/* apply to all screens */
+/* Apply theme to all screens */
 html[data-theme="dark"] .home-card,
 html[data-theme="dark"] .settings-card,
-html[data-theme="dark"] .community-card,
 html[data-theme="dark"] .activity-card,
 html[data-theme="dark"] .playground-card,
-html[data-theme="dark"] .pets-card,
 html[data-theme="dark"] .notifications-card,
 html[data-theme="dark"] .color-card,
 html[data-theme="dark"] .account-card,
 html[data-theme="dark"] .theme-card,
-html[data-theme="dark"] .store-card {
+html[data-theme="dark"] .store-card 
+html[data-theme="dark"] .nav-drawer {
     --screen-banner-bg: var(--color-surface-2);
     background: var(--color-surface) !important;
     box-shadow: var(--shadow-card);
 }
 
-/* theme settings -- fix later */
-html[data-theme="dark"] .theme-option-text, 
-html[data-theme="dark"] .theme-option1,
-html[data-theme="dark"] .theme-option2,
-html[data-theme="dark"] .theme-option3 {
-    color: black !important;
+html[data-theme="dark"] .community-card,
+html[data-theme="dark"] .pets-card {
+    --screen-banner-bg: var(--color-surface-2);
 }
