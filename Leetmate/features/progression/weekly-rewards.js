@@ -85,6 +85,22 @@ function addDay(dateKey, dayDelta) {
   return toDateKey(shifted);
 }
 
+function hasSevenDayStreakEndingOn(dateKey, progressDateSet) {
+  if (!dateKey || !(progressDateSet instanceof Set) || progressDateSet.size === 0) {
+    return false;
+  }
+  if (!progressDateSet.has(dateKey)) return false;
+
+  for (let offset = 1; offset < WEEKLY_STREAK_DAYS; offset += 1) {
+    const previousDayKey = addDay(dateKey, -offset);
+    if (!previousDayKey || !progressDateSet.has(previousDayKey)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function buildWeeklyRewardMilestones(progressDateSet) {
   if (!progressDateSet || !(progressDateSet instanceof Set) || progressDateSet.size === 0) {
     return new Set();
@@ -93,22 +109,10 @@ function buildWeeklyRewardMilestones(progressDateSet) {
   const sortedProgressKeys = sortDateKeys(progressDateSet);
   const milestoneSet = new Set();
 
-  let previousKey = null;
-  let streakLength = 0;
-
   for (const dateKey of sortedProgressKeys) {
-    if (!previousKey) {
-      streakLength = 1;
-    } else {
-      const expectedNext = addDay(previousKey, 1);
-      streakLength = expectedNext === dateKey ? streakLength + 1 : 1;
-    }
-
-    if (streakLength % WEEKLY_STREAK_DAYS === 0) {
+    if (hasSevenDayStreakEndingOn(dateKey, progressDateSet)) {
       milestoneSet.add(dateKey);
     }
-
-    previousKey = dateKey;
   }
 
   return milestoneSet;

@@ -113,10 +113,43 @@
     cell.appendChild(giftButton);
   }
 
+  function getAutoGiftDaysFromProgress(progressDays) {
+    const normalizedDays = Array.from(
+      new Set(
+        (progressDays || [])
+          .map((day) => Number(day))
+          .filter((day) => Number.isInteger(day) && day > 0)
+      )
+    ).sort((a, b) => a - b);
+
+    const giftDays = [];
+    let previousDay = null;
+    let streakLength = 0;
+
+    normalizedDays.forEach((day) => {
+      if (previousDay !== null && day === previousDay + 1) {
+        streakLength += 1;
+      } else {
+        streakLength = 1;
+      }
+
+      if (streakLength % 7 === 0) {
+        giftDays.push(day);
+      }
+
+      previousDay = day;
+    });
+
+    return giftDays;
+  }
+
   function applyVisualDemo({ progressDays, freezeDays, giftDays }) {
     const progressSet = new Set(progressDays || []);
     const freezeSet = new Set(freezeDays || []);
-    const giftSet = new Set(giftDays || []);
+    const giftSourceDays = Array.isArray(giftDays)
+      ? giftDays
+      : getAutoGiftDaysFromProgress(progressDays);
+    const giftSet = new Set(giftSourceDays);
 
     getVisibleCalendarCells().forEach((cell) => {
       const day = getDayNumberFromCell(cell);
@@ -260,18 +293,22 @@
       custom({
         progressDays = pickDayNumbersNearEnd(10),
         freezeDays = pickDayNumbersNearEnd(3),
-        giftDays = pickDayNumbersNearEnd(1),
+        giftDays,
       } = {}) {
         if (!domPreviewSnapshot) saveDomPreviewSnapshot();
 
+        const resolvedGiftDays = Array.isArray(giftDays)
+          ? giftDays
+          : getAutoGiftDaysFromProgress(progressDays);
+
         clearAllVisualMarkers();
-        applyVisualDemo({ progressDays, freezeDays, giftDays });
+        applyVisualDemo({ progressDays, freezeDays, giftDays: resolvedGiftDays });
 
         const summary = getCalendarSummary();
         console.log("Preview demo applied (visual-only):", {
           progressDays,
           freezeDays,
-          giftDays,
+          giftDays: resolvedGiftDays,
           summary,
         });
         return summary;
