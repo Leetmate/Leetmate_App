@@ -41,7 +41,7 @@
   // Clamp heart value into whole 1-5 range 
   function clampThreshold(value) {
     const rounded = Math.round(Number(value) * 2) / 2;
-    return Math.max(0.5, Math.min(5, rounded));
+    return Math.max(1, Math.min(5, rounded));
   }
 
   // Time input (hour) validation
