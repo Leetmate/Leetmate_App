@@ -179,17 +179,23 @@ body {
   overflow: hidden;
 }
 
+/* Spritesheets: use background + 700% width (same idea as friend list cards) */
+.friend-profile-avatar-sprite {
+  width: 112px;
+  height: 112px;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-size: 700% auto;
+  background-position: 0% 0%;
+  image-rendering: pixelated;
+}
+
 .friend-profile-avatar-img {
   width: 112px;
   height: 112px;
   object-fit: cover;
   object-position: 0 0;
   image-rendering: pixelated;
-  will-change: transform;
-}
-
-.friend-profile-avatar-img.is-sprite {
-  clip-path: inset(0 85% 0 0);
 }
 
 .friend-profile-avatar-img.is-egg {
@@ -197,77 +203,6 @@ body {
   height: 98px;
   object-fit: contain;
   image-rendering: pixelated;
-  transform-origin: center bottom;
-}
-
-/* Pet motion: bob + light sprite-frame swap (adult/baby); egg matches home screen */
-.friend-profile-avatar-img.is-sprite.friend-profile-avatar-img--animate {
-  animation:
-    friend-profile-pet-bob 2.4s ease-in-out infinite,
-    friend-profile-sprite-idle 0.85s ease-in-out infinite;
-}
-
-.friend-profile-avatar-img.is-egg.friend-profile-avatar-img--animate {
-  animation: home-egg-idle 6s ease-in-out infinite;
-}
-
-@keyframes friend-profile-pet-bob {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-
-  45% {
-    transform: translateY(-7px) scale(1.02);
-  }
-
-  55% {
-    transform: translateY(-5px) scale(1.02);
-  }
-}
-
-@keyframes friend-profile-sprite-idle {
-  0%,
-  100% {
-    object-position: 0% 0%;
-  }
-
-  50% {
-    object-position: 16.666% 0%;
-  }
-}
-
-/* Same keyframes as screens/home/home.css `.home-hero-egg` */
-@keyframes home-egg-idle {
-
-  0%,
-  100%,
-  15%,
-  100% {
-    transform: rotate(0deg) translateY(0);
-  }
-
-  3% {
-    transform: rotate(-6deg) translateY(-1px);
-  }
-
-  6% {
-    transform: rotate(6deg) translateY(-1px);
-  }
-
-  9% {
-    transform: rotate(-3deg) translateY(-2px);
-  }
-
-  12% {
-    transform: rotate(3deg) translateY(-2px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .friend-profile-avatar-img.friend-profile-avatar-img--animate {
-    animation: none !important;
-  }
 }
 
 .friend-stats-grid {
