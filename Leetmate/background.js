@@ -138,10 +138,13 @@ importScripts(
 	})
 
 	//------------------------Notifications-------------------------
+	//variables for timers
 	let time = 0;
 	let countdown = null;
 	let customTime = 0;
 	let remainingTime = 0;
+	let timerType = "time";
+
 	function startNotifTimer(seconds) {
 		console.log("Starting Timer!");
 
