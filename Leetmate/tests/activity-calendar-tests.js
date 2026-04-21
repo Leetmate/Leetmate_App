@@ -28,6 +28,16 @@
     return Number.isInteger(value) ? value : null;
   }
 
+  function getDateKeyFromCell(cell) {
+    const ariaLabel = cell?.getAttribute("aria-label");
+    if (!ariaLabel) return null;
+    const parsed = new Date(ariaLabel);
+    if (Number.isNaN(parsed.getTime())) return null;
+    return parsed.toLocaleDateString("en-CA", {
+      timeZone: "America/Los_Angeles",
+    });
+  }
+
   function getCalendarSummary() {
     const cells = getVisibleCalendarCells();
     return {
@@ -92,9 +102,56 @@
     giftButton.className = "calendar-weekly-gift-btn";
     giftButton.setAttribute("aria-label", "Demo weekly reward gift");
     giftButton.textContent = "🎁";
-    giftButton.addEventListener("click", () => {
+    giftButton.addEventListener("click", async () => {
       giftButton.disabled = true;
       giftButton.textContent = "✓";
+
+      try {
+        const dateKey = getDateKeyFromCell(cell);
+        const rewardAmounts =
+          typeof window.getWeeklyRewardAmounts === "function"
+            ? window.getWeeklyRewardAmounts()
+            : { coinReward: 100, xpReward: 30 };
+        const coinReward = Number(rewardAmounts?.coinReward) || 0;
+        const xpReward = Number(rewardAmounts?.xpReward) || 0;
+
+        const { db, uid } = await getAuthCtx();
+
+        if (dateKey) {
+          await db
+            .collection("users")
+            .doc(uid)
+            .set(
+              {
+                weeklyRewardClaimedDateKeys: firebase.firestore.FieldValue.arrayUnion(dateKey),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              },
+              { merge: true }
+            );
+        }
+
+        if (typeof window.addCoins === "function") {
+          await window.addCoins(coinReward);
+        }
+        if (typeof window.addXP === "function") {
+          await window.addXP(xpReward);
+        }
+        if (typeof window.saveCoinsToFirestore === "function") {
+          await window.saveCoinsToFirestore(db, uid);
+        }
+        if (typeof window.saveXPToFirestore === "function") {
+          await window.saveXPToFirestore(db, uid);
+        }
+        if (typeof window.updateCoinsUI === "function") {
+          await window.updateCoinsUI();
+        }
+        if (typeof window.updateXPSectionUI === "function") {
+          await window.updateXPSectionUI();
+        }
+      } catch (error) {
+        console.warn("Demo weekly claim failed to write Firestore state:", error);
+      }
+
       if (typeof window.showWeeklyRewardBanner === "function") {
         const rewardAmounts =
           typeof window.getWeeklyRewardAmounts === "function"

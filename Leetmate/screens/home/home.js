@@ -191,6 +191,7 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
   const streakData = await loadStreakData(db, uid);
   if (!streakData) return;
   const today = getTodayString();
+  const { leetmate_last_progress_date } = await storageGet(["leetmate_last_progress_date"]);
 
   // If the background daily check already ran, it would have written the new
   // streak values to chrome storage with leetmate_last_streak_date === today.
@@ -231,6 +232,21 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
   // Already updated today — just show current streak
   if (isStreakUpdatedToday(streakData)) {
     updateStreakUI(streakData);
+    return;
+  }
+
+  // Catch-up path: if yesterday (or earlier) was missed and background alarm did not run,
+  // apply the missed-day update once when Home opens.
+  const missedDayWithoutProgress =
+    !solvedToday &&
+    typeof leetmate_last_progress_date === "string" &&
+    leetmate_last_progress_date < today;
+
+  if (missedDayWithoutProgress) {
+    const updated = processMissedDay(streakData);
+    updated.streakLastUpdated = today;
+    await saveStreakData(db, uid, updated);
+    updateStreakUI(updated);
     return;
   }
 

@@ -118,6 +118,46 @@ function buildWeeklyRewardMilestones(progressDateSet) {
   return milestoneSet;
 }
 
+function getCurrentStreakLength(progressDateSet) {
+  if (!progressDateSet || !(progressDateSet instanceof Set) || progressDateSet.size === 0) {
+    return 0;
+  }
+
+  const sortedProgressKeys = sortDateKeys(progressDateSet);
+  const latestDateKey = sortedProgressKeys[sortedProgressKeys.length - 1];
+  if (!latestDateKey) return 0;
+
+  let streakLength = 0;
+  let cursorKey = latestDateKey;
+  while (cursorKey && progressDateSet.has(cursorKey)) {
+    streakLength += 1;
+    cursorKey = addDay(cursorKey, -1);
+  }
+
+  return streakLength;
+}
+
+function buildWeeklyRewardPreviewDateSet(progressDateSet) {
+  const streakLength = getCurrentStreakLength(progressDateSet);
+  if (streakLength <= 0) return new Set();
+
+  const sortedProgressKeys = sortDateKeys(progressDateSet);
+  const latestDateKey = sortedProgressKeys[sortedProgressKeys.length - 1];
+  if (!latestDateKey) return new Set();
+
+  const progressIntoCycle = streakLength % WEEKLY_STREAK_DAYS;
+  const daysUntilNextReward =
+    progressIntoCycle === 0
+      ? WEEKLY_STREAK_DAYS
+      : WEEKLY_STREAK_DAYS - progressIntoCycle;
+
+  const previewDateSet = new Set();
+  const previewDateKey = addDay(latestDateKey, daysUntilNextReward);
+  if (previewDateKey) previewDateSet.add(previewDateKey);
+
+  return previewDateSet;
+}
+
 async function loadWeeklyClaimedDateSet(db, uid) {
   if (!db || !uid) return new Set();
 
@@ -139,6 +179,7 @@ async function loadWeeklyClaimedDateSet(db, uid) {
 async function getWeeklyRewardsState(db, uid, progressDateSet) {
   const milestones = buildWeeklyRewardMilestones(progressDateSet);
   const claimedDateSet = await loadWeeklyClaimedDateSet(db, uid);
+  const previewDateSet = buildWeeklyRewardPreviewDateSet(progressDateSet);
 
   const claimableDateSet = new Set(
     [...milestones].filter((dateKey) => !claimedDateSet.has(dateKey))
@@ -148,6 +189,7 @@ async function getWeeklyRewardsState(db, uid, progressDateSet) {
     milestones,
     claimedDateSet,
     claimableDateSet,
+    previewDateSet,
     claimableCount: claimableDateSet.size,
   };
 }
@@ -233,24 +275,36 @@ async function claimWeeklyReward(db, uid, dateKey, state) {
 
 function attachWeeklyRewardGift(dayCell, dateKey, weeklyState, onClaim) {
   if (!dayCell || !weeklyState || !(weeklyState.claimableDateSet instanceof Set)) return;
-  if (!weeklyState.claimableDateSet.has(dateKey)) return;
+  const hasClaimableGift = weeklyState.claimableDateSet.has(dateKey);
+  const hasPreviewGift =
+    weeklyState.previewDateSet instanceof Set && weeklyState.previewDateSet.has(dateKey);
+  if (!hasClaimableGift && !hasPreviewGift) return;
 
   dayCell.classList.add("has-weekly-gift");
+  if (hasPreviewGift && !hasClaimableGift) {
+    dayCell.classList.add("is-reward-preview");
+  }
 
   const giftButton = document.createElement("button");
   giftButton.type = "button";
   giftButton.className = "calendar-weekly-gift-btn";
-  giftButton.setAttribute("aria-label", "Claim weekly streak reward");
   giftButton.textContent = "🎁";
 
-  giftButton.addEventListener("click", async (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    if (_weeklyClaimInFlight) return;
+  if (hasClaimableGift) {
+    giftButton.setAttribute("aria-label", "Claim weekly streak reward");
+    giftButton.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      if (_weeklyClaimInFlight) return;
 
+      giftButton.disabled = true;
+      await onClaim(dateKey);
+    });
+  } else {
+    giftButton.classList.add("is-locked");
     giftButton.disabled = true;
-    await onClaim(dateKey);
-  });
+    giftButton.setAttribute("aria-label", "Weekly streak reward locked");
+  }
 
   dayCell.appendChild(giftButton);
 }

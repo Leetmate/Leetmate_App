@@ -11,6 +11,10 @@ body {
     sans-serif;
 }
 
+body.hidden-on-load .popup-layout {
+  visibility: hidden;
+}
+
 /* ACTIVITY CONTAINER */
 .activity-card {
   --screen-banner-bg: #d6d0c5;
@@ -278,9 +282,15 @@ body {
   cursor: not-allowed;
 }
 
+.calendar-weekly-gift-btn.is-locked {
+  background: #e6e1d3;
+  border-color: #7b766b;
+  opacity: 0.65;
+}
+
 .calendar-day.is-reward-preview {
-  background: linear-gradient(180deg, #f7e7b6 0%, #e7c66e 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  background: transparent;
+  box-shadow: none;
 }
 
 .weekly-reward-banner {

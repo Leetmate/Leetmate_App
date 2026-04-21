@@ -6,10 +6,19 @@
     <title>Leetmate - Activity</title>
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
+    <link rel="stylesheet" href="../../styles/loading.css" />
     <link rel="stylesheet" href="activity.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
   </head>
-  <body>
+  <body class="hidden-on-load">
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <p class="loading-text" id="loading-text">Loading activity...</p>
+    </div>
     <div class="popup-layout">
       <div class="popup-content">
         <div class="activity-card">

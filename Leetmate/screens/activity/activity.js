@@ -8,6 +8,19 @@
   const nextBtn = document.getElementById("calendarNext");
   const streakCountEl = document.querySelector(".activity-streak-count");
 
+  function setActivityLoading(isLoading, text) {
+    const overlay = document.getElementById("loading-overlay");
+    const label = document.getElementById("loading-text");
+    if (!overlay) return;
+
+    if (label && text) {
+      label.textContent = text;
+    }
+
+    overlay.classList.toggle("hidden", !isLoading);
+    document.body.classList.toggle("hidden-on-load", isLoading);
+  }
+
   const monthFormatter = new Intl.DateTimeFormat("en-US", {
     month: "long",
     year: "numeric",
@@ -392,7 +405,14 @@
     await loadStreakCount();
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    initActivityCalendar();
+  document.addEventListener("DOMContentLoaded", async () => {
+    setActivityLoading(true, "Loading activity...");
+    try {
+      await initActivityCalendar();
+    } catch (error) {
+      console.error("Activity failed to finish loading:", error);
+    } finally {
+      setActivityLoading(false);
+    }
   });
 })();

@@ -242,6 +242,20 @@ function isStreakUpdatedToday(streakData) {
   return streakData.streakLastUpdated === today;
 }
 
+function isDailyStreakCheckTime() {
+  const timeParts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles",
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+  }).formatToParts(new Date());
+
+  const hour = Number(timeParts.find((part) => part.type === "hour")?.value);
+  const minute = Number(timeParts.find((part) => part.type === "minute")?.value);
+
+  return hour === 23 && minute === 59;
+}
+
 async function runDailyStreakCheck() {
   try {
     const { uid } = await storageGet("uid");
@@ -251,22 +265,32 @@ async function runDailyStreakCheck() {
     }
 
     const today = getTodayString();
-
-    // Check if user solved today
-    const { leetmate_last_progress_date } = await storageGet("leetmate_last_progress_date");
+    const { leetmate_last_streak_date, leetmate_last_progress_date } = await storageGet([
+      "leetmate_last_streak_date",
+      "leetmate_last_progress_date",
+    ]);
+    const streakUpdatedToday = leetmate_last_streak_date === today;
     const solvedToday = leetmate_last_progress_date === today;
 
-    // Solved today → home.js already handled the increment, do nothing
+    if (streakUpdatedToday) {
+      console.log("Daily streak check skipped: streak already updated today.");
+      return;
+    }
+
+    if (!isDailyStreakCheckTime()) {
+      console.log("Daily streak check skipped: not 11:59 PM yet.");
+      return;
+    }
+
     if (solvedToday) {
-      console.log("User solved today, streak already handled by home.js.");
+      console.log("Daily streak check skipped: progress already made today.");
       return;
     }
 
     // Didn't solve today → reset streak to 0
-    const { leetmate_streak, leetmate_last_streak_date, leetmate_streak_freeze_start, leetmate_streak_freeze_end }
+    const { leetmate_streak, leetmate_streak_freeze_start, leetmate_streak_freeze_end }
       = await storageGet([
           "leetmate_streak",
-          "leetmate_last_streak_date",
           "leetmate_streak_freeze_start",
           "leetmate_streak_freeze_end"
         ]);
