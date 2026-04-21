@@ -96,7 +96,18 @@
       giftButton.disabled = true;
       giftButton.textContent = "✓";
       if (typeof window.showWeeklyRewardBanner === "function") {
-        window.showWeeklyRewardBanner("Demo weekly reward: +50 coins, +10 XP");
+        const rewardAmounts =
+          typeof window.getWeeklyRewardAmounts === "function"
+            ? window.getWeeklyRewardAmounts()
+            : { coinReward: 100, xpReward: 30 };
+        const bannerMessage =
+          typeof window.formatWeeklyRewardBannerMessage === "function"
+            ? window.formatWeeklyRewardBannerMessage(
+                rewardAmounts.coinReward,
+                rewardAmounts.xpReward
+              )
+            : `Weekly reward claimed: +${rewardAmounts.coinReward} coins, +${rewardAmounts.xpReward} XP`;
+        window.showWeeklyRewardBanner(bannerMessage);
       }
     });
     cell.appendChild(giftButton);
@@ -246,7 +257,7 @@
     },
 
     preview: {
-      start({
+      custom({
         progressDays = pickDayNumbersNearEnd(10),
         freezeDays = pickDayNumbersNearEnd(3),
         giftDays = pickDayNumbersNearEnd(1),
@@ -267,7 +278,7 @@
       },
 
       quick(options = {}) {
-        return this.start(options);
+        return this.custom(options);
       },
 
       stop() {

@@ -8,10 +8,31 @@ const WEEKLY_STREAK_XP_REWARD = 30;
 let _weeklyClaimInFlight = false;
 let _weeklyBannerTimer = null;
 
+function getWeeklyRewardAmounts() {
+  return {
+    coinReward: WEEKLY_STREAK_COIN_REWARD,
+    xpReward: WEEKLY_STREAK_XP_REWARD,
+  };
+}
+
+function formatWeeklyRewardBannerMessage(coinReward, xpReward) {
+  const safeCoinReward = Number.isFinite(coinReward)
+    ? Math.max(0, Math.floor(coinReward))
+    : WEEKLY_STREAK_COIN_REWARD;
+  const safeXpReward = Number.isFinite(xpReward)
+    ? Math.max(0, Math.floor(xpReward))
+    : WEEKLY_STREAK_XP_REWARD;
+
+  return `Weekly reward claimed: +${safeCoinReward} coins, +${safeXpReward} XP`;
+}
+
 function showWeeklyRewardBanner(message) {
   const bannerMessage =
     message ||
-    `Weekly reward claimed: +${WEEKLY_STREAK_COIN_REWARD} coins, +${WEEKLY_STREAK_XP_REWARD} XP`;
+    formatWeeklyRewardBannerMessage(
+      WEEKLY_STREAK_COIN_REWARD,
+      WEEKLY_STREAK_XP_REWARD
+    );
 
   let bannerEl = document.getElementById("weeklyRewardBanner");
 
@@ -188,7 +209,12 @@ async function claimWeeklyReward(db, uid, dateKey, state) {
     const nextClaimable = new Set(state.claimableDateSet);
     nextClaimable.delete(dateKey);
 
-    showWeeklyRewardBanner();
+    showWeeklyRewardBanner(
+      formatWeeklyRewardBannerMessage(
+        WEEKLY_STREAK_COIN_REWARD,
+        WEEKLY_STREAK_XP_REWARD
+      )
+    );
 
     return {
       ...state,
