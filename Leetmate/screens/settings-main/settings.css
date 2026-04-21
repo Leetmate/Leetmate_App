@@ -3,23 +3,16 @@
 
 :root{
   --color-set-main-set-card: #EEEAE1;
-  --color-set-main-set-easy-sec-bg1: #FFF9E8;
-  --color-set-main-set-easy-sec-bg2: #FFE8B8;
-  --color-set-main-set-easy-sec-bg3: #FFF4DC;
-  --color-set-main-set-easy-sec-checked-bg1: #E9F7E4;
-  --color-set-main-set-easy-sec-checked-bg2: #DFF3D8;
-  --color-set-main-set-easy-info-btn: #5C4327;
-  --color-set-main-set-easy-icon-wrap-bg1: #C8EEA8;
-  --color-set-main-set-easy-icon-wrap-bg2: #7BC96F;
-  --color-set-main-set-easy-icon-wrap-bg3: #5CB85C;
-  --color-set-main-set-tog-slider: #DBC399;
   --color-set-main-set-vol-slider: #CEB68D;
   --color-set-main-set-btn-primary-bg: #D0B27A;
   --color-set-main-set-btn-danger: #E57373;
   --color-set-main-set-btn-secondary: #FFE7B9;
   --color-set-main-set-modal-panel: #FDF5E6;
   --color-set-main-white: #FFF;
-}
+  --color-set-easy-icon-bg1: #C8EEA8;
+  --color-set-easy-icon-bg2: #7BC96F;
+  --color-set-easy-icon-bg3: #5CB85C;
+}  
 
 body {
   font-family:
@@ -113,14 +106,15 @@ body {
 
 .settings-easy-section {
   padding: 18px 16px;
-  background: linear-gradient(135deg, var(--color-set-main-set-easy-sec-bg1) 0%, var(--color-set-main-set-easy-sec-bg2) 42%, var(--color-set-main-set-easy-sec-bg3) 100%);
+  background: linear-gradient(135deg, var(--color-set-toggle-banner-bg1) 0%, var(--color-set-toggle-banner-bg2) 42%, var(--color-set-toggle-banner-bg1) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.75),
+
     0 3px 10px rgba(255, 170, 80, 0.18);
 }
 
 .settings-easy-section:has(#easy-mode-toggle:checked) {
-  background: linear-gradient(135deg, var(--color-set-main-set-easy-sec-checked-bg1) 0%, var(--color-set-main-set-easy-sec-checked-bg2) 45%, var(--color-set-main-set-easy-sec-bg1) 100%);
+  background: linear-gradient(135deg, var(--color-set-toggle-banner-checked-bg1) 0%, var(--color-set-toggle-banner-checked-bg2) 45%, var(--color-set-toggle-banner-bg1) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
     0 3px 12px rgba(123, 201, 111, 0.28);
@@ -175,7 +169,7 @@ body {
 }
 
 .settings-easy-info-btn:focus-visible {
-  outline: 2px solid var(--color-set-main-set-easy-info-btn);
+  outline: 2px solid var(--color-set-toggle-info-btn);
   outline-offset: 2px;
 }
 
@@ -191,7 +185,7 @@ body {
   width: 30px;
   height: 30px;
   border-radius: 999px;
-  background: linear-gradient(165deg, var(--color-set-main-set-easy-icon-wrap-bg1) 0%, var(--color-set-main-set-easy-icon-wrap-bg2) 55%, var(--color-set-main-set-easy-icon-wrap-bg3) 100%);
+  background: linear-gradient(165deg, var(--color-set-easy-icon-bg1) 0%, var(--color-set-easy-icon-bg2) 55%, var(--color-set-easy-icon-bg3) 100%);
   border: 2px solid var(--color-border);
   display: flex;
   align-items: center;
@@ -236,7 +230,7 @@ body {
   inset: 0;
   border-radius: 999px;
   border: 3px solid var(--color-border);
-  background: var(--color-set-main-set-tog-slider);
+  background: var(--color-set-toggle-slider);
   transition: background 0.2s ease;
 }
 
@@ -254,7 +248,7 @@ body {
 }
 
 .settings-toggle-input:checked + .settings-toggle-slider {
-  background: var(--color-set-main-set-easy-icon-wrap-bg2);
+  background: var(--color-set-toggle-icon-bg2);
 }
 
 .settings-toggle-input:checked + .settings-toggle-slider::before {
@@ -262,7 +256,7 @@ body {
 }
 
 .settings-toggle-input:focus-visible + .settings-toggle-slider {
-  outline: 2px solid var(--color-set-main-set-easy-info-btn);
+  outline: 2px solid var(--color-set-toggle-info-btn);
   outline-offset: 2px;
 }
 
@@ -300,7 +294,7 @@ body {
 }
 
 .settings-volume-mute:focus-visible {
-  outline: 2px solid var(--color-set-main-set-easy-info-btn);
+  outline: 2px solid var(--color-set-toggle-info-btn);
   outline-offset: 2px;
 }
 
@@ -367,7 +361,7 @@ body {
 
 .settings-volume-slider::-moz-range-track {
   height: 8px;
-  background: var(--color-set-main-set-tog-slider);
+  background: var(--color-set-toggle-slider);
   border-radius: 999px;
 }
 
@@ -492,7 +486,7 @@ body {
 }
 
 .settings-modal__close:focus-visible {
-  outline: 2px solid var(--color-set-main-set-easy-info-btn);
+  outline: 2px solid var(--color-set-toggle-info-btn);
   outline-offset: 2px;
 }
 
@@ -535,5 +529,5 @@ body {
 .settings-modal__foot {
   margin-bottom: 0 !important;
   font-weight: 600;
-  color: var(--color-set-main-set-easy-info-btn);
+  color: var(--color-set-toggle-info-btn);
 }

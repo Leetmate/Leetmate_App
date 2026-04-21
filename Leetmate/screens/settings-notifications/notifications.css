@@ -1,75 +1,500 @@
-/* Notification Screen Layout */
+/* Notification Settings Screen Layout */
+
+@import url("../../styles/layout.css");
 
 :root{
-  --color-set-notif-body-bg: #F4E0C6;
-  --color-set-notif-body: #3B2B1A;
-  --color-set-notif-card-bg: #FDF5E6;
+    --notif-surface: #e9e0cf;
+    --notif-surface-alt: #d8cfbf;
+    --color-set-reminder-icon-bg1: #fff0cc;
+    --color-set-reminder-icon-bg2: #e8c670;
+    --color-set-reminder-icon-bg3: #d8b04a;
 }
 
 body {
-  font-family:
+    font-family:
     system-ui,
     -apple-system,
     "Segoe UI",
     Roboto,
     Arial,
     sans-serif;
-  font-size: 14px;
-  background: var(--color-set-notif-body-bg); /* Warm background matching signin */
-  color: var(--color-set-notif-body);      /* Dark brown text for better contrast */
+    font-size: 14px;
+    background: var(--color-bg);
+    color: var(--color-text);
 }
 
 .popup-layout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .popup-content {
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
 }
 
 .notifications-card {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0;
-  background: var(--color-set-notif-card-bg); /* Soft cream card color from signin */
-  border: 4px solid var(--color-set-notif-body); /* Dark brown border */
-  border-radius: 28px;
-  padding: 14px 16px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  box-sizing: border-box;
-  flex: 1;
-  box-shadow: 0 8px 16px rgba(59, 43, 26, 0.15); /* Soft shadow */
-  position: relative; /* For absolutely positioned nav menu trigger if needed */
-}
-
-.notifications-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 4px;
+    --screen-banner-bg: var(--color-header-bg);
+    --screen-banner-offset-top: 24px;
+    --screen-banner-offset-x: 20px;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0;
+    background: var(--color-surface);
+    padding: 24px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+    flex: 1;
+    box-shadow: var(--shadow-card);
+    position: relative; /* For absolutely positioned nav menu trigger if needed */
+    overflow: hidden;
 }
 
 .notifications-title-main {
-  margin: 0;
-  text-align: center;
-  font-size: 24px;
-  font-weight: 900;
-  line-height: 1;
-  color: var(--color-set-notif-body);
+    font-size: 32px;
+}
+  
+.settings-reminder-section {
+  padding: 18px 16px;
+  background: linear-gradient(135deg, var(--color-set-toggle-banner-bg1) 0%, var(--color-set-toggle-banner-bg2) 42%, var(--color-set-toggle-banner-bg1) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 3px 10px rgba(255, 170, 80, 0.18);
+  border: 3px solid #000;
+  border-radius: 14px;
 }
 
-.notifications-content {
+.settings-reminder-section:has(#reminder-mode-toggle:checked) {
+  background: linear-gradient(135deg, var(--color-set-toggle-banner-checked-bg1) 0%, var(--color-set-toggle-banner-checked-bg2) 45%, var(--color-set-toggle-banner-bg1) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 3px 12px rgba(123, 201, 111, 0.28);
+}
+
+.settings-reminder-row {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings-reminder-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 0 1 auto;
+  cursor: pointer;
+}
+
+.settings-reminder-leading {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  min-width: 0;
   flex: 1;
+}
+
+.settings-reminder-info-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.settings-reminder-info-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.settings-reminder-info-btn:active {
+  transform: scale(0.94);
+}
+
+.settings-reminder-info-btn:focus-visible {
+  outline: 2px solid var(--color-set-toggle-info-btn);
+  outline-offset: 2px;
+}
+
+.settings-reminder-info-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.settings-reminder-icon-wrap {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: linear-gradient(165deg, var(--color-set-reminder-icon-bg1) 0%, var(--color-set-reminder-icon-bg2) 55%, var(--color-set-reminder-icon-bg3) 100%);
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 0 rgba(59, 43, 26, 0.2);
+  box-sizing: border-box;
+}
+
+.settings-reminder-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+.settings-reminder-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+  min-width: 0;
+}
+
+.settings-toggle-wrap {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.settings-toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-toggle-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 3px solid var(--color-border);
+  background: var(--color-set-toggle-slider);
+  transition: background 0.2s ease;
+}
+
+.settings-toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 4px;
+  top: 3px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  transition: transform 0.2s ease;
+}
+
+.settings-toggle-input:checked + .settings-toggle-slider {
+  background: var(--color-set-toggle-icon-bg2);
+}
+
+.settings-toggle-input:checked + .settings-toggle-slider::before {
+  transform: translateX(21px);
+}
+
+.settings-toggle-input:focus-visible + .settings-toggle-slider {
+  outline: 2px solid var(--color-set-toggle-info-btn);
+  outline-offset: 2px;
+}
+
+
+.mode-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--notif-surface);
+    border: 5px solid var(--color-border);
+    border-radius: 22px;
+    overflow: hidden;
+    min-height: 50px;
+}
+
+.mode-tab {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    border-right: 3px solid rgba(0, 0, 0, 0.45);
+}
+
+.mode-tab:last-child {
+    border-right: none;
+}
+
+.mode-tab.is-active {
+    background: var(--notif-surface-alt);
+}
+
+.notifications-panel {
+    display: flex;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.settings-box {
+    width: 100%;
+    background: var(--notif-surface);
+    border: 5px solid var(--color-border);
+    border-radius: 24px;
+    padding: 14px 16px 18px;
+    box-sizing: border-box;
+}
+
+.settings-box-title {
+    text-align: center;
+    font-family: "Lilita One", sans-serif;
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+.time-picker-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.time-input {
+  width: 104px;
+  height: 82px;
+  border: 3px solid rgba(0, 0, 0, 0.55);
+  border-radius: 12px;
+  background: #f7f7f7;
+  font-family: "Lilita One", sans-serif;
+  font-size: 32px;
+  text-align: center;
+  color: var(--notif-border);
+  box-sizing: border-box;
+}
+
+.time-input::placeholder {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.time-input:focus {
+  outline: 2px solid var(--color-set-toggle-info-btn);
+  outline-offset: 2px;
+}
+
+.time-colon {
+    font-family: "Lilita One", sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    margin: 0 2px;
+}
+
+.ampm-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ampm-btn {
+    width: 62px;
+    height: 36px;
+    border: 3px solid rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    background: #ececec;
+    font-family: "Lilita One", sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.ampm-btn.is-active {
+    background: var(--color-set-toggle-slider);
+    color: white;
+}
+
+.health-hearts-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    outline: none;
+}
+
+.selector-hearts-stack {
+    position: relative;
+    width: 220px;
+    height: 44px;
+    margin: 0 auto;
+}
+
+.hearts {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.hearts-icon {
+    width: 36px;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.bottom-hearts,
+.top-hearts {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.bottom-hearts {
+    z-index: 1;
+}
+
+.top-hearts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.hearts-full {
+  overflow: visible;
+  width: auto;
+}
+
+.top-heart {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.top-heart.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hearts-hitbox-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  height: 36px;
+}
+
+.heart-hit {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.heart-hit:hover ~ .hearts-full {
+  filter: brightness(1.1);
+}
+
+.health-value-text {
+    text-align: center;
+    font-family: "Lilita One", sans-serif;
+    font-size: 18px;
+}
+
+.save-row {
+    display: flex;
+    justify-content: center;}
+
+.save-btn {
+    min-width: 170px;
+    height: 73px;
+    border: 5px solid var(--color-border);
+    border-radius: 22px;
+    background: var(--color-set-toggle-slider);
+    color: var(--color-text-soft);
+    font-family: "Lilita One", sans-serif;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.14);
+}
+
+.save-feedback {
+  text-align: center;
+  font-family: "Lilita One", sans-serif;
+  margin-top: -5px;
+  font-size: 20px;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.save-feedback.show {
+  opacity: 0.9;
+  transform: translateY(0);
+}
+
+/* success (default) */
+.save-feedback {
+  color: var(--color-text-soft);
+}
+
+/* error state */
+.save-feedback.error {
+  color: var(--color-error-text);
+}
+
+.save-btn:hover,
+.mode-tab:hover,
+.ampm-btn:hover,
+.toggle-switch:hover {
+    filter: brightness(1.03);
+}
+
+.save-btn:active,
+.mode-tab:active,
+.ampm-btn:active,
+.toggle-switch:active,
+.close-btn:active {
+  transform: scale(0.98);
+}
+
+.notifications-card.reminders-off .mode-tabs,
+.notifications-card.reminders-off .notifications-panel,
+.notifications-card.reminders-off .save-row {
+  filter: blur(2.5px) grayscale(45%) brightness(0.95) opacity(0.65);
+  pointer-events: none;
+  user-select: none;
+}
+
+.notifications-card.reminders-off .mode-tab,
+.notifications-card.reminders-off .ampm-btn,
+.notifications-card.reminders-off .save-row,
+.notifications-card.reminders-off .heart-hit,
+.notifications-card.reminders-off .time-select {
+    pointer-events: none;
+}
+
+.mode-tabs,
+.notifications-panel,
+.save-row {
+    transition: filter 0.2s ease, opacity 0.2s ease;
 }

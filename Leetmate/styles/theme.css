@@ -26,6 +26,13 @@
   --color-white: #ffffff;
   --color-black: #000000;
 
+  --color-set-toggle-banner-bg1: #FFF9E8;
+  --color-set-toggle-banner-bg2: #FFE8B8;
+  --color-set-toggle-banner-checked-bg1: #E9F7E4;
+  --color-set-toggle-banner-checked-bg2: #DFF3D8;
+  --color-set-toggle-info-btn: #5C4327;
+  --color-set-toggle-slider: #DBC399;
+
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-display: "Lilita One", cursive;
   --font-size-xs: 12px;

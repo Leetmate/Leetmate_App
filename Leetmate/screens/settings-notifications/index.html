@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../styles/dark-theme.css" />
     <link rel="stylesheet" href="../../styles/color-theme.css">
     <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="notifications.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
     <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
@@ -16,14 +17,183 @@
     <div class="popup-layout">
       <div class="popup-content">
         <div class="notifications-card">
-          <div class="notifications-header">
-            <h1 class="notifications-title-main">Notifications</h1>
-            <button type="button" class="menu-btn nav-trigger" id="nav-trigger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">☰</button>
+          <div class="screen-banner">
+            <div class="screen-banner__left">
+              <button
+                type="button"
+                class="menu-btn"
+                id="back-btn"
+                aria-label="Back to settings"
+              >
+                <img
+                  src="../../assets/icons/back-arrow.png"
+                  class="menu-icon"
+                  alt=""
+                />
+              </button>
+            </div>
+
+            <div class="screen-banner__center">
+              <h1 class="screen-banner__title notifications-title-main">Notifications</h1>
+            </div>
+
+            <div class="screen-banner__right">
+              <button
+                type="button"
+                class="menu-btn nav-trigger"
+                id="nav-trigger"
+                aria-expanded="false"
+                aria-controls="nav-drawer"
+                aria-label="Open menu"
+              >
+                <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+              </button>
+            </div>
           </div>
-            
-          <div class="notifications-content">
-            
+
+          <div class="settings-section settings-reminder-section">
+            <div class="settings-reminder-row">
+              <span class="settings-reminder-leading">
+                <label class="settings-reminder-label" for="reminder-mode-toggle">
+                  <span class="settings-reminder-icon-wrap" aria-hidden="true">
+                    <img
+                      src="../../assets/icons/bell.png"
+                      class="settings-reminder-icon"
+                      width="16"
+                      height="16"
+                      alt=""
+                    />
+                  </span>
+                  <span class="settings-reminder-title">Reminders</span>
+                </label>
+                <!--  
+                <button
+                  type="button"
+                  class="settings-reminder-info-btn"
+                  id="reminder-mode-info-btn"
+                  aria-label="What does reminder mode do?"
+                >
+                  <img
+                    src="../../assets/icons/info.svg"
+                    class="settings-reminder-info-icon"
+                    width="20"
+                    height="20"
+                    alt=""
+                  />
+                </button>
+                -->
+              </span>
+              <label class="settings-toggle-wrap">
+                <input type="checkbox" id="reminder-mode-toggle" class="settings-toggle-input" />
+                <span class="settings-toggle-slider" aria-hidden="true"></span>
+              </label>
+            </div>
           </div>
+
+          <section class="mode-tabs" aria-label="Notification type">
+            <button
+              type="button"
+              class="mode-tab is-active"
+              data-mode="time"
+              id="time-tab"
+            >
+              Time Based
+            </button>
+            <button
+              type="button"
+              class="mode-tab"
+              data-mode="health"
+              id="health-tab"
+            >
+              Health Based
+            </button>
+          </section>
+
+          <section class="notifications-panel" id="time-panel">
+            <div class="settings-box">
+              <div class="settings-box-title">Set Time Reminder</div>
+
+              <div class="time-picker-row">
+                <input
+                  id="hour-input"
+                  class="time-input"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="2"
+                  placeholder="12"
+                  aria-label="Hour"
+                />
+              
+                <div class="time-colon">:</div>
+              
+                <input
+                  id="minute-input"
+                  class="time-input"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="2"
+                  placeholder="00"
+                  aria-label="Minute"
+                />
+              
+                <div class="ampm-stack" role="group" aria-label="AM or PM">
+                  <button type="button" class="ampm-btn is-active" data-period="AM">AM</button>
+                  <button type="button" class="ampm-btn" data-period="PM">PM</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="notifications-panel hidden" id="health-panel">
+            <div class="settings-box">
+              <div class="settings-box-title">Set Health Reminder</div>
+
+              <div
+                class="health-hearts-picker"
+                id="health-hearts-picker"
+                role="slider"
+                tabindex="0"
+                aria-label="Health reminder threshold"
+                aria-valuemin="0.5"
+                aria-valuemax="5"
+                aria-valuenow="3"
+                aria-valuetext="3 hearts"
+              >
+                <div class="hearts-stack selector-hearts-stack">
+                  <div class="hearts hearts-empty bottom-hearts">
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                  </div>
+
+                  <div class="hearts hearts-full top-hearts" id="health-hearts-fill">
+                    <span class="top-heart"><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span class="top-heart"><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span class="top-heart"><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span class="top-heart"><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span class="top-heart"><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                  </div>
+
+                  <div class="hearts-hitbox-row">
+                    <button type="button" class="heart-hit" data-value="1"></button>
+                    <button type="button" class="heart-hit" data-value="2"></button>
+                    <button type="button" class="heart-hit" data-value="3"></button>
+                    <button type="button" class="heart-hit" data-value="4"></button>
+                    <button type="button" class="heart-hit" data-value="5"></button>
+                  </div>
+                </div>
+
+                <div class="health-value-text" id="health-value-text">Notify me at 3 hearts</div>
+              </div>
+            </div>
+          </section>
+
+          <div class="save-row">
+            <button type="button" class="save-btn" id="save-btn">Save</button>
+          </div>
+          <div id="save-feedback" class="save-feedback"></div>
         </div>
       </div>
     </div>
@@ -36,5 +206,6 @@
     <script src="../../features/progression/streak.js"></script>
     <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/auth-gate.js"></script>  </body>
+    <script src="notifications.js"></script>
   </body>
 </html>

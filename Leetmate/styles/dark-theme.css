@@ -74,7 +74,7 @@ html[data-theme="dark"] {
     --color-pg-main-pg-nav-btn-bg1: var(--color-accent);
     --color-pg-main-pg-nav-btn-bg2: var(--color-surface-3);
     --color-pg-main-pg-nav-label: var(--color-text);
-    --color-nav-btn-border: var(--color-text);
+    --color-nav-btn-border: var(--color-text-muted);
     --color-pg-main-pg-modal-confirm: var(--color-surface-2);
     --color-pg-main-white: var(--color-surface);
     --color-pg-main-black: var(--color-text);
@@ -94,7 +94,6 @@ html[data-theme="dark"] {
     --color-set-acc-btn-outline: var(--color-accent-strong);
     --color-set-acc-username-bg: var(--color-text-soft);
     --color-set-acc-email: var(--color-text-muted);
-    --color-set-acc-accordian-header-bg: var(--color-accent);
     --color-set-acc-input-bg: var(--color-surface);
     --color-set-acc-update-btn: var(--color-success-text);
     --color-set-acc-confirm-delete-btn-bg: var(--color-error-text);
@@ -106,22 +105,31 @@ html[data-theme="dark"] {
     /* settings.css */
     --color-set-main-body: var(--color-text);
     --color-set-main-set-card: var(--color-surface);
-    --color-set-main-set-easy-sec-bg1: var(--color-surface);
-    --color-set-main-set-easy-sec-bg2: var(--color-surface-2);
-    --color-set-main-set-easy-sec-bg3: var(--color-surface-3);
-    --color-set-main-set-easy-sec-checked-bg1: #24382e;
-    --color-set-main-set-easy-sec-checked-bg2: #2f4a3c;
-    --color-set-main-set-easy-info-btn: var(--color-accent-strong);
-    --color-set-main-set-easy-icon-wrap-bg1: var(--color-surface-2);
-    --color-set-main-set-easy-icon-wrap-bg2: var(--color-accent);
-    --color-set-main-set-easy-icon-wrap-bg3: var(--color-accent-strong);
-    --color-set-main-set-tog-slider: var(--color-surface-3);
     --color-set-main-set-vol-slider: var(--color-surface-3);
     --color-set-main-set-btn-primary-bg: var(--color-accent);
     --color-set-main-set-btn-danger: var(--color-error-text);
     --color-set-main-set-btn-secondary: linear-gradient(135deg, var(--color-accent) 0%, var(--color-surface-3) 40%, var(--color-accent) 100%);
     --color-set-main-set-modal-panel: var(--color-surface);
     --color-set-main-white: var(--color-surface);
+
+    /* settings.css & notifications.css for easy mode and reminders */
+    --color-set-toggle-banner-bg1: var(--color-surface);
+    --color-set-toggle-banner-bg2: var(--color-surface-2);
+    --color-set-toggle-banner-bg3: var(--color-surface-3);
+    --color-set-toggle-banner-checked-bg1: #24382e;
+    --color-set-toggle-banner-checked-bg2: #2f4a3c;
+    --color-set-toggle-info-btn: var(--color-accent-strong);
+    --color-set-easy-icon-bg1: var(--color-surface-2);
+    --color-set-easy-icon-bg2: var(--color-accent);
+    --color-set-easy-icon-bg3: var(--color-accent-strong);
+    --color-set-reminder-icon-bg1: var(--color-surface-2);
+    --color-set-reminder-icon-bg2: var(--color-accent);
+    --color-set-reminder-icon-bg3: var(--color-accent-strong);
+    --color-set-toggle-slider: var(--color-surface-3);
+
+    /* notifications.css */ 
+    --notif-surface: var(--color-surface-3);
+    --notif-surface-alt: var(--color-surface);
 
     /* settings-theme.css */
     --color-option-text: var(--color-surface-2);

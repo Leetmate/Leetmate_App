@@ -1,4 +1,4 @@
-/* Settings Screen Layout */
+/* Theme Settings Screen Layout */
 @import url("../../styles/layout.css");
 
 :root {
@@ -238,27 +238,27 @@ button.theme-option-text {
 }
 
 .color-swatch--red {
-    background: linear-gradient(135deg, #ffd9e3 0%, #f6b6c6 45%, #e68aa3 100%);
+    background: #ffd8df;
 }
 
 .color-swatch--orange {
-    background: linear-gradient(135deg, #ffe3c8 0%, #ffc48e 45%, #f2a45d 100%);
+    background: #fec385;
 }
 
 .color-swatch--gold {
-    background: linear-gradient(135deg, #fff2c4 0%, #f6d978 45%, #dca72b 100%);
+    background: #e8c670;
 }
 
 .color-swatch--green {
-    background: linear-gradient(135deg, #dfffe9 0%, #bff5d6 45%, #9be5c0 100%);
+    background: #8ba888;
 }
 
 .color-swatch--blue {
-    background: linear-gradient(135deg, #dff2ff 0%, #bfe4ff 45%, #9fd4ff 100%);
+    background: #829ab1;
 }
 
 .color-swatch--purple {
-    background: linear-gradient(135deg, #e7ddff 0%, #d4c2ff 45%, #c1b0ff 100%);
+    background: #bfadcc;
 }
 
 body.color-theme-modal-open {

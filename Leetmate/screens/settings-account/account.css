@@ -9,7 +9,6 @@
   --color-set-acc-btn-outline: #D0B27A;
   --color-set-acc-username-bg: #FFE7B9;
   --color-set-acc-email: #8B6B4A;
-  --color-set-acc-accordian-header-bg: #F0D5AE;
   --color-set-acc-input-bg: #F9F3EA;
   --color-set-acc-update-btn: #6FBF73;
   --color-set-acc-confirm-delete-btn-bg: #A94442;
@@ -201,7 +200,7 @@ body {
   padding: 14px;
   border-radius: 16px;
   border: 3px solid var(--color-set-acc-body);
-  background: var(--color-set-acc-accordian-header-bg);
+  background: linear-gradient(135deg, var(--color-set-toggle-banner-bg1) 0%, var(--color-set-toggle-banner-bg2) 42%, var(--color-set-toggle-banner-bg1) 100%);
   font-weight: 800;
   display: flex;
   justify-content: space-between;

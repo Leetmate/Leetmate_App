@@ -6,7 +6,14 @@ Theme files swap those values based on the active data-theme. */
 /* styles/theme.css (shared) */ 
 html[data-theme="color-red"] {
     --color-bg: #fff0f3;
-    --color-header-bg:#ffd8df;
+    --color-header-bg:linear-gradient(
+        90deg,
+        #f5c0ca 0%,
+        #fbcbd4 25%,
+        #ffe4ea 50%,
+        #fbcbd4 75%,
+        #f5c0ca 100%
+    );
     --color-surface: #fae8ed;
     --color-surface-2: #ffd8df;
     --color-surface-3: #f7b7c2;
@@ -38,7 +45,7 @@ html[data-theme="color-red"] {
 
 html[data-theme="color-orange"] {
     --color-bg: #fff4ea;
-    --color-header-bg:#ffe0bf;
+    --color-header-bg:#fec385;
     --color-surface: #fcf2e9;
     --color-surface-2: #ffe0bf;
     --color-surface-3: #f7c792;
@@ -70,8 +77,15 @@ html[data-theme="color-orange"] {
 
 html[data-theme="color-gold"] {
     --color-bg: #fff7df;
-    --color-header-bg:#f8e7af;
-    --color-surface: #fbf8e8;
+    --color-header-bg:linear-gradient(
+        135deg,
+        #d8b04a 0%,
+        #e8c670 30%,
+        #fff0cc 55%,
+        #e8c670 75%,
+        #d8b04a 100%
+    );
+    --color-surface: #fff0cc;
     --color-surface-2: #f8e7af;
     --color-surface-3: #efd58a;
     --color-text: #4d3812;
@@ -101,100 +115,100 @@ html[data-theme="color-gold"] {
 }
 
 html[data-theme="color-green"] {
-    --color-bg: #ecfff3;
-    --color-header-bg:#d9fbe7;
-    --color-surface: #f8fffb;
-    --color-surface-2: #d9fbe7;
-    --color-surface-3: #c2f5da;
-    --color-text: #2f5c45;
-    --color-text-muted: #6c907e;
-    --color-text-soft: #4a7a63;
-    --color-border: #5fa07d;
-    --color-accent: #9be5c0;
-    --color-accent-strong: #4fcf92;
-    --color-success-bg: #e2f7ea;
-    --color-success-text: #2e7252;
-    --color-error-bg: #ffe3ea;
-    --color-error-text: #9d4d68;
-    --shadow-card: 0 8px 18px rgba(70, 150, 110, 0.18);
-    --shadow-button: 0 4px 0 rgba(70, 150, 110, 0.28);
-    --shadow-soft: 0 3px 8px rgba(70, 150, 110, 0.14);
-    --shadow-hero: 0 4px 14px rgba(70, 150, 110, 0.2);
+    --color-bg: #f1ebe1;
+    --color-header-bg: #8ba888;
+    --color-surface: #dfe8d8;
+    --color-surface-2: #c6d2be;
+    --color-surface-3: #c0cfb2;
+    --color-text: #2f4636;
+    --color-text-muted: #6f8578;
+    --color-text-soft: #5f7a66;
+    --color-border: #688272;
+    --color-accent: #8ba888;
+    --color-accent-strong: #44624a;
+    --color-success-bg: #e4efe6;
+    --color-success-text: #3f6a54;
+    --color-error-bg: #f3e4e7;
+    --color-error-text: #8a5a65;
+    --shadow-card: 0 8px 18px rgba(68, 98, 74, 0.16);
+    --shadow-button: 0 4px 0 rgba(68, 98, 74, 0.26);
+    --shadow-soft: 0 3px 8px rgba(68, 98, 74, 0.12);
+    --shadow-hero: 0 4px 14px rgba(68, 98, 74, 0.18);
     --focus-outline: 2px solid var(--color-accent-strong);
     --focus-offset: 2px;
-    --color-wood-medium: #b8e6cb;
-    --color-wood-base: #84c3a0;
-    --color-wood-light: #e2ffed;
-    --color-wood-warm: #c2f5da;
-    --color-wood-cream: #f8fffb;
-    --shadow-wood: 0 6px 0 #93d1ae;
-    --color-shop-bg: #f2fff7;
-    --color-tier-border: rgba(95, 160, 125, 0.18);
+    --color-wood-medium: #c0cfb2;
+    --color-wood-base: #8ba888;
+    --color-wood-light: #f1ebe1;
+    --color-wood-warm: #dfe8d8;
+    --color-wood-cream: #fbf8f2;
+    --shadow-wood: 0 6px 0 #7fa08c;
+    --color-shop-bg: #f8f5ee;
+    --color-tier-border: rgba(68, 98, 74, 0.18);    
 }
 
 html[data-theme="color-blue"] {
-    --color-bg: #eaf6ff;
-    --color-header-bg:#d6ecff;
-    --color-surface: #f5f7f9;
-    --color-surface-2: #d6ecff;
-    --color-surface-3: #bfe2ff;
-    --color-text: #2b4a63;
-    --color-text-muted: #5f7f99;
-    --color-text-soft: #3f627d;
-    --color-border: #5a8bb5;
-    --color-accent: #9fd4ff;
-    --color-accent-strong: #5fb3f5;
-    --color-success-bg: #e0f4ea;
-    --color-success-text: #2e7252;
-    --color-error-bg: #ffe3ea;
-    --color-error-text: #9d4d68;
-    --shadow-card: 0 8px 18px rgba(80, 140, 190, 0.18);
-    --shadow-button: 0 4px 0 rgba(80, 140, 190, 0.28);
-    --shadow-soft: 0 3px 8px rgba(80, 140, 190, 0.14);
-    --shadow-hero: 0 4px 14px rgba(80, 140, 190, 0.2);
+    --color-bg: #f0f4f8;
+    --color-header-bg: #829ab1;
+    --color-surface: #d9e3e9;
+    --color-surface-2: #d9e2ec;
+    --color-surface-3: #bcccdc;
+    --color-text: #102a43;
+    --color-text-muted: #6b7f91;
+    --color-text-soft: #486581;
+    --color-border: #354b60;
+    --color-accent: #829ab1;
+    --color-accent-strong: #486581;
+    --color-success-bg: #e3f2ea;
+    --color-success-text: #2f6f55;
+    --color-error-bg: #f6e4e8;
+    --color-error-text: #8f4d63;
+    --shadow-card: 0 8px 18px rgba(16, 42, 67, 0.16);
+    --shadow-button: 0 4px 0 rgba(16, 42, 67, 0.26);
+    --shadow-soft: 0 3px 8px rgba(16, 42, 67, 0.12);
+    --shadow-hero: 0 4px 14px rgba(16, 42, 67, 0.18);
     --focus-outline: 2px solid var(--color-accent-strong);
     --focus-offset: 2px;
-    --color-wood-medium: #b7d8ee;
-    --color-wood-base: #88b6d5;
-    --color-wood-light: #e0f1ff;
-    --color-wood-warm: #bfe2ff;
-    --color-wood-cream: #f7fbff;
-    --shadow-wood: 0 6px 0 #8bb9dd;
-    --color-shop-bg: #f1f9ff;
-    --color-tier-border: rgba(90, 139, 181, 0.18);
+    --color-wood-medium: #bcccdc;
+    --color-wood-base: #829ab1;
+    --color-wood-light: #f0f4f8;
+    --color-wood-warm: #d9e2ec;
+    --color-wood-cream: #f7fafc;
+    --shadow-wood: 0 6px 0 #829ab1;
+    --color-shop-bg: #f5f8fb;
+    --color-tier-border: rgba(16, 42, 67, 0.18);
 }
-
+    
 html[data-theme="color-purple"] {
-    --color-bg: #f2ecff;
-    --color-header-bg:#e6dbff;
-    --color-surface: #f7edfe;
-    --color-surface-2: #e6dbff;
-    --color-surface-3: #d4c5fb;
-    --color-text: #44335f;
-    --color-text-muted: #76648f;
-    --color-text-soft: #5f4a7d;
-    --color-border: #7356a5;
-    --color-accent: #b59cff;
-    --color-accent-strong: #8c68df;
-    --color-success-bg: #e0f4ea;
-    --color-success-text: #2e7252;
-    --color-error-bg: #ffe3ea;
-    --color-error-text: #9d4d68;
-    --shadow-card: 0 8px 18px rgba(97, 74, 134, 0.18);
-    --shadow-button: 0 4px 0 rgba(95, 74, 125, 0.28);
-    --shadow-soft: 0 3px 8px rgba(97, 74, 134, 0.14);
-    --shadow-hero: 0 4px 14px rgba(97, 74, 134, 0.2);
+    --color-bg: #f7edfd;
+    --color-header-bg: #bfadcc;
+    --color-surface: #fff7fc;
+    --color-surface-2: #f3d7eb;
+    --color-surface-3: #dfbbda;
+    --color-text: #4f3b56;
+    --color-text-muted: #8b7591;
+    --color-text-soft: #6f5875;
+    --color-border: #93849d;
+    --color-accent: #bfadcc;
+    --color-accent-strong: #896790;
+    --color-success-bg: #e5f1e8;
+    --color-success-text: #3d6b56;
+    --color-error-bg: #f8e2ea;
+    --color-error-text: #944f68;
+    --shadow-card: 0 8px 18px rgba(79, 59, 86, 0.16);
+    --shadow-button: 0 4px 0 rgba(79, 59, 86, 0.26);
+    --shadow-soft: 0 3px 8px rgba(79, 59, 86, 0.12);
+    --shadow-hero: 0 4px 14px rgba(79, 59, 86, 0.18);
     --focus-outline: 2px solid var(--color-accent-strong);
     --focus-offset: 2px;
-    --color-wood-medium: #c2b4e8;
-    --color-wood-base: #a996d8;
-    --color-wood-light: #efe7ff;
-    --color-wood-warm: #d8cbff;
-    --color-wood-cream: #fcf8ff;
-    --shadow-wood: 0 6px 0 #b49cde;
-    --color-shop-bg: #f7f1ff;
-    --color-tier-border: rgba(115, 86, 165, 0.18);
-}
+    --color-wood-medium: #dfbbda;
+    --color-wood-base: #bfadcc;
+    --color-wood-light: #ffe1f5;
+    --color-wood-warm: #f3d7eb;
+    --color-wood-cream: #fff7fc;
+    --shadow-wood: 0 6px 0 #bfadcc;
+    --color-shop-bg: #fff3fa;
+    --color-tier-border: rgba(79, 59, 86, 0.18);
+}   
 
 /* Colors unique in default screens (cannot be globally grouped) */ 
 html[data-theme="color-red"],
@@ -211,7 +225,7 @@ html[data-theme="color-purple"] {
     /* home.css */
     --color-home-lc-card-bg1: var(--color-surface);
     --color-home-lc-card-bg2: var(--color-surface-2);
-    --color-home-lc-card-bg3: var(--color-surface-3);
+    --color-home-lc-card-bg3: var(--color-surface);
     --color-home-lc-card-border: var(--color-border);
     --color-home-lc-card-header: var(--color-border);
     --color-home-lc-default-subtext: var(--color-text-muted);
@@ -259,7 +273,6 @@ html[data-theme="color-purple"] {
     --color-set-acc-btn-outline: var(--color-accent-strong);
     --color-set-acc-username-bg: var(--color-accent);
     --color-set-acc-email: var(--color-text-muted);
-    --color-set-acc-accordian-header-bg: var(--color-surface-2);
     --color-set-acc-input-bg: var(--color-surface);
     --color-set-acc-update-btn: var(--color-success-text);
     --color-set-acc-confirm-delete-btn-bg: var(--color-error-text);
@@ -270,14 +283,6 @@ html[data-theme="color-purple"] {
 
     /* settings.css */
     --color-set-main-set-card: var(--color-surface);
-    --color-set-main-set-easy-sec-bg1: var(--color-surface);
-    --color-set-main-set-easy-sec-bg2: var(--color-surface-2);
-    --color-set-main-set-easy-sec-bg3: var(--color-surface-3);
-    --color-set-main-set-easy-info-btn: var(--color-accent-strong);
-    --color-set-main-set-easy-icon-wrap-bg1: var(--color-surface-2);
-    --color-set-main-set-easy-icon-wrap-bg2: var(--color-accent);
-    --color-set-main-set-easy-icon-wrap-bg3: var(--color-accent-strong);
-    --color-set-main-set-tog-slider: var(--color-surface-3);
     --color-set-main-set-vol-slider: var(--color-surface-3);
     --color-set-main-set-btn-primary-bg: var(--color-accent);
     --color-set-main-set-btn-danger: var(--color-error-text);
@@ -285,6 +290,18 @@ html[data-theme="color-purple"] {
     --color-set-main-set-modal-panel: var(--color-surface);
     --color-set-main-white: var(--color-surface);
 
+    /* settings.css & notifications.css for easy mode and reminders */
+    --color-set-toggle-banner-bg1: var(--color-surface);
+    --color-set-toggle-banner-bg2: var(--color-surface-2);
+    --color-set-toggle-banner-bg3: var(--color-surface-3);
+    --color-set-toggle-info-btn: var(--color-accent-strong);
+    --color-set-toggle-slider: var(--color-surface-3);
+    
+    /* notifications.css */ 
+    --notif-black: var(--color-text);
+    --notif-surface: var(--color-surface);
+    --notif-surface-alt: var(--color-surface-2);
+    
     /* settings-theme.css */
     --color-option-text: var(--color-text);
 
@@ -325,6 +342,10 @@ html[data-theme="color-purple"] {
     --color-comm-main-comm-menu-btn-bg5: var(--color-accent-strong);
     --color-comm-main-comm-menu-btn: var(--color-text);
     --color-comm-main-black: var(--color-text);
+    --color-friends-empty-bg1: var(--color-surface);
+    --color-friends-empty-bg2: var(--color-surface-2);
+    --color-friends-request-bg1: var(--color-surface);
+    --color-friends-request-bg2: var(--color-surface-3);
 
     /* menu-nav.css */
     --color-menu-preview-bg: var(--color-bg);
@@ -360,5 +381,5 @@ html[data-theme^="color-"] .nav-drawer {
 
 html[data-theme^="color-"] .community-card,
 html[data-theme^="color-"] .pets-card {
-    --screen-banner-bg: var(--color-surface-2);
+    --screen-banner-bg: var(--color-header-bg);
 }
