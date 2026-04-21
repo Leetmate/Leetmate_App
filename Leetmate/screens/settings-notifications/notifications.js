@@ -1,9 +1,6 @@
 // notifications.js
 
 (() => {
-  // Local storage key for notification screen's settings
-  const STORAGE_KEY = "leetmate_notification_settings";
-
   // Default state 
   const defaults = {
     enabled: true,
@@ -156,7 +153,6 @@
   // Save notification settings locally in chrome.storage 
   function persistSettingsLocal() {
     chrome.storage.local.set({
-      [STORAGE_KEY]: state,
       leetmate_notifications_enabled: state.enabled,
       leetmate_notification_mode: state.mode,
       leetmate_notification_time: {
