@@ -286,6 +286,21 @@
   // Reminder toggle to update page blur state 
   reminderToggle?.addEventListener("change", async () => {
     state.enabled = reminderToggle.checked;
+
+    //if notifications are untoggled, immediately stop the timer
+    if(reminderToggle.checked == false)
+    {
+        //console.log("notifs off");
+        console.log("notifs are off");
+        chrome.runtime.sendMessage({action: "stopTimer"});
+    }
+    else
+    {
+        //starts timer with last saved settings
+        console.log("notifs are on");
+        chrome.runtime.sendMessage({action: "startTimer"});
+    }
+
     updateToggleUI();
     persistSettingsLocal();
     await updateReminderEnabledInFirestore();
@@ -374,6 +389,9 @@
     });
     await saveReminderSettingsToFirestore();
     showSuccess();
+
+    //insert notif logic here
+    chrome.runtime.sendMessage({action: "startTimer"});
   });
 
   // Back button navigation
