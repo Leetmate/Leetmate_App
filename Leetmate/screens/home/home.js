@@ -244,3 +244,9 @@ document.querySelector(".minimize-btn").addEventListener("click", async () => {
   chrome.runtime.sendMessage({ type: "openPip" });
   window.close();
 });
+
+/* Premium button navigation */
+const premiumBtn = document.getElementById("prem-btn");
+premiumBtn?.addEventListener("click", () => {
+    window.location.href = "../premium/index.html";
+});
