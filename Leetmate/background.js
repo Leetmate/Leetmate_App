@@ -137,6 +137,97 @@ importScripts(
 		}
 	})
 
+	// ---- REMINDER ALARM LOGIC ------
+	function getNextTimeReminder(settings) {
+		const now = new Date();
+		const target = new Date();
+
+		let hour = Number(settings.hour) % 12;
+		if (settings.period === "PM") hour += 12;
+		target.setHours(hour, Number(settings.minute), 0, 0);
+
+		// If today's time already passed, schedule for tomorrow
+		if (target.getTime() <= now.getTime()) {
+		target.setDate(target.getDate() + 1);
+		}
+		return target.getTime();
+	}
+
+	async function scheduleTimeReminder(settings) {
+		const timestamp = getNextTimeReminder(settings);
+		await chrome.alarms.clear(REMINDER_ALARM);
+		await chrome.alarms.create(REMINDER_ALARM, { when: timestamp });
+		console.log("Leetmate: reminder scheduled for", new Date(timestamp).toString());
+	}
+
+	async function scheduleReminderFromStorage() {
+		const result = await chrome.storage.local.get("leetmate_notification_settings");
+		const settings = result.leetmate_notification_settings;
+		if (!settings?.enabled) {
+		await chrome.alarms.clear(REMINDER_ALARM);
+		return;
+		}
+
+		if (settings.mode === "time") {
+		await scheduleTimeReminder(settings);
+		}
+		// Health mode can be added later 
+	}
+
+	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		if (message.action === "scheduleReminder") {
+		scheduleReminderFromStorage()
+			.then(() => sendResponse({ ok: true }))
+			.catch((error) => {
+			console.error("Leetmate: failed to schedule reminder:", error);
+			sendResponse({ ok: false, error: String(error) });
+			});
+		return true;
+		}
+
+		if (message.action === "clearReminder") {
+		chrome.alarms.clear(REMINDER_ALARM)
+			.then(() => sendResponse({ ok: true }))
+			.catch((error) => {
+			console.error("Leetmate: failed to clear reminder:", error);
+			sendResponse({ ok: false, error: String(error) });
+			});
+		return true;
+		}
+	});
+
+	// ---- ALARM HANDLER ------
+	chrome.alarms.onAlarm.addListener(async (alarm) => {
+		if (alarm.name === DAILY_STREAK_ALARM) {
+		console.log("Leetmate: daily streak alarm fired.");
+		await runDailyStreakCheck();
+		await runMidnightPetAgeJob();
+		return;
+		}
+
+		if (alarm.name === REMINDER_ALARM) {
+		console.log("Leetmate: reminder alarm fired.");
+
+		const result = await chrome.storage.local.get("leetmate_notification_settings");
+		const settings = result.leetmate_notification_settings;
+
+		if (!settings?.enabled) return;
+
+		await chrome.notifications.create({
+			type: "basic",
+			iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
+			title: "Time is up!",
+			message: "Have you done your daily Leetcode?",
+			requireInteraction: true,
+			priority: 2
+		});
+
+		// Re-schedule next daily time reminder
+		if (settings.mode === "time") {
+			await scheduleTimeReminder(settings);
+		}
+		}
+	});
 
 	// Dummy listener to prevent "Receiving end does not exist" errors
 	chrome.runtime.onConnect.addListener(() => { });
