@@ -188,7 +188,14 @@
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const leading = firstDay.getDay();
     const today = new Date();
-    const activeProgressDateSet = buildActiveProgressDateSet(progressDateSet, weeklyRewardsState);
+    const visualProgressDateSet = new Set(progressDateSet instanceof Set ? progressDateSet : []);
+    if (freezeDateSet instanceof Set) {
+      freezeDateSet.forEach((dateKey) => visualProgressDateSet.add(dateKey));
+    }
+    const activeProgressDateSet = buildActiveProgressDateSet(
+      visualProgressDateSet,
+      weeklyRewardsState
+    );
 
     monthLabelEl.textContent = monthFormatter.format(viewMonth);
     calendarGridEl.innerHTML = "";
@@ -223,7 +230,7 @@
         month,
         daysInMonth,
         leading,
-        progressDateSet,
+        visualProgressDateSet,
         activeProgressDateSet
       );
       applyFreezeOverlay(dayCell, cellDate, freezeDateSet);
