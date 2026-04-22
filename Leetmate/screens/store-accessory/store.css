@@ -10,8 +10,28 @@
   --color-wood-light: #BCAAA4;
   --color-wood-warm: #d6d0c5;
   --color-wood-cream: #EDE0D4;
-  --color-header-bg: #d6d0c5;
   --shadow-wood: 0 6px 0 #3E2723;
+  --color-store-acce-coins-display: #FFDC13;
+  --color-store-acce-unlock-all-btn: #B89D5B;
+  --color-store-acce-store-item-card-bg2: #E7D7C1;
+  --color-store-acce-store-item-card-owned-bg: #4ADE80;
+  --color-store-acce-store-item-card-owned-border: #22C55E;
+  --color-store-acce-store-item-card-locked-bg1: #FDE68A;
+  --color-store-acce-store-item-card-locked-bg2: #F59E0B;
+  --color-store-acce-store-item-card-locked-border: #B45309;
+  --color-store-acce-store-item-card-locked: #78350F;
+  --color-store-acce-store-modal-card-bg: #F5EEE1;
+  --color-store-acce-store-modal-price-bg: #F3D46F;
+  --color-store-acce-store-buy-btn-bg1: #F0D889;
+  --color-store-acce-store-buy-btn-bg2: #E3BF53;
+  --color-store-acce-store-buy-btn-disabled-bg: #D5CBBD;
+  --color-store-acce-store-buy-btn-disabled: #7B6F61;
+  --color-store-acce-black: #111;
+  --color-store-acce-white: #FFF;
+  --color-store-acce-promo-text-shadow: #FFD700;
+  --color-store-acce-store-modal: #241D17;
+  --color-store-acce-store-modal-desc: #3E2C22;
+  --color-store-tab-btn-bg: var(--color-surface);
 }
 
 body {
@@ -73,7 +93,7 @@ body {
 /* APP-NATIVE HEADER BAR */
 .store-card .screen-banner {
   background: var(--color-header-bg);
-  border-bottom: 4px solid var(--color-wood-dark);
+  border-bottom: 4px solid var(--color-border);
   margin: -12px -12px 0px -12px; /* Reduced bottom margin from 16px */
   padding: 10px 16px;
   border-radius: 0;
@@ -84,7 +104,7 @@ body {
 }
 
 .store-card .screen-banner__title {
-  color: var(--color-wood-dark);
+  color: var(--color-text);
   font-family: 'Lilita One', cursive;
   font-size: 28px;
   letter-spacing: 0.8px;
@@ -115,7 +135,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ffdc13;
+  color: var(--color-store-acce-coins-display);
   font-family: 'Lilita One', sans-serif;
   font-size: 16px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
@@ -123,14 +143,14 @@ body {
 
 .add-coins-btn {
   background: var(--color-wood-base);
-  border: 2px solid #111;
+  border: 2px solid var(--color-store-acce-black);
   border-radius: 50%;
   width: 22px;
   height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-store-acce-white);
   font-size: 18px;
   font-weight: 900;
   cursor: pointer;
@@ -148,7 +168,7 @@ body {
 }
 
 #coin-count {
-  -webkit-text-stroke: 0.4px #3E2723;
+  -webkit-text-stroke: 0.4px var(--color-wood-dark);
   text-shadow: 0 1px 0 rgba(62, 39, 35, 0.35);
 }
 
@@ -181,7 +201,7 @@ body {
   background-image: linear-gradient(rgba(255, 248, 236, 0.55), rgba(255, 248, 236, 0.55)), url("../../assets/backgrounds/bg_store-banner.jpg");
   background-size: cover;
   background-position: center 20%;
-  border: 4px solid #111;
+  border: 4px solid var(--color-store-acce-black);
   border-radius: 24px;
   padding: 8px 14px;
   position: relative;
@@ -194,7 +214,7 @@ body {
   position: absolute;
   width: 9px;
   height: 9px;
-  background: #111;
+  background: var(--color-store-acce-black);
   border-radius: 50%;
   box-shadow: inset -2px -2px 0 rgba(0,0,0,0.4);
   z-index: 5;
@@ -217,9 +237,9 @@ body {
 .promo-banner .sparkles::after {
   content: '✦';
   position: absolute;
-  color: #FFF;
+  color: var(--color-store-acce-white);
   font-size: 14px;
-  text-shadow: 0 0 8px #FFD700;
+  text-shadow: 0 0 8px var(--color-store-acce-promo-text-shadow);
   animation: banner-sparkle 3s infinite ease-in-out;
   opacity: 0;
 }
@@ -287,14 +307,14 @@ body {
     #ddc596 90%,
     #cfb98d 100%
   );
-  border: 3px solid #b89d5b;
+  border: 3px solid var(--color-store-acce-unlock-all-btn);
   border-radius: 20px;
   padding: 8px 24px;
   font-family: "Lilita One", cursive;
   font-size: 16px;
 	text-align: center;
 	line-height: 1;
-  color: #b89d5b;
+  color: var(--color-store-acce-unlock-all-btn);
   text-shadow: none;
   box-shadow: 0 0 10px rgba(184, 157, 91, 0.3);
 }
@@ -325,15 +345,15 @@ body {
 }
 
 .tab-btn {
-  background: var(--color-surface);
-  border: 3px solid #111;
+  background: var(--color-store-tab-btn-bg);
+  border: 3px solid var(--color-store-acce-black);
   border-radius: 18px;
   height: 42px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 0 #111;
+  box-shadow: 0 3px 0 var(--color-store-acce-black);
   transition: all 0.15s ease;
 }
 
@@ -344,7 +364,7 @@ body {
 .tab-btn:hover { 
 	background: var(--color-wood-warm); 
 	transform: translateY(-2px); 
-	box-shadow: 0 7px 0 #111; 
+	box-shadow: 0 7px 0 var(--color-store-acce-black); 
 }
 
 .tab-btn.active {
@@ -377,8 +397,8 @@ body {
 }
 
 .store-item-card {
-  background: linear-gradient(135deg, var(--color-surface-2) 0%, #E7D7C1 100%);
-  border: 4px solid #111;
+  background: linear-gradient(135deg, var(--color-surface-2) 0%, var(--color-store-acce-store-item-card-bg2) 100%);
+  border: 4px solid var(--color-store-acce-black);
   border-radius: 24px;
   padding: 20px 10px 12px 10px;
   display: flex;
@@ -386,21 +406,21 @@ body {
   align-items: center;
   gap: 20px;
   cursor: pointer;
-  box-shadow: #111;
+  box-shadow: var(--color-store-acce-black);
   transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .store-item-card:hover {
   transform: translateY(-8px);
   filter: brightness(1.05);
-  box-shadow: 0 14px 0 #111, 0 12px 24px rgba(0,0,0,0.25);
+  box-shadow: 0 14px 0 var(--color-store-acce-black), 0 12px 24px rgba(0,0,0,0.25);
 }
 
 .item-visual-box {
   width: 72px;
   height: 72px;
-  background: #FFF;
-  border: 3px solid #111;
+  background: var(--color-store-acce-white);
+  border: 3px solid var(--color-store-acce-black);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -493,9 +513,9 @@ body {
 }
 
 .store-item-card.owned .item-price-tag {
-  background: #4ade80 !important; /* Success green */
-  border-color: #22c55e !important;
-  color: #fff !important;
+  background: var(--color-store-acce-store-item-card-owned-bg) !important; /* Success green */
+  border-color: var(--color-store-acce-store-item-card-owned-border) !important;
+  color: var(--color-store-acce-white) !important;
 }
 
 .store-item-card.locked .item-visual-box {
@@ -505,9 +525,9 @@ body {
 }
 
 .store-item-card.locked .item-price-tag {
-  background: linear-gradient(180deg, #FDE68A 0%, #F59E0B 100%) !important; /* Gold gradient */
-  border-color: #B45309 !important; /* Hard wood / dark gold border */
-  color: #78350F !important; /* Dark brown text */
+  background: linear-gradient(180deg, var(--color-store-acce-store-item-card-locked-bg1) 0%, var(--color-store-acce-store-item-card-locked-bg2) 100%) !important; /* Gold gradient */
+  border-color: var(--color-store-acce-store-item-card-locked-border) !important; /* Hard wood / dark gold border */
+  color: var(--color-store-acce-store-item-card-locked) !important; /* Dark brown text */
   box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 
@@ -533,8 +553,8 @@ body {
 
 .store-modal-card {
   width: min(320px, 100%);
-  background: #f5eee1;
-  border: 4px solid #111;
+  background: var(--color-store-acce-store-modal-card-bg);
+  border: 4px solid var(--color-store-acce-black);
   border-radius: 28px;
   position: relative;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
@@ -545,7 +565,7 @@ body {
   font-family: "Lilita One", cursive;
   font-size: 30px;
   line-height: 1;
-  color: #241d17;
+  color: var(--color-store-acce-store-modal);
 }
 
 .store-modal-close {
@@ -556,7 +576,7 @@ body {
   height: 32px;
   border: none;
   background: transparent;
-  color: #111;
+  color: var(--color-store-acce-black);
   font-family: "Lilita One", cursive;
   font-size: 30px;
   line-height: 1;
@@ -587,8 +607,8 @@ body {
 .store-modal-visual-box {
   width: 92px;
   height: 92px;
-  background: #fff;
-  border: 3px solid #111;
+  background: var(--color-store-acce-white);
+  border: 3px solid var(--color-store-acce-black);
   border-radius: 22px;
   display: flex;
   align-items: center;
@@ -630,10 +650,10 @@ body {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  border: 3px solid #111;
+  border: 3px solid var(--color-store-acce-black);
   border-radius: 999px;
-  background: #f3d46f;
-  color: #241d17;
+  background: var(--color-store-acce-store-modal-price-bg);
+  color: var(--color-store-acce-store-modal);
   font-family: "Lilita One", cursive;
   font-size: 20px;
 }
@@ -642,7 +662,7 @@ body {
   margin: 0;
   font-size: 15px;
   line-height: 1.25;
-  color: #5d4037;
+  color: var(--color-wood-medium);
   font-style: italic;
 }
 
@@ -655,7 +675,7 @@ body {
   min-height: 0;
   font-size: 15px;
   line-height: 1.35;
-  color: #3e2c22;
+  color: var(--color-store-acce-store-modal-desc);
 }
 
 .store-modal-description.hidden {
@@ -666,10 +686,10 @@ body {
   align-self: center;
   min-width: 180px;
   padding: 10px 20px;
-  border: 4px solid #111;
+  border: 4px solid var(--color-store-acce-black);
   border-radius: 18px;
-  background: linear-gradient(180deg, #f0d889 0%, #e3bf53 100%);
-  color: #241d17;
+  background: linear-gradient(180deg, var(--color-store-acce-store-buy-btn-bg1) 0%, var(--color-store-acce-store-buy-btn-bg2) 100%);
+  color: var(--color-store-acce-store-modal);
   font-family: "Lilita One", cursive;
   font-size: 24px;
   line-height: 1;
@@ -694,8 +714,8 @@ body {
 }
 
 .store-buy-btn:disabled {
-  background: #d5cbbd;
-  color: #7b6f61;
+  background: var(--color-store-acce-store-buy-btn-disabled-bg);
+  color: var(--color-store-acce-store-buy-btn-disabled);
   cursor: not-allowed;
   box-shadow: none;
 }

@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../../features/shared/theme-init.js"></script>
     <title>Leetmate – Settings – Account Information</title>
+    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+    <link rel="stylesheet" href="../../styles/color-theme.css">
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="account.css" />
@@ -12,7 +15,7 @@
   </head>
   <body>
     <div class="popup-layout">
-      <div class="popup-content">
+      <div class="popup-content popup-content--scroll">
         <div class="account-card">
           <div class="screen-banner">
             <div class="screen-banner__left">
@@ -48,6 +51,7 @@
             </div>
           </div>
 
+          <div class="account-scroll-area">
           <div class="account-content">
             <div class="profile-section">
               <button
@@ -83,17 +87,17 @@
                 <div class="accordion-content">
                   <input
                     class="input"
-                    id="current-password-email"
-                    type="password"
-                    placeholder="Current Password"
-                    autocomplete="current-password"
-                  />
-                  <input
-                    class="input"
                     id="new-email"
                     type="email"
                     placeholder="New Email Address"
                     autocomplete="email"
+                  />
+                  <input
+                    class="input"
+                    id="current-password-email"
+                    type="password"
+                    placeholder="Current Password"
+                    autocomplete="current-password"
                   />
                   <button type="button" class="update-btn" id="update-email-btn">
                     Update Email
@@ -147,6 +151,8 @@
         </div>
       </div>
     </div>
+  </div>
+
 
     <!-- Username modal -->
     <div class="username-modal hidden" id="username-modal">

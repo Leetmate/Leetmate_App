@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../../features/shared/theme-init.js"></script>
+    <title>Leetmate - Settings - Theme</title>
+    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+    <link rel="stylesheet" href="../../styles/color-theme.css" />
+    <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="../../styles/top-banner.css" />
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="color-theme.css" />
+    <link rel="stylesheet" href="../../styles/menu-nav.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="theme-card">
+          <div class="screen-banner">
+            <div class="screen-banner__left">
+              <button
+                type="button"
+                class="menu-btn"
+                id="back-btn"
+                aria-label="Back to settings"
+              >
+                <img
+                  src="../../assets/icons/back-arrow.png"
+                  class="menu-icon"
+                  alt=""
+                />
+              </button>
+            </div>
+
+            <div class="screen-banner__center">
+              <h1 class="screen-banner__title account-title-main">Theme</h1>
+            </div>
+
+            <div class="screen-banner__right">
+              <button
+                type="button"
+                class="menu-btn nav-trigger"
+                id="nav-trigger"
+                aria-expanded="false"
+                aria-controls="nav-drawer"
+                aria-label="Open menu"
+              >
+                <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+              </button>
+            </div>
+          </div>
+
+          <div class="theme-content">
+            <button
+              type="button"
+              class="theme-option1 theme-option-text"
+              id="theme-default-btn"
+              aria-label="Use default light theme for all screens"
+            >
+              🏠 &nbsp;&nbsp; Default &nbsp;&nbsp;&nbsp;
+            </button>
+
+            <button
+              type="button"
+              class="theme-option2 theme-option-text"
+              id="theme-dark-btn"
+              aria-label="Use dark theme for all screens"
+            >
+              🌙 &nbsp;&nbsp; Dark &nbsp;&nbsp;&nbsp;
+            </button>
+
+            <button
+              type="button"
+              class="theme-option3 theme-option-text"
+              id="theme-color-btn"
+              aria-label="Choose a color theme for all screens"
+            >
+             🎨 &nbsp;&nbsp; Color &nbsp;&nbsp;&nbsp;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-theme-modal" id="color-theme-modal" hidden>
+      <div class="color-theme-modal__backdrop" data-close-color-modal></div>
+      <div
+        class="color-theme-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="color-theme-modal-title"
+      >
+        <button
+          type="button"
+          class="color-theme-modal__close"
+          id="color-theme-close-btn"
+          aria-label="Close color theme picker"
+        >
+          ×
+        </button>
+
+        <h2 class="color-theme-modal__title" id="color-theme-modal-title">Choose a color theme</h2>
+        <p class="color-theme-modal__subtitle">Apply a palette to every screen.</p>
+
+        <div class="color-theme-grid" role="list" aria-label="Rainbow color theme options">
+          <button
+            type="button"
+            class="color-swatch color-swatch--red"
+            data-color-theme="color-red"
+            aria-label="Apply pastel red theme"
+            title="Pastel Red"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--orange"
+            data-color-theme="color-orange"
+            aria-label="Apply pastel orange theme"
+            title="Pastel Orange"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--gold"
+            data-color-theme="color-gold"
+            aria-label="Apply premium gold theme"
+            title="Premium Gold"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--green"
+            data-color-theme="color-green"
+            aria-label="Apply pastel green theme"
+            title="Pastel Green"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--blue"
+            data-color-theme="color-blue"
+            aria-label="Apply pastel blue theme"
+            title="Pastel Blue"
+          ></button>
+
+          <button
+            type="button"
+            class="color-swatch color-swatch--purple"
+            data-color-theme="color-purple"
+            aria-label="Apply pastel purple theme"
+            title="Pastel Purple"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../features/shared/menu-nav.js"></script>
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/progression/xp.js"></script>
+    <script src="../../features/progression/streak.js"></script>
+    <script src="../../features/shared/storage-helper.js"></script>
+    <script src="../../features/progression/happiness-decay.js"></script>
+    <script src="../../features/progression/easy-mode.js"></script>
+    <script src="../../scripts/auth-gate.js"></script>
+    <script src="theme.js"></script>
+  </body>
+</html>

@@ -1,12 +1,24 @@
 /* Navigation menu – pixel UI, matches Home screen style */
 
+:root{
+  --color-menu-preview-bg: #4A4A4A;;
+  --color-nav-drawer-bg: #D9D9D9;
+  --color-nav-black: #111;
+  --color-nav-menu-btn-bg: #FDF5E6;
+  --color-nav-menu-btn-bg2: #D0B27A;
+  --color-nav-menu-btn-active: #B89D5B;
+  --color-nav-close-btn-bg: #EAEBF0;
+  --color-nav-white: #FFFFFF;
+  --color-nav-menu-btn-active-after: #A68D50;
+}
+
 /* Viewport for design preview (380×520) */
 .menu-preview {
   width: 380px;
   height: 520px;
   margin: 0;
   padding: 0;
-  background: #4a4a4a;
+  background: var(--color-menu-preview-bg);
   position: relative;
   overflow: hidden;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -42,8 +54,8 @@
   max-height: 90%;
   overflow-y: auto; /* Fix overflow issue by allowing scrolling */
   pointer-events: auto;
-  background: #D9D9D9;
-  border: 4px solid #111;
+  background: var(--color-nav-drawer-bg);
+  border: 4px solid var(--color-nav-black);
   border-right: none;
   border-top-left-radius: 32px;
   border-bottom-left-radius: 32px;
@@ -76,9 +88,9 @@
   height: 40px;
   font-size: 20px;
   font-weight: 900;
-  color: #111;
-  background: #fdf5e6;
-  border: 3px solid #111;
+  color: var(--color-nav-black);
+  background: var(--color-nav-menu-btn-bg);
+  border: 3px solid var(--color-nav-black);
   border-radius: 14px;
   cursor: pointer;
   box-shadow: 0 4px 0 rgba(17, 17, 17, 1);
@@ -87,7 +99,7 @@
 
 .menu-btn:hover,
 .menu-btn:focus-visible {
-  background: #d0b27a; /* Gold hover */
+  background: var(--color-nav-menu-btn-bg2); /* Gold hover */
   transform: translateY(-2px);
   box-shadow: 0 6px 0 rgba(17, 17, 17, 1);
   outline: none;
@@ -96,7 +108,7 @@
 .menu-btn:active {
   transform: translateY(4px);
   box-shadow: 0 0 0 rgba(17, 17, 17, 1);
-  background: #B89D5B;
+  background: var(--color-nav-menu-btn-active);
 }
 
 .menu-icon {
@@ -120,9 +132,9 @@
   font-size: 24px;
   line-height: 1;
   font-weight: 900;
-  color: #111;
-  background: #EAEBF0;
-  border: 4px solid #111;
+  color: var(--color-nav-black);
+  background: var(--color-nav-close-btn-bg);
+  border: 4px solid var(--color-nav-black);
   border-radius: 12px;
   cursor: pointer;
   z-index: 102;
@@ -132,7 +144,7 @@
 
 .nav-close-btn:hover,
 .nav-close-btn:focus-visible {
-  background: #fdf5e6;
+  background: var(--color-nav-menu-btn-bg);
   transform: translateY(-2px) rotate(90deg);
   box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
   outline: none;
@@ -160,19 +172,19 @@
   font-family: 'Lilita One', system-ui, sans-serif;
   letter-spacing: 1px;
   text-align: center;
-  color: #ffffff;
-  background: #B89D5B; /* Premium gold base */
-  border: 4px solid #111;
+  color: var(--color-nav-white);
+  background: var(--color-nav-menu-btn-active); /* Premium gold base */
+  border: 4px solid var(--color-nav-black);
   border-radius: 16px;
   cursor: pointer;
-  box-shadow: 0 4px 0 #111; /* 3D effect matching theme */
+  box-shadow: 0 4px 0 var(--color-nav-black); /* 3D effect matching theme */
   position: relative;
   overflow: hidden;
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
               box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1),
               background 0.2s ease;
   text-transform: uppercase;
-  -webkit-text-stroke: 1px #111; /* Adds comic-like outline to text */
+  -webkit-text-stroke: 1px var(--color-nav-black); /* Adds comic-like outline to text */
 }
 
 /* Pseudo element for shine effect on hover */
@@ -190,9 +202,9 @@
 
 .nav-menu-btn:hover,
 .nav-menu-btn:focus-visible {
-  background: #d0b27a; /* Lighter gold on hover */
+  background: var(--color-nav-menu-btn-bg2); /* Lighter gold on hover */
   transform: translateY(-4px); /* Lift up */
-  box-shadow: 0 10px 0 #111; /* Deepen shadow */
+  box-shadow: 0 10px 0 var(--color-nav-black); /* Deepen shadow */
   outline: none;
 }
 
@@ -203,8 +215,8 @@
 
 .nav-menu-btn:active {
   transform: translateY(6px); /* Push down into screen */
-  box-shadow: 0 0px 0 #111; /* Flatten shadow completely */
-  background: #A68D50; /* Slightly darker gold on press */
+  box-shadow: 0 0px 0 var(--color-nav-black); /* Flatten shadow completely */
+  background: var(--color-nav-menu-btn-active-after); /* Slightly darker gold on press */
 }
 
 @keyframes shine {

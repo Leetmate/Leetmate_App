@@ -1,6 +1,36 @@
 /* Home Screen Layout */
 @import url("../../styles/layout.css");
 
+:root{
+  --color-home-lc-card-bg1: #FAF8F5;
+  --color-home-lc-card-bg2: #F5F0E8;
+  --color-home-lc-card-bg3: #EBE4D9;
+  --color-home-lc-card-border: #2C2419;
+  --color-home-lc-card-header: #2C2419;
+  --color-home-lc-default-subtext: #4A4035;
+  --color-home-lc-default-reward: #5C5244;
+  --color-home-lc-default-reward-xp: #4CAF50;
+  --color-home-lc-default-reward-coins: #D4A017;
+  --color-home-lc-card-completed-bg1: #F0D9A0;
+  --color-home-lc-card-completed-bg2: #E8C97A;
+  --color-home-lc-card-completed-bg3: #E2C26B;
+  --color-home-lc-alt-reward-xp: #16A34A;
+  --color-home-lc-alt-reward-coins: #BE8D1A;
+  --color-home-lc-claim-btn-bg1: #FFE8B5;
+  --color-home-lc-claim-btn-bg2: #F2C769;
+  --color-home-lc-claim-btn-bg3: #E2A73A;
+  --color-home-lc-claim-btn-box-shadow: #3B2A12;
+  --color-home-pet-name: #3B2B1A;
+  --color-home-status-bar-bg1: #F1E0BF;
+  --color-home-status-bar-bg2: #F1E0BF;
+  --color-home-status-bar-bg3: #F1E0BF;
+  --color-home-xp-bar: #E6E6E6;
+  --color-home-lc-card-complete-border: #7C5A24;
+  --color-home-black: #111;
+  --color-home-status-text: white;
+  --color-home-status-text-border: black;
+}
+
 body {
   font-family:
     system-ui,
@@ -13,7 +43,7 @@ body {
 
 /* HOME CONTAINER */
 .home-card {
-  --screen-banner-bg: #d6d0c5;
+  --screen-banner-bg: var(--color-header-bg);
   --screen-banner-offset-top: 12px;
   --screen-banner-offset-x: 12px;
   width: 100%;
@@ -22,7 +52,7 @@ body {
   /* Stretch to fill the frame */
   margin: 0 auto;
   padding: 12px;
-  background: #EEEAE1;
+  background: var(--color-bg);
   border-radius: 0;
   border: none;
   display: flex;
@@ -40,8 +70,8 @@ body {
   height: 80px;
 
   /* Default state */
-  background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 40%, #ebe4d9 100%);
-  border: 4px solid #2c2419;
+  background: linear-gradient(135deg, var(--color-home-lc-card-bg1) 0%, var(--color-home-lc-card-bg2) 40%, var(--color-home-lc-card-bg3) 100%);
+  border: 4px solid var(--color-home-lc-card-border);
   border-radius: 28px;
   padding: 12px;
   text-align: left;
@@ -112,31 +142,31 @@ body {
   font-family: 'Lilita One', sans-serif;
   font-size: 15px;
   font-weight: 400;
-  color: #2c2419;
+  color: var(--color-home-lc-card-header);
   letter-spacing: 0.3px;
   line-height: 1.2;
 }
 
 .leetcode-default-subtext {
   font-size: 12px;
-  color: #4a4035;
+  color: var(--color-home-lc-default-subtext);
   line-height: 1.25;
 }
 
 .leetcode-default-reward {
   font-size: 11px;
-  color: #5c5244;
+  color: var(--color-home-lc-default-reward);
   line-height: 1.25;
   margin-top: 1px;
 }
 
 .leetcode-default-reward .reward-xp {
-  color: #4CAF50;
+  color: var(--color-home-lc-default-reward-xp);
   font-weight: 600;
 }
 
 .leetcode-default-reward .reward-coins {
-  color: #D4A017;
+  color: var(--color-home-lc-default-reward-coins);
   font-weight: 600;
 }
 
@@ -156,8 +186,8 @@ body {
 
 /* Completed (has potential rewards or already claimed) */
 .leetcode-card.completed {
-  background: linear-gradient(135deg, #f0d9a0 0%, #e8c97a 25%, #e2c26b 50%, #e8c97a 75%, #f0d9a0 100%);
-  border-color: #7c5a24;
+  background: linear-gradient(135deg, var(--color-home-lc-card-completed-bg1) 0%, var(--color-home-lc-card-completed-bg2) 25%, var(--color-home-lc-card-completed-bg3) 50%, var(--color-home-lc-card-completed-bg2) 75%, var(--color-home-lc-card-completed-bg1) 100%);
+  border-color: var(--color-home-lc-card-complete-border);
   box-shadow:
     0 6px 14px rgba(0, 0, 0, 0.25),
     0 0 0 3px rgba(255, 248, 232, 0.9),
@@ -195,8 +225,8 @@ body {
 
 .leetcode-card.completed.no-claim {
   /* Match default palette */
-  background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 40%, #ebe4d9 100%);
-  border-color: #2c2419;
+  background: linear-gradient(135deg, var(--color-home-lc-card-bg1) 0%, var(--color-home-lc-card-bg2) 40%, var(--color-home-lc-card-bg3) 100%);
+  border-color: var(--color-home-lc-card-border);
   box-shadow: 0 2px 8px rgba(44, 36, 25, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
@@ -225,12 +255,12 @@ body {
   font-family: 'Lilita One', sans-serif;
   font-size: 14px;
   letter-spacing: 0.4px;
-  color: #2c2419;
+  color: var(--color-home-lc-card-border);
 }
 
 .leetcode-alt-subtext {
   font-size: 12px;
-  color: #4a4035;
+  color: var(--color-home-lc-default-subtext);
   line-height: 1.2;
 }
 
@@ -255,22 +285,22 @@ body {
   font-family: 'Lilita One', sans-serif;
   font-size: 14px;
   letter-spacing: 0.3px;
-  color: #2c2419;
+  color: var(--color-home-lc-card-border);
 }
 
 .leetcode-done-kicker {
   font-weight: 800;
-  color: #2c2419;
+  color: var(--color-home-lc-card-border);
 }
 
 .leetcode-done-body {
   font-size: 11px;
-  color: #4a4035;
+  color: var(--color-home-lc-default-subtext);
 }
 
 .leetcode-done-body-rest {
   font-weight: 600;
-  color: #4a4035;
+  color: var(--color-home-lc-default-subtext);
 }
 
 .leetcode-alt-right {
@@ -295,11 +325,11 @@ body {
 }
 
 .leetcode-alt-reward.xp {
-  color: #16a34a;
+  color: var(--color-home-lc-alt-reward-xp);
 }
 
 .leetcode-alt-reward.coins {
-  color: #be8d1a;
+  color: var(--color-home-lc-alt-reward-coins);
 }
 
 .leetcode-claim-btn {
@@ -308,15 +338,15 @@ body {
   font-size: 12px;
   font-weight: 700;
   border-radius: 14px;
-  border: 2px solid #3b2a12;
-  background: linear-gradient(to bottom, #ffe8b5 0%, #f2c769 50%, #e2a73a 100%);
-  color: #2c2419;
+  border: 2px solid var(--color-home-lc-claim-btn-box-shadow);
+  background: linear-gradient(to bottom, var(--color-home-lc-claim-btn-bg1) 0%, var(--color-home-lc-claim-btn-bg2) 50%, var(--color-home-lc-claim-btn-bg3) 100%);
+  color: var(--color-home-lc-card-border);
   cursor: pointer;
   white-space: nowrap;
   margin-bottom: 2px;
   box-shadow:
     0 2px 0 rgba(255, 255, 255, 0.7),
-    0 4px 0 #3b2a12,
+    0 4px 0 var(--color-home-lc-claim-btn-box-shadow),
     0 6px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
 }
@@ -326,7 +356,7 @@ body {
   transform: translateY(2px);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.7),
-    0 2px 0 #3b2a12,
+    0 2px 0 var(--color-home-lc-claim-btn-box-shadow),
     0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -334,7 +364,7 @@ body {
   transform: translateY(4px);
   box-shadow:
     0 0px 0 rgba(255, 255, 255, 0.7),
-    0 1px 0 #3b2a12,
+    0 1px 0 var(--color-home-lc-claim-btn-box-shadow),
     0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -383,7 +413,7 @@ body {
   font-family: 'Lilita One', sans-serif;
   font-size: 18px;
   color: #FFD700;
-  -webkit-text-stroke: 1px #111;
+  -webkit-text-stroke: 1px var(--color-home-black);
   pointer-events: none;
   z-index: 10000;
 
@@ -510,7 +540,7 @@ body {
   justify-content: center;
   position: relative;
 
-  border: 4px solid #111;
+  border: 4px solid var(--color-home-black);
   border-radius: 28px;
   padding: 12px;
   margin: 0;
@@ -560,7 +590,7 @@ body {
   /* Gold color for text */
   font-family: 'Lilita One', sans-serif;
   font-size: 15px;
-  -webkit-text-stroke: 0.5px #111;
+  -webkit-text-stroke: 0.5px var(--color-home-black);
 }
 
 .coin-icon {
@@ -607,10 +637,10 @@ body {
   min-height: 44px;
   padding: 5px 20px;
   border-radius: 24px;
-  color: #3b2b1a;
+  color: var(--color-home-pet-name);
   /* Darker brown for contrast */
   text-align: center;
-  border: 2px solid #D6D0C5;
+  border: 2px solid var(--color-home-banner-bg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 5;
   display: flex;
@@ -728,8 +758,8 @@ body.hidden-on-load .popup-layout {
 /* STATUS BAR */
 .status-bar {
   flex: 0 0 auto;
-  background: #F1E0BF;
-  border: 4px solid #111;
+  background: linear-gradient(135deg, var(--color-home-status-bar-bg1) 0%, var(--color-home-status-bar-bg2) 40%, var(--color-home-status-bar-bg3) 100%);
+  border: 4px solid var(--color-home-black);
   border-radius: 28px;
 
   padding: 12px 10px 10px;
@@ -769,8 +799,8 @@ body.hidden-on-load .popup-layout {
   font-family: 'Lilita One', sans-serif;
   font-size: 24px;
   font-weight: bold;
-  color: white;
-  -webkit-text-stroke: 0.75px #111;
+  color: var(--color-home-status-text);
+  -webkit-text-stroke: 0.75px var(--color-home-status-text-border);
   line-height: 1;
   min-height: 24px;
   display: flex;
@@ -858,8 +888,8 @@ body.hidden-on-load .popup-layout {
   width: 110px;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #e6e6e6;
-  border: 3px solid #111;
+  background-color: var(--color-home-xp-bar);
+  border: 3px solid var(--color-home-black);
   position: relative;
   margin-top: 6px;
 }
@@ -935,7 +965,7 @@ body.hidden-on-load .popup-layout {
 
   /* Outline effect for empty/faded hearts */
   text-shadow:
-    0 0 0 2px #111,
+    0 0 0 2px var(--color-home-black),
     /* hard border */
     0 1px 3px rgba(0, 0, 0, 0.3);
   /* soft shadow */

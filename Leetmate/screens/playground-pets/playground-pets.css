@@ -1,11 +1,19 @@
 @import url("../../styles/layout.css");
 
+:root{
+  --color-pg-pets-pets-loading: #23201D;
+  --color-pg-pets-pets-select-btn-bg: #F0D58B;
+  --color-pg-pets-pets-select-btn: #2C2419;
+  --color-pg-pets-pets-modal-age: #5A4A37;
+  --color-pet-name: white;
+}
+
 body {
-  background: #f3eee5;
+  background: var(--color-surface);
 }
 
 .pets-card {
-  --screen-banner-bg: #d6d0c5;
+  --screen-banner-bg: var(--color-header-bg);
   --screen-banner-offset-top: 12px;
   --screen-banner-offset-x: 12px;
   width: 100%;
@@ -14,7 +22,7 @@ body {
   margin: 0 auto;
   padding: 12px;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+    linear-gradient(var(--overlay), var(--overlay)),
     url("../../assets/backgrounds/pets_bg_v2.png") center top / cover no-repeat;
   display: flex;
   flex-direction: column;
@@ -41,7 +49,7 @@ body {
   margin: 0;
   font-family: "Lilita One", sans-serif;
   font-size: 24px;
-  color: #23201d;
+  color: var(--color-pg-pets-pets-loading);
   text-align: center;
 }
 
@@ -160,9 +168,9 @@ body {
   justify-content: center;
   font-family: "Lilita One", sans-serif;
   font-size: 30px;
-  color: #fff;
+  color: var(--color-pet-name);
   background: rgba(0, 0, 0, 0.7);
-  border: 4px solid #fff;
+  border: 4px solid var(--color-surface);
   border-radius: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -219,13 +227,13 @@ body {
   min-width: 200px;
   min-height: 64px;
   padding: 10px 28px;
-  border: 4px solid #111;
+  border: 4px solid var(--color-text);
   border-radius: 16px;
-  background: #f0d58b;
+  background: var(--color-pg-pets-pets-select-btn-bg);
   box-shadow: 0 4px 0 rgba(17, 17, 17, 0.22);
   font-family: "Lilita One", sans-serif;
   font-size: 32px;
-  color: #2c2419;
+  color: var(--color-pg-pets-pets-select-btn);
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.1s, filter 0.15s ease;
 }
@@ -261,9 +269,9 @@ body {
 .pets-modal {
   width: 100%;
   max-width: 308px;
-  border: 4px solid #111;
+  border: 4px solid var(--color-text);
   border-radius: 28px;
-  background: #f3eee5;
+  background: var(--color-surface);
   overflow: hidden;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
 }
@@ -271,7 +279,7 @@ body {
 .pets-modal-header {
   min-height: 48px;
   padding: 6px 10px 4px 18px;
-  border-bottom: 4px solid #111;
+  border-bottom: 4px solid var(--color-text);
   display: grid;
   grid-template-columns: 34px 1fr 34px;
   align-items: center;
@@ -289,7 +297,7 @@ body {
   justify-self: center;
   font-family: "Lilita One", sans-serif;
   font-size: 28px;
-  color: #111;
+  color: var(--color-text);
 }
 
 .pets-modal-close {
@@ -298,7 +306,7 @@ body {
   padding: 0;
   border: none;
   background: transparent;
-  color: #111;
+  color: var(--color-text);
   font-size: 42px;
   line-height: 1;
   display: inline-flex;
@@ -321,7 +329,7 @@ body {
   margin: 0;
   font-family: "Lilita One", sans-serif;
   font-size: 26px;
-  color: #23201d;
+  color: var(--color-pg-pets-pets-loading);
   text-align: center;
 }
 
@@ -329,7 +337,7 @@ body {
   margin: 0;
   font-family: "Lilita One", sans-serif;
   font-size: 18px;
-  color: #5a4a37;
+  color: var(--color-pg-pets-pets-modal-age);
 }
 
 .pets-modal-stats {
@@ -348,7 +356,7 @@ body {
   gap: 12px;
   font-family: "Lilita One", sans-serif;
   font-size: 16px;
-  color: #23201d;
+  color: var(--color-pg-pets-pets-loading);
 }
 
 .pets-modal-stats strong {
@@ -359,13 +367,13 @@ body {
   min-width: 140px;
   min-height: 56px;
   padding: 8px 22px;
-  border: 4px solid #111;
+  border: 4px solid var(--color-text);
   border-radius: 14px;
-  background: #f0d58b;
+  background: var(--color-pg-pets-pets-select-btn-bg);
   box-shadow: 0 4px 0 rgba(17, 17, 17, 0.22);
   font-family: "Lilita One", sans-serif;
   font-size: 22px;
-  color: #23201d;
+  color: var(--color-pg-pets-pets-loading);
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.1s, filter 0.15s ease;
 }

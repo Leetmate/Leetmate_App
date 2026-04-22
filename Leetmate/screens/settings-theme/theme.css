@@ -1,0 +1,266 @@
+/* Theme Settings Screen Layout */
+@import url("../../styles/layout.css");
+
+:root {
+    --color-option-text: #3b2b1a;
+}
+body {
+    font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+    font-size: 14px;
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.popup-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.theme-card {
+    --screen-banner-bg: var(--color-header-bg);
+    --screen-banner-offset-top: 24px;
+    --screen-banner-offset-x: 20px;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0;
+    background: var(--color-surface);
+    padding: 24px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+    flex: 1;
+    box-shadow: var(--shadow-card);
+    position: relative; /* For absolutely positioned nav menu trigger if needed */
+    overflow: hidden;
+}
+
+.theme-title-main {
+    font-size: 32px;
+}
+
+.theme-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    justify-content: center;
+    gap: 12px;
+}
+
+.theme-option-text {
+    font-size: 24px;
+    font-weight: bold;
+    align-items: center;
+    color: var(--color-option-text);
+}
+
+button.theme-option-text {
+    font-family: inherit;
+    margin: 0;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Default theme (warm) */
+.theme-option1 {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+
+    border-radius: 16px;
+    border: 3px solid var(--color-border);
+    background: linear-gradient(
+        270deg,
+        #F1E0BF,
+        #F5E8CC,
+        #EAD7B0,
+        #F8EDD8,
+        #E6D2A3,
+        #F1E0BF
+    );
+    background-size: 400% 400%;
+    animation: softBeigeFlow 12s ease infinite;
+}
+
+@keyframes softBeigeFlow {
+    0%   { background-position: 100% 50%; }
+    50%  { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Dark mode */
+.theme-option2 {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+
+    border-radius: 16px;
+    border: 3px solid var(--color-border);
+    background: linear-gradient(
+        270deg,
+        #6B6D75,
+        #7A7D86,
+        #5C5E66,
+        #858892,
+        #4F5158,
+        #6B6D75
+      );
+      
+    background-size: 400% 400%;
+    animation: darkGrayFlow 14s ease infinite;
+}
+
+@keyframes darkGrayFlow {
+    0%   { background-position: 100% 50%; }
+    50%  { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Color theme */
+.theme-option3 {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+
+    border-radius: 16px;
+    border: 3px solid var(--color-border);
+    background: linear-gradient(
+        90deg,
+        #FFB3BA,
+        #FFDFBA,
+        #FFFFBA,
+        #BAFFC9,
+        #BAE1FF,
+        #D5BAFF,
+        #FFBAED
+      );
+    background-size: 400% 400%;
+    animation: pastelRainbow 10s ease infinite;    
+}
+
+@keyframes pastelRainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.color-theme-modal[hidden] {
+    display: none;
+}
+
+.color-theme-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+}
+
+.color-theme-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 17, 33, 0.45);
+    backdrop-filter: blur(2px);
+}
+
+.color-theme-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(360px, calc(100vw - 32px));
+    margin: 84px auto 0;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: var(--border-medium);
+    border-radius: 24px;
+    box-shadow: var(--shadow-card);
+    padding: 20px 18px 18px;
+}
+
+.color-theme-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: var(--border-thin);
+    background: var(--color-surface-2);
+    color: var(--color-text);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.color-theme-modal__title {
+    margin: 0 36px 6px 0;
+    font-size: 22px;
+    line-height: 1.2;
+}
+
+.color-theme-modal__subtitle {
+    margin: 0 0 16px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.color-theme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.color-swatch {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    border-radius: 18px;
+    border: 3px solid var(--color-border);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.color-swatch--red {
+    background: #ffd8df;
+}
+
+.color-swatch--orange {
+    background: #fec385;
+}
+
+.color-swatch--gold {
+    background: #e8c670;
+}
+
+.color-swatch--green {
+    background: #8ba888;
+}
+
+.color-swatch--blue {
+    background: #829ab1;
+}
+
+.color-swatch--purple {
+    background: #bfadcc;
+}
+
+body.color-theme-modal-open {
+    overflow: hidden;
+}
