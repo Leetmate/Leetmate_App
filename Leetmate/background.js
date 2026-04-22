@@ -54,7 +54,7 @@ importScripts(
 	});
 
 	// ── 2. On browser restart: recreate alarm if it was lost ────────────────────
-	
+
 	chrome.runtime.onStartup.addListener(async () => {
 		const alarm = await chrome.alarms.get("dailyStreakCheck");
 		if (!alarm) {
@@ -69,11 +69,10 @@ importScripts(
 		await chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
+			if (notifEnabled == true) {
+				startNotifTimer();
+			}
 		});
-		
-		if (notifEnabled == true) {
-			startNotifTimer();
-		}
 	});
 
 	// ── 3. Alarm handler ─────────────────────────────────────────────────────────
@@ -191,7 +190,7 @@ importScripts(
 		}
 		else if (cusVar == "notifEnabled") {
 			notifEnabled = newVal;
-			console.log(`notifEnabled is: ${notifEnabled}`);
+			//console.log(`notifEnabled1 is: ${notifEnabled}`);
 		}
 	}
 
@@ -225,6 +224,13 @@ importScripts(
 			loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
 		});
 
+		//stop timer if enabled = false
+		if(notifEnabled == false)
+		{
+			console.log("Canceling startNotifTimer()");
+			return;
+		}
+
 		//calculations
 		doMath();
 		//for debugging: set the calcSecs to 10secs
@@ -237,8 +243,8 @@ importScripts(
 		countdown = setInterval(() => {
 			remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
 
-			//Remove if not debugging timer. Causes clutter.
-			console.log(`Time left: ${remainingTime}s`);
+			//Remove if not debugging timer. Causes clutter. //Uncomment to test timer
+			//console.log(`Time left: ${remainingTime}s`);
 
 			if (remainingTime <= 0) {
 				clearInterval(countdown);
@@ -283,14 +289,6 @@ importScripts(
 	function doMath() {
 		//("doMath() is running");
 
-		//debugger to check math
-		if (timerType == "time") {
-			//console.log(`Timer type is ${timerType}, the current time is ${Date.now() * 1000} and alarm should trigger at ${notifTime["hour"]}.`);
-		}
-		else if (timerType == "health") {
-			//console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger at ${notifHealth * 20}.`);
-		}
-
 		//math for seconds to time
 		calcSecs = 0;
 		let periodTime = 0;
@@ -327,14 +325,14 @@ importScripts(
 
 			curTime = ((Date.now() - 25200000) % 86400000) / 1000; //current time in seconds of the day starting from midnight today UTC
 			//curTime = curTime + 25200; //make local time PST
-			console.log(`It is currently ${curTime} in PST and will be ${assumedTime} in PST (in seconds).`);
+			//console.log(`It is currently ${curTime} in PST and will be ${assumedTime} in PST (in seconds).`);
 
 			//let startDay = (Date.now() - Date.now()%86400000)/86400000; //trying to determine number of whole days since 1/1/1970
 			let startDay = (Date.now() - Date.now() % 86400000); //trying to determine number of whole days since 1/1/1970
-			console.log(`It has been ${startDay} milliseconds since January 1, 1970.`);
+			//console.log(`It has been ${startDay} milliseconds since January 1, 1970.`);
 			//console.log(`It has been ${startDay} milliseconds since midnight.`);
 			calcSecs = assumedTime - curTime;
-			console.log(`seconds from midnight: ${calcSecs}`);
+			//console.log(`seconds from midnight: ${calcSecs}`);
 
 			if (calcSecs < 0) {
 				//if the time already passed, add a day
@@ -354,15 +352,15 @@ importScripts(
 
 		//console.log(`Timer should run for ${calcSecs} seconds.`)
 		calcSecs = Math.trunc(calcSecs);
-		console.log(`calcSecs after Trunc: ${calcSecs}`);
+		//console.log(`calcSecs after Trunc: ${calcSecs}`);
 
 		//debugger to check math logic
-		if (timerType == "time") {
+		/*if (timerType == "time") {
 			console.log(`Timer type is ${timerType}, the current time is ${curTime} and alarm should trigger at ${assumedTime}.`);
 		}
 		else if (timerType == "health") {
 			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger in ${calcSecs} seconds.`);
-		}
+		}*/
 		//return calcSecs;
 	}
 
@@ -420,7 +418,13 @@ importScripts(
 			//customTime = message.payload;
 			//console.log(`Number passed to timer: ${message.payload}`);
 			notifEnabled = true;
-			console.log(`notifEnabled: ${notifEnabled}`);
+
+			chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
+				//console.log("Value is " + result.key);
+				loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
+			});
+
+			//console.log(`notifEnabled2: ${notifEnabled}`);
 
 			if (notifEnabled == true) {
 				startNotifTimer();
