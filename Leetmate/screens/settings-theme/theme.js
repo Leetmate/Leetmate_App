@@ -75,12 +75,35 @@
         backdrop.addEventListener('click', closeModal);
     }
 
+    // --- Check Premium ----
+    async function isPremiumUser() {
+        const user = firebase.auth().currentUser;
+        if (!user) return false;
+
+        try {
+            const userRef = firebase.firestore().collection("users").doc(user.uid);
+            const doc = await userRef.get();
+
+            if (!doc.exists) return false;
+            return doc.data().premium === true;
+        } catch (err) {
+            console.error("Error checking premium:", err);
+            return false;
+        }
+    }
+
     if (swatches.length) {
         swatches.forEach(function (swatch) {
-            swatch.addEventListener('click', function () {
+            swatch.addEventListener('click', async function () {
+                const premium = await isPremiumUser();
+                // If user clicks on a color theme but premium = false, 
+                // then redirect to premium purchase page 
+                if (!premium) {
+                    window.location.href = "../premium/index.html";
+                    return;
+                }
                 var theme = swatch.getAttribute('data-color-theme');
                 if (!theme) return;
-
                 setTheme(theme);
                 closeModal();
             });
@@ -92,17 +115,18 @@
             closeModal();
         }
     });
+
+    // --- Navigation ----
+    // Back button logic (in header)
+    const backBtn = document.getElementById("back-btn");
+    if (backBtn) {
+        backBtn.addEventListener("click", () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "../settings-main/index.html";
+            }
+        });
+    }
 })();
 
-// --- Navigation ----
-// Back button logic (in header)
-const backBtn = document.getElementById("back-btn");
-if (backBtn) {
-  backBtn.addEventListener("click", () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.href = "../settings-main/index.html";
-    }
-  });
-}

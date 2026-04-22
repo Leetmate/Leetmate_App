@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../../features/shared/theme-init.js"></script>
+    <title>Leetmate - Premium</title>
+    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+    <link rel="stylesheet" href="../../styles/color-theme.css">
+    <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="../../styles/top-banner.css" />
+    <link rel="stylesheet" href="premium.css" />
+    <link rel="stylesheet" href="../../styles/menu-nav.css" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="premium-card">
+          <div class="screen-banner">
+            <div class="screen-banner__left">
+              <button
+                type="button"
+                class="menu-btn"
+                id="back-btn"
+                aria-label="Back to previous page"
+              >
+                <img
+                  src="../../assets/icons/back-arrow.png"
+                  class="menu-icon"
+                  alt=""
+                />
+              </button>
+            </div>
+
+            <div class="screen-banner__center">
+              <h1 class="screen-banner__title account-title-main">Premium</h1>
+            </div>
+
+            <div class="screen-banner__right">
+              <button
+                type="button"
+                class="menu-btn nav-trigger"
+                id="nav-trigger"
+                aria-expanded="false"
+                aria-controls="nav-drawer"
+                aria-label="Open menu"
+              >
+                <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+              </button>
+            </div>
+          </div>
+
+          <div class="premium-content">
+            <button class="premium-btn" id="prem-btn"> Get Premium! </button>
+            <p id="prem-feedback"> </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../scripts/background-music.js"></script>
+    <script src="../../features/shared/menu-nav.js"></script>
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/progression/xp.js"></script>
+    <script src="../../features/progression/streak.js"></script>
+    <script src="../../scripts/auth-gate.js"></script>
+    <script src="premium.js"></script>
+  </body>
+</html>

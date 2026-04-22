@@ -29,6 +29,9 @@ html[data-theme="dark"] {
     --focus-outline: 2px solid var(--color-accent-strong);
     --focus-offset: 2px;
 
+    /* slightly darker background image */
+    --overlay: rgba(0, 0, 0, 0.4);
+
    /* activity.css */
     --color-act-content-bg1: var(--color-surface-2);
     --color-act-content-bg2: var(--color-surface-3);
@@ -191,11 +194,35 @@ html[data-theme="dark"] {
     --color-comm-main-comm-menu-btn-bg5: var(--color-accent);
     --color-comm-main-comm-menu-btn: var(--color-text);
     --color-comm-main-black: var(--color-surface);
+
+    /* community-friends */
+    --color-friends-heading: var(--color-text-soft);
+    --color-friends-card-name: var(--color-text);
+    --color-friends-card-bg1: var(--color-accent);
+    --color-friends-card-bg2: var(--color-surface-3);
+    --color-friends-card-avatar-bg: var(--color-text-muted);
+    --color-friends-trophy-count: var(--color-text);
     --color-friends-empty-bg1: var(--color-text-muted);
     --color-friends-empty-bg2: var(--color-surface-3);
     --color-friends-request-bg1: var(--color-text-muted);
     --color-friends-request-bg2: var(--color-text-muted);
 
+    /* community-friends-profile.css */
+    --color-comm-fri-body: var(--color-surface);
+    --color-comm-fri-fri-username: var(--color-surface);
+    --color-comm-fri-fri-pro-load: var(--color-surface);
+    --color-comm-fri-fri-pro-un: var(--color-text);
+    --color-comm-fri-fri-pro-pet-name1: var(--color-accent);
+    --color-comm-fri-fri-pro-pet-name2: var(--color-surface-3);
+    --color-comm-fri-fri-pro-pet-name3: var(--color-text);
+    --color-comm-fri-fri-pro-pet-name4: var(--color-text);
+    --color-comm-fri-fri-pro-pet-name5: var(--color-surface-3);
+    --color-comm-fri-fri-pro-pet-name6: var(--color-surface-3);
+    --color-comm-fri-fri-pro-ava: linear-gradient(135deg, var(--color-surface-3) 0%,#75726b 50%, var(--color-surface-3) 100%);
+    --color-comm-fri-fri-stat-title1: var(--color-accent);
+    --color-comm-fri-fri-stat-title2: var(--color-surface-3);
+    --color-comm-fri-fri-stat-label: var(--color-text);
+    
     /* menu-nav.css */
     --color-menu-preview-bg: var(--color-bg);
     --color-nav-drawer-bg: var(--color-surface);
@@ -213,7 +240,6 @@ html[data-theme="dark"] body {
     color: var(--color-text) !important;
 }
 
-/* Apply theme to all screens */
 html[data-theme="dark"] .home-card,
 html[data-theme="dark"] .settings-card,
 html[data-theme="dark"] .activity-card,
@@ -222,14 +248,11 @@ html[data-theme="dark"] .notifications-card,
 html[data-theme="dark"] .color-card,
 html[data-theme="dark"] .account-card,
 html[data-theme="dark"] .theme-card,
-html[data-theme="dark"] .store-card 
-html[data-theme="dark"] .nav-drawer {
-    --screen-banner-bg: var(--color-surface-2);
-    background: var(--color-surface) !important;
-    box-shadow: var(--shadow-card);
-}
-
+html[data-theme="dark"] .store-card, 
+html[data-theme="dark"] .nav-drawer,
 html[data-theme="dark"] .community-card,
+html[data-theme="dark"] .friend-profile-card,
 html[data-theme="dark"] .pets-card {
     --screen-banner-bg: var(--color-surface-2);
+    box-shadow: var(--shadow-card);
 }

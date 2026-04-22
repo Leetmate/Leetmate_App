@@ -1,8 +1,8 @@
 :root{
-  --color-comm-fri-body-bg: #D6D0C5;
   --color-comm-fri-body: #3B2B1A;
   --color-comm-fri-fri-pro-load: #7C684F;
   --color-comm-fri-fri-pro-un: #251D13;
+  --color-comm-fri-fri-username: #251D13;
   --color-comm-fri-fri-pro-pet-name1: #F7EEDC;
   --color-comm-fri-fri-pro-pet-name2: #EFE0C6;
   --color-comm-fri-fri-pro-pet-name3: #D8BF95;
@@ -15,6 +15,7 @@
   --color-comm-fri-fri-stat-label: #7D5D36;
   --color-comm-fri-fri-pro-err: #8B2F2F;
   --color-comm-fri-fri-pro-err-bg: #FDE6E6;
+  --overlay: rgba(209, 202, 191, 0.75);
 }
 
 body {
@@ -26,7 +27,7 @@ body {
     Arial,
     sans-serif;
   font-size: 14px;
-  background: var(--color-comm-fri-body-bg);
+  background: var(--color-bg);
   color: var(--color-comm-fri-body);
   margin: 0;
   min-height: 100vh;
@@ -56,9 +57,9 @@ body {
   width: 100%;
   max-width: 100%;
   margin: 0;
-  background-color: var(--color-comm-fri-body-bg);
+  background-color: var(--color-bg);
   background-image:
-    linear-gradient(rgba(209, 202, 191, 0.75), rgba(209, 202, 191, 0.75)),
+    linear-gradient(var(--overlay), var(--overlay)),
     url("../../assets/backgrounds/bg_arena2.jpg");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
@@ -118,7 +119,7 @@ body {
   /* line-height 1 + overflow:hidden clipped descenders / rounded letter bottoms */
   line-height: 1.2;
   letter-spacing: 0.4px;
-  color: var(--color-comm-fri-fri-pro-un);
+  color: var(--color-comm-fri-fri-username);
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.45);
   white-space: nowrap;
   overflow: hidden;
