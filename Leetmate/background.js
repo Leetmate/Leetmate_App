@@ -63,7 +63,13 @@ importScripts(
 		}
 
 		//restart notif timer if needed as well
-		startNotifTimer();
+		await chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
+			//console.log("Value is " + result.key);
+			loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
+		});
+		if (notifEnabled == true) {
+			startNotifTimer();
+		}
 	});
 
 	// ── 3. Alarm handler ─────────────────────────────────────────────────────────
@@ -164,30 +170,33 @@ importScripts(
 	async function loadLocalVars(cusVar, newVal) {
 		if (cusVar == "timerType") {
 			timerType = newVal;
-			console.log(`timerType is: ${timerType}`);
+			//console.log(`timerType is: ${timerType}`);
 		}
 		else if (cusVar == "notifTime") {
 			notifTime = JSON.parse(JSON.stringify(newVal, null, 2));
 			//notifTime = JSON.stringify(newVal, null, 2);
-			console.log(`notifTime is: ${notifTime}`);
-			console.log(`notifTime is: ${notifTime}`);
+			//console.log(`notifTime is: ${notifTime}`);
+			//console.log(`notifTime is: ${notifTime}`);
 		}
 		else if (cusVar == "notifHealth") {
 			notifHealth = newVal;
-			console.log(`notifHealth is: ${notifHealth}`);
+			//console.log(`notifHealth is: ${notifHealth}`);
 		}
 		else if (cusVar == "curHealth") {
 			curHealth = newVal;
-			console.log(`curHealth is: ${curHealth}`);
+			//console.log(`curHealth is: ${curHealth}`);
 		}
 		else if (cusVar == "notifEnabled") {
 			notifEnabled = newVal;
-			console.log(`notifEnabled is: ${notifEnabled}`);
+			//console.log(`notifEnabled is: ${notifEnabled}`);
 		}
 	}
 
 	//async function calculateTimer() {
 	async function startNotifTimer() {
+		//debugger status
+		console.log("Starting startNotifTimer()");
+
 		await chrome.storage.local.get(["leetmate_notification_mode"]).then((result) => {
 			//console.log("Value is " + result.key);
 			loadLocalVars("timerType", result["leetmate_notification_mode"]);
@@ -220,7 +229,7 @@ importScripts(
 
 		//start the timer
 		time = Date.now() + calcSecs * 1000; //set as calculation for actual time later
-		console.log(`assumedTime: ${assumedTime}; time: ${time}`);
+		//console.log(`assumedTime: ${assumedTime}; time: ${time}`);
 		clearInterval(countdown);
 		countdown = setInterval(() => {
 			remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
@@ -267,14 +276,14 @@ importScripts(
 	}*/
 
 	function doMath() {
-		console.log("doMath() is running");
+		//("doMath() is running");
 
 		//debugger to check math
 		if (timerType == "time") {
-			console.log(`Timer type is ${timerType}, the current time is ${Date.now() * 1000} and alarm should trigger at ${notifTime["hour"]}.`);
+			//console.log(`Timer type is ${timerType}, the current time is ${Date.now() * 1000} and alarm should trigger at ${notifTime["hour"]}.`);
 		}
 		else if (timerType == "health") {
-			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger at ${notifHealth * 20}.`);
+			//console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger at ${notifHealth * 20}.`);
 		}
 
 		//math for seconds to time
@@ -287,7 +296,7 @@ importScripts(
 			if (notifTime["period"] == "PM") {
 				periodTime = 12;
 			}
-			console.log(`periodTime: ${periodTime}`);
+			//console.log(`periodTime: ${periodTime}`);
 
 			let assumedHour = Number(notifTime["hour"]);
 			let assumedMinute = Number(notifTime["minute"]);
@@ -304,27 +313,32 @@ importScripts(
 			assumedTime = (((periodTime + assumedHour) * 3600) + assumedMinute * 60); //seconds to reach a specific time in the day
 
 			//time zone is UTC+7
-			assumedTime = assumedTime + 25200;
+			//assumedTime = assumedTime + 25200; //this is local time
 
-			console.log(`notifTime["period"]: ${notifTime["period"]}`);
-			console.log(`assumedHour: ${assumedHour}`)
-			console.log(`assumedMinute: ${assumedMinute}`)
-			console.log(`Time based alarm should run trigger at ${calcSecs}`);
+			//console.log(`notifTime["period"]: ${notifTime["period"]}`);
+			//console.log(`assumedHour: ${assumedHour}`)
+			//console.log(`assumedMinute: ${assumedMinute}`)
+			//console.log(`Time based alarm should run trigger at ${calcSecs}`);
 
-			curTime = (Date.now() % 86400000) / 1000; //current time in seconds of the day starting from midnight today UTC
-			console.log(`It is currently ${curTime}`);
+			curTime = ((Date.now() - 25200000) % 86400000) / 1000; //current time in seconds of the day starting from midnight today UTC
+			//curTime = curTime + 25200; //make local time PST
+			console.log(`It is currently ${curTime} in PST and will be ${assumedTime} in PST (in seconds).`);
 
 			//let startDay = (Date.now() - Date.now()%86400000)/86400000; //trying to determine number of whole days since 1/1/1970
 			let startDay = (Date.now() - Date.now() % 86400000); //trying to determine number of whole days since 1/1/1970
 			console.log(`It has been ${startDay} milliseconds since January 1, 1970.`);
 			//console.log(`It has been ${startDay} milliseconds since midnight.`);
-			calcSecs = assumedTime - curTime; //
-			console.log(`calcSecs: ${calcSecs}`);
+			calcSecs = assumedTime - curTime; 
+			console.log(`seconds from midnight: ${calcSecs}`);
 
 			if (calcSecs < 0) {
 				//if the time already passed, add a day
 				//calcSecs = calcSecs + 86400;
-				calcSecs = Date.now() * 1000;
+				/*while (calcSecs == 86400 || calcSecs == 0)
+				{
+					calcSecs = 86400 - (curTime - assumedTime);
+				}*/	
+				calcSecs = 86400 - (curTime - assumedTime);	
 			}
 		}
 		else if (timerType == "health") {
@@ -380,6 +394,12 @@ importScripts(
 			requireInteraction: true, // The notification will stay until the user interacts with it
 			priority: 2
 		});
+
+		//restart timer
+		if (timerType == "time" && notifEnabled == true) {
+			//if the timer is time based, it should restart the timer after ending (24 hours)
+			startNotifTimer()
+		}
 	}
 
 	function stopTimer() {
@@ -387,10 +407,7 @@ importScripts(
 		clearInterval(countdown);
 		time = 0;
 		remainingTime = 0;
-		if (timerType == "time" && notifEnabled == true) {
-			//if the timer is time based, it should restart the timer after ending (24 hours)
-			startNotifTimer()
-		}
+		
 	}
 
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
