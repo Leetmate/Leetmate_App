@@ -216,14 +216,51 @@ body.hidden-on-load .popup-layout {
   color: red;
 }
 
+/* Continuous progress bar: same-row neighbors share one green strip (see activity.js segment classes) */
 .calendar-day.has-progress {
-  border-color: #2a241a;
+  /* Softer edge than black: darker mint than fill (#c3ebc6) */
+  --progress-bar-edge: #86b892;
   background: #c3ebc6;
+  border: none;
+  border-top: 2px solid var(--progress-bar-edge);
+  border-bottom: 2px solid var(--progress-bar-edge);
+}
+
+.calendar-day.has-progress.progress-connect-left {
+  margin-left: -2px;
+}
+
+.calendar-day.has-progress.progress-connect-right {
+  margin-right: -2px;
+}
+
+.calendar-day.has-progress.progress-run-single {
+  border-left: 2px solid var(--progress-bar-edge);
+  border-right: 2px solid var(--progress-bar-edge);
+  border-radius: 9px;
+}
+
+.calendar-day.has-progress.progress-run-start {
+  border-left: 2px solid var(--progress-bar-edge);
+  border-radius: 9px 0 0 9px;
+}
+
+.calendar-day.has-progress.progress-run-end {
+  border-right: 2px solid var(--progress-bar-edge);
+  border-radius: 0 9px 9px 0;
+}
+
+.calendar-day.has-progress.progress-run-mid {
+  border-radius: 0;
 }
 
 .calendar-day.has-progress.is-today {
-  border-color: #2f9a4a;
-  box-shadow: inset 0 0 0 1px #1d6f34;
+  box-shadow: inset 0 0 0 1px var(--progress-bar-edge, #86b892);
+}
+
+.calendar-day-number {
+  position: relative;
+  z-index: 1;
 }
 
 .calendar-day.has-freeze::after {
@@ -231,14 +268,15 @@ body.hidden-on-load .popup-layout {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   transform: translate(-50%, -50%);
-  background-image: url("../../assets/icons/streak_ice.png");
+  z-index: 0;
+  background-image: url("../../assets/icons/frozen.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.5;
+  opacity: 0.72;
   pointer-events: none;
 }
 
@@ -247,6 +285,10 @@ body.hidden-on-load .popup-layout {
 }
 
 .calendar-day.has-freeze.is-today {
+  color: red;
+}
+
+.calendar-day.has-freeze.is-today .calendar-day-number {
   color: red;
 }
 
@@ -259,6 +301,7 @@ body.hidden-on-load .popup-layout {
   top: -8px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 2;
   width: 18px;
   height: 18px;
   border: 1px solid #17130f;

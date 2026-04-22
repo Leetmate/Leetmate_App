@@ -73,11 +73,56 @@
     );
   }
 
-  function applyProgressBorder(dayCell, cellDate, progressDateSet) {
+  /**
+   * Same-row consecutive progress days get merged visually (continuous green bar).
+   * Week boundaries break the bar (Sat → Sun is not horizontally adjacent in the grid).
+   */
+  function applyProgressStyling(
+    dayCell,
+    cellDate,
+    day,
+    year,
+    month,
+    daysInMonth,
+    leading,
+    progressDateSet
+  ) {
     if (!progressDateSet || !(progressDateSet instanceof Set)) return;
     const dateKey = toDateKey(cellDate);
-    if (progressDateSet.has(dateKey)) {
-      dayCell.classList.add("has-progress");
+    if (!progressDateSet.has(dateKey)) return;
+
+    dayCell.classList.add("has-progress");
+
+    const pos = leading + day - 1;
+    const col = pos % 7;
+
+    let linkLeft = false;
+    if (day > 1) {
+      const prevKey = toDateKey(new Date(year, month, day - 1));
+      if (progressDateSet.has(prevKey) && col !== 0) {
+        linkLeft = true;
+      }
+    }
+
+    let linkRight = false;
+    if (day < daysInMonth) {
+      const nextKey = toDateKey(new Date(year, month, day + 1));
+      if (progressDateSet.has(nextKey) && col !== 6) {
+        linkRight = true;
+      }
+    }
+
+    if (linkLeft) dayCell.classList.add("progress-connect-left");
+    if (linkRight) dayCell.classList.add("progress-connect-right");
+
+    if (!linkLeft && !linkRight) {
+      dayCell.classList.add("progress-run-single");
+    } else if (!linkLeft && linkRight) {
+      dayCell.classList.add("progress-run-start");
+    } else if (linkLeft && !linkRight) {
+      dayCell.classList.add("progress-run-end");
+    } else {
+      dayCell.classList.add("progress-run-mid");
     }
   }
 
@@ -114,12 +159,24 @@
       dayCell.className = "calendar-day";
       dayCell.setAttribute("role", "gridcell");
       dayCell.setAttribute("aria-label", cellDate.toDateString());
-      dayCell.textContent = String(day);
+      const dayLabel = document.createElement("span");
+      dayLabel.className = "calendar-day-number";
+      dayLabel.textContent = String(day);
+      dayCell.appendChild(dayLabel);
 
       if (isSameDay(cellDate, today)) {
         dayCell.classList.add("is-today");
       }
-      applyProgressBorder(dayCell, cellDate, progressDateSet);
+      applyProgressStyling(
+        dayCell,
+        cellDate,
+        day,
+        year,
+        month,
+        daysInMonth,
+        leading,
+        progressDateSet
+      );
       applyFreezeOverlay(dayCell, cellDate, freezeDateSet);
       if (typeof attachWeeklyRewardGift === "function") {
         attachWeeklyRewardGift(

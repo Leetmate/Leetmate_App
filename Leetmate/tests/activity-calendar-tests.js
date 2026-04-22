@@ -68,9 +68,67 @@
     return true;
   }
 
+  const PROGRESS_SEGMENT_CLASSES = [
+    "progress-connect-left",
+    "progress-connect-right",
+    "progress-run-single",
+    "progress-run-start",
+    "progress-run-end",
+    "progress-run-mid",
+  ];
+
+  function getMonthLayoutFromDom() {
+    const grid = document.getElementById("activityCalendarGrid");
+    if (!grid) return { leading: 0, daysInMonth: 31 };
+    const cells = Array.from(grid.querySelectorAll(".calendar-day"));
+    let leading = 0;
+    let daysInMonth = 0;
+    for (let i = 0; i < cells.length; i += 1) {
+      const c = cells[i];
+      if (c.classList.contains("is-placeholder")) continue;
+      const d = getDayNumberFromCell(c);
+      if (d === 1) {
+        leading = i;
+        break;
+      }
+    }
+    for (let i = 0; i < cells.length; i += 1) {
+      const c = cells[i];
+      if (c.classList.contains("is-placeholder")) continue;
+      const d = getDayNumberFromCell(c);
+      if (d >= 1 && d > daysInMonth) daysInMonth = d;
+    }
+    return { leading, daysInMonth: daysInMonth || 31 };
+  }
+
+  function applyProgressSegmentClassesForDemo(cell, day, progressSet, leading, daysInMonth) {
+    if (!progressSet.has(day)) return;
+    cell.classList.add("has-progress");
+    const pos = leading + day - 1;
+    const col = pos % 7;
+
+    let linkLeft = false;
+    if (day > 1) {
+      if (progressSet.has(day - 1) && col !== 0) linkLeft = true;
+    }
+
+    let linkRight = false;
+    if (day < daysInMonth) {
+      if (progressSet.has(day + 1) && col !== 6) linkRight = true;
+    }
+
+    if (linkLeft) cell.classList.add("progress-connect-left");
+    if (linkRight) cell.classList.add("progress-connect-right");
+
+    if (!linkLeft && !linkRight) cell.classList.add("progress-run-single");
+    else if (!linkLeft && linkRight) cell.classList.add("progress-run-start");
+    else if (linkLeft && !linkRight) cell.classList.add("progress-run-end");
+    else cell.classList.add("progress-run-mid");
+  }
+
   function clearAllVisualMarkers() {
     getVisibleCalendarCells().forEach((cell) => {
-      cell.classList.remove("has-progress", "has-freeze", "has-weekly-gift");
+      cell.classList.remove("has-progress", "has-freeze", "has-weekly-gift", ...PROGRESS_SEGMENT_CLASSES);
       cell.querySelectorAll(".calendar-weekly-gift-btn").forEach((btn) => btn.remove());
     });
   }
@@ -207,12 +265,15 @@
       ? giftDays
       : getAutoGiftDaysFromProgress(progressDays);
     const giftSet = new Set(giftSourceDays);
+    const { leading, daysInMonth } = getMonthLayoutFromDom();
 
     getVisibleCalendarCells().forEach((cell) => {
       const day = getDayNumberFromCell(cell);
       if (!day) return;
 
-      if (progressSet.has(day)) cell.classList.add("has-progress");
+      if (progressSet.has(day)) {
+        applyProgressSegmentClassesForDemo(cell, day, progressSet, leading, daysInMonth);
+      }
       if (freezeSet.has(day)) cell.classList.add("has-freeze");
       if (giftSet.has(day)) applyGiftButtonToCell(cell);
     });
