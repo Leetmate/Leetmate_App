@@ -57,6 +57,44 @@
     return toDateKey(shiftedDate);
   }
 
+  function getLatestDateKey(dateSet) {
+    if (!(dateSet instanceof Set) || dateSet.size === 0) return null;
+    return [...dateSet]
+      .filter((key) => typeof key === "string")
+      .sort((a, b) => a.localeCompare(b))
+      .pop() || null;
+  }
+
+  /**
+   * Active streak = latest contiguous progress run ending on latest progress date,
+   * cut off at latest claimed weekly reward date (claimed day excluded).
+   * Everything else should be rendered as muted historical progress.
+   */
+  function buildActiveProgressDateSet(progressDateSet, weeklyRewardsState) {
+    const activeSet = new Set();
+    if (!(progressDateSet instanceof Set) || progressDateSet.size === 0) return activeSet;
+
+    const latestProgressKey = getLatestDateKey(progressDateSet);
+    if (!latestProgressKey) return activeSet;
+
+    const claimedSet = weeklyRewardsState?.claimedDateSet;
+    const latestClaimedKey = getLatestDateKey(claimedSet);
+
+    let cursorKey = latestProgressKey;
+    while (cursorKey && progressDateSet.has(cursorKey)) {
+      if (latestClaimedKey && cursorKey <= latestClaimedKey) {
+        break;
+      }
+      activeSet.add(cursorKey);
+      const prevKey = addDaysToDateKey(cursorKey, -1);
+      if (!prevKey || !progressDateSet.has(prevKey)) break;
+      if (latestClaimedKey && prevKey <= latestClaimedKey) break;
+      cursorKey = prevKey;
+    }
+
+    return activeSet;
+  }
+
   function getMonthStart(date) {
     return new Date(date.getFullYear(), date.getMonth(), 1);
   }
@@ -85,13 +123,18 @@
     month,
     daysInMonth,
     leading,
-    progressDateSet
+    progressDateSet,
+    activeProgressDateSet
   ) {
     if (!progressDateSet || !(progressDateSet instanceof Set)) return;
     const dateKey = toDateKey(cellDate);
     if (!progressDateSet.has(dateKey)) return;
 
     dayCell.classList.add("has-progress");
+    const isActive = activeProgressDateSet instanceof Set && activeProgressDateSet.has(dateKey);
+    if (!isActive) {
+      dayCell.classList.add("has-progress-muted");
+    }
 
     const pos = leading + day - 1;
     const col = pos % 7;
@@ -99,7 +142,9 @@
     let linkLeft = false;
     if (day > 1) {
       const prevKey = toDateKey(new Date(year, month, day - 1));
-      if (progressDateSet.has(prevKey) && col !== 0) {
+      const prevIsProgress = progressDateSet.has(prevKey);
+      const prevIsActive = activeProgressDateSet instanceof Set && activeProgressDateSet.has(prevKey);
+      if (prevIsProgress && prevIsActive === isActive && col !== 0) {
         linkLeft = true;
       }
     }
@@ -107,7 +152,9 @@
     let linkRight = false;
     if (day < daysInMonth) {
       const nextKey = toDateKey(new Date(year, month, day + 1));
-      if (progressDateSet.has(nextKey) && col !== 6) {
+      const nextIsProgress = progressDateSet.has(nextKey);
+      const nextIsActive = activeProgressDateSet instanceof Set && activeProgressDateSet.has(nextKey);
+      if (nextIsProgress && nextIsActive === isActive && col !== 6) {
         linkRight = true;
       }
     }
@@ -141,6 +188,7 @@
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const leading = firstDay.getDay();
     const today = new Date();
+    const activeProgressDateSet = buildActiveProgressDateSet(progressDateSet, weeklyRewardsState);
 
     monthLabelEl.textContent = monthFormatter.format(viewMonth);
     calendarGridEl.innerHTML = "";
@@ -175,7 +223,8 @@
         month,
         daysInMonth,
         leading,
-        progressDateSet
+        progressDateSet,
+        activeProgressDateSet
       );
       applyFreezeOverlay(dayCell, cellDate, freezeDateSet);
       if (typeof attachWeeklyRewardGift === "function") {

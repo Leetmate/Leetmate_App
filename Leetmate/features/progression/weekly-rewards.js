@@ -7,6 +7,8 @@ const WEEKLY_STREAK_XP_REWARD = 30;
 
 let _weeklyClaimInFlight = false;
 let _weeklyBannerTimer = null;
+let _weeklyBannerHideTimer = null;
+const WEEKLY_CHEST_CLAIM_FADE_MS = 460;
 
 function getWeeklyRewardAmounts() {
   return {
@@ -46,16 +48,27 @@ function showWeeklyRewardBanner(message) {
   }
 
   bannerEl.textContent = bannerMessage;
+  bannerEl.classList.remove("is-hiding");
+  // Restart enter animation on repeat claims.
+  void bannerEl.offsetWidth;
   bannerEl.classList.add("is-visible");
 
   if (_weeklyBannerTimer) {
     clearTimeout(_weeklyBannerTimer);
   }
+  if (_weeklyBannerHideTimer) {
+    clearTimeout(_weeklyBannerHideTimer);
+  }
 
   _weeklyBannerTimer = setTimeout(() => {
     bannerEl.classList.remove("is-visible");
+    bannerEl.classList.add("is-hiding");
+    _weeklyBannerHideTimer = setTimeout(() => {
+      bannerEl.classList.remove("is-hiding");
+      _weeklyBannerHideTimer = null;
+    }, 460);
     _weeklyBannerTimer = null;
-  }, 2200);
+  }, 3400);
 }
 
 function sortDateKeys(dateKeys) {
@@ -83,6 +96,15 @@ function addDay(dateKey, dayDelta) {
   const shifted = new Date(parsed);
   shifted.setDate(shifted.getDate() + dayDelta);
   return toDateKey(shifted);
+}
+
+function formatDateKeyForAria(dateKey) {
+  const parsed = parseDateKeyToDate(dateKey);
+  if (!parsed) return dateKey;
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+  }).format(parsed);
 }
 
 function hasSevenDayStreakEndingOn(dateKey, progressDateSet) {
@@ -275,36 +297,56 @@ async function claimWeeklyReward(db, uid, dateKey, state) {
 
 function attachWeeklyRewardGift(dayCell, dateKey, weeklyState, onClaim) {
   if (!dayCell || !weeklyState || !(weeklyState.claimableDateSet instanceof Set)) return;
-  const hasClaimableGift = weeklyState.claimableDateSet.has(dateKey);
-  const hasPreviewGift =
+  const hasClaimableReward = weeklyState.claimableDateSet.has(dateKey);
+  const hasClaimedReward =
+    weeklyState.claimedDateSet instanceof Set && weeklyState.claimedDateSet.has(dateKey);
+  const hasPreviewReward =
     weeklyState.previewDateSet instanceof Set && weeklyState.previewDateSet.has(dateKey);
-  if (!hasClaimableGift && !hasPreviewGift) return;
+  if (!hasClaimableReward && !hasPreviewReward && !hasClaimedReward) return;
 
-  dayCell.classList.add("has-weekly-gift");
-  if (hasPreviewGift && !hasClaimableGift) {
-    dayCell.classList.add("is-reward-preview");
+  dayCell.classList.add("has-weekly-reward");
+
+  if (hasClaimedReward) {
+    dayCell.classList.add("weekly-reward-claimed");
+    dayCell.setAttribute(
+      "aria-label",
+      `Weekly reward already claimed for ${formatDateKeyForAria(dateKey)}`
+    );
+    return;
   }
 
-  const giftButton = document.createElement("button");
-  giftButton.type = "button";
-  giftButton.className = "calendar-weekly-gift-btn";
-  giftButton.textContent = "🎁";
+  if (hasClaimableReward) {
+    dayCell.classList.add("weekly-reward-claimable");
+    dayCell.setAttribute("role", "button");
+    dayCell.setAttribute("tabindex", "0");
+    dayCell.setAttribute(
+      "aria-label",
+      `Claim weekly reward for ${formatDateKeyForAria(dateKey)}`
+    );
 
-  if (hasClaimableGift) {
-    giftButton.setAttribute("aria-label", "Claim weekly streak reward");
-    giftButton.addEventListener("click", async (event) => {
+    const handleClaim = async (event) => {
       event.stopPropagation();
       event.preventDefault();
       if (_weeklyClaimInFlight) return;
 
-      giftButton.disabled = true;
+      dayCell.classList.add("weekly-reward-claiming");
+      await new Promise((resolve) => {
+        setTimeout(resolve, WEEKLY_CHEST_CLAIM_FADE_MS);
+      });
       await onClaim(dateKey);
+    };
+
+    dayCell.addEventListener("click", handleClaim);
+    dayCell.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        handleClaim(event);
+      }
     });
   } else {
-    giftButton.classList.add("is-locked");
-    giftButton.disabled = true;
-    giftButton.setAttribute("aria-label", "Weekly streak reward locked");
+    dayCell.classList.add("weekly-reward-locked");
+    dayCell.setAttribute(
+      "aria-label",
+      `Weekly reward locked for ${formatDateKeyForAria(dateKey)}`
+    );
   }
-
-  dayCell.appendChild(giftButton);
 }

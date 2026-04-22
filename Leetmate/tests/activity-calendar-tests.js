@@ -4,6 +4,7 @@
 
   let domPreviewSnapshot = null;
   let lastFreezeDemoRange = null;
+  const DEMO_CHEST_CLAIM_FADE_MS = 460;
 
   function isValidDateKey(value) {
     return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
@@ -43,9 +44,17 @@
     return {
       visibleDayCells: cells.length,
       progressCount: cells.filter((cell) => cell.classList.contains("has-progress")).length,
+      progressActiveCount: cells.filter(
+        (cell) =>
+          cell.classList.contains("has-progress") &&
+          !cell.classList.contains("has-progress-muted")
+      ).length,
+      progressMutedCount: cells.filter((cell) => cell.classList.contains("has-progress-muted")).length,
       freezeCount: cells.filter((cell) => cell.classList.contains("has-freeze")).length,
-      giftCount: cells.filter((cell) => cell.classList.contains("has-weekly-gift")).length,
-      giftButtons: document.querySelectorAll(".calendar-weekly-gift-btn").length,
+      rewardCount: cells.filter((cell) => cell.classList.contains("has-weekly-reward")).length,
+      rewardClaimableCount: cells.filter((cell) => cell.classList.contains("weekly-reward-claimable")).length,
+      rewardLockedCount: cells.filter((cell) => cell.classList.contains("weekly-reward-locked")).length,
+      rewardClaimedCount: cells.filter((cell) => cell.classList.contains("weekly-reward-claimed")).length,
     };
   }
 
@@ -62,7 +71,9 @@
     domPreviewSnapshot.forEach((entry) => {
       if (!entry?.cell) return;
       entry.cell.className = entry.className;
-      entry.cell.querySelectorAll(".calendar-weekly-gift-btn").forEach((btn) => btn.remove());
+      entry.cell.removeAttribute("role");
+      entry.cell.removeAttribute("tabindex");
+      entry.cell.removeAttribute("aria-label");
     });
     domPreviewSnapshot = null;
     return true;
@@ -101,20 +112,35 @@
     return { leading, daysInMonth: daysInMonth || 31 };
   }
 
-  function applyProgressSegmentClassesForDemo(cell, day, progressSet, leading, daysInMonth) {
+  function applyProgressSegmentClassesForDemo(
+    cell,
+    day,
+    progressSet,
+    activeProgressSet,
+    leading,
+    daysInMonth
+  ) {
     if (!progressSet.has(day)) return;
     cell.classList.add("has-progress");
+    const isActive = activeProgressSet.has(day);
+    if (!isActive) {
+      cell.classList.add("has-progress-muted");
+    }
     const pos = leading + day - 1;
     const col = pos % 7;
 
     let linkLeft = false;
     if (day > 1) {
-      if (progressSet.has(day - 1) && col !== 0) linkLeft = true;
+      if (progressSet.has(day - 1) && activeProgressSet.has(day - 1) === isActive && col !== 0) {
+        linkLeft = true;
+      }
     }
 
     let linkRight = false;
     if (day < daysInMonth) {
-      if (progressSet.has(day + 1) && col !== 6) linkRight = true;
+      if (progressSet.has(day + 1) && activeProgressSet.has(day + 1) === isActive && col !== 6) {
+        linkRight = true;
+      }
     }
 
     if (linkLeft) cell.classList.add("progress-connect-left");
@@ -128,8 +154,20 @@
 
   function clearAllVisualMarkers() {
     getVisibleCalendarCells().forEach((cell) => {
-      cell.classList.remove("has-progress", "has-freeze", "has-weekly-gift", ...PROGRESS_SEGMENT_CLASSES);
-      cell.querySelectorAll(".calendar-weekly-gift-btn").forEach((btn) => btn.remove());
+      cell.classList.remove(
+        "has-progress",
+        "has-progress-muted",
+        "has-freeze",
+        "has-weekly-reward",
+        "weekly-reward-locked",
+        "weekly-reward-claimable",
+        "weekly-reward-claimed",
+        "weekly-reward-claiming",
+        ...PROGRESS_SEGMENT_CLASSES
+      );
+      cell.removeAttribute("role");
+      cell.removeAttribute("tabindex");
+      cell.removeAttribute("aria-label");
     });
   }
 
@@ -149,83 +187,107 @@
     return picked;
   }
 
-  function applyGiftButtonToCell(cell) {
+  function applyRewardStateToCell(cell, state) {
     if (!cell) return;
-    cell.classList.add("has-weekly-gift");
+    cell.classList.add("has-weekly-reward");
+    if (state === "claimed") {
+      cell.classList.add("weekly-reward-claimed");
+      return;
+    }
+    if (state === "claimable") {
+      cell.classList.add("weekly-reward-claimable");
+      cell.setAttribute("role", "button");
+      cell.setAttribute("tabindex", "0");
+      cell.setAttribute("aria-label", "Demo weekly reward claimable");
+      const handleDemoClaim = async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!cell.classList.contains("weekly-reward-claimable")) return;
 
-    if (cell.querySelector(".calendar-weekly-gift-btn")) return;
+        cell.classList.add("weekly-reward-claiming");
+        await new Promise((resolve) => {
+          setTimeout(resolve, DEMO_CHEST_CLAIM_FADE_MS);
+        });
 
-    const giftButton = document.createElement("button");
-    giftButton.type = "button";
-    giftButton.className = "calendar-weekly-gift-btn";
-    giftButton.setAttribute("aria-label", "Demo weekly reward gift");
-    giftButton.textContent = "🎁";
-    giftButton.addEventListener("click", async () => {
-      giftButton.disabled = true;
-      giftButton.textContent = "✓";
+        cell.classList.remove("weekly-reward-claimable");
+        cell.classList.add("weekly-reward-claimed");
+        cell.removeAttribute("role");
+        cell.removeAttribute("tabindex");
+        cell.setAttribute("aria-label", "Demo weekly reward claimed");
 
-      try {
-        const dateKey = getDateKeyFromCell(cell);
-        const rewardAmounts =
-          typeof window.getWeeklyRewardAmounts === "function"
-            ? window.getWeeklyRewardAmounts()
-            : { coinReward: 100, xpReward: 30 };
-        const coinReward = Number(rewardAmounts?.coinReward) || 0;
-        const xpReward = Number(rewardAmounts?.xpReward) || 0;
+        try {
+          const dateKey = getDateKeyFromCell(cell);
+          const rewardAmounts =
+            typeof window.getWeeklyRewardAmounts === "function"
+              ? window.getWeeklyRewardAmounts()
+              : { coinReward: 100, xpReward: 30 };
+          const coinReward = Number(rewardAmounts?.coinReward) || 0;
+          const xpReward = Number(rewardAmounts?.xpReward) || 0;
 
-        const { db, uid } = await getAuthCtx();
+          const { db, uid } = await getAuthCtx();
 
-        if (dateKey) {
-          await db
-            .collection("users")
-            .doc(uid)
-            .set(
-              {
-                weeklyRewardClaimedDateKeys: firebase.firestore.FieldValue.arrayUnion(dateKey),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-              },
-              { merge: true }
-            );
+          if (dateKey) {
+            await db
+              .collection("users")
+              .doc(uid)
+              .set(
+                {
+                  weeklyRewardClaimedDateKeys: firebase.firestore.FieldValue.arrayUnion(dateKey),
+                  updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                },
+                { merge: true }
+              );
+          }
+
+          if (typeof window.addCoins === "function") {
+            await window.addCoins(coinReward);
+          }
+          if (typeof window.addXP === "function") {
+            await window.addXP(xpReward);
+          }
+          if (typeof window.saveCoinsToFirestore === "function") {
+            await window.saveCoinsToFirestore(db, uid);
+          }
+          if (typeof window.saveXPToFirestore === "function") {
+            await window.saveXPToFirestore(db, uid);
+          }
+          if (typeof window.updateCoinsUI === "function") {
+            await window.updateCoinsUI();
+          }
+          if (typeof window.updateXPSectionUI === "function") {
+            await window.updateXPSectionUI();
+          }
+        } catch (error) {
+          console.warn("Demo weekly reward claim failed:", error);
+        } finally {
+          cell.classList.remove("weekly-reward-claiming");
         }
 
-        if (typeof window.addCoins === "function") {
-          await window.addCoins(coinReward);
+        if (typeof window.showWeeklyRewardBanner === "function") {
+          const rewardAmounts =
+            typeof window.getWeeklyRewardAmounts === "function"
+              ? window.getWeeklyRewardAmounts()
+              : { coinReward: 100, xpReward: 30 };
+          const bannerMessage =
+            typeof window.formatWeeklyRewardBannerMessage === "function"
+              ? window.formatWeeklyRewardBannerMessage(
+                  rewardAmounts.coinReward,
+                  rewardAmounts.xpReward
+                )
+              : `Weekly reward claimed: +${rewardAmounts.coinReward} coins, +${rewardAmounts.xpReward} XP`;
+          window.showWeeklyRewardBanner(bannerMessage);
         }
-        if (typeof window.addXP === "function") {
-          await window.addXP(xpReward);
-        }
-        if (typeof window.saveCoinsToFirestore === "function") {
-          await window.saveCoinsToFirestore(db, uid);
-        }
-        if (typeof window.saveXPToFirestore === "function") {
-          await window.saveXPToFirestore(db, uid);
-        }
-        if (typeof window.updateCoinsUI === "function") {
-          await window.updateCoinsUI();
-        }
-        if (typeof window.updateXPSectionUI === "function") {
-          await window.updateXPSectionUI();
-        }
-      } catch (error) {
-        console.warn("Demo weekly claim failed to write Firestore state:", error);
-      }
+      };
 
-      if (typeof window.showWeeklyRewardBanner === "function") {
-        const rewardAmounts =
-          typeof window.getWeeklyRewardAmounts === "function"
-            ? window.getWeeklyRewardAmounts()
-            : { coinReward: 100, xpReward: 30 };
-        const bannerMessage =
-          typeof window.formatWeeklyRewardBannerMessage === "function"
-            ? window.formatWeeklyRewardBannerMessage(
-                rewardAmounts.coinReward,
-                rewardAmounts.xpReward
-              )
-            : `Weekly reward claimed: +${rewardAmounts.coinReward} coins, +${rewardAmounts.xpReward} XP`;
-        window.showWeeklyRewardBanner(bannerMessage);
-      }
-    });
-    cell.appendChild(giftButton);
+      cell.addEventListener("click", handleDemoClaim);
+      cell.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          handleDemoClaim(event);
+        }
+      });
+      return;
+    }
+    cell.classList.add("weekly-reward-locked");
   }
 
   function getAutoGiftDaysFromProgress(progressDays) {
@@ -258,13 +320,31 @@
     return giftDays;
   }
 
-  function applyVisualDemo({ progressDays, freezeDays, giftDays }) {
+  function applyVisualDemo({
+    progressDays,
+    activeProgressDays,
+    mutedProgressDays,
+    freezeDays,
+    rewardDays,
+    claimableDays,
+    lockedDays,
+    claimedDays,
+  }) {
     const progressSet = new Set(progressDays || []);
+    const activeProgressSet = Array.isArray(activeProgressDays)
+      ? new Set(activeProgressDays)
+      : Array.isArray(mutedProgressDays)
+      ? new Set([...progressSet].filter((day) => !new Set(mutedProgressDays).has(day)))
+      : new Set(progressSet);
     const freezeSet = new Set(freezeDays || []);
-    const giftSourceDays = Array.isArray(giftDays)
-      ? giftDays
+    const claimableSourceDays = Array.isArray(claimableDays)
+      ? claimableDays
+      : Array.isArray(rewardDays)
+      ? rewardDays
       : getAutoGiftDaysFromProgress(progressDays);
-    const giftSet = new Set(giftSourceDays);
+    const claimableSet = new Set(claimableSourceDays);
+    const lockedSet = new Set(lockedDays || []);
+    const claimedSet = new Set(claimedDays || []);
     const { leading, daysInMonth } = getMonthLayoutFromDom();
 
     getVisibleCalendarCells().forEach((cell) => {
@@ -272,10 +352,19 @@
       if (!day) return;
 
       if (progressSet.has(day)) {
-        applyProgressSegmentClassesForDemo(cell, day, progressSet, leading, daysInMonth);
+        applyProgressSegmentClassesForDemo(
+          cell,
+          day,
+          progressSet,
+          activeProgressSet,
+          leading,
+          daysInMonth
+        );
       }
       if (freezeSet.has(day)) cell.classList.add("has-freeze");
-      if (giftSet.has(day)) applyGiftButtonToCell(cell);
+      if (claimedSet.has(day)) applyRewardStateToCell(cell, "claimed");
+      else if (claimableSet.has(day)) applyRewardStateToCell(cell, "claimable");
+      else if (lockedSet.has(day)) applyRewardStateToCell(cell, "locked");
     });
   }
 
@@ -410,23 +499,43 @@
     preview: {
       custom({
         progressDays = pickDayNumbersNearEnd(10),
+        activeProgressDays,
+        mutedProgressDays,
         freezeDays = pickDayNumbersNearEnd(3),
-        giftDays,
+        rewardDays,
+        claimableDays,
+        lockedDays,
+        claimedDays,
       } = {}) {
         if (!domPreviewSnapshot) saveDomPreviewSnapshot();
 
-        const resolvedGiftDays = Array.isArray(giftDays)
-          ? giftDays
+        const resolvedClaimableDays = Array.isArray(claimableDays)
+          ? claimableDays
+          : Array.isArray(rewardDays)
+          ? rewardDays
           : getAutoGiftDaysFromProgress(progressDays);
 
         clearAllVisualMarkers();
-        applyVisualDemo({ progressDays, freezeDays, giftDays: resolvedGiftDays });
+        applyVisualDemo({
+          progressDays,
+          activeProgressDays,
+          mutedProgressDays,
+          freezeDays,
+          rewardDays,
+          claimableDays: resolvedClaimableDays,
+          lockedDays,
+          claimedDays,
+        });
 
         const summary = getCalendarSummary();
         console.log("Preview demo applied (visual-only):", {
           progressDays,
+          activeProgressDays,
+          mutedProgressDays,
           freezeDays,
-          giftDays: resolvedGiftDays,
+          claimableDays: resolvedClaimableDays,
+          lockedDays,
+          claimedDays,
           summary,
         });
         return summary;
@@ -460,9 +569,9 @@
         freezeClear: "await activityCalendarTest.freezeDemo.clear()",
         previewQuick: "activityCalendarTest.preview.quick()",
         previewQuickCustom:
-          "activityCalendarTest.preview.quick({ progressDays:[14,15,16], freezeDays:[16], giftDays:[16] })",
+          "activityCalendarTest.preview.quick({ progressDays:[10,11,12,13,14,15,16], activeProgressDays:[14,15,16], freezeDays:[12], claimableDays:[16], lockedDays:[18], claimedDays:[11] })",
         previewCustom:
-          "activityCalendarTest.preview.start({ progressDays:[14,15,16], freezeDays:[16], giftDays:[16] })",
+          "activityCalendarTest.preview.custom({ progressDays:[10,11,12,13,14,15,16], activeProgressDays:[14,15,16], freezeDays:[12], claimableDays:[16], lockedDays:[18], claimedDays:[11] })",
         previewStop: "activityCalendarTest.preview.stop()",
         readView: "activityCalendarTest.readView()",
       };
