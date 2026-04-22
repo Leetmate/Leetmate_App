@@ -247,6 +247,8 @@ importScripts(
 		}, 1000);
 	}
 
+
+
 	/*function getFromStorage(keys) {
 		return new Promise((resolve, reject) => {
 			try {
