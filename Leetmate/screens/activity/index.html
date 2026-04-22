@@ -6,15 +6,26 @@
     <title>Leetmate - Activity</title>
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
+    <link rel="stylesheet" href="../../styles/loading.css" />
     <link rel="stylesheet" href="activity.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
   </head>
-  <body>
+  <body class="hidden-on-load">
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <p class="loading-text" id="loading-text">Loading activity...</p>
+    </div>
     <div class="popup-layout">
       <div class="popup-content">
         <div class="activity-card">
           <div class="screen-banner">
-            <div class="screen-banner__left"></div>
+            <div class="screen-banner__left">
+              <button type="button" class="screen-banner__premium premium-btn">+ Premium</button>
+            </div>
             <div class="screen-banner__center">
               <h1 class="screen-banner__title">Activity</h1>
             </div>
@@ -32,12 +43,52 @@
             </div>
           </div>
 
-          <div class="activity-content">
-            <p
-              style="color: #111; font-family: 'Lilita One', cursive; font-size: 20px;"
-            >
-              Activity content goes here...
-            </p>
+          <div class="activity-scroll">
+            <section class="activity-streak-card" aria-label="Current streak">
+              <p class="activity-streak-title">Current Streak</p>
+              <div class="activity-streak-display">
+                <div class="streak-icon-wrap">
+                  <img
+                    src="../../assets/icons/streak_fire.png"
+                    class="activity-streak-icon"
+                    alt="Streak fire icon"
+                  />
+                  <img
+                    src="../../assets/icons/streak_ice.png"
+                    class="activity-streak-freeze streak-freeze-overlay"
+                    alt="Streak freeze active"
+                  />
+                </div>
+                <span class="streak-count activity-streak-count">0</span>
+              </div>
+              <p class="activity-streak-subtext">Keep your streak alive to unlock weekly drops!</p>
+            </section>
+
+            <section class="activity-calendar-card" aria-label="Rewards calendar">
+              <div class="activity-calendar-header">
+                <button type="button" class="calendar-nav-btn" id="calendarPrev" aria-label="Previous month">
+                  &#9664;
+                </button>
+                <h2 id="calendarMonthLabel" class="activity-calendar-month">Month Year</h2>
+                <button type="button" class="calendar-nav-btn" id="calendarNext" aria-label="Next month">
+                  &#9654;
+                </button>
+              </div>
+
+              <div class="activity-calendar-weekdays" aria-hidden="true">
+                <span>S</span>
+                <span>M</span>
+                <span>T</span>
+                <span>W</span>
+                <span>T</span>
+                <span>F</span>
+                <span>S</span>
+              </div>
+
+              <div id="activityCalendarGrid" class="activity-calendar-grid" role="grid"></div>
+            </section>
+
+            <!-- <button type="button" class="activity-premium-btn">+ Premium</button> -->
           </div>
         </div>
       </div>
@@ -45,10 +96,15 @@
 
     <script src="../../scripts/background-music.js"></script>
     <script src="../../features/shared/menu-nav.js"></script>
+    <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/progression/coins.js"></script>
     <script src="../../features/progression/xp.js"></script>
     <script src="../../features/progression/streak.js"></script>
+    <script src="../../features/progression/weekly-rewards.js"></script>
+    <script src="../../tests/activity-calendar-tests.js"></script>
+    <script src="activity.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
   </body>
 </html>
