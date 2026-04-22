@@ -1,3 +1,8 @@
+:root{
+  --color-start-hero-base: #BFA77A;
+  --color-start-btn-sec: #E8DECC;
+}
+
 body {
   padding: var(--space-5) !important;
 }
@@ -90,7 +95,7 @@ body.auth-checking .popup-main {
 .hero-base {
   width: 310px;
   height: 32px;
-  background: #bfa77a;
+  background: var(--color-start-hero-base);
   border-radius: 50%;
   position: absolute;
   bottom: -28px;
@@ -137,7 +142,7 @@ body.auth-checking .popup-main {
 }
 
 .start-btn--secondary {
-  background: #e8decc;
+  background: var(--color-start-btn-sec);
   color: var(--color-text);
 }
 

@@ -1,6 +1,14 @@
 /* Community Screen Layout */
 @import url("../../styles/layout.css");
 
+:root{
+  --color-comm-multi-comm-card-banner-bg: #D6D0C5;
+  --color-comm-multi-comm-card-bg: #EEEAE1;
+  --color-comm-multi-comm-content-bg1: #DCEAF5;
+  --color-comm-multi-comm-content-bg2: #F5DCE0;
+  --color-comm-multi-black: #111;
+}
+
 body {
   font-family:
     system-ui,
@@ -13,7 +21,7 @@ body {
 
 /* COMMUNITY CONTAINER */
 .community-card {
-  --screen-banner-bg: #d6d0c5;
+  --screen-banner-bg: var(--color-comm-multi-comm-card-banner-bg);
   --screen-banner-offset-top: 16px;
   --screen-banner-offset-x: 16px;
   width: 100%;
@@ -21,7 +29,7 @@ body {
   min-height: 520px;
   margin: 0 auto;
   padding: 16px;
-  background: #EEEAE1; 
+  background: var(--color-comm-multi-comm-card-bg); 
   border-radius: 0;
   border: none;
   display: flex;
@@ -37,8 +45,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(#DCEAF5, #F5DCE0); /* playful gradient */
-  border: 4px solid #111;
+  background: linear-gradient(var(--color-comm-multi-comm-content-bg1), var(--color-comm-multi-comm-content-bg2)); /* playful gradient */
+  border: 4px solid var(--color-comm-multi-black);
   border-radius: 28px;
   padding: 16px;
   margin: 0;

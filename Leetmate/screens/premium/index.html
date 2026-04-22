@@ -4,25 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="../../features/shared/theme-init.js"></script>
-    <title>Leetmate - Community</title>
+    <title>Leetmate - Premium</title>
     <link rel="stylesheet" href="../../styles/dark-theme.css" />
     <link rel="stylesheet" href="../../styles/color-theme.css">
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
-    <link rel="stylesheet" href="community.css" />
+    <link rel="stylesheet" href="premium.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
   </head>
-  <body data-music-zone="community">
+  <body>
     <div class="popup-layout">
       <div class="popup-content">
-        <div class="community-card">
+        <div class="premium-card">
           <div class="screen-banner">
             <div class="screen-banner__left">
               <button
                 type="button"
                 class="menu-btn"
-                id="community-back-btn"
-                aria-label="Back to community menu"
+                id="back-btn"
+                aria-label="Back to previous page"
               >
                 <img
                   src="../../assets/icons/back-arrow.png"
@@ -31,9 +31,11 @@
                 />
               </button>
             </div>
+
             <div class="screen-banner__center">
-              <h1 class="screen-banner__title">Multiplayer</h1>
+              <h1 class="screen-banner__title account-title-main">Premium</h1>
             </div>
+
             <div class="screen-banner__right">
               <button
                 type="button"
@@ -48,12 +50,9 @@
             </div>
           </div>
 
-          <div class="community-content">
-            <p
-              style="color: #111; font-family: 'Lilita One', cursive; font-size: 20px;"
-            >
-              Multiplayer content goes here...
-            </p>
+          <div class="premium-content">
+            <button class="premium-btn" id="prem-btn"> Get Premium! </button>
+            <p id="prem-feedback"> </p>
           </div>
         </div>
       </div>
@@ -66,6 +65,6 @@
     <script src="../../features/progression/xp.js"></script>
     <script src="../../features/progression/streak.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
-    <script src="./community.js"></script>
+    <script src="premium.js"></script>
   </body>
 </html>

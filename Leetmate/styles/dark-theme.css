@@ -1,0 +1,273 @@
+/* Dark mode */
+
+html[data-theme="dark"] {
+    /* styles/theme.css (shared) */ 
+    --color-bg: #1e1f24;
+    --color-header-bg:#34353e;
+    --color-surface: #2a2b32;
+    --color-surface-2: #34353e;
+    --color-surface-3: #3e404a;
+  
+    --color-text: #b3b3b3;
+    --color-text-muted: #a9a49a;
+    --color-text-soft: #95938f;
+  
+    --color-border: #5c5d66;
+    --color-accent: #53514c;
+    --color-accent-strong: #c9a227;
+  
+    --color-success-bg: #1e3d2f;
+    --color-success-text: #7dccb0;
+    --color-error-bg: #3d1e24;
+    --color-error-text: #f5a5ad;
+  
+    --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.45);
+    --shadow-button: 0 4px 0 rgba(0, 0, 0, 0.35);
+    --shadow-soft: 0 3px 10px rgba(0, 0, 0, 0.35);
+    --shadow-hero: 0 4px 14px rgba(0, 0, 0, 0.55);
+  
+    --focus-outline: 2px solid var(--color-accent-strong);
+    --focus-offset: 2px;
+
+    /* slightly darker background image */
+    --overlay: rgba(0, 0, 0, 0.4);
+
+   /* activity.css */
+    --color-act-streak-card-bg1: var(--color-surface-3);
+    --color-act-streak-card-bg2: var(--color-accent);
+    --color-act-body-bg: var(--color-bg);
+    --color-act-text: var(--color-text);
+    --color-act-calendar-bg: #817e7a;
+    --color-act-calendar-nav-btn-bg1: var(--color-accent);
+    --color-act-calendar-nav-btn-bg2: var(--color-surface-3);
+    --color-act-shadow: var(--color-border);
+    --color-act-streak-count-shadow: var(--color-text-soft);
+    --color-act-streak-subtext: var(--color-text-soft);
+    --color-act-today: rgb(157, 36, 36);
+    --color-act-reward-banner-bg1: var(--color-accent);
+    --color-act-reward-banner-bg2: var(--color-surface-3);
+    --color-act-prog-border-mute: #adc6b13f;
+    --color-act-prog-bg-mute: #84a4877d;
+    --color-act-prog-border: #beddc1a4;
+    --color-act-prog-bg: #78ad7da6;
+    
+
+    /* home.css */
+    --color-home-lc-card-bg1: var(--color-accent);
+    --color-home-lc-card-bg2: var(--color-surface-2);
+    --color-home-lc-card-bg3: var(--color-accent);
+    --color-home-lc-card-border: var(--color-border);
+    --color-home-lc-card-header: var(--color-text-muted);
+    --color-home-lc-default-subtext: var(--color-text-muted);
+    --color-home-lc-default-reward: var(--color-text-soft);
+    --color-home-lc-default-reward-xp: var(--color-success-text);
+    --color-home-lc-default-reward-coins: var(--color-accent-strong);
+
+    --color-home-lc-card-completed-bg1: var(--color-surface-2);
+    --color-home-lc-card-completed-bg2: var(--color-surface-3);
+    --color-home-lc-card-completed-bg3: var(--color-surface-2);
+    --color-home-lc-alt-reward-xp: var(--color-success-text);
+    --color-home-lc-alt-reward-coins: var(--color-accent-strong);
+
+    --color-home-lc-claim-btn-bg1: var(--color-surface);
+    --color-home-lc-claim-btn-bg2: var(--color-surface-2);
+    --color-home-lc-claim-btn-bg3: var(--color-accent);
+    --color-home-lc-claim-btn-box-shadow: var(--color-border);
+
+    --color-home-coin-reward-popup: var(--color-accent-strong);
+    --color-home-pet-name: var(--color-text);
+    --color-home-status-bar-bg1: var(--color-accent);
+    --color-home-status-bar-bg2: var(--color-surface-2);
+    --color-home-status-bar-bg3: var(--color-accent);
+    --color-home-xp-bar: var(--color-surface-3);
+    --color-home-lc-card-complete-border: var(--color-border);
+    --color-home-black: var(--color-text);
+    --color-home-status-text: var(--color-text);
+    --color-home-status-text-border: var(--color-surface);
+
+    /* playground.css */
+    --color-pg-main-pg-pet-name-bg: var(--color-accent);
+    --color-pg-main-pg-pet-name-bg2: var(--color-text);
+    --color-pg-main-pg-pet-name-bg3: var(--color-text);
+    --color-pg-main-pg-nav-btn-bg1: var(--color-accent);
+    --color-pg-main-pg-nav-btn-bg2: var(--color-surface-3);
+    --color-pg-main-pg-nav-label: var(--color-text);
+    --color-nav-btn-border: var(--color-text-muted);
+    --color-pg-main-pg-modal-confirm: var(--color-surface-2);
+    --color-pg-main-white: var(--color-surface);
+    --color-pg-main-black: var(--color-text);
+    
+    /* playground-pets.css */
+    --color-pg-pets-pets-loading: var(--color-text);
+    --color-pg-pets-pets-select-btn-bg: var(--color-accent);
+    --color-pg-pets-pets-select-btn: var(--color-text);
+    --color-pg-pets-pets-modal-age: var(--color-text-muted);
+    --color-pet-name: var(--color-text);
+
+    /* account.css */
+    --color-set-acc-body: var(--color-text);
+    --color-set-acc-body-bg: var(--color-accent);
+    --color-set-acc-acc-card-bg: var(--color-surface);
+    --color-set-acc-profile-avatar: var(--color-surface-3);
+    --color-set-acc-btn-outline: var(--color-accent-strong);
+    --color-set-acc-username-bg: var(--color-text-soft);
+    --color-set-acc-email: var(--color-text-muted);
+    --color-set-acc-input-bg: var(--color-surface);
+    --color-set-acc-update-btn: var(--color-success-text);
+    --color-set-acc-confirm-delete-btn-bg: var(--color-error-text);
+    --color-set-acc-danger-zone-bg: var(--color-error-bg);
+    --color-set-acc-delete-btn-bg: var(--color-error-text);
+    --color-set-acc-username-modal-card-bg: var(--color-surface);
+    --color-set-acc-cancel-btn: var(--color-surface-2);
+
+    /* settings.css */
+    --color-set-main-body: var(--color-text);
+    --color-set-main-set-card: var(--color-surface);
+    --color-set-main-set-vol-slider: var(--color-surface-3);
+    --color-set-main-set-btn-primary-bg: var(--color-accent);
+    --color-set-main-set-btn-danger: var(--color-error-text);
+    --color-set-main-set-btn-secondary: linear-gradient(135deg, var(--color-accent) 0%, var(--color-surface-3) 40%, var(--color-accent) 100%);
+    --color-set-main-set-modal-panel: var(--color-surface);
+    --color-set-main-white: var(--color-surface);
+
+    /* settings.css & notifications.css for easy mode and reminders */
+    --color-set-toggle-banner-bg1: var(--color-surface);
+    --color-set-toggle-banner-bg2: var(--color-surface-2);
+    --color-set-toggle-banner-bg3: var(--color-surface-3);
+    --color-set-toggle-banner-checked-bg1: #24382e;
+    --color-set-toggle-banner-checked-bg2: #2f4a3c;
+    --color-set-toggle-info-btn: var(--color-accent-strong);
+    --color-set-easy-icon-bg1: var(--color-surface-2);
+    --color-set-easy-icon-bg2: var(--color-accent);
+    --color-set-easy-icon-bg3: var(--color-accent-strong);
+    --color-set-reminder-icon-bg1: var(--color-surface-2);
+    --color-set-reminder-icon-bg2: var(--color-accent);
+    --color-set-reminder-icon-bg3: var(--color-accent-strong);
+    --color-set-toggle-slider: var(--color-surface-3);
+
+    /* notifications.css */ 
+    --notif-surface: var(--color-surface-3);
+    --notif-surface-alt: var(--color-surface);
+
+    /* settings-theme.css */
+    --color-option-text: var(--color-surface-2);
+
+    /* settings-profile-color.css */
+    --color-set-prof-color-set-title: var(--color-text);
+    --color-set-prof-color-prof-avatar-bg: var(--color-surface-3);
+    --color-set-prof-color-color-card-bg: var(--color-surface-2);
+    --color-set-prof-color-black: var(--color-text);
+
+    /* store.css */
+    --color-header-bg: #2f3139;
+    --color-wood-dark: var(--color-border);
+    --color-wood-medium: #8a7f72;
+    --color-wood-base: #6d6358;
+    /* active store tab gradient */
+    --color-wood-warm: #8a7f72;
+    --color-wood-light: var(--color-surface-3);
+    /* default store tabs */
+    --color-store-tab-btn-bg: var(--color-accent);    
+   
+    --color-wood-cream: #2f3139;
+    --shadow-wood: 0 6px 0 #1a1b1f;
+    --color-store-acce-coins-display: var(--color-accent-strong);
+    --color-store-acce-unlock-all-btn: var(--color-border);
+    --color-store-acce-store-item-card-bg2: var(--color-accent);
+    --color-store-acce-store-item-card-owned-bg: var(--color-success-text);
+    --color-store-acce-store-item-card-owned-border: var(--color-success-text);
+    --color-store-acce-store-item-card-locked-bg1: var(--color-surface-2);
+    --color-store-acce-store-item-card-locked-bg2: var(--color-accent);
+    --color-store-acce-store-item-card-locked-border: var(--color-border);
+    --color-store-acce-store-item-card-locked: var(--color-text);
+    --color-store-acce-store-modal-card-bg: var(--color-surface);
+    --color-store-acce-store-modal-price-bg: var(--color-accent);
+    --color-store-acce-store-buy-btn-bg1: var(--color-surface);
+    --color-store-acce-store-buy-btn-bg2: var(--color-accent);
+    --color-store-acce-store-buy-btn-disabled-bg: var(--color-surface-3);
+    --color-store-acce-store-buy-btn-disabled: var(--color-text-muted);
+    --color-store-acce-black: var(--color-text);
+    --color-store-acce-white: var(--color-surface);
+    --color-store-acce-promo-text-shadow: var(--color-accent-strong);
+    --color-store-acce-store-modal: var(--color-text);
+    --color-store-acce-store-modal-desc: var(--color-text-soft);
+
+    /* store-coins.css */
+    --color-store-coins-back-btn-bg: var(--color-surface);
+    --color-store-coins-back-btn: var(--color-border);
+    --color-store-coins-display: var(--color-accent-strong);
+    --color-store-coins-white: var(--color-surface);
+    --color-store-coins-black: var(--color-border);
+    --color-shop-bg: #2a2b32;
+    --color-tier-border: rgba(232, 230, 227, 0.15);
+
+    /* community.css */
+    --color-comm-main-comm-menu-btn-bg1: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg2: var(--color-surface-3);
+    --color-comm-main-comm-menu-btn-bg3: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg4: var(--color-accent);
+    --color-comm-main-comm-menu-btn-bg5: var(--color-accent);
+    --color-comm-main-comm-menu-btn: var(--color-text);
+    --color-comm-main-black: var(--color-surface);
+
+    /* community-friends */
+    --color-friends-heading: var(--color-text-soft);
+    --color-friends-card-name: var(--color-text);
+    --color-friends-card-bg1: var(--color-accent);
+    --color-friends-card-bg2: var(--color-surface-3);
+    --color-friends-card-avatar-bg: var(--color-text-muted);
+    --color-friends-trophy-count: var(--color-text);
+    --color-friends-empty-bg1: var(--color-text-muted);
+    --color-friends-empty-bg2: var(--color-surface-3);
+    --color-friends-request-bg1: var(--color-text-muted);
+    --color-friends-request-bg2: var(--color-text-muted);
+
+    /* community-friends-profile.css */
+    --color-comm-fri-body: var(--color-surface);
+    --color-comm-fri-fri-username: var(--color-surface);
+    --color-comm-fri-fri-pro-load: var(--color-surface);
+    --color-comm-fri-fri-pro-un: var(--color-text);
+    --color-comm-fri-fri-pro-pet-name1: var(--color-accent);
+    --color-comm-fri-fri-pro-pet-name2: var(--color-surface-3);
+    --color-comm-fri-fri-pro-pet-name3: var(--color-text);
+    --color-comm-fri-fri-pro-pet-name4: var(--color-text);
+    --color-comm-fri-fri-pro-pet-name5: var(--color-surface-3);
+    --color-comm-fri-fri-pro-pet-name6: var(--color-surface-3);
+    --color-comm-fri-fri-pro-ava: linear-gradient(135deg, var(--color-surface-3) 0%,#75726b 50%, var(--color-surface-3) 100%);
+    --color-comm-fri-fri-stat-title1: var(--color-accent);
+    --color-comm-fri-fri-stat-title2: var(--color-surface-3);
+    --color-comm-fri-fri-stat-label: var(--color-text);
+    
+    /* menu-nav.css */
+    --color-menu-preview-bg: var(--color-bg);
+    --color-nav-drawer-bg: var(--color-surface);
+    --color-nav-black: var(--color-border);
+    --color-nav-menu-btn-bg: var(--color-surface-3);
+    --color-nav-menu-btn-bg2: var(--color-accent); 
+    --color-nav-close-btn-bg: var(--color-surface-3); 
+    --color-nav-menu-btn-active: var(--color-accent);
+    --color-nav-menu-btn-active-after: var(--color-accent);
+    --color-nav-white: var(--color-text);
+}
+  
+html[data-theme="dark"] body {
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+}
+
+html[data-theme="dark"] .home-card,
+html[data-theme="dark"] .settings-card,
+html[data-theme="dark"] .activity-card,
+html[data-theme="dark"] .playground-card,
+html[data-theme="dark"] .notifications-card,
+html[data-theme="dark"] .color-card,
+html[data-theme="dark"] .account-card,
+html[data-theme="dark"] .theme-card,
+html[data-theme="dark"] .store-card, 
+html[data-theme="dark"] .nav-drawer,
+html[data-theme="dark"] .community-card,
+html[data-theme="dark"] .friend-profile-card,
+html[data-theme="dark"] .pets-card {
+    --screen-banner-bg: var(--color-surface-2);
+    box-shadow: var(--shadow-card);
+}

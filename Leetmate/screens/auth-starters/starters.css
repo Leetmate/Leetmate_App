@@ -12,6 +12,13 @@
     --web-charcoal: #2D2926;
     --thick-border: 4px solid var(--web-charcoal);
     --selection-border: 7px solid var(--web-charcoal);
+    --color-auth-start-pod-base-shadow: #DDD8CE;
+    --color-auth-start-cen-pod-base-bg: #FFFBF0;
+    --color-auth-start-cen-pod-base-shadow: #B89D5B;
+    --color-auth-start-btn-shadow: #9C812D;
+    --color-auth-start-modal-btn-cancel: #999;
+    --color-auth-start-modal-btn-cancel-hover: #666;
+    --color-auth-start-white: #FFF;
 }
 
 html, body {
@@ -36,7 +43,7 @@ html, body {
 .web-header {
     font-family: var(--font-display);
     text-transform: uppercase;
-    color: #fff;
+    color: var(--color-auth-start-white);
     -webkit-text-stroke: 1.5px var(--web-charcoal);
     paint-order: stroke fill;
     filter: drop-shadow(4px 4px 0px var(--web-charcoal));
@@ -150,18 +157,18 @@ html, body {
 .podium-base {
     width: 100px;
     height: 20px;
-    background: #fff;
+    background: var(--color-auth-start-white);
     border: var(--thick-border);
     border-radius: 50%;
     z-index: 2;
-    box-shadow: 0 8px 0 #ddd8ce;
+    box-shadow: 0 8px 0 var(--color-auth-start-pod-base-shadow);
     position: relative;
 }
 
 .central .podium-base {
     border-color: var(--web-gold);
-    background: #FFFBF0;
-    box-shadow: 0 14px 0 #B89D5B; /* Thicker shadow for ground presence */
+    background: var(--color-auth-start-cen-pod-base-bg);
+    box-shadow: 0 14px 0 var(--color-auth-start-cen-pod-base-shadow); /* Thicker shadow for ground presence */
     width: 280px; 
     height: 62px; /* Thicker surface */
     margin-top: 0;
@@ -183,7 +190,7 @@ html, body {
 #current-pet-name {
     font-family: var(--font-display);
     font-size: 1.25rem; 
-    color: #fff; /* WHITE TEXT ON GOLD TAG */
+    color: var(--color-auth-start-white); /* WHITE TEXT ON GOLD TAG */
     margin: 0;
     text-transform: uppercase;
 }
@@ -197,7 +204,7 @@ html, body {
 }
 
 .control-btn {
-    background: #fff;
+    background: var(--color-auth-start-white);
     border: var(--thick-border);
     border-radius: 16px;
     width: 52px;
@@ -217,20 +224,20 @@ html, body {
 
 .choose-btn {
     background: var(--web-gold);
-    color: #fff;
+    color: var(--color-auth-start-white);
     border: var(--thick-border);
     border-radius: 100px;
     padding: 8px 36px; /* Tighter padding */
     font-family: var(--font-display);
     font-size: 1.6rem;
     cursor: pointer;
-    box-shadow: 0 6px 0 #9c812d;
+    box-shadow: 0 6px 0 var(--color-auth-start-btn-shadow);
     transition: all 0.1s ease;
 }
 
 .choose-btn:active {
     transform: translateY(4px);
-    box-shadow: 0 3px 0 #9c812d;
+    box-shadow: 0 3px 0 var(--color-auth-start-btn-shadow);
 }
 
 /* Modal v9 - Fixed Scaling & Overlap */
@@ -258,7 +265,7 @@ html, body {
 }
 
 .modal-content {
-    background: #fff;
+    background: var(--color-auth-start-white);
     border: var(--selection-border);
     border-radius: 40px;
     width: 330px; /* STANDARD EXTENSION WIDTH */
@@ -331,26 +338,26 @@ html, body {
 
 .modal-btn.confirm {
     background: var(--web-gold);
-    color: #fff;
+    color: var(--color-auth-start-white);
     border: var(--thick-border);
     padding: 12px;
     border-radius: 100px;
     font-family: var(--font-display);
     font-size: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 6px 0 #9c812d;
+    box-shadow: 0 6px 0 var(--color-auth-start-btn-shadow);
     transition: all 0.1s ease;
 }
 
 .modal-btn.confirm:active {
     transform: translateY(3px);
-    box-shadow: 0 3px 0 #9c812d;
+    box-shadow: 0 3px 0 var(--color-auth-start-btn-shadow);
 }
 
 .modal-btn.cancel {
     background: transparent;
     border: none;
-    color: #999;
+    color: var(--color-auth-start-modal-btn-cancel);
     text-decoration: underline;
     font-size: 1rem;
     padding: 5px 0;
@@ -359,7 +366,7 @@ html, body {
 }
 
 .modal-btn.cancel:hover {
-    color: #666;
+    color: var(--color-auth-start-modal-btn-cancel-hover);
     transform: translateY(-1px);
 }
 
