@@ -22,7 +22,7 @@ body {
   margin: 0 auto;
   padding: 12px;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+    linear-gradient(var(--overlay), var(--overlay)),
     url("../../assets/backgrounds/pets_bg_v2.png") center top / cover no-repeat;
   display: flex;
   flex-direction: column;

@@ -4,7 +4,7 @@
   // Default state 
   const defaults = {
     enabled: true,
-    mode: "time",         // "time" or "heatlh"
+    mode: "time",         // "time" or "health"
     hour: "12",
     minute: "00",
     period: "AM",         // "AM" or "PM"
@@ -254,7 +254,8 @@
 
             // Convert from Firestore health percent to 1-5 full-heart value 
             if (typeof reminders.setHealth === "number") {
-              state.healthThreshold = clampThreshold(reminders.setHealth);
+              const hearts = Math.round((reminders.setHealth / 100) * 5);
+              state.healthThreshold = clampThreshold(hearts);
             }
           }
         }

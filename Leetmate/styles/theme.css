@@ -70,4 +70,6 @@
 
   --transition-fast: 0.2s ease;
   --transition-fade: 0.3s ease;
+
+  --overlay: rgba(255, 255, 255, 0.2);
 }
