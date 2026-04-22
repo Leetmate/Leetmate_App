@@ -396,10 +396,37 @@
     return usage;
   }
 
+	async function setHearts(count) {
+  const clamped = Math.max(0, Math.min(5, Number(count)));
+  const happiness = clamped * 20;
+
+  if (typeof storageSet === "function") {
+    await storageSet({
+      leetmate_happiness: happiness,
+      leetmate_happiness_easy_snapshot: happiness,
+    });
+  } else {
+    await chrome.storage.local.set({
+      leetmate_happiness: happiness,
+      leetmate_happiness_easy_snapshot: happiness,
+    });
+  }
+
+  if (typeof window.updateHeartsUI === "function") {
+    await window.updateHeartsUI();
+  }
+
+  chrome.runtime.sendMessage({ action: "startTimer" });
+
+  console.log(`demo.setHearts: set to ${clamped} hearts (${happiness}%)`);
+  return true;
+}
+
   window.demo = {
     activityCalendar,
     downed,
     stop,
     help,
+		setHearts,
   };
 })();
