@@ -22,6 +22,8 @@ importScripts(
 (function () {
 	'use strict';
 
+	let notifEnabled = null;
+
 	//make service worker persistent
 	chrome.runtime.onInstalled.addListener(() => {
 		chrome.alarms.create("repeatTask", { periodInMinutes: 0.25 });
@@ -52,6 +54,7 @@ importScripts(
 	});
 
 	// ── 2. On browser restart: recreate alarm if it was lost ────────────────────
+	
 	chrome.runtime.onStartup.addListener(async () => {
 		const alarm = await chrome.alarms.get("dailyStreakCheck");
 		if (!alarm) {
@@ -67,6 +70,7 @@ importScripts(
 			//console.log("Value is " + result.key);
 			loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
 		});
+		
 		if (notifEnabled == true) {
 			startNotifTimer();
 		}
@@ -162,7 +166,6 @@ importScripts(
 	let notifTime = null;
 	let notifHealth = null;
 	let curHealth = null;
-	let notifEnabled = null;
 	let calcSecs = 0;
 	let curTime = 0;
 	let assumedTime = 0;
@@ -188,7 +191,7 @@ importScripts(
 		}
 		else if (cusVar == "notifEnabled") {
 			notifEnabled = newVal;
-			//console.log(`notifEnabled is: ${notifEnabled}`);
+			console.log(`notifEnabled is: ${notifEnabled}`);
 		}
 	}
 
@@ -328,7 +331,7 @@ importScripts(
 			let startDay = (Date.now() - Date.now() % 86400000); //trying to determine number of whole days since 1/1/1970
 			console.log(`It has been ${startDay} milliseconds since January 1, 1970.`);
 			//console.log(`It has been ${startDay} milliseconds since midnight.`);
-			calcSecs = assumedTime - curTime; 
+			calcSecs = assumedTime - curTime;
 			console.log(`seconds from midnight: ${calcSecs}`);
 
 			if (calcSecs < 0) {
@@ -337,8 +340,8 @@ importScripts(
 				/*while (calcSecs == 86400 || calcSecs == 0)
 				{
 					calcSecs = 86400 - (curTime - assumedTime);
-				}*/	
-				calcSecs = 86400 - (curTime - assumedTime);	
+				}*/
+				calcSecs = 86400 - (curTime - assumedTime);
 			}
 		}
 		else if (timerType == "health") {
@@ -347,17 +350,17 @@ importScripts(
 
 		}
 
+		//console.log(`Timer should run for ${calcSecs} seconds.`)
+		calcSecs = Math.trunc(calcSecs);
+		console.log(`calcSecs after Trunc: ${calcSecs}`);
+
 		//debugger to check math logic
 		if (timerType == "time") {
 			console.log(`Timer type is ${timerType}, the current time is ${curTime} and alarm should trigger at ${assumedTime}.`);
 		}
 		else if (timerType == "health") {
-			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger at ${notifHealth * 20}.`);
+			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger in ${calcSecs} seconds.`);
 		}
-
-		//console.log(`Timer should run for ${calcSecs} seconds.`)
-		calcSecs = Math.trunc(calcSecs);
-		console.log(`calcSecs after Trunc: ${calcSecs}`);
 		//return calcSecs;
 	}
 
@@ -407,20 +410,24 @@ importScripts(
 		clearInterval(countdown);
 		time = 0;
 		remainingTime = 0;
-		
+		notifEnabled = false;
 	}
 
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		if (message.action == "startTimer") {
 			//customTime = message.payload;
 			//console.log(`Number passed to timer: ${message.payload}`);
+			notifEnabled = true;
+			console.log(`notifEnabled: ${notifEnabled}`);
 
-			startNotifTimer();
+			if (notifEnabled == true) {
+				startNotifTimer();
 
-			console.log("Creating timer alarm!");
-			chrome.alarms.create("leetmate-reminder", {
-				delayInMinutes: 0
-			});
+				console.log("Creating timer alarm!");
+				chrome.alarms.create("leetmate-reminder", {
+					delayInMinutes: 0
+				});
+			}
 		}
 		else if (message.action == "stopTimer") {
 			chrome.alarms.create("stop-timer", {

@@ -102,6 +102,8 @@ async function getLocalLastFedTime() {
 
 async function setLocalLastFedTime(timestamp) {
   await storageSet({ [LAST_FED_KEY]: timestamp });
+  //when fed run starttimer for altered value
+  chrome.runtime.sendMessage({action: "startTimer"});
 }
 
 // ── Decay timer ───────────────────────────────────────────────────────────────
