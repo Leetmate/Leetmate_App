@@ -2,9 +2,23 @@
 @import url("../../styles/layout.css");
 
 :root {
-  --color-act-content-bg1: #BFD1DF;
-  --color-act-content-bg2: #DCEAF5;
-  --color-act-content-border: #111;
+  --color-act-streak-card-bg1: #f5eee1;
+  --color-act-streak-card-bg2: #ece4d3;
+  --color-act-body-bg: #EEEAE1;
+  --color-act-text: #2a241a;
+  --color-act-calendar-bg: #f6f4ef;
+  --color-act-calendar-nav-btn-bg1: #f8f0da;
+  --color-act-calendar-nav-btn-bg2: #e3c78d;
+  --color-act-shadow: rgba(255, 255, 255, 0.6);
+  --color-act-streak-count-shadow: #f9f5ec;
+  --color-act-streak-subtext: #6d6354;
+  --color-act-today: red;
+  --color-act-reward-banner-bg1: #ffeeba;
+  --color-act-reward-banner-bg2: #f3d17d;
+  --color-act-prog-border-mute: #adc6b1;
+  --color-act-prog-bg-mute: #dbe8dc;
+  --color-act-prog-border: #86b892;
+  --color-act-prog-bg: #c3ebc6;
 }
 
 body {
@@ -23,7 +37,7 @@ body.hidden-on-load .popup-layout {
 
 /* ACTIVITY CONTAINER */
 .activity-card {
-  --screen-banner-bg: #d6d0c5;
+  --screen-banner-bg: var(--color-header-bg);
   --screen-banner-offset-top: 16px;
   --screen-banner-offset-x: 16px;
   width: 100%;
@@ -31,7 +45,7 @@ body.hidden-on-load .popup-layout {
   min-height: 520px;
   margin: 0 auto;
   padding: 16px;
-  background: #EEEAE1; /* slightly different cool tone */
+  background: var(--color-act-body-bg); /* slightly different cool tone */
   border-radius: 0;
   border: none;
   display: flex;
@@ -55,8 +69,8 @@ body.hidden-on-load .popup-layout {
 
 .activity-streak-card {
   flex-shrink: 0;
-  background: linear-gradient(180deg, #f5eee1 0%, #ece4d3 100%);
-  border: 3px solid #17130f;
+  background: linear-gradient(180deg, var(--color-act-streak-card-bg1) 0%, var(--color-act-streak-card-bg2) 100%);
+  border: 3px solid var(--color-border);
   border-radius: 22px;
   padding: 12px 16px;
   display: flex;
@@ -64,7 +78,7 @@ body.hidden-on-load .popup-layout {
   align-items: center;
   gap: 4px;
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.6),
+    inset 0 2px 0 var(--color-act-shadow),
     0 4px 0 #17130f,
     0 9px 14px rgba(0, 0, 0, 0.12);
 }
@@ -73,7 +87,7 @@ body.hidden-on-load .popup-layout {
   margin: 0;
   font-size: 16px;
   font-family: "Lilita One", system-ui, sans-serif;
-  color: #2a241a;
+  color: var(--color-act-text);
   letter-spacing: 0.25px;
 }
 
@@ -111,25 +125,25 @@ body.hidden-on-load .popup-layout {
   font-family: "Lilita One", system-ui, sans-serif;
   font-size: 35px;
   line-height: 0.95;
-  color: #14110d;
-  text-shadow: 0 2px 0 #f9f5ec;
+  color: var(--color-act-text);
+  text-shadow: 0 2px 0 var(--color-act-streak-count-shadow);
 }
 
 .activity-streak-subtext {
   margin: 0;
   font-size: 11px;
   line-height: 1.25;
-  color: #6d6354;
+  color: var(--color-act-streak-subtext);
   text-align: center;
 }
 
 .activity-calendar-card {
-  border: 4px solid #17130f;
+  border: 4px solid var(--color-border);
   border-radius: 22px;
-  background: #f6f4ef;
+  background: var(--color-act-calendar-bg);
   padding: 12px 10px 14px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 1px 0 var(--color-act-shadow),
     0 4px 0 #17130f,
     0 9px 14px rgba(0, 0, 0, 0.1);
 }
@@ -154,8 +168,8 @@ body.hidden-on-load .popup-layout {
   min-width: 38px;
   height: 38px;
   border-radius: 12px;
-  border: 3px solid #17130f;
-  background: linear-gradient(180deg, #f8f0da 0%, #e3c78d 100%);
+  border: 3px solid var(--color-border);
+  background: linear-gradient(180deg, var(--color-act-calendar-nav-btn-bg1) 0%, var(--color-act-calendar-nav-btn-bg2) 100%);
   color: #17130f;
   font-size: 20px;
   font-weight: 900;
@@ -219,15 +233,15 @@ body.hidden-on-load .popup-layout {
 .calendar-day.is-today {
   /* border-color: #2a241a;
   background: #eee4cd; */
-  color: red;
+  color: var(--color-act-today);
   font-size: 24px;
 }
 
 /* Continuous progress bar: same-row neighbors share one green strip (see activity.js segment classes) */
 .calendar-day.has-progress {
   /* Softer edge than black: darker mint than fill (#c3ebc6) */
-  --progress-bar-edge: #86b892;
-  background: #c3ebc6;
+  --progress-bar-edge: var(--color-act-prog-border);
+  background: var(--color-act-prog-bg);
   border: none;
   border-top: 2px solid var(--progress-bar-edge);
   border-bottom: 2px solid var(--progress-bar-edge);
@@ -266,8 +280,8 @@ body.hidden-on-load .popup-layout {
 }
 
 .calendar-day.has-progress.has-progress-muted {
-  --progress-bar-edge: #adc6b1;
-  background: #dbe8dc;
+  --progress-bar-edge: var(--color-act-prog-border-mute);
+  background: var(--color-act-prog-bg-mute);
 }
 
 .calendar-day-number {
@@ -379,10 +393,10 @@ body.hidden-on-load .popup-layout {
   z-index: 9999;
   max-width: 330px;
   padding: 10px 14px;
-  border: 3px solid #17130f;
+  border: 3px solid var(--color-border);
   border-radius: 14px;
-  background: linear-gradient(180deg, #ffeeba 0%, #f3d17d 100%);
-  color: #17130f;
+  background: linear-gradient(180deg, var(--color-act-reward-banner-bg1) 0%, var(--color-act-reward-banner-bg2) 100%);
+  color: var(--color-text);
   font-family: "Lilita One", system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.2;

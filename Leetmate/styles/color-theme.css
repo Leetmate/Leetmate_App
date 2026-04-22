@@ -218,9 +218,16 @@ html[data-theme="color-green"],
 html[data-theme="color-blue"],
 html[data-theme="color-purple"] {
     /* activity.css */
-    --color-act-content-bg1: var(--color-surface-2);
-    --color-act-content-bg2: var(--color-surface-3);
-    --color-act-content-border: var(--color-border);
+    --color-act-streak-card-bg1: var(--color-surface);
+    --color-act-streak-card-bg2: var(--color-surface-3);
+    --color-act-body-bg: var(--color-bg);
+    --color-act-text: var(--color-text);
+    --color-act-calendar-bg: var(--color-surface-2);
+    --color-act-calendar-nav-btn-bg1: var(--color-surface);
+    --color-act-calendar-nav-btn-bg2: var(--color-surface-2);
+    --color-act-shadow: var(--color-border);
+    --color-act-streak-count-shadow: var(--color-accent);
+    --color-act-streak-subtext: var(--color-border);
 
     /* home.css */
     --color-home-lc-card-bg1: var(--color-surface);

@@ -33,9 +33,24 @@ html[data-theme="dark"] {
     --overlay: rgba(0, 0, 0, 0.4);
 
    /* activity.css */
-    --color-act-content-bg1: var(--color-surface-2);
-    --color-act-content-bg2: var(--color-surface-3);
-    --color-act-content-border: var(--color-border);
+    --color-act-streak-card-bg1: var(--color-surface-3);
+    --color-act-streak-card-bg2: var(--color-accent);
+    --color-act-body-bg: var(--color-bg);
+    --color-act-text: var(--color-text);
+    --color-act-calendar-bg: #817e7a;
+    --color-act-calendar-nav-btn-bg1: var(--color-accent);
+    --color-act-calendar-nav-btn-bg2: var(--color-surface-3);
+    --color-act-shadow: var(--color-border);
+    --color-act-streak-count-shadow: var(--color-text-soft);
+    --color-act-streak-subtext: var(--color-text-soft);
+    --color-act-today: rgb(157, 36, 36);
+    --color-act-reward-banner-bg1: var(--color-accent);
+    --color-act-reward-banner-bg2: var(--color-surface-3);
+    --color-act-prog-border-mute: #adc6b13f;
+    --color-act-prog-bg-mute: #84a4877d;
+    --color-act-prog-border: #beddc1a4;
+    --color-act-prog-bg: #78ad7da6;
+    
 
     /* home.css */
     --color-home-lc-card-bg1: var(--color-accent);
