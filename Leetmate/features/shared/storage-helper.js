@@ -17,6 +17,7 @@ async function clearAppStorage() {
       leetmate_level:               1,
       leetmate_streak:              0,
       leetmate_last_streak_date:    null,
+      leetmate_streak_freeze_start: null,
       leetmate_streak_freeze_end:   null,
       leetmate_happiness:           100,
       leetmate_easy_mode:           false,

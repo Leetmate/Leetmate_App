@@ -62,9 +62,21 @@
     return ref || 'Pet';
   }
 
+  function normalizePetRef(ref) {
+    var r = (ref != null && String(ref).trim()) ? String(ref).trim() : '';
+    return r || 'Cat';
+  }
+
+  function normalizePetStage(stage) {
+    var s = String(stage != null ? stage : 'Adult').trim().toLowerCase();
+    if (s === 'egg') return 'egg';
+    if (s === 'baby') return 'baby';
+    return 'adult';
+  }
+
   function getPetPath(petRef, petStage) {
-    var safeRef = petRef || 'Cat';
-    var stage = String(petStage || 'Adult').toLowerCase();
+    var safeRef = normalizePetRef(petRef);
+    var stage = normalizePetStage(petStage);
     var base = '../../assets';
 
     if (stage === 'egg') {
@@ -152,17 +164,20 @@
     avatarEl.className = 'friend-profile-avatar';
     avatarEl.style.backgroundColor = profileColor;
 
-    var avatarImg = document.createElement('img');
-    avatarImg.className = 'friend-profile-avatar-img friend-profile-avatar-img--animate';
-    avatarImg.src = petInfo.src;
-    avatarImg.alt = username + ' active pet';
     if (petInfo.isEgg) {
-      avatarImg.classList.add('is-egg');
+      var avatarImg = document.createElement('img');
+      avatarImg.className = 'friend-profile-avatar-img is-egg';
+      avatarImg.src = petInfo.src;
+      avatarImg.alt = username + ' active pet';
+      avatarEl.appendChild(avatarImg);
     } else {
-      avatarImg.classList.add('is-sprite');
+      var spriteEl = document.createElement('div');
+      spriteEl.className = 'friend-profile-avatar-sprite';
+      spriteEl.setAttribute('role', 'img');
+      spriteEl.setAttribute('aria-label', username + ' active pet');
+      spriteEl.style.backgroundImage = 'url("' + petInfo.src + '")';
+      avatarEl.appendChild(spriteEl);
     }
-
-    avatarEl.appendChild(avatarImg);
 
     var petNameEl = document.createElement('p');
     petNameEl.className = 'friend-profile-pet-name';
