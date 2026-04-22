@@ -241,8 +241,8 @@ function applyPetVisualState() {
 
     const isBaby = petStage === 'baby';
     const isAdult = petStage === 'adult';
-		// egg has no "downed" state here
     const isDowned = (isBaby || isAdult) && currentHappinessPercent === 0;
+    const isEggDowned = petStage === 'egg' && currentHappinessPercent === 0;
 
     petSprite.classList.remove('stage-egg', 'stage-baby', 'stage-adult', 'stage-downed');
     petSprite.style.animation = 'none';
@@ -250,12 +250,16 @@ function applyPetVisualState() {
 		petSprite.style.backgroundPosition = '';
     petSprite.classList.remove('hidden');
     petEgg.classList.add('hidden');
+    petEgg.classList.remove('is-downed');
     petEgg.src = '';
 
     if (petStage === 'egg') {
         petSprite.classList.add('hidden');
         petEgg.src = assetSet.egg;
         petEgg.classList.remove('hidden');
+        if (isEggDowned) {
+            petEgg.classList.add('is-downed');
+        }
     } else if (isDowned) {
         petSprite.classList.add(isBaby ? 'stage-baby' : 'stage-adult', 'stage-downed');
         petSprite.style.backgroundImage = `url("${isBaby ? assetSet.baby : assetSet.adult}")`;
@@ -288,6 +292,9 @@ function setPetHappinessState(happinessPercent) {
 
 window.LeetmatePetUI = {
     setPetHappinessState,
+    getPetHappinessState: function () {
+        return currentHappinessPercent;
+    },
     loadActivePetFromStorage,
     toCachedPetData
 };

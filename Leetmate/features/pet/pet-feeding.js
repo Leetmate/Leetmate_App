@@ -67,6 +67,15 @@
       return String(getPetSnapshot()?.stage || "").toLowerCase();
     }
 
+    function getPetCreatedTimeMs() {
+      return getTimestampMs(getPetSnapshot()?.createdTimestampMs);
+    }
+
+    function getCurrentHappinessPercent() {
+      const happiness = window.LeetmatePetUI?.getPetHappinessState?.();
+      return Number.isFinite(happiness) ? happiness : 100;
+    }
+
     // Move the active pet by updating the CSS variables the shared Playground
     // sprite styles already use.
     function setPetOffset(x, y = 0) {
@@ -453,10 +462,16 @@
           throw new Error("Food item is out of stock");
         }
 
-        const lastFedTimeMs = getTimestampMs(userSnap.data()?.lastFedTime);
-        const currentHappiness = decayApi.calculateHappinessFromFedTime(lastFedTimeMs);
+        const userData = userSnap.data() || {};
+        const lastFedTimeMs = getTimestampMs(userData.lastFedTime);
+        const currentHappiness = decayApi.calculateDisplayHappiness(
+          userData.happiness ?? 100,
+          lastFedTimeMs,
+          nowMs,
+          getPetCreatedTimeMs()
+        );
         const nextHappiness = Math.min(100, currentHappiness + recoveryAmount);
-        const nextLastFedTimeMs = decayApi.lastFedTimeMsFromHappinessPercent(nextHappiness, nowMs);
+        const nextLastFedTimeMs = nowMs;
         const nextQuantity = currentQuantity - 1;
 
         if (nextQuantity > 0) {
@@ -507,6 +522,10 @@
 
     // Normal foods default to baby/adult only. Special items can override that with usableStages.
     function canUseItem(catalogItem) {
+      if (getCurrentHappinessPercent() <= 0) {
+        return false;
+      }
+
       const stage = getCurrentStage();
       const allowedStages = Array.isArray(catalogItem.usableStages)
         ? catalogItem.usableStages.map((value) => String(value).toLowerCase())
@@ -673,7 +692,8 @@
       const recovery = Number(
         inventoryItem.recoveryAmount ?? catalogItem.recoveryAmount ?? 0
       );
-      const hoverText = catalogItem.statusText || (recovery > 0 ? `+${recovery} Health` : "Food");
+      const hoverText =
+        catalogItem.statusText || (recovery > 0 ? `+${recovery} Health` : "Food");
 
       syncFoodSlotState(button, catalogItem);
 

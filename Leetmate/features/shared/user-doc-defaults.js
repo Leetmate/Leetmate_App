@@ -50,6 +50,7 @@
       xp: 0, // level is derived from XP: level = floor(xp/100) + 1
       level: 1,
       coins: 0,
+      happiness: 100,
       savedHappiness: null,
 			trophy: 0,
 			premium: false,
@@ -81,9 +82,13 @@
     return userRef.get().then(function (snap) {
       if (snap.exists) {
         var data = snap.data() || {};
-        if (!Object.prototype.hasOwnProperty.call(data, 'savedHappiness')) {
+        if (
+          !Object.prototype.hasOwnProperty.call(data, 'savedHappiness') ||
+          !Object.prototype.hasOwnProperty.call(data, 'happiness')
+        ) {
           return userRef.set(
             {
+              happiness: data.happiness ?? 100,
               savedHappiness: null,
               updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             },

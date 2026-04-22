@@ -111,12 +111,48 @@
       </div>
     </div>
 
+    <div class="item-modal-overlay hidden" id="item-modal-overlay">
+      <div class="item-modal" role="dialog" aria-modal="true" aria-labelledby="item-modal-title">
+        <div class="item-modal-header">
+          <button type="button" class="item-modal-close" id="item-modal-close" aria-label="Close item details">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h2 id="item-modal-title">Item</h2>
+        </div>
+        <div class="item-modal-body">
+          <div class="item-modal-visual">
+            <img id="item-modal-image" class="item-modal-image" alt="" />
+          </div>
+          <p class="item-modal-description" id="item-modal-description"></p>
+          <button type="button" class="item-modal-use" id="item-modal-use">Use</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-modal-overlay hidden" id="tonic-modal-overlay">
+      <div class="item-modal item-tonic-modal" role="dialog" aria-modal="true" aria-labelledby="tonic-modal-title">
+        <div class="item-modal-header">
+          <button type="button" class="item-modal-close" id="tonic-modal-close" aria-label="Close stat selection">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h2 id="tonic-modal-title">Choose Stats</h2>
+        </div>
+        <div class="item-modal-body item-tonic-body">
+          <p class="item-tonic-copy" id="tonic-modal-copy">Select stats to boost.</p>
+          <div class="item-tonic-picks" id="tonic-picks"></div>
+          <div class="item-tonic-grid" id="tonic-stat-grid"></div>
+          <button type="button" class="item-modal-use" id="tonic-modal-confirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+
     <script src="../../scripts/background-music.js"></script>
     <script src="../../features/shared/menu-nav.js"></script>
     <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
     <script src="../../features/progression/happiness-decay.js"></script>
+    <script src="../../features/pet/pet-evolution.js"></script>
     <script src="../../features/store/item-catalog.js"></script>
     <script src="../../features/pet/pet-loader.js"></script>
     <script src="playground-items.js"></script>

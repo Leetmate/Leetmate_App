@@ -1,9 +1,11 @@
 /**
  * Easy mode (Settings toggle)
  *
- * ON:  chrome.storage leetmate_easy_mode = true, freeze heart % snapshot locally + savedHappiness in Firestore,
+ * ON:  chrome.storage leetmate_easy_mode = true, freeze the current displayed happiness locally
+ *     + savedHappiness in Firestore,
  *     stop the happiness decay interval when that API exists (Home).
- * OFF: read Firestore savedHappiness (easy-on snapshot), derive lastFedTime from that %, write leetmate_last_fed + lastFedTime/happiness locally and in Firestore, clear savedHappiness, restart timer on Home.
+ * OFF: read Firestore savedHappiness (easy-on snapshot), set lastFedTime = now and
+ *     write that frozen happiness locally and in Firestore, clear savedHappiness, restart timer on Home.
  *
  * Depends on happiness-decay.js (before this script): window.LeetmateHappinessDecay.
  */
@@ -22,24 +24,20 @@
   }
 
   /**
-   * Heart % to store when Easy mode turns on: prefer cached leetmate_happiness, else derive from leetmate_last_fed.
+   * Easy mode freezes whatever the user is currently seeing, not just the raw
+   * persisted happiness snapshot.
    */
   async function getHappinessPercentForSnapshot() {
-    var store = await storageGet([LAST_FED_KEY, HAPPINESS_KEY]);
-    var cached = store[HAPPINESS_KEY];
-    if (typeof cached === "number" && Number.isFinite(cached)) {
-      return Math.max(0, Math.min(100, cached));
-    }
-    var parsed = parseFloat(cached);
-    if (Number.isFinite(parsed)) {
-      return Math.max(0, Math.min(100, parsed));
-    }
+    var store = await storageGet([LAST_FED_KEY, HAPPINESS_KEY, "activePetSnapshot"]);
     return Math.max(
       0,
       Math.min(
         100,
-        api.calculateHappinessFromFedTime(
-          store[LAST_FED_KEY] || null
+        api.calculateDisplayHappiness(
+          store[HAPPINESS_KEY] ?? 100,
+          store[LAST_FED_KEY] || null,
+          Date.now(),
+          store.activePetSnapshot?.createdTimestampMs || null
         )
       )
     );
@@ -124,7 +122,7 @@
       H = Math.max(0, Math.min(100, H));
     }
 
-    var newLastFed = api.lastFedTimeMsFromHappinessPercent(H, Date.now());
+    var newLastFed = Date.now();
 
     await storageSet({
       [EASY_MODE_KEY]: false,
