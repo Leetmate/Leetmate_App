@@ -168,6 +168,7 @@ importScripts(
 	let calcSecs = 0;
 	let curTime = 0;
 	let assumedTime = 0;
+	let timeFlag = true;
 
 	async function loadLocalVars(cusVar, newVal) {
 		if (cusVar == "timerType") {
@@ -196,6 +197,9 @@ importScripts(
 
 	//async function calculateTimer() {
 	async function startNotifTimer() {
+		setTimeout(() => {
+			console.log("1 second later");
+		}, 1000); // 1000 ms = 1 second
 		//debugger status
 		console.log("Starting startNotifTimer()");
 
@@ -225,8 +229,7 @@ importScripts(
 		});
 
 		//stop timer if enabled = false
-		if(notifEnabled == false)
-		{
+		if (notifEnabled == false) {
 			console.log("Canceling startNotifTimer()");
 			return;
 		}
@@ -244,7 +247,7 @@ importScripts(
 			remainingTime = Math.max(0, Math.round((time - Date.now()) / 1000));
 
 			//Remove if not debugging timer. Causes clutter. //Uncomment to test timer
-			//console.log(`Time left: ${remainingTime}s`);
+			console.log(`Time left: ${remainingTime}s`);
 
 			if (remainingTime <= 0) {
 				clearInterval(countdown);
@@ -325,7 +328,7 @@ importScripts(
 
 			curTime = ((Date.now() - 25200000) % 86400000) / 1000; //current time in seconds of the day starting from midnight today UTC
 			//curTime = curTime + 25200; //make local time PST
-			//console.log(`It is currently ${curTime} in PST and will be ${assumedTime} in PST (in seconds).`);
+			//console.log(`It is currently ${curTime} in PST.`);
 
 			//let startDay = (Date.now() - Date.now()%86400000)/86400000; //trying to determine number of whole days since 1/1/1970
 			let startDay = (Date.now() - Date.now() % 86400000); //trying to determine number of whole days since 1/1/1970
@@ -341,7 +344,9 @@ importScripts(
 				{
 					calcSecs = 86400 - (curTime - assumedTime);
 				}*/
+
 				calcSecs = 86400 - (curTime - assumedTime);
+
 			}
 		}
 		else if (timerType == "health") {
@@ -355,12 +360,12 @@ importScripts(
 		//console.log(`calcSecs after Trunc: ${calcSecs}`);
 
 		//debugger to check math logic
-		/*if (timerType == "time") {
+		if (timerType == "time") {
 			console.log(`Timer type is ${timerType}, the current time is ${curTime} and alarm should trigger at ${assumedTime}.`);
 		}
 		else if (timerType == "health") {
 			console.log(`Timer type is ${timerType}, the current health is ${curHealth} and alarm should trigger in ${calcSecs} seconds.`);
-		}*/
+		}
 		//return calcSecs;
 	}
 
@@ -389,24 +394,29 @@ importScripts(
 
 	function completeTimer() {
 		//clearInterval(countdown); //stop countdown
-		chrome.notifications.create({
-			type: 'basic',
-			iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
-			title: 'Time is up!',
-			message: 'Have you done your daily Leetcode?',
-			requireInteraction: true, // The notification will stay until the user interacts with it
-			priority: 2
-		});
+
+		//for time based notifs, prevent duplicate
+		if (timerType == "time" && timeFlag == true) {
+			chrome.notifications.create({
+				type: 'basic',
+				iconUrl: chrome.runtime.getURL("assets/icons/leetmate128.png"),
+				title: 'Time is up!',
+				message: 'Have you done your daily Leetcode?',
+				requireInteraction: true, // The notification will stay until the user interacts with it
+				priority: 2
+			});
+		}
 
 		//restart timer
 		if (timerType == "time" && notifEnabled == true) {
 			//if the timer is time based, it should restart the timer after ending (24 hours)
+			timeFlag = !(timeFlag);
 			startNotifTimer()
 		}
 	}
 
 	function stopTimer() {
-		console.log("Trying to stop timer!");
+		//console.log("Trying to stop timer!");
 		clearInterval(countdown);
 		time = 0;
 		remainingTime = 0;
@@ -429,7 +439,7 @@ importScripts(
 			if (notifEnabled == true) {
 				startNotifTimer();
 
-				console.log("Creating timer alarm!");
+				//console.log("Creating timer alarm!");
 				chrome.alarms.create("leetmate-reminder", {
 					delayInMinutes: 0
 				});
@@ -466,7 +476,7 @@ importScripts(
 			);*/
 		}
 		else if (alarm.name == "stop-timer") {
-			console.log("Stop timer alarm heard.");
+			//console.log("Stop timer alarm heard.");
 			stopTimer();
 		}
 
