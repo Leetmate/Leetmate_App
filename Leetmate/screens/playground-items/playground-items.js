@@ -2,7 +2,8 @@
   "use strict";
 
   const DEFAULT_STATUS_TEXT = "Items";
-  const EFFECT_DURATION_MS = 2200;
+  const EFFECT_DURATION_MS = 1600;
+  const ITEM_INVENTORY_SNAPSHOT_KEY = "itemInventorySnapshot";
   const REVIVE_AMOUNT = 50;
   const POWER_TONIC_STAT_KEYS = ["hp", "atk", "def", "spAtk", "spDef", "spd"];
   const POWER_TONIC_STAT_LABELS = {
@@ -43,6 +44,7 @@
       grid: document.getElementById("item-grid"),
       empty: document.getElementById("item-empty"),
       status: document.getElementById("item-status-pill"),
+      gridWrap: document.getElementById("item-grid-wrap"),
       modalOverlay: document.getElementById("item-modal-overlay"),
       modalClose: document.getElementById("item-modal-close"),
       modalTitle: document.getElementById("item-modal-title"),
@@ -60,6 +62,7 @@
 
   function getSceneElements() {
     return {
+      petCard: document.querySelector(".playground-pet-card"),
       scene: document.querySelector(".playground-scene"),
       petSprite: document.getElementById("active-pet"),
       petEgg: document.getElementById("active-pet-egg"),
@@ -192,6 +195,15 @@
     return Number.isFinite(raw) ? raw : 0;
   }
 
+  function toCachedItem(item) {
+    return {
+      id: item.id || null,
+      category: item.category || null,
+      quantity: Number(item.quantity ?? 0) || 0,
+      purchasedAtMs: getPurchasedTimeMs(item),
+    };
+  }
+
   function canUseSpecialItem(catalogItem) {
     if (!catalogItem) return false;
 
@@ -260,6 +272,9 @@
       setStatusText();
     });
     button.addEventListener("click", () => {
+      if (useInFlight || document.body.classList.contains("item-sequence-active")) {
+        return;
+      }
       openItemModal(inventoryItem, catalogItem);
     });
 
@@ -280,17 +295,11 @@
     });
   }
 
-  async function loadItemInventory(db, uid) {
-    const { grid, empty } = getItemElements();
-    if (!grid || !empty) return;
+  function renderItemInventory(items) {
+    const { grid, empty, gridWrap } = getItemElements();
+    if (!grid || !empty || !gridWrap) return;
 
     const catalogById = getItemCatalogMap();
-    const snap = await db.collection("users").doc(uid).collection("inventory").get();
-    const items = snap.docs
-      .map((doc) => ({ id: doc.id, ...doc.data() }))
-      .filter((item) => item.category === "Special")
-      .sort((a, b) => getPurchasedTimeMs(b) - getPurchasedTimeMs(a));
-
     grid.innerHTML = "";
 
     items.forEach((inventoryItem) => {
@@ -300,7 +309,42 @@
     });
 
     empty.classList.toggle("hidden", grid.children.length > 0);
+    gridWrap.classList.remove("is-loading");
     refreshRenderedItemSlotStates();
+  }
+
+  async function renderCachedItemInventory() {
+    const { itemInventorySnapshot } = await storageGet([ITEM_INVENTORY_SNAPSHOT_KEY]);
+    if (!Array.isArray(itemInventorySnapshot) || itemInventorySnapshot.length === 0) {
+      return false;
+    }
+
+    renderItemInventory(
+      itemInventorySnapshot
+        .filter((item) => item && item.category === "Special")
+        .sort((a, b) => getPurchasedTimeMs(b) - getPurchasedTimeMs(a))
+    );
+    return true;
+  }
+
+  async function loadItemInventory(db, uid) {
+    const { grid, empty, gridWrap } = getItemElements();
+    if (!grid || !empty || !gridWrap) return;
+
+    try {
+      const snap = await db.collection("users").doc(uid).collection("inventory").get();
+      const items = snap.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((item) => item.category === "Special")
+        .sort((a, b) => getPurchasedTimeMs(b) - getPurchasedTimeMs(a));
+
+      renderItemInventory(items);
+      await storageSet({
+        [ITEM_INVENTORY_SNAPSHOT_KEY]: items.map((item) => toCachedItem(item)),
+      });
+    } finally {
+      gridWrap.classList.remove("is-loading");
+    }
   }
 
   function openItemModal(inventoryItem, catalogItem) {
@@ -312,7 +356,15 @@
       modalUse,
     } = getItemElements();
 
-    if (!modalOverlay || !modalTitle || !modalImage || !modalDescription || !modalUse) {
+    if (
+      !modalOverlay ||
+      !modalTitle ||
+      !modalImage ||
+      !modalDescription ||
+      !modalUse ||
+      useInFlight ||
+      document.body.classList.contains("item-sequence-active")
+    ) {
       return;
     }
 
@@ -465,6 +517,10 @@
     sceneEffectEls = [];
   }
 
+  function setItemSequenceActive(isActive) {
+    document.body.classList.toggle("item-sequence-active", Boolean(isActive));
+  }
+
   function registerEffectEl(el) {
     sceneEffectEls.push(el);
     return el;
@@ -515,31 +571,35 @@
     if (!rectData) return;
 
     clearSceneEffects();
-    const { scene, targetRect } = rectData;
+    const { petCard, scene, targetRect } = { ...getSceneElements(), ...rectData };
     const shell = registerEffectEl(document.createElement("div"));
     shell.className = "item-scene-effect item-freeze-shell";
-    shell.style.left = `${targetRect.left - 8}px`;
-    shell.style.top = `${targetRect.top - 10}px`;
-    shell.style.width = `${targetRect.width + 16}px`;
-    shell.style.height = `${targetRect.height + 20}px`;
-    scene.appendChild(shell);
+    shell.style.left = "0px";
+    shell.style.top = "0px";
+    shell.style.width = petCard ? `${petCard.clientWidth}px` : `${scene.clientWidth}px`;
+    shell.style.height = petCard ? `${petCard.clientHeight}px` : `${scene.clientHeight}px`;
+    (petCard || scene).appendChild(shell);
 
     const shardPositions = [
-      [18, 18, -22, -18, -26],
-      [targetRect.width * 0.26, 10, -10, -28, -12],
-      [targetRect.width * 0.62, 12, 12, -26, 14],
-      [targetRect.width - 6, 18, 24, -12, 24],
-      [14, targetRect.height - 4, -22, 20, -18],
-      [targetRect.width * 0.56, targetRect.height + 4, 8, 26, 16],
-      [targetRect.width - 12, targetRect.height - 4, 24, 18, 28],
-      [targetRect.width * 0.44, targetRect.height * 0.5, 0, -32, 36],
+      [24, 22, -24, -18, -26],
+      [scene.clientWidth * 0.28, 14, -10, -30, -12],
+      [scene.clientWidth * 0.68, 12, 12, -28, 14],
+      [scene.clientWidth - 24, 20, 24, -12, 24],
+      [18, scene.clientHeight - 22, -22, 20, -18],
+      [scene.clientWidth * 0.54, scene.clientHeight - 12, 8, 26, 16],
+      [scene.clientWidth - 26, scene.clientHeight - 24, 24, 18, 28],
+      [scene.clientWidth * 0.48, scene.clientHeight * 0.48, 0, -36, 36],
+      [scene.clientWidth * 0.18, scene.clientHeight * 0.28, -30, -16, -32],
+      [scene.clientWidth * 0.82, scene.clientHeight * 0.26, 28, -20, 34],
+      [scene.clientWidth * 0.22, scene.clientHeight * 0.72, -26, 24, -24],
+      [scene.clientWidth * 0.78, scene.clientHeight * 0.7, 30, 22, 30],
     ];
 
     shardPositions.forEach(([left, top, dx, dy, rot], index) => {
       const shard = registerEffectEl(document.createElement("span"));
       shard.className = "item-scene-effect item-freeze-shard";
-      shard.style.left = `${targetRect.left - 8 + left}px`;
-      shard.style.top = `${targetRect.top - 8 + top}px`;
+      shard.style.left = `${left}px`;
+      shard.style.top = `${top}px`;
       shard.style.setProperty("--shard-dx", `${dx}px`);
       shard.style.setProperty("--shard-dy", `${dy}px`);
       shard.style.setProperty("--shard-rot", `${rot}deg`);
@@ -650,6 +710,7 @@
       throw new Error("No stat boosts selected");
     }
     const boostTone = inventoryItem?.id === "spec-tonicpotion2" ? "boost-purple" : "boost-red";
+    const effectPromise = playBoostEffect(boostTone);
 
     const userRef = activeDb.collection("users").doc(activeUid);
     const userSnap = await userRef.get();
@@ -689,17 +750,17 @@
         { merge: true }
       );
     });
-
+    await effectPromise;
     await loadItemInventory(activeDb, activeUid);
     await loadActivePetFromFirestore(activeDb, activeUid);
     await refreshCurrentPetSnapshot();
-    await playBoostEffect(boostTone);
   }
 
   async function applyStreakFreeze(inventoryItem) {
     const userRef = activeDb.collection("users").doc(activeUid);
     const inventoryRef = userRef.collection("inventory").doc(inventoryItem.id);
     const freezeEnd = getTomorrowLosAngelesDateString(1);
+    const effectPromise = playFreezeEffect();
 
     await activeDb.runTransaction(async (tx) => {
       const inventorySnap = await tx.get(inventoryRef);
@@ -714,10 +775,9 @@
         { merge: true }
       );
     });
-
+    await effectPromise;
     await storageSet({ leetmate_streak_freeze_end: freezeEnd });
     await loadItemInventory(activeDb, activeUid);
-    await playFreezeEffect();
   }
 
   async function applyAgeUp(inventoryItem, catalogItem) {
@@ -813,6 +873,7 @@
     const userRef = activeDb.collection("users").doc(activeUid);
     const inventoryRef = userRef.collection("inventory").doc(inventoryItem.id);
     const nowMs = Date.now();
+    const effectPromise = playReviveEffect();
 
     await activeDb.runTransaction(async (tx) => {
       const inventorySnap = await tx.get(inventoryRef);
@@ -828,14 +889,13 @@
         { merge: true }
       );
     });
-
+    await effectPromise;
     await storageSet({
       leetmate_happiness: reviveAmount,
       leetmate_last_fed: nowMs,
     });
     await updateHeartsUI();
     await loadItemInventory(activeDb, activeUid);
-    await playReviveEffect();
   }
 
   async function useSelectedItem() {
@@ -852,6 +912,7 @@
 
     const { modalUse, tonicConfirm } = getItemElements();
     useInFlight = true;
+    setItemSequenceActive(true);
     if (modalUse) {
       modalUse.disabled = true;
       modalUse.textContent = "Using...";
@@ -894,6 +955,7 @@
       await loadItemInventory(activeDb, activeUid).catch(() => {});
     } finally {
       useInFlight = false;
+      setItemSequenceActive(false);
       if (modalUse) {
         modalUse.disabled = false;
         modalUse.textContent = "Use";
@@ -915,6 +977,9 @@
 
     setupRenameModal();
     setupItemModal();
+    renderCachedItemInventory().catch((error) => {
+      console.warn("Item page could not load cached inventory:", error);
+    });
 
     window.LeetmatePetUI.loadActivePetFromStorage().then(refreshCurrentPetSnapshot).catch((error) => {
       console.warn("Item page could not load cached pet state:", error);

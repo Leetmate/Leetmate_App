@@ -14,6 +14,12 @@
   const HAPPY_HEART_COUNT = 3;
   const HAPPY_HEART_STAGGER_MS = 160;
   const PET_TRAVEL_MS_PER_PX = 10;
+  const FAVORITE_FOOD_BONUS = 10;
+  const FAVORITE_FOOD_BY_PET = {
+    fox: "food-bacon",
+    cat: "food-fish",
+    bat: "food-honey",
+  };
 
   function wait(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -65,6 +71,16 @@
 
     function getCurrentStage() {
       return String(getPetSnapshot()?.stage || "").toLowerCase();
+    }
+
+    function getCurrentPetRef() {
+      return String(getPetSnapshot()?.petRef || "").toLowerCase();
+    }
+
+    function isFavoriteFood(catalogItem) {
+      const petRef = getCurrentPetRef();
+      if (!petRef || !catalogItem?.id) return false;
+      return FAVORITE_FOOD_BY_PET[petRef] === catalogItem.id;
     }
 
     function getPetCreatedTimeMs() {
@@ -407,7 +423,7 @@
     }
 
     // The jump itself is CSS-driven; JS only toggles classes and times the hearts.
-    async function playHappyJump() {
+    async function playHappyReaction({ showHearts = true, showJump = true } = {}) {
       const { hero, petSprite } = getEls();
       if (!hero || !petSprite) return;
 
@@ -417,10 +433,14 @@
       void hero.offsetWidth;
       await nextFrame();
 
-      hero.classList.add("is-happy-jump");
+      if (showJump) {
+        hero.classList.add("is-happy-jump");
+      }
       petSprite.classList.add("is-happy");
-      for (let index = 0; index < HAPPY_HEART_COUNT; index += 1) {
-        window.setTimeout(() => spawnHappyHeart(index), index * HAPPY_HEART_STAGGER_MS);
+      if (showHearts) {
+        for (let index = 0; index < HAPPY_HEART_COUNT; index += 1) {
+          window.setTimeout(() => spawnHappyHeart(index), index * HAPPY_HEART_STAGGER_MS);
+        }
       }
       await wait(1000);
       hero.classList.remove("is-happy-jump");
@@ -433,9 +453,10 @@
       const uid = getUid();
       if (!db || !uid) return false;
 
-      const recoveryAmount = Number(
+      const baseRecoveryAmount = Number(
         inventoryItem.recoveryAmount ?? catalogItem.recoveryAmount ?? 0
       );
+      const recoveryAmount = baseRecoveryAmount + (isFavoriteFood(catalogItem) ? FAVORITE_FOOD_BONUS : 0);
       if (recoveryAmount <= 0) return false;
 
       const decayApi = window.LeetmateHappinessDecay;
@@ -567,6 +588,7 @@
         const usable = canUseItem(catalogItem);
         const feedable = usable;
         const isEggPowder = catalogItem.sceneType === "egg-powder";
+        const favoriteFood = isFavoriteFood(catalogItem);
         const shouldWalkToFood = feedable && shouldDrop && !isEggPowder;
         const shouldJumpAtFood = feedable && !isEggPowder;
 
@@ -593,7 +615,10 @@
         }
 
         if (shouldJumpAtFood) {
-          await playHappyJump();
+          await playHappyReaction({
+            showHearts: true,
+            showJump: favoriteFood,
+          });
         }
 
         if (feedable) {

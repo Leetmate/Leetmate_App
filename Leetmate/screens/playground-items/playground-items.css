@@ -47,6 +47,10 @@
   scrollbar-width: none;
 }
 
+.item-grid-wrap.is-loading {
+  visibility: hidden;
+}
+
 .item-grid-wrap::-webkit-scrollbar {
   display: none;
 }
@@ -75,7 +79,11 @@
 }
 
 .item-slot.is-unusable {
-  cursor: default;
+  cursor: not-allowed;
+}
+
+body.item-sequence-active .item-slot {
+  cursor: not-allowed;
 }
 
 .item-slot:focus-visible {
@@ -97,6 +105,13 @@
 .item-slot:not(.is-unusable):focus-visible .item-slot-img {
   transform: translateY(-2px) scale(1.06);
   filter: brightness(1.08) drop-shadow(0 2px 0 rgba(17, 17, 17, 0.22));
+}
+
+body.item-sequence-active .item-slot .item-slot-img,
+body.item-sequence-active .item-slot:hover .item-slot-img,
+body.item-sequence-active .item-slot:focus-visible .item-slot-img {
+  transform: none;
+  filter: none;
 }
 
 .item-slot.is-unusable:hover .item-slot-img,
@@ -156,7 +171,7 @@
 
 .item-modal {
   width: 100%;
-  max-width: 238px;
+  max-width: 232px;
   border: 4px solid var(--color-border);
   border-radius: 22px;
   background: var(--color-surface-2);
@@ -205,16 +220,17 @@
 }
 
 .item-modal-body {
-  padding: 10px 12px 12px;
+  min-height: 244px;
+  padding: 10px 11px 11px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .item-modal-visual {
   width: 100%;
-  min-height: 116px;
+  min-height: 106px;
   border: 4px solid var(--color-text-soft);
   border-radius: 12px;
   background:
@@ -227,17 +243,17 @@
 }
 
 .item-modal-image {
-  width: 70px;
-  height: 70px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
   image-rendering: pixelated;
 }
 
 .item-modal-description {
   margin: 0;
-  min-height: 46px;
+  min-height: 50px;
   font-family: "Lilita One", sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.15;
   color: var(--color-text);
   text-align: center;
@@ -245,12 +261,12 @@
 
 .item-modal-use {
   min-width: 144px;
-  min-height: 42px;
+  min-height: 40px;
   border: 4px solid var(--color-border);
   border-radius: 12px;
   background: linear-gradient(to bottom, var(--color-surface) 0%, var(--color-surface-2) 100%);
   font-family: "Lilita One", sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--color-text);
   cursor: pointer;
 }
@@ -261,36 +277,42 @@
 }
 
 .item-tonic-body {
-  gap: 8px;
+  min-height: 244px;
+  gap: 4px;
+}
+
+.item-tonic-body .item-modal-use {
+  margin-top: auto;
+  margin-bottom: 2px;
 }
 
 .item-tonic-copy {
   margin: 0;
-  min-height: 28px;
+  min-height: 34px;
   font-family: "Lilita One", sans-serif;
-  font-size: 15px;
-  line-height: 1.15;
+  font-size: 13px;
+  line-height: 1.1;
   color: var(--color-text);
   text-align: center;
 }
 
 .item-tonic-picks {
-  min-height: 20px;
+  min-height: 22px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .item-tonic-pick {
-  min-width: 36px;
-  height: 24px;
-  padding: 0 8px;
+  min-width: 32px;
+  height: 22px;
+  padding: 0 7px;
   border: 3px solid var(--color-border);
   border-radius: 999px;
   background: var(--color-surface);
   font-family: "Lilita One", sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text);
   display: inline-flex;
   align-items: center;
@@ -301,16 +323,16 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  gap: 5px;
 }
 
 .item-tonic-stat-btn {
-  min-height: 34px;
+  min-height: 30px;
   border: 3px solid var(--color-border);
   border-radius: 12px;
   background: linear-gradient(to bottom, var(--color-surface) 0%, var(--color-surface-2) 100%);
   font-family: "Lilita One", sans-serif;
-  font-size: 15px;
+  font-size: 13px;
   color: var(--color-text);
   cursor: pointer;
 }
@@ -371,8 +393,9 @@
 }
 
 .item-freeze-shell {
+  box-sizing: border-box;
   border: 4px solid rgba(192, 240, 255, 0.76);
-  border-radius: 12px;
+  border-radius: 28px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08)),
     linear-gradient(to bottom, rgba(196, 243, 255, 0.34), rgba(100, 186, 255, 0.18));
@@ -384,7 +407,7 @@
 }
 
 .item-freeze-shell.is-visible {
-  animation: item-freeze-cube 0.42s ease-out forwards;
+  animation: item-freeze-cube 0.78s ease-out forwards;
 }
 
 .item-freeze-shard {
@@ -397,7 +420,7 @@
 }
 
 .item-freeze-shard.is-visible {
-  animation: item-freeze-burst 0.72s ease-out forwards;
+  animation: item-freeze-burst 0.96s ease-out forwards;
 }
 
 .item-age-glow {

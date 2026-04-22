@@ -80,11 +80,11 @@
 }
 
 body.food-sequence-active .food-slot {
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .food-slot.is-unusable {
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .food-slot:focus-visible {

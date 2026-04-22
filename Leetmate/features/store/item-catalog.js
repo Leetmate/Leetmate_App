@@ -65,7 +65,7 @@
       accessoryItem("acc-leprechaunhat", "Leprechaun Hat", 250, "../../assets/store/acc-leprechaunhat.png", "Lucky and loud.", "A bright green hat with a playful shape and a little extra charm."),
     ],
     food: [
-      foodItem("food-magicpowder", "Magic Powder", 10, "../../assets/store/food-magicpowder.png", "A soft dust with a gentle warmth.", "Usuable on eggs only. Recovers 10 health.", 10, { usableStages: ["egg"], sceneType: "egg-powder", statusText: "+10 Health" }),
+      foodItem("food-magicpowder", "Magic Powder", 10, "../../assets/store/food-magicpowder.png", "A soft dust with a gentle warmth.", "Eggs only. Recovers 10 health.", 10, { usableStages: ["egg"], sceneType: "egg-powder", statusText: "+10 Health" }),
       foodItem("food-milk", "Milk", 10, "../../assets/store/food-milk.png", "Cool, simple, and always reliable.", "Recovers 10 health.", 10),
       foodItem("food-egg", "Fried Egg", 10, "../../assets/store/food-egg.png", "Simple, warm, and cooked just right.", "Recovers 10 health.", 10),
       foodItem("food-honey", "Honey", 10, "../../assets/store/food-honey.png", "Golden, sticky, and naturally sweet.", "Recovers 10 health.", 10),
@@ -102,9 +102,9 @@
       petItem("MicoLeaoDourado", "Golden Tamarin", 1300, "../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png", "Rare and radiant.", "A rare pet with high overall growth and strong late-game value.", { hp: 68, atk: 70, def: 62, spAtk: 76, spDef: 68, spd: 78 }, 10),
     ],
     special: [
-			specialItem("spec-wateroflife", "Water of Life", 500, "../../assets/store/spec-wateroflife.png", "A bright sip that stirs sleeping spirits.", "Revives a downed pet to 50 health.", { effect: "revive", reviveAmount: 50 }),
 			specialItem("spec-streakfreeze", "Streak Freeze", 200, "../../assets/store/spec-streakfreeze.png", "A little breathing room.", "Prevents your streak from resetting for 1 calendar day.", { effect: "streak-freeze", durationDays: 1 }),
 			specialItem("spec-tonicpotion1", "Power Tonic I", 300, "../../assets/store/spec-tonicpotion1.png", "A small boost in a bottle.", "Choose 1 stat to increase by 10. Adult pets only.", { effect: "power-tonic", statPoints: 1 }),
+			specialItem("spec-wateroflife", "Water of Life", 500, "../../assets/store/spec-wateroflife.png", "A bright sip that stirs sleeping spirits.", "Revives a downed pet to 50 health.", { effect: "revive", reviveAmount: 50 }),
 			specialItem("spec-magiclamp", "Magic Lamp", 600, "../../assets/store/spec-magiclamp.png", "Time moves a little faster here.", "Increases your pet's age by 1.", { effect: "age-up", ageIncrease: 1 }),
 			specialItem("spec-tonicpotion2", "Power Tonic II", 700, "../../assets/store/spec-tonicpotion2.png", "A stronger spark of growth.", "Choose 3 stat boosts of +10 each. Adult pets only.", { effect: "power-tonic", statPoints: 3 }),
     ],
