@@ -50,6 +50,7 @@
       xp: 0, // level is derived from XP: level = floor(xp/100) + 1
       level: 1,
       coins: 0,
+      happiness: 100,
       savedHappiness: null,
 			trophy: 0,
 			premium: false,
@@ -93,8 +94,15 @@
         if (userSnap.exists) {
           var userData = userSnap.data() || {};
   
-          if (!Object.prototype.hasOwnProperty.call(userData, 'savedHappiness')) {
+          if (
+            !Object.prototype.hasOwnProperty.call(userData, 'savedHappiness') ||
+            !Object.prototype.hasOwnProperty.call(userData, 'happiness')
+          ) {
             transaction.set(userRef, {
+              happiness:
+                typeof userData.happiness === 'number' && Number.isFinite(userData.happiness)
+                  ? userData.happiness
+                  : 100,
               savedHappiness: null,
               updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });

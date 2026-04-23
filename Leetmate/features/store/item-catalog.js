@@ -13,7 +13,7 @@
     };
   }
 
-  function foodItem(id, name, price, image, flavorText, description, recoveryAmount) {
+  function foodItem(id, name, price, image, flavorText, description, recoveryAmount, options = {}) {
     return {
       id,
       category: "food",
@@ -23,6 +23,7 @@
 			description,
       flavorText,
       recoveryAmount,
+      ...options,
     };
   }
 
@@ -41,7 +42,7 @@
     };
   }
 
-  function specialItem(id, name, price, image, flavorText, description) {
+  function specialItem(id, name, price, image, flavorText, description, options = {}) {
     return {
       id,
       category: "special",
@@ -50,6 +51,7 @@
       image,
       flavorText,
       description,
+      ...options,
     };
   }
 
@@ -63,30 +65,31 @@
       accessoryItem("acc-leprechaunhat", "Leprechaun Hat", 250, "../../assets/store/acc-leprechaunhat.png", "Lucky and loud.", "A bright green hat with a playful shape and a little extra charm."),
     ],
     food: [
-      foodItem("food-milk", "Milk", 10, "../../assets/store/food-milk.png", "Cool, simple, and always reliable.", "Recovers 10 happiness.", 10),
-      foodItem("food-egg", "Fried Egg", 10, "../../assets/store/food-egg.png", "Simple, warm, and cooked just right.", "Recovers 10 happiness.", 10),
-      foodItem("food-bacon", "Bacon", 15, "../../assets/store/food-bacon.png", "Crispy, smoky, and hard to resist.", "Recovers 15 happiness.", 15),
-      foodItem("food-honey", "Honey", 10, "../../assets/store/food-honey.png", "Golden, sticky, and naturally sweet.", "Recovers 10 happiness.", 10),
-      foodItem("food-cheese", "Cheese", 10, "../../assets/store/food-cheese.png", "Rich, creamy, and full of comfort.", "Recovers 10 happiness.", 10),
-      foodItem("food-cookie", "Cookie", 10, "../../assets/store/food-cookie.png", "Sweet, soft, and gone in a bite.", "Recovers 10 happiness.", 10),
-      foodItem("food-croissant", "Croissant", 15, "../../assets/store/food-croissant.png", "Buttery layers with a soft middle.", "Recovers 15 happiness.", 15),
-      foodItem("food-icecream", "Icecream", 15, "../../assets/store/food-icecream.png", "A chilly treat your pet would adore.", "Recovers 15 happiness.", 15),
-      foodItem("food-popcorn", "Popcorn", 15, "../../assets/store/food-popcorn.png", "Tiny bites with big snack energy.", "Recovers 15 happiness.", 15),
-      foodItem("food-pretzel", "Pretzel", 15, "../../assets/store/food-pretzel.png", "Chewy, salty, and baked to a golden brown.", "Recovers 15 happiness.", 15),
-      foodItem("food-bread", "Bread", 20, "../../assets/store/food-bread.png", "Fresh from the oven and still warm to the touch.", "Recovers 20 happiness.", 20),
-      foodItem("food-donut", "Donut", 20, "../../assets/store/food-donut.png", "Sweet, round, and impossible to ignore.", "Recovers 20 happiness.", 20),
-      foodItem("food-fish", "Fish", 20, "../../assets/store/food-fish.png", "Light, fresh, and easy to enjoy.", "Recovers 20 happiness.", 20),
-      foodItem("food-pancake", "Pancake", 20, "../../assets/store/food-pancake.png", "Fluffy, golden, and made for slow mornings.", "Recovers 20 happiness.", 20),
-      foodItem("food-soup", "Soup", 20, "../../assets/store/food-soup.png", "Warm and soothing after a long day.", "Recovers 20 happiness.", 20),
-      foodItem("food-cookedmeat", "Cooked Meat", 25, "../../assets/store/food-cookedmeat.png", "Smoky, savory, and filling.", "Recovers 25 happiness.", 25),
-      foodItem("food-hamburger", "Hamburger", 25, "../../assets/store/food-hamburger.png", "A classic meal stacked with flavor.", "Recovers 25 happiness.", 25),
-      foodItem("food-hotdog", "Hotdog", 25, "../../assets/store/food-hotdog.png", "Quick, messy, and worth it every time.", "Recovers 25 happiness.", 25),
-      foodItem("food-pizza", "Pizza", 25, "../../assets/store/food-pizza.png", "Cheesy, hot, and full of comfort.", "Recovers 25 happiness.", 25),
-      foodItem("food-sandwich", "Sandwich", 25, "../../assets/store/food-sandwich.png", "Simple, filling, and ready anytime.", "Recovers 25 happiness.", 25),
-      foodItem("food-sushi", "Sushi", 25, "../../assets/store/food-sushi.png", "Fresh, neat, and carefully prepared.", "Recovers 25 happiness.", 25),
-      foodItem("food-taco", "Taco", 25, "../../assets/store/food-taco.png", "Crunchy, bold, and full of fun.", "Recovers 25 happiness.", 25),
-      foodItem("food-burrito", "Burrito", 30, "../../assets/store/food-burrito.png", "Packed tight with a big, hearty bite.", "Recovers 30 happiness.", 30),
-      foodItem("food-chicken", "Chicken", 30, "../../assets/store/food-chicken.png", "A warm meal that always hits the spot.", "Recovers 30 happiness.", 30),
+      foodItem("food-magicpowder", "Magic Powder", 10, "../../assets/store/food-magicpowder.png", "A soft dust with a gentle warmth.", "Eggs only. Recovers 10 health.", 10, { usableStages: ["egg"], sceneType: "egg-powder", statusText: "+10 Health" }),
+      foodItem("food-milk", "Milk", 10, "../../assets/store/food-milk.png", "Cool, simple, and always reliable.", "Recovers 10 health.", 10),
+      foodItem("food-egg", "Fried Egg", 10, "../../assets/store/food-egg.png", "Simple, warm, and cooked just right.", "Recovers 10 health.", 10),
+      foodItem("food-honey", "Honey", 10, "../../assets/store/food-honey.png", "Golden, sticky, and naturally sweet.", "Recovers 10 health.", 10),
+      foodItem("food-cheese", "Cheese", 10, "../../assets/store/food-cheese.png", "Rich, creamy, and full of comfort.", "Recovers 10 health.", 10),
+      foodItem("food-cookie", "Cookie", 10, "../../assets/store/food-cookie.png", "Sweet, soft, and gone in a bite.", "Recovers 10 health.", 10),
+			foodItem("food-bacon", "Bacon", 15, "../../assets/store/food-bacon.png", "Crispy, smoky, and hard to resist.", "Recovers 15 health.", 15),
+      foodItem("food-croissant", "Croissant", 15, "../../assets/store/food-croissant.png", "Buttery layers with a soft middle.", "Recovers 15 health.", 15),
+      foodItem("food-icecream", "Icecream", 15, "../../assets/store/food-icecream.png", "A chilly treat your pet would adore.", "Recovers 15 health.", 15),
+      foodItem("food-popcorn", "Popcorn", 15, "../../assets/store/food-popcorn.png", "Tiny bites with big snack energy.", "Recovers 15 health.", 15),
+      foodItem("food-pretzel", "Pretzel", 15, "../../assets/store/food-pretzel.png", "Chewy, salty, and baked to a golden brown.", "Recovers 15 health.", 15),
+      foodItem("food-bread", "Bread", 20, "../../assets/store/food-bread.png", "Fresh from the oven and still warm to the touch.", "Recovers 20 health.", 20),
+      foodItem("food-donut", "Donut", 20, "../../assets/store/food-donut.png", "Sweet, round, and impossible to ignore.", "Recovers 20 health.", 20),
+      foodItem("food-fish", "Fish", 20, "../../assets/store/food-fish.png", "Light, fresh, and easy to enjoy.", "Recovers 20 health.", 20),
+      foodItem("food-pancake", "Pancake", 20, "../../assets/store/food-pancake.png", "Fluffy, golden, and made for slow mornings.", "Recovers 20 health.", 20),
+      foodItem("food-soup", "Soup", 20, "../../assets/store/food-soup.png", "Warm and soothing after a long day.", "Recovers 20 health.", 20),
+      foodItem("food-cookedmeat", "Cooked Meat", 25, "../../assets/store/food-cookedmeat.png", "Smoky, savory, and filling.", "Recovers 25 health.", 25),
+      foodItem("food-hamburger", "Hamburger", 25, "../../assets/store/food-hamburger.png", "A classic meal stacked with flavor.", "Recovers 25 health.", 25),
+      foodItem("food-hotdog", "Hotdog", 25, "../../assets/store/food-hotdog.png", "Quick, messy, and worth it every time.", "Recovers 25 health.", 25),
+      foodItem("food-pizza", "Pizza", 25, "../../assets/store/food-pizza.png", "Cheesy, hot, and full of comfort.", "Recovers 25 health.", 25),
+      foodItem("food-sandwich", "Sandwich", 25, "../../assets/store/food-sandwich.png", "Simple, filling, and ready anytime.", "Recovers 25 health.", 25),
+      foodItem("food-sushi", "Sushi", 25, "../../assets/store/food-sushi.png", "Fresh, neat, and carefully prepared.", "Recovers 25 health.", 25),
+      foodItem("food-taco", "Taco", 25, "../../assets/store/food-taco.png", "Crunchy, bold, and full of fun.", "Recovers 25 health.", 25),
+      foodItem("food-burrito", "Burrito", 30, "../../assets/store/food-burrito.png", "Packed tight with a big, hearty bite.", "Recovers 30 health.", 30),
+      foodItem("food-chicken", "Chicken", 30, "../../assets/store/food-chicken.png", "A warm meal that always hits the spot.", "Recovers 30 health.", 30),
     ],
     pets: [
       petItem("Bat", "Bat", 300, "../../assets/spritesheets/CubicBatAdult.png", "Swift and watchful.", "A fast companion that leans into speed and special attack.", { hp: 40, atk: 45, def: 40, spAtk: 60, spDef: 50, spd: 80 }),
@@ -99,10 +102,11 @@
       petItem("MicoLeaoDourado", "Golden Tamarin", 1300, "../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png", "Rare and radiant.", "A rare pet with high overall growth and strong late-game value.", { hp: 68, atk: 70, def: 62, spAtk: 76, spDef: 68, spd: 78 }, 10),
     ],
     special: [
-			specialItem("spec-streakfreeze", "Streak Freeze", 200, "../../assets/store/spec-streakfreeze.png", "A little breathing room.", "Prevents your streak from resetting for 1 calendar day."),
-			specialItem("spec-tonicpotion1", "Power Tonic I", 300, "../../assets/store/spec-tonicpotion1.png", "A small boost in a bottle.", "Increases 1 stat for your pet."),
-			specialItem("spec-magiclamp", "Magic Lamp", 600, "../../assets/store/spec-magiclamp.png", "Time moves a little faster here.", "Increases your pet's age by 1."),
-			specialItem("spec-tonicpotion2", "Power Tonic II", 700, "../../assets/store/spec-tonicpotion2.png", "A stronger spark of growth.", "Increases 3 stats for your pet."),
+			specialItem("spec-streakfreeze", "Streak Freeze", 200, "../../assets/store/spec-streakfreeze.png", "A little breathing room.", "Prevents your streak from resetting for 1 calendar day.", { effect: "streak-freeze", durationDays: 1 }),
+			specialItem("spec-tonicpotion1", "Power Tonic I", 300, "../../assets/store/spec-tonicpotion1.png", "A small boost in a bottle.", "Choose 1 stat to increase by 10. Adult pets only.", { effect: "power-tonic", statPoints: 1 }),
+			specialItem("spec-wateroflife", "Water of Life", 500, "../../assets/store/spec-wateroflife.png", "A bright sip that stirs sleeping spirits.", "Revives a downed pet to 50 health.", { effect: "revive", reviveAmount: 50 }),
+			specialItem("spec-magiclamp", "Magic Lamp", 600, "../../assets/store/spec-magiclamp.png", "Time moves a little faster here.", "Increases your pet's age by 1.", { effect: "age-up", ageIncrease: 1 }),
+			specialItem("spec-tonicpotion2", "Power Tonic II", 700, "../../assets/store/spec-tonicpotion2.png", "A stronger spark of growth.", "Choose 3 stat boosts of +10 each. Adult pets only.", { effect: "power-tonic", statPoints: 3 }),
     ],
   };
 

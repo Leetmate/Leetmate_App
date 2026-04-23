@@ -14,11 +14,41 @@
       adult: "../../assets/spritesheets/CubicCatAdult.png",
       defaultName: "Cubic Cat"
     },
+    Fish: {
+      egg: "../../assets/eggs/CubicFishEgg.png",
+      baby: "../../assets/spritesheets/CubicFishBaby.png",
+      adult: "../../assets/spritesheets/CubicFishAdult.png",
+      defaultName: "Cubic Fish"
+    },
     Fox: {
       egg: "../../assets/eggs/CubicFoxEgg.png",
       baby: "../../assets/spritesheets/CubicFoxBaby.png",
       adult: "../../assets/spritesheets/CubicFoxAdult.png",
       defaultName: "Cubic Fox"
+    },
+    Frog: {
+      egg: "../../assets/eggs/CubicFrogEgg.png",
+      baby: "../../assets/spritesheets/CubicFrogBaby.png",
+      adult: "../../assets/spritesheets/CubicFrogAdult.png",
+      defaultName: "Cubic Frog"
+    },
+    Giraffe: {
+      egg: "../../assets/eggs/CubicGiraffeEgg.png",
+      baby: "../../assets/spritesheets/CubicGiraffeBaby.png",
+      adult: "../../assets/spritesheets/CubicGiraffeAdult.png",
+      defaultName: "Cubic Giraffe"
+    },
+    MicoLeaoDourado: {
+      egg: "../../assets/eggs/CubicMicoLeaoDouradoEgg.png",
+      baby: "../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png",
+      adult: "../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png",
+      defaultName: "Golden Tamarin"
+    },
+    Wolf: {
+      egg: "../../assets/eggs/CubicWolfEgg.png",
+      baby: "../../assets/spritesheets/CubicWolfBaby.png",
+      adult: "../../assets/spritesheets/CubicWolfAdult.png",
+      defaultName: "Cubic Wolf"
     }
   };
 
@@ -26,6 +56,7 @@
   let db = null;
   let pets = [];
   let currentIndex = 0;
+  let modalSelectedPetId = null;
 
   // turn pet into snapshot in extension storage
   function toCachedPetData(pet) {
@@ -89,13 +120,10 @@
   }
 
   function getPetAge(pet) {
-    const createdMs =
-      typeof pet.createdTimestamp?.toMillis === "function"
-        ? pet.createdTimestamp.toMillis()
-        : pet.createdTimestampMs || pet.createdTimestamp || Date.now();
+    const storedAge =
+      typeof pet.age === "number" && Number.isFinite(pet.age) ? pet.age : 0;
     const adjustedDays = pet.adjustedDays || 0;
-    const diffDays = Math.floor((Date.now() - createdMs) / (1000 * 60 * 60 * 24));
-    return Math.max(0, diffDays + adjustedDays);
+    return Math.max(0, storedAge + adjustedDays);
   }
 
   // each slot can render as an egg or baby/adult sprite sheet
@@ -217,14 +245,19 @@
   function openModal() {
     const { modalOverlay } = getEls();
     if (!modalOverlay || pets.length === 0) return;
-    // use the centered pet as the current selection
-    populateModal(pets[currentIndex]);
+    const selectedPet = pets[currentIndex];
+    if (!selectedPet) return;
+
+    // lock the modal to the pet that was centered when Select was pressed
+    modalSelectedPetId = selectedPet.id;
+    populateModal(selectedPet);
     modalOverlay.classList.remove("hidden");
   }
 
   function closeModal() {
     const { modalOverlay } = getEls();
     if (!modalOverlay) return;
+    modalSelectedPetId = null;
     modalOverlay.classList.add("hidden");
   }
 
@@ -232,7 +265,8 @@
   async function setActivePet() {
     if (!auth?.currentUser || !db || pets.length === 0) return;
 
-    const selectedPet = pets[currentIndex];
+    const selectedPet = pets.find((pet) => pet.id === modalSelectedPetId) || pets[currentIndex];
+    if (!selectedPet) return;
     const userRef = db.collection("users").doc(auth.currentUser.uid);
 
     // write the new active pet id to firestore first
@@ -255,7 +289,7 @@
     });
 
     closeModal();
-    renderCarousel();
+    window.location.href = "../playground-main/index.html";
   }
 
   async function loadPets() {

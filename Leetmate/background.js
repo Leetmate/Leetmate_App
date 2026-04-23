@@ -192,35 +192,50 @@ importScripts(
 
 	//async function calculateTimer() {
 	async function startNotifTimer() {
-		//debugger status
-		console.log("Starting startNotifTimer()");
+		// //debugger status
+		// console.log("Starting startNotifTimer()");
 
-		await chrome.storage.local.get(["leetmate_notification_mode"]).then((result) => {
-			loadLocalVars("timerType", result["leetmate_notification_mode"]);
-		});
+		// await chrome.storage.local.get(["leetmate_notification_mode"]).then((result) => {
+		// 	loadLocalVars("timerType", result["leetmate_notification_mode"]);
+		// });
 
-		await chrome.storage.local.get(["leetmate_notification_time"]).then((result) => {
-			loadLocalVars("notifTime", result["leetmate_notification_time"]);
-		});
+		// await chrome.storage.local.get(["leetmate_notification_time"]).then((result) => {
+		// 	loadLocalVars("notifTime", result["leetmate_notification_time"]);
+		// });
 
-		await chrome.storage.local.get(["leetmate_health_notification_threshold"]).then((result) => {
-			loadLocalVars("notifHealth", result["leetmate_health_notification_threshold"]);
-		});
+		// await chrome.storage.local.get(["leetmate_health_notification_threshold"]).then((result) => {
+		// 	loadLocalVars("notifHealth", result["leetmate_health_notification_threshold"]);
+		// });
 
-		await chrome.storage.local.get(["leetmate_happiness"]).then((result) => {
-			loadLocalVars("curHealth", result["leetmate_happiness"]);
-		});
+		// await chrome.storage.local.get(["leetmate_happiness"]).then((result) => {
+		// 	loadLocalVars("curHealth", result["leetmate_happiness"]);
+		// });
 
-		await chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
-			loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
-		});
+		// await chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
+		// 	loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
+		// });
 
-		//stop timer if enabled = false
-		if (notifEnabled == false) {
-			console.log("Canceling startNotifTimer()");
-			return;
-		}
+		// //stop timer if enabled = false
+		// if (notifEnabled == false) {
+		// 	console.log("Canceling startNotifTimer()");
+		// 	return;
+		// }
+		const data = await chrome.storage.local.get([
+			"leetmate_notification_mode",
+			"leetmate_notification_time",
+			"leetmate_health_notification_threshold",
+			"leetmate_happiness",
+			"leetmate_notifications_enabled"
+		]);
 
+		timerType = data.leetmate_notification_mode;
+		notifTime = data.leetmate_notification_time;
+		notifHealth = data.leetmate_health_notification_threshold;
+		curHealth = data.leetmate_happiness;
+		notifEnabled = data.leetmate_notifications_enabled;
+
+		if (!notifEnabled) return;
+		
 		//calculations
 		doMath();
 		//for debugging: set the calcSecs to 10secs
@@ -323,30 +338,40 @@ importScripts(
 	}
 
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-		if (message.action == "startTimer") {
-			notifEnabled = true;
+		// if (message.action == "startTimer") {
+		// 	notifEnabled = true;
 
-			chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
-				loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
-			});
+		// 	chrome.storage.local.get(["leetmate_notifications_enabled"]).then((result) => {
+		// 		loadLocalVars("notifEnabled", result["leetmate_notifications_enabled"]);
+		// 	});
 
-			if (notifEnabled == true) {
-				startNotifTimer();
+		// 	if (notifEnabled == true) {
+		// 		startNotifTimer();
 
-				chrome.alarms.create("leetmate-reminder", {
-					delayInMinutes: 0
-				});
-			}
+		// 		chrome.alarms.create("leetmate-reminder", {
+		// 			delayInMinutes: 0
+		// 		});
+		// 	}
+		// }
+		// else if (message.action == "stopTimer") {
+		// 	chrome.alarms.create("stop-timer", {
+		// 		delayInMinutes: 0
+		// 	});
+		// }
+
+		// sendResponse({ ok: true });
+		// // no return true here
+		// return;
+
+		if (message.action === "startTimer") {
+			startNotifTimer().then(() => sendResponse({ ok: true }));
+			return true;
 		}
-		else if (message.action == "stopTimer") {
-			chrome.alarms.create("stop-timer", {
-				delayInMinutes: 0
-			});
-		}
 
-		sendResponse({ ok: true });
-		// no return true here
-		return;
+		if (message.action === "stopTimer") {
+			stopTimer();
+			sendResponse({ ok: true });
+		}
 	});
 
 	chrome.alarms.onAlarm.addListener((alarm) => {

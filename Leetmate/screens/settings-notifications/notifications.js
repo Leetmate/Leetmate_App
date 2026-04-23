@@ -151,19 +151,20 @@
 
   // ---- LOCAL STORAGE --------
   // Save notification settings locally in chrome.storage 
+	// joon: it looks like background.js reads separate keys
   const STORAGE_KEY = "leetmate_notification_settings";
   function persistSettingsLocal() {
-    chrome.storage.local.set({
-      [STORAGE_KEY]: {
-        enabled: state.enabled,
-        mode: state.mode,
-        hour: sanitizeHour(state.hour) || "12",
-        minute: sanitizeMinute(state.minute) || "00",
-        period: state.period,
-        healthThreshold: state.healthThreshold
-      }
-    });
-  }
+		chrome.storage.local.set({
+			leetmate_notifications_enabled: state.enabled,
+			leetmate_notification_mode: state.mode,
+			leetmate_notification_time: {
+				hour: sanitizeHour(state.hour) || "12",
+				minute: sanitizeMinute(state.minute) || "00",
+				period: state.period
+			},
+			leetmate_health_notification_threshold: state.healthThreshold
+		});
+	}
 
   // ---- FIREBASE / FIRESTORE HELPERS --------
   function getCurrentUser() {

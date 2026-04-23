@@ -3,23 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="../../features/shared/theme-init.js"></script>
-    <title>Leetmate - Playground</title>
-    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+		<script src="../../features/shared/theme-init.js"></script>
+    <title>Leetmate - item</title>
+		<link rel="stylesheet" href="../../styles/dark-theme.css" />
     <link rel="stylesheet" href="../../styles/color-theme.css">
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
-    <link rel="stylesheet" href="playground.css" />
     <link rel="stylesheet" href="../../styles/menu-nav.css" />
+    <link rel="stylesheet" href="../playground-main/playground.css" />
+    <link rel="stylesheet" href="playground-items.css" />
   </head>
   <body>
     <div class="popup-layout">
       <div class="popup-content">
-        <div class="playground-card">
+        <div class="playground-card item-card">
           <div class="screen-banner">
-            <div class="screen-banner__left"></div>
+            <div class="screen-banner__left">
+              <button
+                type="button"
+                class="menu-btn"
+                id="item-back-btn"
+                aria-label="Back to playground"
+              >
+                <img src="../../assets/icons/back-arrow.png" class="menu-icon" alt="" />
+              </button>
+            </div>
             <div class="screen-banner__center">
-              <h1 class="screen-banner__title">Playground</h1>
+              <h1 class="screen-banner__title">Items</h1>
             </div>
             <div class="screen-banner__right">
               <button
@@ -35,8 +45,8 @@
             </div>
           </div>
 
-          <div class="playground-content">
-						<section class="playground-pet-card" aria-label="Active pet display">
+          <div class="playground-content item-content">
+            <section class="playground-pet-card" aria-label="Active pet display">
               <div class="playground-pet-name">
                 <div class="playground-pet-name-row">
                   <h2 id="pet-name-display">Loading...</h2>
@@ -46,17 +56,18 @@
                 </div>
                 <p>Age: <span id="pet-age-display"></span></p>
               </div>
-							<div class="playground-scene">
-								<div class="home-hero">
-									<div class="home-hero-pet" id="active-pet"></div>
-									<img
-										id="active-pet-egg"
-										class="home-hero-egg hidden"
-										alt="Active pet egg"
-									/>
-								</div>
 
-								<div class="playground-health">
+              <div class="playground-scene">
+                <div class="home-hero">
+                  <div class="home-hero-pet" id="active-pet"></div>
+                  <img
+                    id="active-pet-egg"
+                    class="home-hero-egg hidden"
+                    alt="Active pet egg"
+                  />
+                </div>
+
+                <div class="playground-health">
                   <div class="hearts hearts-empty bottom-hearts">
                     <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
                     <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
@@ -70,32 +81,18 @@
                     <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
                     <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
                     <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
-                  </div>									
-								</div>
-							</div>
-						</section>
+                  </div>
+                </div>
+              </div>
+            </section>
 
-						<nav class="playground-nav-grid" aria-label="Playground sections">
-							<button type="button" class="playground-nav-btn" id="playground-pets-btn">
-                <img src="../../assets/icons/paw.svg" class="playground-nav-icon" alt="" />
-								<span class="playground-nav-label">Pets</span>
-							</button>
-
-							<button type="button" class="playground-nav-btn" id="playground-items-btn">
-                <img src="../../assets/icons/playground_items.png" class="playground-nav-icon" alt="" />
-								<span class="playground-nav-label">Items</span>
-							</button>
-
-							<button type="button" class="playground-nav-btn" id="playground-food-btn">
-                <img src="../../assets/icons/playground_food.png" class="playground-nav-icon" alt="" />
-								<span class="playground-nav-label">Food</span>
-							</button>
-
-							<button type="button" class="playground-nav-btn" id="playground-closet-btn">
-                <img src="../../assets/icons/playground_closet.png" class="playground-nav-icon" alt="" />
-								<span class="playground-nav-label">Closet</span>
-							</button>
-						</nav>
+            <section class="item-inventory-card" aria-label="Item inventory">
+              <div class="item-status-pill" id="item-status-pill">Items</div>
+              <div class="item-grid-wrap is-loading" id="item-grid-wrap">
+                <div class="item-grid" id="item-grid"></div>
+                <p class="item-empty hidden" id="item-empty">No items in inventory yet.</p>
+              </div>
+            </section>
           </div>
         </div>
       </div>
@@ -117,17 +114,52 @@
       </div>
     </div>
 
+    <div class="item-modal-overlay hidden" id="item-modal-overlay">
+      <div class="item-modal" role="dialog" aria-modal="true" aria-labelledby="item-modal-title">
+        <div class="item-modal-header">
+          <button type="button" class="item-modal-close" id="item-modal-close" aria-label="Close item details">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h2 id="item-modal-title">Item</h2>
+        </div>
+        <div class="item-modal-body">
+          <div class="item-modal-visual">
+            <img id="item-modal-image" class="item-modal-image" alt="" />
+          </div>
+          <p class="item-modal-description" id="item-modal-description"></p>
+          <button type="button" class="item-modal-use" id="item-modal-use">Use</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-modal-overlay hidden" id="tonic-modal-overlay">
+      <div class="item-modal item-tonic-modal" role="dialog" aria-modal="true" aria-labelledby="tonic-modal-title">
+        <div class="item-modal-header">
+          <button type="button" class="item-modal-close" id="tonic-modal-close" aria-label="Close stat selection">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h2 id="tonic-modal-title">Choose Stats</h2>
+        </div>
+        <div class="item-modal-body item-tonic-body">
+          <p class="item-tonic-copy" id="tonic-modal-copy">Select stats to boost.</p>
+          <div class="item-tonic-picks" id="tonic-picks"></div>
+          <div class="item-tonic-grid" id="tonic-stat-grid"></div>
+          <button type="button" class="item-modal-use" id="tonic-modal-confirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+
     <script src="../../scripts/background-music.js"></script>
     <script src="../../features/shared/menu-nav.js"></script>
-		<script src="../../features/shared/storage-helper.js"></script>
+    <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
-    <script src="../../features/progression/xp.js"></script>
-    <script src="../../features/progression/streak.js"></script>
     <script src="../../features/progression/happiness-decay.js"></script>
-		<script src="../../features/pet/pet-loader.js"></script>
-    <script src="../../features/pet/pet-rename.js"></script>
-    <script src="playground.js"></script>
+    <script src="../../features/pet/pet-evolution.js"></script>
+    <script src="../../features/store/item-catalog.js"></script>
+    <script src="../../features/pet/pet-loader.js"></script>
+    <script src="../../tests/demo.js"></script>
+    <script src="playground-items.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
   </body>
 </html>
