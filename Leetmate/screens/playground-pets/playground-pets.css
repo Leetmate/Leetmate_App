@@ -104,7 +104,7 @@ body {
 }
 
 .pets-slot--center .pets-slot-sprite {
-  width: 220px;
+  width: 180px;
   aspect-ratio: 21 / 16;
   position: relative;
   z-index: 2;
@@ -112,8 +112,9 @@ body {
 }
 
 .pets-slot--side .pets-slot-sprite {
-  width: 86px;
+  width: 72px;
   aspect-ratio: 21 / 16;
+  transform: translateY(12px);
 }
 
 .pets-slot--center .pets-slot-egg {
@@ -140,8 +141,8 @@ body {
 .stage-baby .pets-slot-sprite,
 .stage-adult .pets-slot-sprite {
   display: block !important;
-  background-size: 700% 100%;
-  background-position: 0% 0%;
+  background-size: 700% 200%;
+  background-position: 0% 100%;
 }
 
 .stage-egg .pets-slot-egg {
@@ -393,15 +394,15 @@ body {
 
 @keyframes pets-idle {
   0% {
-    background-position: 0% 0%;
+    background-position: 0% 100%;
   }
 
   50% {
-    background-position: 33.33% 0%;
+    background-position: 33.33% 100%;
   }
 
   100% {
-    background-position: 0% 0%;
+    background-position: 0% 100%;
   }
 }
 

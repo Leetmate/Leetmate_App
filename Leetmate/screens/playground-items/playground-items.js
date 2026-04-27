@@ -211,8 +211,12 @@
     const stage = getCurrentStage();
     const dead = isPetDead();
 
+    if (dead) {
+      return effect === "revive";
+    }
+
     if (effect === "power-tonic") {
-      return stage === "adult" && !dead;
+      return stage === "adult";
     }
 
     if (effect === "streak-freeze") {
@@ -224,7 +228,7 @@
     }
 
     if (effect === "revive") {
-      return dead;
+      return false;
     }
 
     return false;
@@ -233,6 +237,7 @@
   function syncItemSlotState(button, catalogItem) {
     const usable = canUseSpecialItem(catalogItem);
     button.classList.toggle("is-unusable", !usable);
+    button.disabled = !usable;
     button.setAttribute("aria-disabled", usable ? "false" : "true");
     return usable;
   }

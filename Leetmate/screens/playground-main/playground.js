@@ -23,10 +23,17 @@
       });
     }
 		
-    const itemsBtn = document.getElementById("playground-items-btn");
+		const itemsBtn = document.getElementById("playground-items-btn");
     if (itemsBtn) {
       itemsBtn.addEventListener("click", () => {
         window.location.href = "../playground-items/index.html";
+      });
+    }
+
+    const closetBtn = document.getElementById("playground-closet-btn");
+    if (closetBtn) {
+      closetBtn.addEventListener("click", () => {
+        window.location.href = "../playground-closet/index.html";
       });
     }
 

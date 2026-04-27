@@ -77,6 +77,18 @@
     return null;
   }
 
+  async function resolveSelectedPetSpritePath(pet, equippedItemId) {
+    if (window.LeetmatePetUI?.resolveActivePetSpritePath) {
+      return window.LeetmatePetUI.resolveActivePetSpritePath(
+        pet?.petRef || null,
+        pet?.stage || null,
+        equippedItemId || null
+      );
+    }
+
+    return getActivePetSpritePath(pet);
+  }
+
   function getEls() {
     return {
       leftSlot: document.getElementById("pet-slot-left"),
@@ -268,6 +280,13 @@
     const selectedPet = pets.find((pet) => pet.id === modalSelectedPetId) || pets[currentIndex];
     if (!selectedPet) return;
     const userRef = db.collection("users").doc(auth.currentUser.uid);
+    const { activePetSnapshot } = await storageGet(["activePetSnapshot"]);
+    const equippedItemId = activePetSnapshot?.equippedItemId || null;
+    const resolvedSpritePath = await resolveSelectedPetSpritePath(selectedPet, equippedItemId);
+    const nextSnapshot = {
+      ...toCachedPetData(selectedPet),
+      equippedItemId
+    };
 
     // write the new active pet id to firestore first
     await userRef.set(
@@ -283,8 +302,8 @@
       activePetId: selectedPet.id,
       activePetType: selectedPet.petRef || null,
       activePetStage: selectedPet.stage || null,
-      activePetSpritePath: getActivePetSpritePath(selectedPet),
-      activePetSnapshot: toCachedPetData(selectedPet),
+      activePetSpritePath: resolvedSpritePath,
+      activePetSnapshot: nextSnapshot,
       ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet))
     });
 
@@ -301,6 +320,7 @@
     if (!userSnap.exists) return;
 
     const activePetId = userSnap.data().activePetId || null;
+    const equippedItemId = userSnap.data().equippedItemId || null;
     // fetch every pet the user owns
     const petsSnap = await userRef.collection("pets").get();
 
@@ -313,13 +333,16 @@
 
     const activePet = pets.find((pet) => pet.id === activePetId) || pets[0];
 
+    const resolvedSpritePath = await resolveSelectedPetSpritePath(activePet, equippedItemId);
     await storageSet({
       ownedPetsSnapshot: pets.map((pet) => toCachedPetData(pet)),
       activePetId: activePet?.id || activePetId || null,
       activePetType: activePet?.petRef || null,
       activePetStage: activePet?.stage || null,
-      activePetSpritePath: getActivePetSpritePath(activePet),
-      activePetSnapshot: activePet ? toCachedPetData(activePet) : null,
+      activePetSpritePath: resolvedSpritePath,
+      activePetSnapshot: activePet
+        ? { ...toCachedPetData(activePet), equippedItemId }
+        : null,
     });
 
     const activeIndex = pets.findIndex((pet) => pet.id === activePetId);

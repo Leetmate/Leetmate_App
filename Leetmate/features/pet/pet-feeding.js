@@ -10,7 +10,7 @@
   // Interaction / animation tuning.
   const DRAG_THRESHOLD_PX = 10;
   const FOOD_VISIBLE_MS = 2000;
-  const FOOD_FLOOR_TOP = 146;
+  const FOOD_FLOOR_TOP = 136;
   const HAPPY_HEART_COUNT = 3;
   const HAPPY_HEART_STAGGER_MS = 160;
   const PET_TRAVEL_MS_PER_PX = 10;
@@ -543,25 +543,26 @@
 
     // Normal foods default to baby/adult only. Special items can override that with usableStages.
     function canUseItem(catalogItem) {
+      const stage = getCurrentStage();
+      if (!stage) {
+        return false;
+      }
+
       if (getCurrentHappinessPercent() <= 0) {
         return false;
       }
 
-      const stage = getCurrentStage();
-      const allowedStages = Array.isArray(catalogItem.usableStages)
-        ? catalogItem.usableStages.map((value) => String(value).toLowerCase())
-        : null;
-
-      if (!allowedStages) {
-        return stage === "baby" || stage === "adult";
+      if (catalogItem?.id === "food-magicpowder") {
+        return stage === "egg";
       }
 
-      return allowedStages.includes(stage);
+      return stage !== "egg";
     }
 
     function syncFoodSlotState(button, catalogItem) {
       const usable = canUseItem(catalogItem);
       button.classList.toggle("is-unusable", !usable);
+      button.disabled = !usable;
       button.setAttribute("aria-disabled", usable ? "false" : "true");
       return usable;
     }
@@ -775,6 +776,7 @@
 
     return {
       attachFoodSlot,
+      syncFoodSlotState,
       resetPetPose,
     };
   }

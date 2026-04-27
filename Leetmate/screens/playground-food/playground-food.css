@@ -79,12 +79,13 @@
   touch-action: none;
 }
 
+.food-slot:disabled,
 body.food-sequence-active .food-slot {
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .food-slot.is-unusable {
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .food-slot:focus-visible {
@@ -112,10 +113,18 @@ body.food-sequence-active .food-slot {
   filter: brightness(1.08) drop-shadow(0 2px 0 rgba(17, 17, 17, 0.22));
 }
 
+.food-slot:disabled .food-slot-img,
+.food-slot.is-unusable .food-slot-img {
+  filter: grayscale(1) brightness(0.82);
+  opacity: 0.72;
+}
+
 .food-slot.is-unusable:hover .food-slot-img,
-.food-slot.is-unusable:focus-visible .food-slot-img {
+.food-slot.is-unusable:focus-visible .food-slot-img,
+.food-slot:disabled:hover .food-slot-img,
+.food-slot:disabled:focus-visible .food-slot-img {
   transform: none;
-  filter: none;
+  filter: grayscale(1) brightness(0.82);
 }
 
 .food-slot-count {

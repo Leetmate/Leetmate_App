@@ -78,12 +78,13 @@
   overflow: visible;
 }
 
+.item-slot:disabled,
 .item-slot.is-unusable {
-  cursor: not-allowed;
+  cursor: default;
 }
 
 body.item-sequence-active .item-slot {
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .item-slot:focus-visible {
@@ -107,6 +108,12 @@ body.item-sequence-active .item-slot {
   filter: brightness(1.08) drop-shadow(0 2px 0 rgba(17, 17, 17, 0.22));
 }
 
+.item-slot:disabled .item-slot-img,
+.item-slot.is-unusable .item-slot-img {
+  filter: grayscale(1) brightness(0.82);
+  opacity: 0.72;
+}
+
 body.item-sequence-active .item-slot .item-slot-img,
 body.item-sequence-active .item-slot:hover .item-slot-img,
 body.item-sequence-active .item-slot:focus-visible .item-slot-img {
@@ -115,9 +122,11 @@ body.item-sequence-active .item-slot:focus-visible .item-slot-img {
 }
 
 .item-slot.is-unusable:hover .item-slot-img,
-.item-slot.is-unusable:focus-visible .item-slot-img {
+.item-slot.is-unusable:focus-visible .item-slot-img,
+.item-slot:disabled:hover .item-slot-img,
+.item-slot:disabled:focus-visible .item-slot-img {
   transform: none;
-  filter: none;
+  filter: grayscale(1) brightness(0.82);
 }
 
 .item-slot-count {
