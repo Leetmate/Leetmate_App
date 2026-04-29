@@ -19,11 +19,6 @@ const PET_ASSETS = {
         baby: '../../assets/spritesheets/CubicFoxBaby.png',
         adult: '../../assets/spritesheets/CubicFoxAdult.png'
     },
-		Fish: {
-        egg: '../../assets/eggs/CubicFishEgg.png',
-        baby: '../../assets/spritesheets/CubicFishBaby.png',
-        adult: '../../assets/spritesheets/CubicFishAdult.png'
-    },
     Frog: {
         egg: '../../assets/eggs/CubicFrogEgg.png',
         baby: '../../assets/spritesheets/CubicFrogBaby.png',

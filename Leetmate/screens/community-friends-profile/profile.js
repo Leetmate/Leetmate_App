@@ -46,7 +46,6 @@
     Bat: 'Cubic Bat',
     Cat: 'Cubic Cat',
     Fox: 'Cubic Fox',
-    Fish: 'Cubic Fish',
     Frog: 'Cubic Frog',
     Wolf: 'Cubic Wolf',
     Giraffe: 'Cubic Giraffe',

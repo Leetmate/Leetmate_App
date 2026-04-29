@@ -14,12 +14,6 @@
       adult: "../../assets/spritesheets/CubicCatAdult.png",
       defaultName: "Cubic Cat"
     },
-    Fish: {
-      egg: "../../assets/eggs/CubicFishEgg.png",
-      baby: "../../assets/spritesheets/CubicFishBaby.png",
-      adult: "../../assets/spritesheets/CubicFishAdult.png",
-      defaultName: "Cubic Fish"
-    },
     Fox: {
       egg: "../../assets/eggs/CubicFoxEgg.png",
       baby: "../../assets/spritesheets/CubicFoxBaby.png",

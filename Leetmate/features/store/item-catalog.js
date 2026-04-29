@@ -94,7 +94,6 @@
     pets: [
       petItem("Bat", "Bat", 300, "../../assets/spritesheets/CubicBatAdult.png", "Swift and watchful.", "A fast companion that leans into speed and special attack.", { hp: 40, atk: 45, def: 40, spAtk: 60, spDef: 50, spd: 80 }),
       petItem("Cat", "Cat", 300, "../../assets/spritesheets/CubicCatAdult.png", "Balanced and curious.", "A steady pet with reliable all-around stats and a calm pace.", { hp: 50, atk: 55, def: 50, spAtk: 55, spDef: 55, spd: 65 }),
-      petItem("Fish", "Fish", 400, "../../assets/spritesheets/CubicFishAdult.png", "Calm and light.", "A simple pet with modest stats and an easygoing nature.", { hp: 35, atk: 35, def: 35, spAtk: 45, spDef: 45, spd: 55 }),
       petItem("Fox", "Fox", 300, "../../assets/spritesheets/CubicFoxAdult.png", "Clever and fiery.", "A quick pet with strong special power and sharp instincts.", { hp: 45, atk: 50, def: 45, spAtk: 75, spDef: 60, spd: 70 }),
       petItem("Frog", "Frog", 800, "../../assets/spritesheets/CubicFrogAdult.png", "Bouncy and lively.", "A nimble pet with good speed and balanced growth.", { hp: 42, atk: 46, def: 42, spAtk: 50, spDef: 48, spd: 72 }),
 			petItem("Wolf", "Wolf", 800, "../../assets/spritesheets/CubicWolfAdult.png", "Fierce and loyal.", "A strong pet built around high attack and solid speed.", { hp: 58, atk: 72, def: 55, spAtk: 42, spDef: 48, spd: 68 }),
