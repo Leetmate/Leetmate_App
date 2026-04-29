@@ -114,9 +114,9 @@ body.item-sequence-active .item-slot {
   opacity: 0.72;
 }
 
-body.item-sequence-active .item-slot .item-slot-img,
-body.item-sequence-active .item-slot:hover .item-slot-img,
-body.item-sequence-active .item-slot:focus-visible .item-slot-img {
+body.item-sequence-active .item-slot:not(.is-unusable):not(:disabled) .item-slot-img,
+body.item-sequence-active .item-slot:not(.is-unusable):not(:disabled):hover .item-slot-img,
+body.item-sequence-active .item-slot:not(.is-unusable):not(:disabled):focus-visible .item-slot-img {
   transform: none;
   filter: none;
 }

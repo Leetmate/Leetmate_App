@@ -441,8 +441,8 @@ body {
 .pet-thumb {
   width: 63px; /* 21px * 3 scale */
   height: 48px; /* 16px * 3 scale */
-  background-size: 700% 100%; /* EXACTLY 4 frames * 63px total width */
-  background-position: -2px 0;
+  background-size: 700% 200%;
+  background-position: 0 100%;
   background-repeat: no-repeat;
   image-rendering: pixelated;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
@@ -638,8 +638,8 @@ body {
 .store-modal-pet-thumb {
   width: 63px;
   height: 48px;
-  background-size: 700% 100%;
-  background-position: -2px 0;
+  background-size: 700% 200%;
+  background-position: 0 100%;
   background-repeat: no-repeat;
   image-rendering: pixelated;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));

@@ -627,16 +627,16 @@
     const glow = registerEffectEl(document.createElement("div"));
     glow.className = "item-scene-effect item-age-glow";
     glow.style.left = `${targetRect.left + targetRect.width * 0.02}px`;
-    glow.style.top = `${targetRect.top + targetRect.height * 0.04}px`;
+    glow.style.top = `${targetRect.top + targetRect.height * 0.14}px`;
     glow.style.width = `${targetRect.width * 0.96}px`;
-    glow.style.height = `${targetRect.height * 0.88}px`;
+    glow.style.height = `${targetRect.height * 1.08}px`;
     scene.appendChild(glow);
 
     for (let index = 0; index < 12; index += 1) {
       const spark = registerEffectEl(document.createElement("span"));
       spark.className = "item-scene-effect item-age-spark";
       spark.style.left = `${targetRect.left + 12 + Math.random() * Math.max(16, targetRect.width - 24)}px`;
-      spark.style.top = `${targetRect.top + targetRect.height * 0.4 + Math.random() * 20}px`;
+      spark.style.top = `${targetRect.top + targetRect.height * 0.6 + Math.random() * 24}px`;
       spark.style.animationDelay = `${index * 70}ms`;
       scene.appendChild(spark);
       window.requestAnimationFrame(() => spark.classList.add("is-visible"));
