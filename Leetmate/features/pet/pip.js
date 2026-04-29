@@ -1,13 +1,13 @@
 if (!window.pipInitialized) {	// guard against multiple injections
 	window.pipInitialized = true;
 
-	let petDataUrl = null;
+	let petSpriteUrl = null;
 	let pipWindow = null;
 	
 	// wait for background to send message
 	chrome.runtime.onMessage.addListener((message) => {
 		if (message.type === "loadPip") {
-			petDataUrl = message.petDataUrl;
+			petSpriteUrl = message.petSpriteUrl;
 			showLaunchButton();
 		}
 	});
@@ -211,7 +211,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 			if (!animationsEnabled) return;
 
 			sprite.style.animation = "none";
-			sprite.style.backgroundPosition = "100% 0%";
+			sprite.style.backgroundPosition = "100% 100%";
 			resetSprite();
 
 			const sleepDuration = Math.random() * 3000 + 6000;
@@ -246,9 +246,9 @@ if (!window.pipInitialized) {	// guard against multiple injections
 			
 			setTimeout(() => {
 				const roll = Math.random();
-				if (roll < 0.45) walk();
-				else if (roll < 0.65) jump();
-				else if (roll < 0.80) backflip();
+				if (roll < 0.25) walk();
+				else if (roll < 0.25) jump();
+				else if (roll < 0.60) backflip();
 				else sleep();
 			}, delay);
 		}
@@ -282,6 +282,10 @@ if (!window.pipInitialized) {	// guard against multiple injections
 			<style>
 				* {margin: 0; padding: 0; box-sizing: border-box;}
 				html, body {width: 100%; height: 100%; overflow: hidden;}
+				:root {
+					--pip-pet-width: clamp(76px, 56%, 190px);
+					--pip-pet-offset-y: 0px;
+				}
 				
 				.pip-card {
 					position: relative;
@@ -328,12 +332,17 @@ if (!window.pipInitialized) {	// guard against multiple injections
 
 				
 				.mini-pet-sprite{
-					width: clamp(60px, 50%, 180px);
-					aspect-ratio: 21 / 16;
-					background-image: url("${petDataUrl}");
-					background-size: 700%;
+					width: var(--pip-pet-width);
+					aspect-ratio: 21 / 32;
+					background-image: url("${petSpriteUrl}");
+					background-repeat: no-repeat;
+					background-size: 700% 100%;
+					background-position: 0% 0%;
 					image-rendering: pixelated;
 					position: relative;
+					display: block;
+					flex: 0 0 auto;
+					transform: translateY(var(--pip-pet-offset-y));
 				}
 
 				/* base: 0%, walk: 16.67%, down: 33.33%, happy: 66.67%. jump: 83.33%, sleep: 100% (don't need F4)*/
@@ -377,7 +386,7 @@ if (!window.pipInitialized) {	// guard against multiple injections
 				.pet-sleep {
 					position: absolute;
 					right: 14px;
-					bottom: 65%;
+					bottom: 15%;
 					font-family: "Lilita One", sans-serif;
 					font-size: 24px;
 					color: #c8deff;

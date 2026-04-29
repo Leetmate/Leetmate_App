@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../../features/shared/theme-init.js"></script>
+    <title>Leetmate - Closet</title>
+    <link rel="stylesheet" href="../../styles/dark-theme.css" />
+    <link rel="stylesheet" href="../../styles/color-theme.css">
+    <link rel="stylesheet" href="../../styles/layout.css" />
+    <link rel="stylesheet" href="../../styles/top-banner.css" />
+    <link rel="stylesheet" href="../../styles/menu-nav.css" />
+    <link rel="stylesheet" href="../playground-main/playground.css" />
+    <link rel="stylesheet" href="playground-closet.css" />
+  </head>
+  <body>
+    <div class="popup-layout">
+      <div class="popup-content">
+        <div class="playground-card closet-card">
+          <div class="screen-banner">
+            <div class="screen-banner__left">
+              <button
+                type="button"
+                class="menu-btn"
+                id="closet-back-btn"
+                aria-label="Back to playground"
+              >
+                <img src="../../assets/icons/back-arrow.png" class="menu-icon" alt="" />
+              </button>
+            </div>
+            <div class="screen-banner__center">
+              <h1 class="screen-banner__title">Closet</h1>
+            </div>
+            <div class="screen-banner__right">
+              <button
+                type="button"
+                class="menu-btn nav-trigger"
+                id="nav-trigger"
+                aria-expanded="false"
+                aria-controls="nav-drawer"
+                aria-label="Open menu"
+              >
+                <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
+              </button>
+            </div>
+          </div>
+
+          <div class="playground-content closet-content">
+            <section class="playground-pet-card" aria-label="Active pet display">
+              <div class="playground-pet-name">
+                <div class="playground-pet-name-row">
+                  <h2 id="pet-name-display">Loading...</h2>
+                  <button type="button" class="playground-rename-btn" aria-label="Rename pet">
+                    <img src="../../assets/icons/playground_rename.png" class="playground-rename-icon" alt="" />
+                  </button>
+                </div>
+                <p>Age: <span id="pet-age-display"></span></p>
+              </div>
+
+              <div class="playground-scene">
+                <div class="home-hero">
+                  <div class="home-hero-pet" id="active-pet"></div>
+                  <img
+                    id="active-pet-egg"
+                    class="home-hero-egg hidden"
+                    alt="Active pet egg"
+                  />
+                </div>
+
+                <div class="playground-health">
+                  <div class="hearts hearts-empty bottom-hearts">
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart_empty.png" class="hearts-icon" alt="" /></span>
+                  </div>
+                  <div class="hearts hearts-full top-hearts">
+                    <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                    <span><img src="../../assets/icons/heart.png" class="hearts-icon" alt="" /></span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="closet-inventory-card" aria-label="Accessory inventory">
+              <div class="closet-status-pill" id="closet-status-pill">Closet</div>
+              <div class="closet-grid-wrap is-loading" id="closet-grid-wrap">
+                <div class="closet-grid" id="closet-grid"></div>
+                <p class="closet-empty hidden" id="closet-empty">No accessories in inventory yet.</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="playground-modal-overlay hidden" id="rename-modal-overlay">
+      <div class="playground-modal" role="dialog" aria-modal="true" aria-labelledby="rename-modal-title">
+        <div class="playground-modal-header">
+          <h2 id="rename-modal-title">Rename</h2>
+          <button type="button" class="playground-modal-close" id="rename-modal-close" aria-label="Close rename modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="playground-modal-body">
+          <label class="playground-modal-label" for="rename-input">New Name</label>
+          <input type="text" id="rename-input" class="playground-modal-input" maxlength="15" />
+          <button type="button" class="playground-modal-confirm" id="rename-modal-confirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../scripts/background-music.js"></script>
+    <script src="../../features/shared/menu-nav.js"></script>
+    <script src="../../features/shared/storage-helper.js"></script>
+    <script src="../../scripts/firebase-bundle.js"></script>
+    <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/progression/happiness-decay.js"></script>
+    <script src="../../features/store/item-catalog.js"></script>
+    <script src="../../features/pet/pet-loader.js"></script>
+    <script src="../../features/pet/pet-rename.js"></script>
+    <script src="playground-closet.js"></script>
+    <script src="../../scripts/auth-gate.js"></script>
+  </body>
+</html>

@@ -12,7 +12,6 @@
     Bat:             '../../assets/spritesheets/CubicBatAdult.png',
     Cat:             '../../assets/spritesheets/CubicCatAdult.png',
     Fox:             '../../assets/spritesheets/CubicFoxAdult.png',
-    Fish:            '../../assets/spritesheets/CubicFishAdult.png',
     Frog:            '../../assets/spritesheets/CubicFrogAdult.png',
     Wolf:            '../../assets/spritesheets/CubicWolfAdult.png',
     Giraffe:         '../../assets/spritesheets/CubicGiraffeAdult.png',

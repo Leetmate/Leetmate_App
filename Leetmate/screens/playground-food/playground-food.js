@@ -62,6 +62,7 @@
     button.type = "button";
     button.className = "food-slot";
     button.setAttribute("aria-label", catalogItem.name);
+    button.dataset.itemId = entry.id;
 
     const img = document.createElement("img");
     img.className = "food-slot-img";
@@ -70,6 +71,7 @@
     button.appendChild(img);
 
     feedingController?.attachFoodSlot(button, entry, catalogItem);
+    feedingController?.syncFoodSlotState?.(button, catalogItem);
 
     if (Number(entry.quantity) > 1) {
       const count = document.createElement("span");
@@ -79,6 +81,19 @@
     }
 
     return button;
+  }
+
+  function refreshRenderedFoodSlotStates() {
+    const { grid } = getFoodElements();
+    if (!grid || !feedingController) return;
+
+    const catalogById = getFoodCatalogMap();
+    grid.querySelectorAll(".food-slot").forEach((button) => {
+      const catalogItem = catalogById.get(button.dataset.itemId);
+      if (catalogItem) {
+        feedingController.syncFoodSlotState?.(button, catalogItem);
+      }
+    });
   }
 
   function renderFoodInventory(foods) {
@@ -202,10 +217,20 @@
 
         await refreshCurrentPetSnapshot();
         feedingController?.resetPetPose();
+        refreshRenderedFoodSlotStates();
         await startHappinessDecayTimer();
       } catch (error) {
         console.error("Food page failed to load:", error);
       }
     });
+
+    if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.onChanged) {
+      chrome.storage.onChanged.addListener(async (changes, area) => {
+        if (area !== "local") return;
+        if (!changes.activePetSnapshot && !changes.leetmate_happiness) return;
+        await refreshCurrentPetSnapshot().catch(() => {});
+        refreshRenderedFoodSlotStates();
+      });
+    }
   });
 })();

@@ -29,6 +29,11 @@ body {
   --screen-banner-offset-top: 12px;
   --screen-banner-offset-x: 12px;
   --playground-pet-card-height: 282px;
+  --playground-pet-size: 150px;
+  --playground-pet-adult-size: 150px;
+  --playground-pet-offset-y: 0px;
+  --playground-pet-adult-offset-y: -50px;
+  --playground-pet-baby-offset-y: -50px;
   width: 100%;
   max-width: 380px;
   height: 100%;
@@ -175,12 +180,13 @@ body {
   --pet-follow-x: 0px;
   --pet-follow-y: 0px;
   --pet-facing-x: 1;
-  width: 188px;
-  aspect-ratio: 21 / 16;
+  width: var(--playground-pet-size);
+  aspect-ratio: 21 / 32;
   background-repeat: no-repeat;
+  background-position: 0% 0%;
   image-rendering: pixelated;
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
-  translate: var(--pet-follow-x) var(--pet-follow-y);
+  translate: var(--pet-follow-x) calc(var(--playground-pet-offset-y) + var(--pet-follow-y));
   scale: var(--pet-facing-x) 1;
   transform-origin: center bottom;
   transition: translate 0.12s ease-out;
@@ -188,12 +194,12 @@ body {
 }
 
 .home-hero-pet.stage-adult {
-  width: 176px;
-  translate: var(--pet-follow-x) calc(40px + var(--pet-follow-y));
+  width: var(--playground-pet-adult-size);
+  translate: var(--pet-follow-x) calc(var(--playground-pet-adult-offset-y) + var(--pet-follow-y));
 }
 
 .home-hero-pet.stage-baby {
-  translate: var(--pet-follow-x) calc(20px + var(--pet-follow-y));
+  translate: var(--pet-follow-x) calc(var(--playground-pet-baby-offset-y) + var(--pet-follow-y));
 }
 
 .home-hero-pet.hidden,

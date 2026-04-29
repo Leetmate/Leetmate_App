@@ -255,22 +255,23 @@ body {
 }
 
 .home-hero-pet {
-  width: 188px;
+  width: 156px;
   aspect-ratio: 21 / 16;
   background-repeat: no-repeat;
-  background-position: 0% 0%;
+  background-size: 700% 200%;
+  background-position: 0% 100%;
   image-rendering: pixelated;
   z-index: 4;
   transform-origin: center bottom;
-  transform: translateY(-10px) scale(1.2);
+  transform: translateY(-2px) scale(1);
   filter:
     drop-shadow(0 0 12px rgba(255, 210, 255, 0.28))
     drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
 }
 
 .home-hero-pet.stage-baby {
-  background-size: 700% 100%;
-  background-position: 0% 0%;
+  background-size: 700% 200%;
+  background-position: 0% 100%;
 }
 
 .egg-stage.hatching .home-hero-egg {
@@ -306,14 +307,14 @@ body {
 /* baby -> adult */
 .evolution-from-pet {
     position: absolute;
-    width: 188px;
+    width: 156px;
     aspect-ratio: 21 / 16;
     background-repeat: no-repeat;
-    background-size: 700% 100%;
-    background-position: 0% 0%;
+    background-size: 700% 200%;
+    background-position: 0% 100%;
     image-rendering: pixelated;
     transform-origin: center bottom;
-    transform: translateY(-10px) scale(1.2);
+    transform: translateY(-2px) scale(1);
     z-index: 4;
     filter:
       drop-shadow(0 0 12px rgba(255, 210, 180, 0.28))
@@ -327,27 +328,27 @@ body {
 @keyframes child-stretch-pop {
   0% {
     opacity: 1;
-    transform: translateY(-10px) scale(1.2, 1.2);
+    transform: translateY(-2px) scale(1, 1);
     filter: brightness(1);
   }
   20% {
     opacity: 1;
-    transform: translateY(-6px) scale(1.1, 1.35);
+    transform: translateY(2px) scale(0.94, 1.12);
     filter: brightness(1.08);
   }
   45% {
     opacity: 1;
-    transform: translateY(-14px) scale(1.28, 0.92);
+    transform: translateY(-6px) scale(1.08, 0.8);
     filter: brightness(1.15);
   }
   70% {
     opacity: 1;
-    transform: translateY(-18px) scale(1.42, 1.42);
+    transform: translateY(-10px) scale(1.2, 1.2);
     filter: brightness(1.35);
   }
   100% {
     opacity: 0;
-    transform: translateY(-24px) scale(1.75, 1.75);
+    transform: translateY(-16px) scale(1.48, 1.48);
     filter: brightness(1.9);
   }
 }
@@ -501,29 +502,29 @@ body {
 @keyframes baby-pop {
   0% {
     opacity: 0;
-    transform: translateY(-10px) scale(0.35);
+    transform: translateY(-2px) scale(0.32);
     filter: brightness(2.4);
   }
   55% {
     opacity: 1;
-    transform: translateY(-10px) scale(1.6);
+    transform: translateY(-2px) scale(1.2);
     filter: brightness(1.4);
   }
   100% {
     opacity: 1;
-    transform: translateY(-10px) scale(1.5);
+    transform: translateY(-2px) scale(1.1);
     filter: brightness(1);
   }
 }
 
 @keyframes baby-animation {
-  0%   { background-position: 0% 0%; }
-  16%  { background-position: 33.33% 0%; }
-  33%  { background-position: 0% 0%; }
-  34%  { background-position: 0% 0%; }
-  50%  { background-position: 33.33% 0%; }
-  66%  { background-position: 0% 0%; }
-  76%  { background-position: 66.66% 0%; }
-  88%  { background-position: 83.33% 0%; }
-  100% { background-position: 66.66% 0%; }
+  0%   { background-position: 0% 100%; }
+  16%  { background-position: 33.33% 100%; }
+  33%  { background-position: 0% 100%; }
+  34%  { background-position: 0% 100%; }
+  50%  { background-position: 33.33% 100%; }
+  66%  { background-position: 0% 100%; }
+  76%  { background-position: 66.66% 100%; }
+  88%  { background-position: 83.33% 100%; }
+  100% { background-position: 66.66% 100%; }
 }

@@ -249,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
           //get info for the pet display
           const petRef = petData.petRef || "Cat";
           const petStage = petData.stage || "Adult";
+          const equippedItemId = data.equippedItemId || null;
           let petPath = "../../assets";
 
           //create the path for the pet image
@@ -256,11 +257,8 @@ document.addEventListener("DOMContentLoaded", () => {
             {
             petPath = "../../assets/eggs/Cubic"+petRef+"Egg.png";
             //"../../assets/spritesheets/CubicFoxAdult.png"
-            if(!profileImg.classList.contains("egg")) 
-              {
-              profileImg.classList.toggle("adult");
-              profileImg.classList.toggle("egg");
-            }
+            profileImg.classList.remove("adult");
+            profileImg.classList.add("egg");
           }
           else if (petStage == "Baby" || petStage == "baby" || petStage == "Adult" || petStage == "adult")
           {
@@ -270,14 +268,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (petStage == "Adult" || petStage == "adult")
             {
-              petPath = "../../assets/spritesheets/Cubic"+petRef+"Adult.png";
+              petPath = await window.LeetmatePetUI.resolveActivePetSpritePath(
+                petRef,
+                petStage,
+                equippedItemId
+              );
+              if (petPath && petPath.startsWith("assets/")) {
+                petPath = chrome.runtime.getURL(petPath);
+              }
             }
 
-            if(!profileImg.classList.contains("adult")) 
-              {
-              profileImg.classList.toggle("egg");
-              profileImg.classList.toggle("adult");
-            }
+            profileImg.classList.remove("egg");
+            profileImg.classList.add("adult");
           }
 
           //alert(petPath);
@@ -299,12 +301,13 @@ document.addEventListener("DOMContentLoaded", () => {
           emailDisplay.textContent = email;
           profileAvatar.style.backgroundColor = color;
           //profileImg.src = "../../assets/spritesheets/CubicFoxAdult.png";
-          profileImg.src = petPath;
+          profileImg.style.backgroundImage = `url("${petPath}")`;
         } else {
           // Fallback if no document exists 
           usernameDisplay.textContent = "USERNAME_001 ✏️";
           emailDisplay.textContent = currentUser.email || "No email";
           profileAvatar.style.backgroundColor = "#d9d9d9";
+          profileImg.style.backgroundImage = "";
         }
       }
     } catch (error) {
