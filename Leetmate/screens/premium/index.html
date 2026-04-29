@@ -6,7 +6,7 @@
     <script src="../../features/shared/theme-init.js"></script>
     <title>Leetmate - Premium</title>
     <link rel="stylesheet" href="../../styles/dark-theme.css" />
-    <link rel="stylesheet" href="../../styles/color-theme.css">
+    <link rel="stylesheet" href="../../styles/color-theme.css" />
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="premium.css" />
@@ -16,43 +16,40 @@
     <div class="popup-layout">
       <div class="popup-content">
         <div class="premium-card">
-          <div class="screen-banner">
-            <div class="screen-banner__left">
-              <button
-                type="button"
-                class="menu-btn"
-                id="back-btn"
-                aria-label="Back to previous page"
-              >
-                <img
-                  src="../../assets/icons/back-arrow.png"
-                  class="menu-icon"
-                  alt=""
-                />
+          <header class="premium-header">
+            <div class="header-left">
+              <button class="back-btn" id="back-btn" title="Back">
+                <span class="arrow-icon"></span>
               </button>
             </div>
-
-            <div class="screen-banner__center">
-              <h1 class="screen-banner__title account-title-main">Premium</h1>
-            </div>
-
-            <div class="screen-banner__right">
-              <button
-                type="button"
-                class="menu-btn nav-trigger"
-                id="nav-trigger"
-                aria-expanded="false"
-                aria-controls="nav-drawer"
-                aria-label="Open menu"
-              >
-                <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
-              </button>
-            </div>
-          </div>
+          
+            <h1 class="premium-title">
+              LeetMate<br />Premium
+            </h1>
+          
+            <div class="header-right"></div>
+          </header>
 
           <div class="premium-content">
-            <button class="premium-btn" id="prem-btn"> Get Premium! </button>
-            <p id="prem-feedback"> </p>
+            <div class="premium-info-box">
+              <div class="premium-text">
+                <h1 id="prem-header">Go Premium & Unlock:</h1>
+                <ul>
+                  <li>⚡ More XP & Coins </li>
+                  <li>🎁 Bigger Milestone Rewards</li>
+                  <li>🎨 Color Themes </li>
+                  <li>🐾 Exclusive Pets & Accessories</li>
+                </ul>
+              </div>
+
+              <button class="premium-btn" id="prem-btn">$3.99</button>
+              <p id="prem-feedback" class="premium-feedback"></p>
+            </div>
+
+            <div class="premium-pet pet-left"></div>
+            <div class="premium-pet pet-right"></div>
+            <div class="premium-pet pet-extra pet-extra-left"></div>
+            <div class="premium-pet pet-extra pet-extra-right"></div>
           </div>
         </div>
       </div>
