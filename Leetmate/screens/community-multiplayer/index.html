@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="../../features/shared/theme-init.js"></script>
-    <title>Leetmate - Community</title>
+    <title>Leetmate - Multiplayer</title>
     <link rel="stylesheet" href="../../styles/dark-theme.css" />
-    <link rel="stylesheet" href="../../styles/color-theme.css">
+    <link rel="stylesheet" href="../../styles/color-theme.css" />
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="community.css" />
@@ -15,56 +15,191 @@
   <body data-music-zone="community">
     <div class="popup-layout">
       <div class="popup-content">
-        <div class="community-card">
-          <div class="screen-banner">
+        <div class="community-card" id="community-card">
+
+          <!-- Header — hidden during battle screens -->
+          <div class="screen-banner" id="main-header">
             <div class="screen-banner__left">
-              <button
-                type="button"
-                class="menu-btn"
-                id="community-back-btn"
-                aria-label="Back to community menu"
-              >
-                <img
-                  src="../../assets/icons/back-arrow.png"
-                  class="menu-icon"
-                  alt=""
-                />
+              <button type="button" class="menu-btn" id="community-back-btn" aria-label="Back">
+                <img src="../../assets/icons/back-arrow.png" class="menu-icon" alt="" />
               </button>
             </div>
             <div class="screen-banner__center">
               <h1 class="screen-banner__title">Multiplayer</h1>
             </div>
             <div class="screen-banner__right">
-              <button
-                type="button"
-                class="menu-btn nav-trigger"
-                id="nav-trigger"
-                aria-expanded="false"
-                aria-controls="nav-drawer"
-                aria-label="Open menu"
-              >
+              <button type="button" class="menu-btn nav-trigger" id="nav-trigger"
+                aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
                 <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
               </button>
             </div>
           </div>
 
-          <div class="community-content">
-            <p
-              style="color: #111; font-family: 'Lilita One', cursive; font-size: 20px;"
-            >
-              Multiplayer content goes here...
-            </p>
+          <!-- ═══════════════════ SCREEN 1: LOBBY ═══════════════════ -->
+          <div id="screen-lobby" class="battle-screen is-active">
+            <div class="multi-content">
+              <div class="multi-fighter">
+                <div class="multi-fighter-sprite" id="multi-pet-sprite"></div>
+                <p class="multi-fighter-name" id="multi-pet-name">—</p>
+              </div>
+              <div class="multi-stats-card" id="multi-stats-card">
+                <div class="multi-stats-grid">
+                  <div class="multi-stat"><span class="multi-stat-name">HP</span><span class="multi-stat-value" id="stat-hp">—</span></div>
+                  <div class="multi-stat"><span class="multi-stat-name">ATK</span><span class="multi-stat-value" id="stat-atk">—</span></div>
+                  <div class="multi-stat"><span class="multi-stat-name">DEF</span><span class="multi-stat-value" id="stat-def">—</span></div>
+                  <div class="multi-stat"><span class="multi-stat-name">SP.ATK</span><span class="multi-stat-value" id="stat-spatk">—</span></div>
+                  <div class="multi-stat"><span class="multi-stat-name">SP.DEF</span><span class="multi-stat-value" id="stat-spdef">—</span></div>
+                  <div class="multi-stat"><span class="multi-stat-name">SPEED</span><span class="multi-stat-value" id="stat-spd">—</span></div>
+                </div>
+              </div>
+              <button class="multi-match-btn" id="multi-match-btn" type="button">
+                <img src="../../assets/icons/match-icon.png" class="multi-match-icon" alt="" />
+                <span>Find Match</span>
+              </button>
+
+              <!-- Shown instead of stats + button when pet is not adult -->
+              <div class="multi-locked" id="multi-locked" style="display:none">
+                <div class="multi-locked-card">
+                  <p class="multi-locked-title">Multiplayer Locked</p>
+                  <p class="multi-locked-desc" id="multi-locked-desc">Evolve your pet into an adult to unlock battles!</p>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <!-- ═══════════════════ SCREEN 2: MATCHMAKING ═══════════════════ -->
+          <div id="screen-matchmaking" class="battle-screen">
+            <div class="mm-content">
+              <p class="mm-title">Finding Opponent</p>
+              <div class="mm-dots"><span></span><span></span><span></span></div>
+              <div class="mm-arena">
+                <div class="mm-side">
+                  <div class="mm-sprite" id="mm-pet-sprite" style="transform:scaleX(-1)"></div>
+                  <p class="mm-name" id="mm-pet-name">You</p>
+                </div>
+                <div class="mm-vs">VS</div>
+                <div class="mm-side">
+                  <div class="mm-question-wrap">
+                    <span class="mm-question">?</span>
+                  </div>
+                  <p class="mm-name">???</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══════════════════ SCREEN 3: BATTLE ═══════════════════ -->
+          <div id="screen-battle" class="battle-screen">
+
+            <!-- Exit button (replaces header during battle) -->
+            <button class="battle-exit-btn" id="battle-exit-btn" type="button" aria-label="Exit battle">✕</button>
+
+            <!-- HP bars — player LEFT, CPU RIGHT -->
+            <div class="battle-hp-bars">
+              <div class="battle-plate battle-plate--player" style="border-left:4px solid #4caf50">
+                <div class="battle-plate-header">
+                  <span class="battle-plate-name" id="player-name">—</span>
+                  <span class="battle-plate-hp"   id="player-hp-text">—</span>
+                </div>
+                <div class="battle-bar-wrap"><div class="battle-bar" id="player-hp-bar"></div></div>
+              </div>
+              <div class="battle-plate battle-plate--cpu" style="border-left:4px solid #f44336">
+                <div class="battle-plate-header">
+                  <span class="battle-plate-name" id="cpu-name">—</span>
+                  <span class="battle-plate-hp"   id="cpu-hp-text">—</span>
+                </div>
+                <div class="battle-bar-wrap"><div class="battle-bar" id="cpu-hp-bar"></div></div>
+              </div>
+            </div>
+
+            <!-- Arena zone — both pets side-by-side at ground level -->
+            <div class="battle-arena-zone">
+              <!-- Player LEFT — flip wrapper makes it face RIGHT toward center -->
+              <div class="battle-fighter battle-fighter--player">
+                <div class="player-flip" style="transform:scaleX(-1)">
+                  <div class="battle-sprite" id="player-sprite"></div>
+                  <div class="battle-fx" id="player-fx">
+                    <img src="" alt="" style="transform:scaleX(-1)" />
+                  </div>
+                </div>
+              </div>
+              <!-- CPU RIGHT — cpu-flip wrapper holds the scaleX(-1), animations stay on sprite -->
+              <div class="battle-fighter battle-fighter--cpu">
+                <div class="cpu-flip">
+                  <div class="battle-sprite" id="cpu-sprite"></div>
+                  <div class="battle-fx" id="cpu-fx">
+                    <img src="" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Log -->
+            <div class="battle-log">
+              <p id="battle-log-text">Your turn! Choose an action.</p>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="battle-actions">
+              <button class="battle-btn" id="btn-scratch" type="button">
+                <img src="../../assets/icons/scratch.png" class="battle-btn-icon" alt="" />
+                <span>Scratch</span>
+              </button>
+              <button class="battle-btn" id="btn-guard" type="button">
+                <img src="../../assets/icons/guard.png" class="battle-btn-icon" alt="" />
+                <span>Guard</span>
+              </button>
+              <button class="battle-btn battle-btn--super" id="btn-super" type="button">
+                <img src="../../assets/icons/SuperAttack.png" class="battle-btn-icon" alt="" />
+                <span>Super</span>
+                <span class="super-cd" id="super-cd-text"></span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- ═══════════════════ SCREEN 4: WIN ═══════════════════ -->
+          <div id="screen-win" class="battle-screen">
+            <div class="result-content win-result">
+              <div class="win-sparkles" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <img src="../../assets/icons/YouWin.png" class="win-title-img" alt="You Win!" />
+              <img src="../../assets/icons/winnerCup.png" class="result-trophy" alt="" />
+              <div class="win-pet-showcase">
+                <div class="win-sprite" id="win-sprite"></div>
+              </div>
+              <div class="result-actions">
+                <button class="result-btn result-btn--again" id="win-again-btn" type="button">Play Again</button>
+                <button class="result-btn result-btn--home"  id="win-home-btn"  type="button">Return</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══════════════════ SCREEN 5: GAME OVER ═══════════════════ -->
+          <div id="screen-lose" class="battle-screen">
+            <div class="result-content lose-result">
+              <img src="../../assets/icons/gameOver.png" class="lose-title-img" alt="Game Over" />
+              <div class="lose-pet-showcase">
+                <div class="lose-sprite" id="lose-sprite"></div>
+              </div>
+              <div class="result-actions">
+                <button class="result-btn result-btn--again" id="lose-again-btn" type="button">Try Again</button>
+                <button class="result-btn result-btn--home"  id="lose-home-btn"  type="button">Return</button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
 
     <script src="../../scripts/background-music.js"></script>
     <script src="../../features/shared/menu-nav.js"></script>
+    <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
-    <script src="../../features/progression/xp.js"></script>
-    <script src="../../features/progression/streak.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
     <script src="./community.js"></script>
   </body>
