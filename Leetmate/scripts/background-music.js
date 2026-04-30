@@ -106,6 +106,12 @@
     console.warn("Background music failed to load:", src);
   });
 
+  // Expose pause/resume so other scripts can stop bg music during battle
+  window.LeetmateBGMusic = {
+    pause:  function () { audio.pause(); },
+    resume: function () { tryPlay(); },
+  };
+
   loadPrefsAndApply(function () {
     whenMetadataReady(function () {
       if (resumeSameTrack && snapshot) {

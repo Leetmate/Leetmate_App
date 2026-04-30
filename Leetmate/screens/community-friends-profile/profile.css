@@ -199,14 +199,14 @@ body {
   overflow: hidden;
 }
 
-/* Spritesheets: use background + 700% width (same idea as friend list cards) */
+/* Spritesheets: 2-row layout, 21:16 aspect ratio — fills circle width */
 .friend-profile-avatar-sprite {
-  width: 112px;
-  height: 112px;
+  width: 128px;
+  height: 98px;
   flex-shrink: 0;
   background-repeat: no-repeat;
-  background-size: 700% auto;
-  background-position: 0% 0%;
+  background-size: 700% 200%;
+  background-position: 0% 100%;
   image-rendering: pixelated;
 }
 

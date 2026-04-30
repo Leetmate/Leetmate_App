@@ -47,31 +47,35 @@
         <div class="pets-content">
           <p class="pets-loading" id="pets-loading">Loading...</p>
           <h2 class="pets-current-name" id="pets-current-name"></h2>
-          <section class="pets-carousel" aria-label="Owned pets">
-            <div class="pets-slot pets-slot--side pets-slot--left" id="pet-slot-left" aria-hidden="true">
-              <div class="pets-slot-sprite"></div>
-              <img class="pets-slot-egg hidden" alt="" />
-            </div>
 
-            <div class="pets-slot pets-slot--center" id="pet-slot-center">
-              <div class="pets-slot-sprite"></div>
-              <img class="pets-slot-egg hidden" alt="" />
-            </div>
-
-            <div class="pets-slot pets-slot--side pets-slot--right" id="pet-slot-right" aria-hidden="true">
-              <div class="pets-slot-sprite"></div>
-              <img class="pets-slot-egg hidden" alt="" />
-            </div>
-          </section>
-
-          <div class="pets-controls">
+          <div class="pets-carousel-row">
             <button type="button" class="pets-arrow-btn" id="pets-prev-btn" aria-label="Previous pet">
               <img src="../../assets/icons/arrow.svg" class="pets-arrow-icon pets-arrow-icon--left" alt="" />
             </button>
+
+            <section class="pets-carousel" aria-label="Owned pets">
+              <div class="pets-slot pets-slot--side pets-slot--left" id="pet-slot-left" aria-hidden="true">
+                <div class="pets-slot-sprite"></div>
+                <img class="pets-slot-egg hidden" alt="" />
+              </div>
+
+              <div class="pets-slot pets-slot--center" id="pet-slot-center">
+                <div class="pets-slot-sprite"></div>
+                <img class="pets-slot-egg hidden" alt="" />
+              </div>
+
+              <div class="pets-slot pets-slot--side pets-slot--right" id="pet-slot-right" aria-hidden="true">
+                <div class="pets-slot-sprite"></div>
+                <img class="pets-slot-egg hidden" alt="" />
+              </div>
+            </section>
+
             <button type="button" class="pets-arrow-btn" id="pets-next-btn" aria-label="Next pet">
               <img src="../../assets/icons/arrow.svg" class="pets-arrow-icon" alt="" />
             </button>
           </div>
+
+          <div class="pets-dots" id="pets-dots" aria-hidden="true"></div>
 
           <button type="button" class="pets-select-btn" id="pets-select-btn">
             Select
