@@ -13,6 +13,26 @@ const PET_ASSETS = {
       egg: '../../assets/eggs/CubicFoxEgg.png',
       baby: '../../assets/spritesheets/CubicFoxBaby.png',
       adult: '../../assets/spritesheets/CubicFoxAdult.png'
+    },
+    Frog: {
+      egg: '../../assets/eggs/CubicFrogEgg.png',
+      baby: '../../assets/spritesheets/CubicFrogBaby.png',
+      adult: '../../assets/spritesheets/CubicFrogAdult.png'
+    },
+    Wolf: {
+      egg: '../../assets/eggs/CubicWolfEgg.png',
+      baby: '../../assets/spritesheets/CubicWolfBaby.png',
+      adult: '../../assets/spritesheets/CubicWolfAdult.png'
+    },
+    Giraffe: {
+      egg: '../../assets/eggs/CubicGiraffeEgg.png',
+      baby: '../../assets/spritesheets/CubicGiraffeBaby.png',
+      adult: '../../assets/spritesheets/CubicGiraffeAdult.png'
+    },
+    MicoLeaoDourado: {
+      egg: '../../assets/eggs/CubicMicoLeaoDouradoEgg.png',
+      baby: '../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png',
+      adult: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png'
     }
 };
   
@@ -189,12 +209,12 @@ function resetEvolutionState() {
   
     fromPetSprite.classList.add('hidden');
     fromPetSprite.style.backgroundImage = '';
-    fromPetSprite.style.backgroundPosition = '0% 0%';
+    fromPetSprite.style.backgroundPosition = '0% 100%';
   
     petSprite.classList.add('hidden');
     petSprite.classList.remove('hatch-appear');
     petSprite.style.backgroundImage = '';
-    petSprite.style.backgroundPosition = '0% 0%';
+    petSprite.style.backgroundPosition = '0% 100%';
   
     return {
       evolutionWrap,
@@ -287,7 +307,7 @@ function playEvolutionAnimation(petType, activeStage = 'egg') {
       eggStage.classList.add('hatching');
     } else {
       fromPetSprite.style.backgroundImage = `url("${assetSet.baby}")`;
-      fromPetSprite.style.backgroundPosition = '0% 0%';
+      fromPetSprite.style.backgroundPosition = '0% 100%';
       fromPetSprite.classList.remove('hidden');
   
       void eggStage.offsetWidth;

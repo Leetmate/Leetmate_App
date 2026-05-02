@@ -118,14 +118,14 @@ body {
 /* Sprite avatar box */
 .friend-card__avatar {
   flex: 0 0 auto;
-  width: 52px;
-  height: 52px;
+  width: 65px;
+  height: 50px;
   border: 3px solid #111;
-  border-radius: 12px;
+  border-radius: 10px;
   background-color: var(--color-friends-card-avatar-bg);
   background-repeat: no-repeat;
-  background-size: 700% auto;
-  background-position: 0% 0%;
+  background-size: 700% 200%;
+  background-position: 0% 100%;
   image-rendering: pixelated;
   overflow: hidden;
 }
@@ -595,14 +595,14 @@ body {
 
 .inbox-card__avatar {
   flex: 0 0 auto;
-  width: 44px;
+  width: 58px;
   height: 44px;
   border: 3px solid #111;
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: #e8dfc8;
   background-repeat: no-repeat;
-  background-size: 700% auto;
-  background-position: 0% 0%;
+  background-size: 700% 200%;
+  background-position: 0% 100%;
   image-rendering: pixelated;
   display: flex;
   align-items: center;

@@ -11,13 +11,47 @@
   var PET_SPRITES = {
     Bat:             '../../assets/spritesheets/CubicBatAdult.png',
     Cat:             '../../assets/spritesheets/CubicCatAdult.png',
-    Fox:             '../../assets/spritesheets/CubicFoxAdult.png',
     Fish:            '../../assets/spritesheets/CubicFishAdult.png',
+    Fox:             '../../assets/spritesheets/CubicFoxAdult.png',
     Frog:            '../../assets/spritesheets/CubicFrogAdult.png',
+    Jaguatirica:     '../../assets/spritesheets/CubicJaguatiricaAdult.png',
     Wolf:            '../../assets/spritesheets/CubicWolfAdult.png',
     Giraffe:         '../../assets/spritesheets/CubicGiraffeAdult.png',
     MicoLeaoDourado: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png',
   };
+
+  // Single-row spritesheets (588×64) need different background sizing
+  var SINGLE_ROW_PETS = { Fish: true, Jaguatirica: true };
+
+  // Hat spritesheets: Cubic{PetRef}{Suffix}.png (no "Adult" in name)
+  var ACCESSORY_SUFFIX = {
+    'acc-greyhat':       'GreyHat',
+    'acc-brownhat':      'BrownHat',
+    'acc-strawhat':      'StrawHat',
+    'acc-tophat':        'TopHat',
+    'acc-santahat':      'SantaHat',
+    'acc-leprechaunhat': 'LeprechaunHat'
+  };
+
+  function resolveSpriteSrc(petRef, equippedItemId) {
+    var suffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
+    if (suffix && petRef) return '../../assets/spritesheets/Cubic' + petRef + suffix + '.png';
+    return PET_SPRITES[petRef] || null;
+  }
+
+  function applyAvatarSprite(el, petRef, equippedItemId, emptyClass) {
+    var sprite = resolveSpriteSrc(petRef, equippedItemId);
+    if (!sprite) {
+      if (emptyClass) el.classList.add(emptyClass);
+      el.textContent = '🥚';
+      return;
+    }
+    el.style.backgroundImage = 'url("' + sprite + '")';
+    if (SINGLE_ROW_PETS[petRef]) {
+      el.style.backgroundSize     = '700% 100%';
+      el.style.backgroundPosition = '0% 0%';
+    }
+  }
 
   var auth = null;
   var db   = null;
@@ -193,13 +227,7 @@
 
     var avatar = document.createElement('div');
     avatar.className = 'friend-card__avatar';
-    var sprite = PET_SPRITES[friendData.petRef];
-    if (sprite) {
-      avatar.style.backgroundImage = 'url("' + sprite + '")';
-    } else {
-      avatar.classList.add('friend-card__avatar--empty');
-      avatar.textContent = '🥚';
-    }
+    applyAvatarSprite(avatar, friendData.petRef, friendData.equippedItemId, 'friend-card__avatar--empty');
 
     var info = document.createElement('div');
     info.className = 'friend-card__info';
@@ -298,9 +326,7 @@
     db.collection('users').doc(uid).collection('friends')
       .get()
       .then(function (snap) {
-        friendsList.innerHTML = '';
         var friends = [];
-
         friendUidSet = {};
         snap.forEach(function (doc) {
           if (doc.id === '_meta') return;
@@ -310,11 +336,36 @@
             friendUidSet[data.friendUid] = true;
           }
         });
-
         friends.sort(function (a, b) {
           return (a.username || '').localeCompare(b.username || '');
         });
 
+        // Live-fetch each friend's current active pet so we show the right sprite
+        var petFetches = friends.map(function (f) {
+          return db.collection('users').doc(f.friendUid).get()
+            .then(function (uSnap) {
+              if (!uSnap.exists) return f;
+              var uData = uSnap.data() || {};
+              var activePetId = uData.activePetId;
+              if (!activePetId) return f;
+              return db.collection('users').doc(f.friendUid)
+                .collection('pets').doc(activePetId).get()
+                .then(function (petSnap) {
+                  if (petSnap.exists) {
+                    var pd = petSnap.data();
+                    f.petRef         = pd.petRef         || f.petRef;
+                    f.equippedItemId = pd.equippedItemId || null;
+                  }
+                  return f;
+                });
+            })
+            .catch(function () { return f; });
+        });
+
+        return Promise.all(petFetches);
+      })
+      .then(function (friends) {
+        friendsList.innerHTML = '';
         friends.forEach(function (f) {
           friendsList.appendChild(buildFriendCard(f));
         });
@@ -375,16 +426,7 @@
 
     var avatar = document.createElement('div');
     avatar.className = 'inbox-card__avatar';
-    var sprite = PET_SPRITES[reqData.petRef];
-    if (sprite) {
-      avatar.style.backgroundImage = 'url("' + sprite + '")';
-      avatar.style.backgroundSize = '700% auto';
-      avatar.style.backgroundPosition = '0% 0%';
-      avatar.style.backgroundRepeat = 'no-repeat';
-      avatar.style.imageRendering = 'pixelated';
-    } else {
-      avatar.textContent = '🥚';
-    }
+    applyAvatarSprite(avatar, reqData.petRef, reqData.equippedItemId || null, null);
 
     var info = document.createElement('div');
     info.className = 'inbox-card__info';
@@ -559,11 +601,13 @@
                 ? db.collection('users').doc(u.uid).collection('pets').doc(uData.activePetId).get()
                 : Promise.resolve(null);
               return petPromise.then(function (petSnap) {
+                var pData = (petSnap && petSnap.exists) ? petSnap.data() : null;
                 return {
-                  uid:      u.uid,
-                  username: u.username,
-                  trophy:   Number(uData.trophy || 0),
-                  petRef:   (petSnap && petSnap.exists) ? petSnap.data().petRef : null,
+                  uid:            u.uid,
+                  username:       u.username,
+                  trophy:         Number(uData.trophy || 0),
+                  petRef:         pData ? pData.petRef : null,
+                  equippedItemId: pData ? (pData.equippedItemId || null) : null,
                 };
               });
             })
@@ -590,16 +634,7 @@
 
     var avatar = document.createElement('div');
     avatar.className = 'inbox-card__avatar';
-    var sprite = PET_SPRITES[userData.petRef];
-    if (sprite) {
-      avatar.style.backgroundImage = 'url("' + sprite + '")';
-      avatar.style.backgroundSize = '700% auto';
-      avatar.style.backgroundPosition = '0% 0%';
-      avatar.style.backgroundRepeat = 'no-repeat';
-      avatar.style.imageRendering = 'pixelated';
-    } else {
-      avatar.textContent = '🥚';
-    }
+    applyAvatarSprite(avatar, userData.petRef, userData.equippedItemId || null, null);
 
     var info = document.createElement('div');
     info.className = 'inbox-card__info';
