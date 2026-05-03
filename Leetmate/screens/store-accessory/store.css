@@ -72,6 +72,11 @@ body {
   flex-direction: column;
 }
 
+/* Adjust spacing when promo banner is removed */
+.store-card.is-premium .store-main-content{
+  margin-top: 6px;
+}
+
 .store-scroll-area {
   flex: 1;
   min-height: 0;
@@ -209,6 +214,11 @@ body {
   overflow: hidden;
 }
 
+/* Hide promo banner when user is premium */
+.store-card.is-premium .promo-banner {
+  display: none;
+}
+
 /* Corner Nails Class-based Positioning */
 .banner-nail {
   position: absolute;
@@ -317,6 +327,7 @@ body {
   color: var(--color-store-acce-unlock-all-btn);
   text-shadow: none;
   box-shadow: 0 0 10px rgba(184, 157, 91, 0.3);
+  cursor: pointer;
 }
 
 

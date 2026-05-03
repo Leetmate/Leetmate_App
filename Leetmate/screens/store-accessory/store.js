@@ -398,3 +398,26 @@
     init();
   }
 })();
+
+// Remove promotion premium banner if user already has premium 
+const storeCard = document.querySelector(".store-card");
+
+function applyStorePremiumUI(isPremium) {
+  storeCard?.classList.toggle("is-premium", isPremium);
+}
+
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) return;
+  const doc = await firebase.firestore()
+    .collection("users")
+    .doc(user.uid)
+    .get();
+  const isPremium = !!doc.data()?.premium;
+  applyStorePremiumUI(isPremium);
+});
+
+/* Premium button navigation */
+const premiumBtn = document.getElementById("prem-btn");
+premiumBtn?.addEventListener("click", () => {
+    window.location.href = "../premium/index.html";
+});
