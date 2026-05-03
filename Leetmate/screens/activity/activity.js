@@ -529,3 +529,25 @@
     }
   });
 })();
+
+/* Premium button navigation */
+const premiumBtn = document.getElementById("prem-btn");
+premiumBtn?.addEventListener("click", () => {
+    window.location.href = "../premium/index.html";
+});
+
+/* Add check mark in premium button if user has premium */
+function applyPremiumUI(isPremium) {
+  if (!premiumBtn) return;
+  premiumBtn.textContent = isPremium ? "✔ Premium" : "+ Premium";
+}
+
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) return;
+  const doc = await firebase.firestore()
+    .collection("users")
+    .doc(user.uid)
+    .get();
+  const isPremium = !!doc.data()?.premium;
+  applyPremiumUI(isPremium);
+});
