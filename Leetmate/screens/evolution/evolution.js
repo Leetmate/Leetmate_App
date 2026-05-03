@@ -216,13 +216,12 @@ function resetEvolutionState() {
   
     fromPetSprite.classList.add('hidden');
     fromPetSprite.style.backgroundImage = '';
-    fromPetSprite.style.backgroundPosition = '0% 0%';
+    fromPetSprite.style.backgroundPosition = '0% 100%';
   
     petSprite.classList.add('hidden');
     petSprite.classList.remove('hatch-appear');
     petSprite.style.backgroundImage = '';
-    petSprite.style.backgroundPosition = '0% 0%';
-  
+    petSprite.style.backgroundPosition = '0% 100%';  
     return {
       evolutionWrap,
       eggStage,
@@ -355,7 +354,7 @@ function playEvolutionAnimation(petType, activeStage = 'egg') {
       eggStage.classList.add('hatching');
     } else {
       fromPetSprite.style.backgroundImage = `url("${assetSet.baby}")`;
-      fromPetSprite.style.backgroundPosition = '0% 0%';
+      fromPetSprite.style.backgroundPosition = '0% 100%';      
       fromPetSprite.classList.remove('hidden');
   
       void eggStage.offsetWidth;
@@ -456,14 +455,14 @@ window.addEventListener('load', async () => {
         return;
       }
 
-      if (
-        payload.petRef &&
-        activePet.petType &&
-        !evolutionStagesMatch(payload.petRef, activePet.petType)
-      ) {
-        redirectToHome();
-        return;
-      }
+    if (
+      payload.petRef &&
+      activePet.petType &&
+      !evolutionStagesMatch(payload.petRef, activePet.petType)
+    ) {
+      redirectToHome();
+      return;
+    }
 
       const oldStats = activePet.petData?.stats || {};
       const updatedStats = await incrementPetStats(payload.petId, oldStats);
@@ -482,12 +481,12 @@ window.addEventListener('load', async () => {
         sessionStorage.removeItem('leetmate_evolution_payload');
       } catch (_) {}
 
-      activePetContext.petType = petType;
-      activePetContext.activeStage = payload.fromStage;
-      activePetContext.petData = {
-        ...activePet.petData,
-        stats: activePet.petData?.stats
-      };
+    activePetContext.petType = petType;
+    activePetContext.activeStage = payload.fromStage;
+    activePetContext.petData = {
+      ...activePet.petData,
+      stats: updatedStats
+    };
 
       playEvolutionAnimation(petType, payload.fromStage);
     } catch (error) {

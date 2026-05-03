@@ -9,9 +9,10 @@
   <link rel="stylesheet" href="../../styles/top-banner.css" />
   <link rel="stylesheet" href="./evolution.css" />
 </head>
-<body>
+<body data-music-zone="evolve">
   <div class="evolution-screen">
-    <div id="top-banner" class="screen-banner evolution-top-banner hidden">      <div class="screen-banner__left"></div>
+    <div id="top-banner" class="screen-banner evolution-top-banner hidden">
+      <div class="screen-banner__left"></div>
       <div class="screen-banner__center">
         <h1 class="screen-banner__title">Your pet evolved!</h1>
       </div>
@@ -28,12 +29,16 @@
       <div class="evolution-glow"></div>
       <div class="evolution-ring"></div>
 
-      <div class="spark spark-1"></div>
-      <div class="spark spark-2"></div>
-      <div class="spark spark-3"></div>
-      <div class="spark spark-4"></div>
-      <div class="spark spark-5"></div>
-      <div class="spark spark-6"></div>
+      <div class="spark spark-lg spark-1"></div>
+      <div class="spark spark-sm spark-2"></div>
+      <div class="spark spark-md spark-3"></div>
+      <div class="spark spark-sm spark-4"></div>
+      <div class="spark spark-lg spark-5"></div>
+      <div class="spark spark-md spark-6"></div>
+      <div class="spark spark-sm spark-7"></div>
+      <div class="spark spark-lg spark-8"></div>
+      <div class="spark spark-sm spark-9"></div>
+      <div class="spark spark-md spark-10"></div>
 
       <div class="egg-stage" id="egg-stage">
         <img id="active-pet-egg" class="home-hero-egg" alt=" " />
@@ -54,9 +59,11 @@
     </div>
   </div>
 
+  <script src="../../scripts/background-music.js"></script>
   <script src="../../scripts/firebase-bundle.js"></script>
   <script src="../../scripts/firebase-config.js"></script>
   <script src="../../features/shared/storage-helper.js"></script>
   <script src="../../features/pet/evolution-notify.js"></script>
   <script src="./evolution.js"></script>
+</body>
 </html>
