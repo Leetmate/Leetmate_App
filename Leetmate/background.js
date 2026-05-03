@@ -14,6 +14,7 @@
  */
 importScripts(
 	"features/shared/storage-helper.js",
+	"features/progression/coins.js",
 	"features/progression/streak.js",
 	"features/pet/pet-evolution.js",
 	"features/pet/evolution-notify.js",

@@ -5,10 +5,10 @@
 // 2) claim      -> solved and has unclaimed rewards
 // 3) motivation -> solved, but today's rewards already claimed
 
-const COINS_PER_SUBMISSION = 5;
+const COINS_PER_SUBMISSION = 20;
 const XP_PER_SUBMISSION = 5;
 const COINS_FIRST_SUBMISSION = 10;
-const XP_FIRST_SUBMISSION = 10;
+const XP_FIRST_SUBMISSION = 80;
 
 let rewardsState = {
   solved: false,

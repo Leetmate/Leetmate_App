@@ -71,17 +71,36 @@ async function runMidnightPetAgeJob() {
 
         const agedPets = incrementAllPetsAge(pets);
         const updatedPets = LeetmatePetEvolution.applyEvolutionToPets(agedPets);
+        const evolvedCount =
+            typeof LeetmateEvolutionNotify !== 'undefined' &&
+            LeetmateEvolutionNotify.collectEvolutionEvents
+                ? LeetmateEvolutionNotify.collectEvolutionEvents(agedPets, updatedPets).length
+                : 0;
+        const rewardEach =
+            typeof LeetmatePetEvolution !== 'undefined' &&
+            typeof LeetmatePetEvolution.EVOLUTION_COIN_REWARD === 'number'
+                ? LeetmatePetEvolution.EVOLUTION_COIN_REWARD
+                : 100;
+        const evolutionCoinBonus = evolvedCount * rewardEach;
         if (typeof LeetmateEvolutionNotify !== 'undefined' && LeetmateEvolutionNotify.enqueueEvolutionEvents) {
             await LeetmateEvolutionNotify.enqueueEvolutionEvents(agedPets, updatedPets);
         }
         const today = getTodayString();
-        const { activePetId } = await storageGet(['activePetId']);
+        const { activePetId, leetmate_pending_evolution_coins: priorPendingEvolutionCoins } =
+            await storageGet(['activePetId', 'leetmate_pending_evolution_coins']);
 
         const payload = {
             ownedPetsSnapshot: updatedPets,
             leetmate_pet_age_last_rollover: today,
             leetmate_pet_age_pending_firestore_sync: true
         };
+        if (evolutionCoinBonus > 0) {
+            const curPending = Math.max(
+                0,
+                Math.floor(Number(priorPendingEvolutionCoins) || 0)
+            );
+            payload.leetmate_pending_evolution_coins = curPending + evolutionCoinBonus;
+        }
 
         if (activePetId) {
             const active = updatedPets.find((p) => p && p.id === activePetId);
