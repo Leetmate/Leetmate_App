@@ -8,6 +8,7 @@
   var TRACKS = {
     default: "LeetmateBGMusic.mp3",
     community: "communityMusic.mp3",
+    evolve: "evolve.mp3",
   };
 
   var STORAGE_VOLUME = "leetmate_music_volume";
@@ -35,7 +36,8 @@
     snapshot &&
     snapshot.zone === zone &&
     typeof snapshot.currentTime === "number" &&
-    !isNaN(snapshot.currentTime);
+    !isNaN(snapshot.currentTime) &&
+    zone !== "evolve";
 
   function persistSession() {
     try {

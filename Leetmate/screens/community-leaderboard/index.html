@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="../../features/shared/theme-init.js"></script>
-    <title>Leetmate - Community</title>
+    <title>Leetmate - Leaderboard</title>
     <link rel="stylesheet" href="../../styles/dark-theme.css" />
-    <link rel="stylesheet" href="../../styles/color-theme.css">
+    <link rel="stylesheet" href="../../styles/color-theme.css" />
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="community.css" />
@@ -48,12 +48,39 @@
             </div>
           </div>
 
-          <div class="community-content">
-            <p
-              style="color: #111; font-family: 'Lilita One', cursive; font-size: 20px;"
-            >
-              Leaderboard content goes here...
-            </p>
+          <div class="leaderboard-body">
+            <div class="leaderboard-subheader">
+              <img
+                src="../../assets/icons/swords.png"
+                class="leaderboard-subheader__icon"
+                alt=""
+                width="40"
+                height="40"
+              />
+              <h2 class="leaderboard-subheader__title">Top Global</h2>
+            </div>
+
+            <div class="leaderboard-loading" id="leaderboard-loading" aria-live="polite">
+              <span class="leaderboard-loading__dot"></span>
+              <span class="leaderboard-loading__dot"></span>
+              <span class="leaderboard-loading__dot"></span>
+            </div>
+
+            <ul
+              class="leaderboard-list hidden"
+              id="leaderboard-list"
+              role="list"
+              aria-label="Global leaderboard"
+            ></ul>
+
+            <div class="leaderboard-empty hidden" id="leaderboard-empty" aria-live="polite">
+              <img
+                src="../../assets/icons/trophy.png"
+                class="leaderboard-empty__icon"
+                alt=""
+              />
+              <p class="leaderboard-empty__text">No leaderboard data yet!</p>
+            </div>
           </div>
         </div>
       </div>

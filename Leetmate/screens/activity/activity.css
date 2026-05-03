@@ -325,10 +325,11 @@ body.hidden-on-load .popup-layout {
 }
 
 .calendar-day.has-weekly-reward::before {
+  --weekly-chest-offset-x: 0px;
   content: "";
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: calc(50% + var(--weekly-chest-offset-x));
   width: 52px;
   height: 52px;
   transform: translate(-50%, -50%);
@@ -342,19 +343,17 @@ body.hidden-on-load .popup-layout {
   transition: opacity 460ms ease-in-out;
 }
 
+/* Only run-end cells need compensation (left-merge without right-merge). */
+.calendar-day.has-weekly-reward.progress-run-end::before {
+  --weekly-chest-offset-x: 2px;
+}
+
 .calendar-day.weekly-reward-locked::before {
   opacity: 1;
 }
 
 .calendar-day.weekly-reward-claimable {
   cursor: pointer;
-}
-
-.calendar-day.has-progress.weekly-reward-claimable {
-  /* Keep reward day visually merged with its streak segment */
-  border-left: none;
-  margin-left: -2px;
-  border-radius: 0 9px 9px 0;
 }
 
 .calendar-day.weekly-reward-claimable::before {
