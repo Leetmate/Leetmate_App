@@ -400,20 +400,42 @@
 })();
 
 // Remove promotion premium banner if user already has premium 
-const storeCard = document.querySelector(".store-card");
+async function getLocalPremium() {
+  const result = await chrome.storage.local.get(["isPremium"]);
+  return !!result.isPremium;
+}
 
+const storeCard = document.querySelector(".store-card");
 function applyStorePremiumUI(isPremium) {
   storeCard?.classList.toggle("is-premium", isPremium);
 }
 
-firebase.auth().onAuthStateChanged(async (user) => {
-  if (!user) return;
+/* Sync logic */
+async function syncPremiumState(user) {
+  // 1. FAST: show cached value first
+  const localPremium = await getLocalPremium();
+  applyStorePremiumUI(localPremium);
+
+  // 2. SLOW: fetch real value from Firestore
   const doc = await firebase.firestore()
     .collection("users")
     .doc(user.uid)
     .get();
-  const isPremium = !!doc.data()?.premium;
-  applyStorePremiumUI(isPremium);
+  const firestorePremium = !!doc.data()?.premium;
+
+  // 3. Update local storage if different 
+  if (localPremium !== firestorePremium) {
+    await chrome.storage.local.set({ isPremium: firestorePremium });
+  }
+
+  // 4. Update UI 
+  applyPremiumUI(firestorePremium);
+}
+
+/* Run on auth */
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) return;
+  await syncPremiumState(user);
 });
 
 /* Premium button navigation */

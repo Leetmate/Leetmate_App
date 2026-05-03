@@ -72,8 +72,10 @@ async function syncPremiumState() {
   const firestorePremium = await getFirestorePremium();
   // if auth is not ready or Firestore failed, do not overwrite cache
   if (firestorePremium === null) return;
-  await setLocalPremium(firestorePremium);
-  applyPremiumUI(firestorePremium);
+  // only write if changed
+  if (localPremium !== firestorePremium) {
+    await setLocalPremium(firestorePremium);
+}  applyPremiumUI(firestorePremium);
 }
 
 // ---- Wait for Firebase auth before syncing ----
