@@ -145,10 +145,14 @@ body {
 }
 
 .premium-feedback {
-  margin-top: 12px;
+  margin-top: -7px;
   text-align: center;
   font-size: 14px;
   font-weight: 600;
+}
+
+.premium-card.is-premium .premium-feedback {
+  margin-top: 12px;
 }
 
 .premium-btn {

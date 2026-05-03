@@ -1,5 +1,6 @@
 # Env with real values – do not commit
 .env
+*.local
 
 # Generated from .env – do not commit (use firebase-config.template.js as source)
 firebase-config.js
@@ -8,3 +9,6 @@ node_modules/
 
 # Mac OS Directory Meta Data
 .DS_Store
+
+# Firebase local config 
+.firebase/
