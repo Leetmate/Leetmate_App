@@ -13,12 +13,35 @@ const PET_ASSETS = {
       egg: '../../assets/eggs/CubicFoxEgg.png',
       baby: '../../assets/spritesheets/CubicFoxBaby.png',
       adult: '../../assets/spritesheets/CubicFoxAdult.png'
-    }
+    },
+    Frog: {
+      egg: "../../assets/eggs/CubicFrogEgg.png",
+      baby: "../../assets/spritesheets/CubicFrogBaby.png",
+      adult: "../../assets/spritesheets/CubicFrogAdult.png",
+    },
+    Giraffe: {
+      egg: "../../assets/eggs/CubicGiraffeEgg.png",
+      baby: "../../assets/spritesheets/CubicGiraffeBaby.png",
+      adult: "../../assets/spritesheets/CubicGiraffeAdult.png",
+    },
+    MicoLeaoDourado: {
+      egg: "../../assets/eggs/CubicMicoLeaoDouradoEgg.png",
+      baby: "../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png",
+      adult: "../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png",
+    },
+    Wolf: {
+      egg: "../../assets/eggs/CubicWolfEgg.png",
+      baby: "../../assets/spritesheets/CubicWolfBaby.png",
+      adult: "../../assets/spritesheets/CubicWolfAdult.png",
+    }    
 };
   
 let activePetContext = {
     petType: null,
-    activeStage: null
+    activeStage: null,
+    petData: null,
+    oldStats: null,
+    newStats: null
 };
   
 function redirectToHome() {
@@ -170,7 +193,8 @@ function resetEvolutionState() {
     const fromPetSprite = document.getElementById('active-from-pet');
     const petSprite = document.getElementById('active-pet');
     const topBanner = document.getElementById('top-banner');
-    const bottomBanner = document.getElementById('bottom-banner');
+    const statsDialog = document.getElementById('stats-dialog');
+    const statsGrid = document.getElementById('stats-grid');
   
     if (!evolutionWrap || !eggStage || !eggEl || !fromPetSprite || !petSprite) {
       return null;
@@ -178,8 +202,11 @@ function resetEvolutionState() {
     resetEvolutionDialog();
 
     topBanner?.classList.add('hidden');
-    bottomBanner?.classList.add('hidden');
-  
+    statsDialog?.classList.add('hidden');
+    
+    if (statsGrid) {
+      statsGrid.innerHTML = '';
+    }  
     evolutionWrap.classList.remove('is-hatching');
     eggStage.classList.remove('hatching', 'evolving-child');
     eggStage.classList.remove('hidden');
@@ -203,7 +230,6 @@ function resetEvolutionState() {
       fromPetSprite,
       petSprite,
       topBanner,
-      bottomBanner
     };
 }
 
@@ -254,6 +280,49 @@ function typeEvolutionDialog(message, speed = 28) {
 
     step();
 }
+
+function showStatsDialog(oldStats = {}, newStats = {}) {
+  const dialog = document.getElementById('stats-dialog');
+  const grid = document.getElementById('stats-grid');
+
+  if (!dialog || !grid) return;
+
+  const statRows = [
+    ['HP', 'hp'],
+    ['ATK', 'atk'],
+    ['DEF', 'def'],
+    ['SP ATK', 'spAtk'],
+    ['SP DEF', 'spDef'],
+    ['SPD', 'spd']
+  ];
+
+  grid.innerHTML = statRows
+    .map(([label, key]) => {
+      const oldValue = oldStats[key] ?? 0;
+      const newValue = newStats[key] ?? oldValue + 5;
+
+      return `
+        <div class="stat-label">${label}</div>
+        <div class="stat-value" data-new-value="${newValue}">${oldValue}</div>
+        <div class="stat-increase">+5</div>
+      `;
+    })
+    .join('');
+
+  dialog.classList.remove('hidden');
+
+  setTimeout(() => {
+    grid.querySelectorAll('.stat-value').forEach((valueEl, index) => {
+      valueEl.textContent = valueEl.dataset.newValue;
+      valueEl.style.animationDelay = `${index * 60}ms`; // stagger effect
+      valueEl.classList.add('stat-value-boosted');
+    });
+  
+    grid.querySelectorAll('.stat-increase').forEach((increaseEl) => {
+      increaseEl.classList.add('stat-increase-hide');
+    });
+  }, 900);
+}
   
 function playEvolutionAnimation(petType, activeStage = 'egg') {
     const els = resetEvolutionState();
@@ -271,7 +340,6 @@ function playEvolutionAnimation(petType, activeStage = 'egg') {
       fromPetSprite,
       petSprite,
       topBanner,
-      bottomBanner
     } = els;
   
     const { fromStage, toStage } = stages;
@@ -305,36 +373,56 @@ function playEvolutionAnimation(petType, activeStage = 'egg') {
   
     setTimeout(() => {
       topBanner?.classList.remove('hidden');
-      bottomBanner?.classList.remove('hidden');
     }, 2200);
 
     setTimeout(() => {
+      const petName = activePetContext.petData?.customName || 'your pet';
       typeEvolutionDialog(
-        'Congrats, your pet is stronger now! All stats +5.',
+        `Congrats, ${petName} is stronger now! All stats boosted.`,
         28
       );
     }, 2550);
+
+    setTimeout(() => {
+      showStatsDialog(
+        activePetContext.oldStats,
+        activePetContext.newStats
+      );
+    }, 4200);
+}
+
+async function incrementPetStats(petId, currentStats = {}) {
+  const user = firebase.auth().currentUser;
+  if (!user || !petId) return currentStats;
+
+  const updatedStats = {
+    hp: (currentStats.hp || 0) + 5,
+    atk: (currentStats.atk || 0) + 5,
+    def: (currentStats.def || 0) + 5,
+    spAtk: (currentStats.spAtk || 0) + 5,
+    spDef: (currentStats.spDef || 0) + 5,
+    spd: (currentStats.spd || 0) + 5
+  };
+
+  const db = firebase.firestore();
+  const petRef = db
+    .collection('users')
+    .doc(user.uid)
+    .collection('pets')
+    .doc(petId);
+
+  await petRef.update({
+    stats: updatedStats,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  return updatedStats;
 }
   
 function setupButtons() {
-    const replayBtn = document.getElementById('replay-btn');
-    const homeBtn = document.getElementById('home-btn');
-  
-    replayBtn?.addEventListener('click', () => {
-      if (!activePetContext.petType) {
-        console.warn('No active pet loaded yet.');
-        return;
-      }
-  
-      playEvolutionAnimation(
-        activePetContext.petType,
-        activePetContext.activeStage
-      );
+    const closeBtn = document.getElementById('close-btn');
+    closeBtn?.addEventListener('click', () => {
+      redirectToHome();
     });
-  
-    homeBtn?.addEventListener('click', () => {
-      window.location.href = '../home/index.html';
-   });
 }
   
 window.addEventListener('load', async () => {
@@ -377,6 +465,12 @@ window.addEventListener('load', async () => {
         return;
       }
 
+      const oldStats = activePet.petData?.stats || {};
+      const updatedStats = await incrementPetStats(payload.petId, oldStats);
+
+      activePetContext.oldStats = oldStats;
+      activePetContext.newStats = updatedStats;
+
       if (
         typeof LeetmateEvolutionNotify !== 'undefined' &&
         LeetmateEvolutionNotify.consumeEventForPetId
@@ -390,6 +484,10 @@ window.addEventListener('load', async () => {
 
       activePetContext.petType = petType;
       activePetContext.activeStage = payload.fromStage;
+      activePetContext.petData = {
+        ...activePet.petData,
+        stats: activePet.petData?.stats
+      };
 
       playEvolutionAnimation(petType, payload.fromStage);
     } catch (error) {

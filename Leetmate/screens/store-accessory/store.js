@@ -429,7 +429,7 @@ async function syncPremiumState(user) {
   }
 
   // 4. Update UI 
-  applyPremiumUI(firestorePremium);
+  applyStorePremiumUI(firestorePremium);
 }
 
 /* Run on auth */
