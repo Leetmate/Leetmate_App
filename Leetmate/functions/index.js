@@ -50,32 +50,20 @@ const PREMIUM_PRODUCT = {
 };
 
 const COIN_PACKAGES = {
-  coins_50: {
+  coins_100: {
     purchaseType: "coins",
-    //purchaseType: "coinsFifty",
-    coinAmount: 50,
-    unitAmount: 99,
-    currency: "usd",
-    name: "50 LeetMate Coins",
-    description: "Coin pack for LeetMate",
+    priceId: "price_1TTB7ZKTMSK0DShx73uJdwts",
+    coinAmount: 100
   },
-  coins_150: {
+  coins_300: {
     purchaseType: "coins",
-    //purchaseType: "coinsOneFifty",
-    coinAmount: 150,
-    unitAmount: 199,
-    currency: "usd",
-    name: "150 LeetMate Coins",
-    description: "Coin pack for LeetMate",
+    priceId: "price_1TTB7xKTMSK0DShxalZisV5C",
+    coinAmount: 300
   },
-  coins_500: {
+  coins_1000: {
     purchaseType: "coins",
-    //purchaseType: "coinsFiveHun",
-    coinAmount: 500,
-    unitAmount: 499,
-    currency: "usd",
-    name: "500 LeetMate Coins",
-    description: "Coin pack for LeetMate",
+    priceId: "price_1TTB8TKTMSK0DShxA7B81oy5",
+    coinAmount: 1000
   },
 };
 

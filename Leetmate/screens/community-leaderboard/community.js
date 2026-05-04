@@ -15,7 +15,7 @@
   async function getTrophiesList() {
     try {
       //works
-      const snapshot = await db.collection("trophies").orderBy("trophy", "desc").get();
+      const snapshot = await db.collection("users").orderBy("trophy", "desc").get();
 
       /*const snapshot = await db.collection("trophies")
         .orderBy("lastUpdated", "asc")

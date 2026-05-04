@@ -52,11 +52,12 @@ const CREATE_CHECKOUT_SESSION_URL =
     }*/
 
     async function handlePurchase(amount) {
+      //let purchaseSuccess = false;
+
       //new change
       //handle payment processing
       const user = firebase.auth().currentUser;
       const coinsFeedback = document.getElementById("coins-feedback");
-
 
       try {
         coinsFeedback.textContent = "Redirecting to checkout...";
@@ -64,7 +65,7 @@ const CREATE_CHECKOUT_SESSION_URL =
         // Send request to backend to create Stripe checkout session 
 
         let packageId = "coins_" + amount;
-        
+
         const response = await fetch(CREATE_CHECKOUT_SESSION_URL, {
           method: "POST",
           headers: {
@@ -90,21 +91,21 @@ const CREATE_CHECKOUT_SESSION_URL =
         coinsFeedback.textContent = "Could not start checkout.";
       }
 
-      const amountNum = Number(amount);
+      /*const amountNum = Number(amount);
       if (isNaN(amountNum)) return;
 
       // Use shared addCoins logic (local storage)
-      if (typeof addCoins === 'function') {
-        await addCoins(amountNum);
+        if (typeof addCoins === 'function') {
+          await addCoins(amountNum);
 
-        // Sync to Firestore immediately
-        if (currentUid && typeof saveCoinsToFirestore === 'function') {
-          await saveCoinsToFirestore(db, currentUid);
-        }
+          // Sync to Firestore immediately
+          if (currentUid && typeof saveCoinsToFirestore === 'function') {
+            await saveCoinsToFirestore(db, currentUid);
+          }
 
-        // Refresh UI
-        updateCoinsUI();
-      }
+          // Refresh UI
+          updateCoinsUI();
+        }*/
     }
 
     /*async function handlePurchase(amount) {
@@ -148,4 +149,3 @@ const CREATE_CHECKOUT_SESSION_URL =
     document.body.classList.remove('hidden-on-load');
   });
 })();
-
