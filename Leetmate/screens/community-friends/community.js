@@ -124,6 +124,134 @@
   var searchDebounce  = null;
   var sentRequestUids = {}; // UIDs we sent a request to this session
   var friendUidSet    = {}; // UIDs that are already friends
+  var battleInviteDocUnsubs = [];
+
+  // ── Battle invites (real-time, one doc listener per friend pair) ──
+  // Avoids collection queries + array-contains, which often fail rules unless
+  // the query shape exactly matches what rules can prove (see Firestore docs).
+
+  function stopBattleInviteDocListeners() {
+    battleInviteDocUnsubs.forEach(function (u) {
+      try { u(); } catch (e) { /* ignore */ }
+    });
+    battleInviteDocUnsubs = [];
+  }
+
+  function renderBattleInviteRows(items) {
+    var wrap = document.getElementById('battle-invites-wrap');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    if (items.length === 0) {
+      wrap.classList.add('hidden');
+      return;
+    }
+    wrap.classList.remove('hidden');
+    items.forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'battle-invite-banner';
+
+      var text = document.createElement('p');
+      text.className = 'battle-invite-banner__text';
+      text.textContent = item.fromUsername + ' invited you to a pet battle!';
+
+      var actions = document.createElement('div');
+      actions.className = 'battle-invite-banner__actions';
+
+      var acceptBtn = document.createElement('button');
+      acceptBtn.type = 'button';
+      acceptBtn.className = 'battle-invite-banner__btn battle-invite-banner__btn--accept';
+      acceptBtn.textContent = 'Accept';
+      acceptBtn.addEventListener('click', function () {
+        acceptBtn.disabled = true;
+        var dBtn = row.querySelector('.battle-invite-banner__btn--decline');
+        if (dBtn) dBtn.disabled = true;
+        window.location.href = '../community-battle-friend/index.html?uid=' + encodeURIComponent(item.inviterUid) + '&accept=1';
+      });
+
+      var declineBtn = document.createElement('button');
+      declineBtn.type = 'button';
+      declineBtn.className = 'battle-invite-banner__btn battle-invite-banner__btn--decline';
+      declineBtn.textContent = 'Decline';
+      declineBtn.addEventListener('click', function () {
+        declineBtn.disabled = true;
+        acceptBtn.disabled = true;
+        declineBattleInvite(item.pairId, row);
+      });
+
+      actions.appendChild(declineBtn);
+      actions.appendChild(acceptBtn);
+      row.appendChild(text);
+      row.appendChild(actions);
+      wrap.appendChild(row);
+    });
+  }
+
+  function declineBattleInvite(pairId, rowEl) {
+    db.collection('friendBattleInvites').doc(pairId).set({ status: 'declined' }, { merge: true })
+      .then(function () {
+        if (rowEl && rowEl.parentNode) rowEl.parentNode.removeChild(rowEl);
+        var wrap = document.getElementById('battle-invites-wrap');
+        if (wrap && wrap.children.length === 0) wrap.classList.add('hidden');
+      })
+      .catch(function (err) {
+        console.error('Decline battle invite:', err);
+        if (rowEl) {
+          var btns = rowEl.querySelectorAll('button');
+          btns.forEach(function (b) { b.disabled = false; });
+        }
+      });
+  }
+
+  function attachBattleInviteDocListeners(myUid, friendUids) {
+    if (!db || !myUid) return;
+    stopBattleInviteDocListeners();
+
+    var ids = (friendUids || []).filter(function (fid) {
+      return fid && fid !== '_meta' && fid !== myUid;
+    });
+    if (ids.length === 0) {
+      renderBattleInviteRows([]);
+      return;
+    }
+
+    var pendingByPairId = {};
+
+    function renderFromPending() {
+      var items = Object.keys(pendingByPairId).map(function (pairId) {
+        var x = pendingByPairId[pairId];
+        return {
+          pairId: pairId,
+          inviterUid: x.inviterUid,
+          fromUsername: x.fromUsername || 'Friend'
+        };
+      });
+      renderBattleInviteRows(items);
+    }
+
+    ids.forEach(function (fid) {
+      var pairId = myUid < fid ? (myUid + '_' + fid) : (fid + '_' + myUid);
+      var ref = db.collection('friendBattleInvites').doc(pairId);
+      var unsub = ref.onSnapshot(function (snap) {
+        if (!snap.exists) {
+          delete pendingByPairId[pairId];
+        } else {
+          var d = snap.data();
+          if (d && d.status === 'pending' && d.fromUid && d.fromUid !== myUid) {
+            pendingByPairId[pairId] = {
+              inviterUid: d.fromUid,
+              fromUsername: d.fromUsername || 'Friend'
+            };
+          } else {
+            delete pendingByPairId[pairId];
+          }
+        }
+        renderFromPending();
+      }, function (err) {
+        console.error('Battle invite doc listener', pairId, err);
+      });
+      battleInviteDocUnsubs.push(unsub);
+    });
+  }
 
   // ── Navigation ────────────────────────────────────────
   if (backBtn) {
@@ -270,7 +398,52 @@
     matchBtn.appendChild(matchLabel);
     matchBtn.addEventListener('click', function (event) {
       event.stopPropagation();
-      window.location.href = '../community-multiplayer/index.html';
+      var fid = friendData && friendData.friendUid ? String(friendData.friendUid) : '';
+      if (!fid || !auth || !auth.currentUser) return;
+      var myUid = auth.currentUser.uid;
+      var pairId = myUid < fid ? (myUid + '_' + fid) : (fid + '_' + myUid);
+      var url = '../community-battle-friend/index.html?uid=' + encodeURIComponent(fid);
+      matchBtn.disabled = true;
+
+      db.collection('friendPvPBattles').doc(pairId).get()
+        .then(function (bSnap) {
+          var bd = bSnap.exists ? bSnap.data() : null;
+          if (bd && bd.phase === 'battle') {
+            throw { friendlyMsg: 'A battle is already in progress with this friend.' };
+          }
+          return db.collection('friendBattleInvites').doc(pairId).get();
+        })
+        .then(function (iSnap) {
+          var iv = iSnap.exists ? iSnap.data() : null;
+          if (iv && iv.status === 'pending' && iv.fromUid === fid) {
+            throw { friendlyMsg: 'This friend already invited you! Accept their invite above.' };
+          }
+          return db.collection('users').doc(myUid).get();
+        })
+        .then(function (meSnap) {
+          var un = (meSnap.exists && meSnap.data()) ? (meSnap.data().username || '') : '';
+          return db.collection('friendBattleInvites').doc(pairId).set({
+            uids: myUid < fid ? [myUid, fid] : [fid, myUid],
+            fromUid: myUid,
+            fromUsername: un,
+            status: 'pending',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: false });
+        })
+        .then(function () {
+          window.location.href = url;
+        })
+        .catch(function (err) {
+          matchBtn.disabled = false;
+          if (err && err.friendlyMsg) {
+            alert(err.friendlyMsg);
+          } else if (err && (err.code === 'permission-denied' || err.code === 'PERMISSION_DENIED')) {
+            alert('Firestore blocked the invite. Open firestore.rules.example in the Leetmate project, copy the two match blocks into Firebase Console → Firestore → Rules (inside your existing rules), then Publish.');
+          } else {
+            console.error('Battle invite send:', err);
+            alert('Could not send battle invitation. Check the console for the error.');
+          }
+        });
     });
 
     var removeBtn = document.createElement('button');
@@ -310,6 +483,7 @@
         delete friendUidSet[friendUid];
         if (cardEl) cardEl.remove();
         if (friendsList && friendsList.children.length === 0) showList(false);
+        attachBattleInviteDocListeners(currentUid, Object.keys(friendUidSet));
       })
       .catch(function (err) {
         console.error('Remove friend error:', err);
@@ -370,10 +544,13 @@
           friendsList.appendChild(buildFriendCard(f));
         });
         showList(friends.length > 0);
+        var friendIds = friends.map(function (f) { return f.friendUid; }).filter(Boolean);
+        attachBattleInviteDocListeners(uid, friendIds);
       })
       .catch(function (err) {
         console.error('Failed to load friends:', err);
         showList(false);
+        attachBattleInviteDocListeners(uid, []);
       });
   }
 

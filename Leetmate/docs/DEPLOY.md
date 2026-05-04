@@ -32,7 +32,7 @@ The deployed extension will use the config from step 1; no env vars or CLI run o
 ## Firebase Auth and Firestore (for sign-up/sign-in)
 
 - **Authorized domains:** In [Firebase Console](https://console.firebase.google.com) → Authentication → Settings → Authorized domains, add your Chrome extension origin: `chrome-extension://YOUR_EXTENSION_ID` (find the ID on `chrome://extensions` when the extension is loaded).
-- **Firestore rules:** In Firestore → Rules, allow authenticated users to read/write their own document in `users` (see `firestore.rules.example` in the repo for a starter).
+- **Firestore rules:** In Firestore → Rules, allow authenticated users to read/write their own document in `users`, plus any other collections you use. For **friend battles**, merge the `friendBattleInvites` and `friendPvPBattles` blocks from `firestore.rules.example` in this folder (paste them inside your existing `match /databases/{database}/documents { ... }` — do not drop your `users` / `friendRequests` rules).
 
 ## Notes
 

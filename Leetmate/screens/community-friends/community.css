@@ -63,6 +63,62 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* ── BATTLE INVITES ───────────────────────────────────── */
+.battle-invites-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.battle-invite-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  background: linear-gradient(to bottom, #fdf4e7, #f0d5ae);
+  border: 3px solid #111;
+  border-radius: 16px;
+  box-shadow: 0 4px 0 #111;
+}
+
+.battle-invite-banner__text {
+  margin: 0;
+  font-family: "Lilita One", cursive;
+  font-size: 15px;
+  color: var(--color-friends-heading);
+  text-align: center;
+  line-height: 1.35;
+}
+
+.battle-invite-banner__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.battle-invite-banner__btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 10px 12px;
+  font-family: "Lilita One", cursive;
+  font-size: 14px;
+  border: 3px solid #111;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #111;
+}
+
+.battle-invite-banner__btn--accept {
+  color: #1a3d1a;
+  background: linear-gradient(to bottom, #a8e6a8, #6fcf6f);
+}
+
+.battle-invite-banner__btn--decline {
+  color: #3d1a1a;
+  background: linear-gradient(to bottom, #f0c4c4, #e08a8a);
+}
+
 /* ── FRIEND LIST ───────────────────────────────────────── */
 .friends-list {
   flex: 1 1 0;
