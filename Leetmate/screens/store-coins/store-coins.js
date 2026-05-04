@@ -62,6 +62,7 @@ const CREATE_CHECKOUT_SESSION_URL =
         coinsFeedback.textContent = "Redirecting to checkout...";
         const idToken = await user.getIdToken();
         // Send request to backend to create Stripe checkout session 
+        
         const response = await fetch(CREATE_CHECKOUT_SESSION_URL, {
           method: "POST",
           headers: {
@@ -71,9 +72,10 @@ const CREATE_CHECKOUT_SESSION_URL =
           body: JSON.stringify({
             email: user.email || "",
             purchaseType: "coins",
-            coinAmount: 50
+            packageId: "coins_50"
           }),
         });
+
         const data = await response.json();
         if (!response.ok || !data.url) {
           throw new Error(data.error || "Could not create checkout session");

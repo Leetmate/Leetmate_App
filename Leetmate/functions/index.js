@@ -50,7 +50,7 @@ const PREMIUM_PRODUCT = {
 };
 
 const COIN_PACKAGES = {
-  coins_100: {
+  coins_50: {
     purchaseType: "coins",
     //purchaseType: "coinsFifty",
     coinAmount: 50,
@@ -59,7 +59,7 @@ const COIN_PACKAGES = {
     name: "50 LeetMate Coins",
     description: "Coin pack for LeetMate",
   },
-  coins_250: {
+  coins_150: {
     purchaseType: "coins",
     //purchaseType: "coinsOneFifty",
     coinAmount: 150,
@@ -68,7 +68,7 @@ const COIN_PACKAGES = {
     name: "150 LeetMate Coins",
     description: "Coin pack for LeetMate",
   },
-  coins_700: {
+  coins_500: {
     purchaseType: "coins",
     //purchaseType: "coinsFiveHun",
     coinAmount: 500,

@@ -10,6 +10,10 @@
 (function () {
   'use strict';
 
+  //TODO: get all of the documents in trophies and store them to an array?
+  const db = firebase.firestore();
+  const newUsernameRef = db.collection("trophies");
+
   var MOCK_LEADERBOARD = [
     {
       uid: 'mock-1',

@@ -442,8 +442,8 @@ async function syncPremiumState(user) {
     await chrome.storage.local.set({ isPremium: firestorePremium });
   }
 
-  // 4. Update UI //TO FIX: temporarily removed
-  //applyPremiumUI(firestorePremium);
+  // 4. Update UI
+  applyStorePremiumUI(firestorePremium);
 }
 
 /* Run on auth */
