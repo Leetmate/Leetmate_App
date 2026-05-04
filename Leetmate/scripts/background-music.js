@@ -8,6 +8,7 @@
   var TRACKS = {
     default: "LeetmateBGMusic.mp3",
     community: "communityMusic.mp3",
+    evolve: "evolve.mp3",
   };
 
   var STORAGE_VOLUME = "leetmate_music_volume";
@@ -35,7 +36,8 @@
     snapshot &&
     snapshot.zone === zone &&
     typeof snapshot.currentTime === "number" &&
-    !isNaN(snapshot.currentTime);
+    !isNaN(snapshot.currentTime) &&
+    zone !== "evolve";
 
   function persistSession() {
     try {
@@ -105,6 +107,12 @@
     /* eslint-disable no-console */
     console.warn("Background music failed to load:", src);
   });
+
+  // Expose pause/resume so other scripts can stop bg music during battle
+  window.LeetmateBGMusic = {
+    pause:  function () { audio.pause(); },
+    resume: function () { tryPlay(); },
+  };
 
   loadPrefsAndApply(function () {
     whenMetadataReady(function () {

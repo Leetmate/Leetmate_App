@@ -129,24 +129,40 @@ body {
   border-radius: 50%;
   border: 5px solid var(--color-set-acc-body);
   background: var(--color-set-acc-profile-avatar);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   transition:
     transform 0.15s,
     filter 0.15s;
 }
 
+.clip-avatar {
+  --account-pet-size: 85px;
+  --account-pet-offset-y: -12px;
+  --account-egg-size: 86px;
+  --account-egg-offset-y: 8px;
+  flex: 0 0 auto;
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  image-rendering: pixelated;
+}
+
 .clip-avatar.adult {
-  object-position: 0px 0px;
-  /*this is good for spritesheets*/
-  /*cuts: top right bottom left*/
-  clip-path: inset(0 85% 0 0);
+  width: var(--account-pet-size);
+  aspect-ratio: 21 / 32;
+  background-size: 700% 100%;
+  background-position: 0% 0%;
+  transform: translateY(var(--account-pet-offset-y));
 }
 
 .clip-avatar.egg {
-  object-position: 0px 0px;
-  height: 100px;
-  width: 100px;
-  position: relative;
-  left: -9px;
+  width: var(--account-egg-size);
+  height: var(--account-egg-size);
+  background-size: contain;
+  background-position: center bottom;
+  transform: translateY(var(--account-egg-offset-y));
 }
 
 .profile-avatar-btn:hover .profile-avatar,

@@ -1,16 +1,16 @@
 (function () {
   "use strict";
 
-  // Local cache keys that need to stay in sync with feeding updates.
+  // Local cache keys 
   const LAST_FED_KEY = "leetmate_last_fed";
   const HAPPINESS_STORAGE_KEY = "leetmate_happiness";
   const EASY_MODE_KEY = "leetmate_easy_mode";
   const EASY_HAPPINESS_SNAPSHOT_KEY = "leetmate_happiness_easy_snapshot";
 
-  // Interaction / animation tuning.
+  // Interaction / animation variables
   const DRAG_THRESHOLD_PX = 10;
   const FOOD_VISIBLE_MS = 2000;
-  const FOOD_FLOOR_TOP = 146;
+  const FOOD_FLOOR_TOP = 136;
   const HAPPY_HEART_COUNT = 3;
   const HAPPY_HEART_STAGGER_MS = 160;
   const PET_TRAVEL_MS_PER_PX = 10;
@@ -19,6 +19,10 @@
     fox: "food-bacon",
     cat: "food-fish",
     bat: "food-honey",
+    frog: "food-soup",
+    wolf: "food-cookedmeat",
+    giraffe: "food-bread",
+    micoleaodourado: "food-popcorn",
   };
 
   function wait(ms) {
@@ -47,7 +51,6 @@
       reloadInventory,
     } = options;
 
-    // Controller-local scene state. Only one feeding sequence should exist at a time.
     let dragState = null;
     let sceneFoodEl = null;
     let sceneAuraEl = null;
@@ -58,7 +61,6 @@
         ? chrome.runtime.getURL("assets/icons/heart.png")
         : "../../assets/icons/heart.png";
 
-    // Core scene / pet elements used by the feeding interactions.
     function getEls() {
       return {
         petCard: document.querySelector(".playground-pet-card"),
@@ -92,8 +94,6 @@
       return Number.isFinite(happiness) ? happiness : 100;
     }
 
-    // Move the active pet by updating the CSS variables the shared Playground
-    // sprite styles already use.
     function setPetOffset(x, y = 0) {
       const { petSprite } = getEls();
       if (!petSprite) return;
@@ -101,7 +101,6 @@
       petSprite.style.setProperty("--pet-follow-y", `${y}px`);
     }
 
-    // PiP-style facing: rightward travel flips the sprite, leftward travel resets it.
     function setPetFacing(directionX) {
       const { petSprite } = getEls();
       if (!petSprite) return;
@@ -109,12 +108,10 @@
       petSprite.style.setProperty("--pet-facing-x", String(facingX));
     }
 
-    // Constant horizontal velocity: farther distances simply take proportionally longer.
     function getTravelDurationMs(distancePx) {
       return Math.abs(distancePx) * PET_TRAVEL_MS_PER_PX;
     }
 
-    // Hard reset of all temporary pet animation state.
     function resetPetPose() {
       const { hero, petSprite } = getEls();
       if (!petSprite || !hero) return;
@@ -125,7 +122,6 @@
       setPetOffset(0, 0);
     }
 
-    // Remove the floating drag image and clear the active drag session.
     function clearDragGhost() {
       if (!dragState) return;
       dragState.button.classList.remove("is-dragging");
@@ -135,7 +131,7 @@
       dragState = null;
     }
 
-    // Update the visible inventory slot immediately so feeding feels responsive.
+    // for updating the inventory fast
     function applyOptimisticInventoryUpdate(button, inventoryItem) {
       if (!button || !inventoryItem) return false;
 
@@ -163,7 +159,6 @@
       return true;
     }
 
-    // Clear the normal food sprite from the scene.
     function removeSceneFood() {
       if (sceneFoodEl?.isConnected) {
         sceneFoodEl.remove();
@@ -171,7 +166,6 @@
       sceneFoodEl = null;
     }
 
-    // Clear the egg-only warming effects.
     function removeEggWarmingScene() {
       if (sceneAuraEl?.isConnected) {
         sceneAuraEl.remove();
@@ -181,7 +175,6 @@
       scenePowderEls = [];
     }
 
-    // Let the aura / powder fade out before doing the hard cleanup.
     async function fadeOutEggWarmingScene() {
       if (sceneAuraEl) {
         sceneAuraEl.classList.remove("is-visible");
@@ -192,7 +185,6 @@
       removeEggWarmingScene();
     }
 
-    // Floating hearts are spawned as temporary DOM nodes above the pet.
     function spawnHappyHeart(index) {
       const { scene } = getEls();
       const petRect = getPetRectInScene();
@@ -214,7 +206,6 @@
       window.setTimeout(() => heart.remove(), 1100);
     }
 
-    // The drag ghost is a separate image attached to <body>, not the inventory slot itself.
     function createDragGhost(imageSrc) {
       const ghost = document.createElement("img");
       ghost.className = "food-drag-ghost";
@@ -224,13 +215,11 @@
       return ghost;
     }
 
-    // Keep the ghost centered under the pointer while dragging.
     function positionDragGhost(ghost, x, y) {
       ghost.style.left = `${x}px`;
       ghost.style.top = `${y}px`;
     }
 
-    // Convert the active pet's screen-space box into coordinates local to the scene.
     function getPetRectInScene() {
       const { scene, petSprite, petEgg } = getEls();
       if (!scene) return null;
@@ -258,14 +247,12 @@
       return FOOD_FLOOR_TOP;
     }
 
-    // Clamp horizontal placement so the food never hangs outside the pet display.
     function clampFoodX(left) {
       const { scene } = getEls();
       if (!scene) return left;
       return Math.max(8, Math.min(scene.clientWidth - 52, left));
     }
 
-    // Convert a pointer release position into the local x-position for the dropped food.
     function getDropLeft(pointerX) {
       const { scene } = getEls();
       if (!scene) return 8;
@@ -273,7 +260,6 @@
       return clampFoodX(pointerX - sceneRect.left - 22);
     }
 
-    // Plain clicks spawn the food near the pet's mouth instead of at the pointer.
     function getDefaultSpawnLeft() {
       const { scene } = getEls();
       const petRect = getPetRectInScene();
@@ -314,8 +300,6 @@
 
           sceneFood.addEventListener("transitionend", onEnd);
           window.requestAnimationFrame(() => {
-            // Start the CSS transition on the next frame so the browser sees
-            // a real "from" position before we move the item to the floor.
             sceneFood.classList.add("is-dropping");
             sceneFood.style.top = `${floorTop}px`;
           });
@@ -330,7 +314,6 @@
       const petRect = getPetRectInScene();
       if (!scene || !petRect) return null;
 
-      // Always start from a clean state so multiple egg effects never stack.
       removeSceneFood();
       removeEggWarmingScene();
 
@@ -344,8 +327,6 @@
       const powderStartX = petRect.left + petRect.width * 0.5;
       const powderEndY = petRect.top + petRect.height * 0.48;
 
-      // Build a fixed number of particles up front so the effect reads as a
-      // short shower rather than a continuous emitter.
       scenePowderEls = Array.from({ length: 16 }, (_, index) => {
         const particle = document.createElement("span");
         const drift = (Math.random() * 34) - 17;
@@ -386,11 +367,9 @@
       const nextOffsetX = Math.max(-90, Math.min(90, targetCenterX - currentCenterX));
       const durationMs = getTravelDurationMs(nextOffsetX);
 
-      // Facing is based on direction of travel, then the translation animates separately.
       petSprite.classList.add("is-walking");
       setPetFacing(nextOffsetX);
       petSprite.style.transition = `translate ${durationMs}ms linear`;
-      // Force the browser to commit the starting pose before we move the pet.
       petSprite.getBoundingClientRect();
       setPetOffset(nextOffsetX, 0);
 
@@ -412,7 +391,6 @@
       petSprite.classList.add("is-walking");
       setPetFacing(-currentOffset);
       petSprite.style.transition = `translate ${durationMs}ms linear`;
-      // Same forced layout as walk-to-food so the first return animation does not collapse.
       petSprite.getBoundingClientRect();
       setPetOffset(0, 0);
 
@@ -422,12 +400,10 @@
       petSprite.classList.remove("is-walking");
     }
 
-    // The jump itself is CSS-driven; JS only toggles classes and times the hearts.
     async function playHappyReaction({ showHearts = true, showJump = true } = {}) {
       const { hero, petSprite } = getEls();
       if (!hero || !petSprite) return;
 
-      // Removing then re-adding the classes guarantees the keyframe restarts cleanly.
       hero.classList.remove("is-happy-jump");
       petSprite.classList.remove("is-happy");
       void hero.offsetWidth;
@@ -447,7 +423,6 @@
       petSprite.classList.remove("is-happy");
     }
 
-    // Firestore transaction: inventory decrement and happiness update must commit together.
     async function consumeFood(inventoryItem, catalogItem) {
       const db = getDb();
       const uid = getUid();
@@ -524,8 +499,6 @@
         };
       });
 
-      // Keep local caches aligned with the transaction result so the UI updates
-      // immediately instead of waiting for another Firestore read.
       const storagePayload = {
         [LAST_FED_KEY]: result.nextLastFedTimeMs,
         [HAPPINESS_STORAGE_KEY]: result.nextHappiness,
@@ -541,37 +514,31 @@
       return true;
     }
 
-    // Normal foods default to baby/adult only. Special items can override that with usableStages.
     function canUseItem(catalogItem) {
+      const stage = getCurrentStage();
+      if (!stage) {
+        return false;
+      }
+
       if (getCurrentHappinessPercent() <= 0) {
         return false;
       }
 
-      const stage = getCurrentStage();
-      const allowedStages = Array.isArray(catalogItem.usableStages)
-        ? catalogItem.usableStages.map((value) => String(value).toLowerCase())
-        : null;
-
-      if (!allowedStages) {
-        return stage === "baby" || stage === "adult";
+      if (catalogItem?.id === "food-magicpowder") {
+        return stage === "egg";
       }
 
-      return allowedStages.includes(stage);
+      return stage !== "egg";
     }
 
     function syncFoodSlotState(button, catalogItem) {
       const usable = canUseItem(catalogItem);
       button.classList.toggle("is-unusable", !usable);
+      button.disabled = !usable;
       button.setAttribute("aria-disabled", usable ? "false" : "true");
       return usable;
     }
 
-    // Full feeding flow:
-    // 1. lock interaction
-    // 2. spawn the scene effect
-    // 3. kick off the backend consume work
-    // 4. run pet animation
-    // 5. clean up / unlock
     async function runFeedingSequence(
       inventoryItem,
       catalogItem,
@@ -605,7 +572,6 @@
           : await spawnSceneFood(imageSrc, spawnLeft, shouldDrop);
         if (!sceneFood) return;
 
-        // Start the backend update immediately, but do not block the walk/jump animation on it.
         const consumePromise = feedable
           ? consumeFood(inventoryItem, catalogItem)
           : Promise.resolve(true);
@@ -659,7 +625,6 @@
       return pointerX >= rect.left && pointerX <= rect.right && pointerY >= rect.top && pointerY <= rect.bottom;
     }
 
-    // Decide whether the interaction was a click or a real drag/drop when the pointer is released.
     async function handlePointerUp(event) {
       if (!dragState) return;
 
@@ -693,7 +658,6 @@
       );
     }
 
-    // Drag starts only after the pointer has moved far enough from the initial press.
     function handlePointerMove(event) {
       if (!dragState) return;
 
@@ -712,7 +676,6 @@
       positionDragGhost(dragState.ghost, event.clientX, event.clientY);
     }
 
-    // The page renders the button; this method adds the Food-page-specific interaction behavior.
     function attachFoodSlot(button, inventoryItem, catalogItem) {
       const recovery = Number(
         inventoryItem.recoveryAmount ?? catalogItem.recoveryAmount ?? 0
@@ -775,6 +738,7 @@
 
     return {
       attachFoodSlot,
+      syncFoodSlotState,
       resetPetPose,
     };
   }

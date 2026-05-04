@@ -222,12 +222,26 @@
     try {
       const snap = await db.collection('users').doc(uid).collection('inventory').get();
       ownedAccessoryIds.clear();
+      const accessoryInventorySnapshot = [];
       snap.forEach((doc) => {
         const data = doc.data() || {};
         if (data.category === 'Accessory') {
           ownedAccessoryIds.add(doc.id);
+          accessoryInventorySnapshot.push({
+            id: doc.id,
+            category: data.category,
+            quantity: Number(data.quantity ?? 0) || 0,
+            purchasedAtMs:
+              typeof data.purchasedAt?.toMillis === 'function'
+                ? data.purchasedAt.toMillis()
+                : Number(data.purchasedAt ?? data.purchasedAtMs ?? 0) || 0,
+          });
         }
       });
+
+      if (typeof storageSet === 'function') {
+        await storageSet({ accessoryInventorySnapshot });
+      }
     } catch (e) {
       console.error('Error fetching owned accessories:', e);
     }

@@ -43,14 +43,26 @@
   }
 
   var PET_DEFAULT_NAMES = {
-    Bat: 'Cubic Bat',
-    Cat: 'Cubic Cat',
-    Fox: 'Cubic Fox',
-    Fish: 'Cubic Fish',
-    Frog: 'Cubic Frog',
-    Wolf: 'Cubic Wolf',
-    Giraffe: 'Cubic Giraffe',
+    Bat:             'Cubic Bat',
+    Cat:             'Cubic Cat',
+    Fish:            'Cubic Fish',
+    Fox:             'Cubic Fox',
+    Frog:            'Cubic Frog',
+    Jaguatirica:     'Cubic Jaguatirica',
+    Wolf:            'Cubic Wolf',
+    Giraffe:         'Cubic Giraffe',
     MicoLeaoDourado: 'Mico Leão Dourado'
+  };
+
+  var SINGLE_ROW_PETS = { Fish: true, Jaguatirica: true };
+
+  var ACCESSORY_SUFFIX = {
+    'acc-greyhat':       'GreyHat',
+    'acc-brownhat':      'BrownHat',
+    'acc-strawhat':      'StrawHat',
+    'acc-tophat':        'TopHat',
+    'acc-santahat':      'SantaHat',
+    'acc-leprechaunhat': 'LeprechaunHat'
   };
 
   function getPetDisplayName(petData) {
@@ -151,7 +163,14 @@
     var profileColor = (userData && userData.profileColor) || '#d9d9d9';
     var petRef = (petData && petData.petRef) || 'Cat';
     var petStage = (petData && petData.stage) || 'Adult';
+    var equippedItemId = (petData && petData.equippedItemId) || null;
     var petInfo = getPetPath(petRef, petStage);
+
+    // Use hat spritesheet if equipped and it's an adult
+    var hatSuffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
+    if (hatSuffix && normalizePetStage(petStage) === 'adult') {
+      petInfo = { src: '../../assets/spritesheets/Cubic' + petRef + hatSuffix + '.png', isEgg: false };
+    }
 
     if (usernameEl) {
       usernameEl.textContent = username;
@@ -176,6 +195,10 @@
       spriteEl.setAttribute('role', 'img');
       spriteEl.setAttribute('aria-label', username + ' active pet');
       spriteEl.style.backgroundImage = 'url("' + petInfo.src + '")';
+      if (SINGLE_ROW_PETS[petRef] && !hatSuffix) {
+        spriteEl.style.backgroundSize     = '700% 100%';
+        spriteEl.style.backgroundPosition = '0% 0%';
+      }
       avatarEl.appendChild(spriteEl);
     }
 

@@ -29,6 +29,9 @@
   --color-home-black: #111;
   --color-home-status-text: white;
   --color-home-status-text-border: black;
+  --home-pet-baby-size: 150px;
+  --home-pet-adult-size: 150px;
+  --home-pet-offset-y: -30px;
 }
 
 body {
@@ -680,10 +683,12 @@ body.hidden-on-load .popup-layout {
 
 /* Pet Sprite */
 .home-hero-pet {
-  width: 188px;
-  aspect-ratio: 21 / 16;
+  width: var(--home-pet-baby-size);
+  aspect-ratio: 21 / 32;
   background-repeat: no-repeat;
   image-rendering: pixelated;
+  background-position: 0% 0%;
+  transform: translateY(var(--home-pet-offset-y));
 
   /* Add floor shadow */
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
@@ -714,6 +719,10 @@ body.hidden-on-load .popup-layout {
     brightness(0.82)
     contrast(0.9)
     drop-shadow(0 12px 18px rgba(0, 0, 0, 0.22));
+}
+
+.home-hero-pet.stage-adult {
+  width: var(--home-pet-adult-size);
 }
 
 .home-hero-pet.stage-baby,
