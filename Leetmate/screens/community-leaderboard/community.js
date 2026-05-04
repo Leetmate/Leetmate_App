@@ -10,9 +10,27 @@
 (function () {
   'use strict';
 
-  //TODO: get all of the documents in trophies and store them to an array?
   const db = firebase.firestore();
-  const newUsernameRef = db.collection("trophies");
+  let ascendingOrderTrophies = [];
+  async function getTrophiesList() {
+    try {
+      const snapshot = await db.collection("trophies").orderBy("trophy", "desc").get();
+
+      if (snapshot.empty)
+      {
+        console.log("No matching documents found.");
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        ascendingOrderTrophies.push(doc.data());
+      });
+    } catch (error) {
+      console.error("Error getting trophy list:", error.message);
+    }
+
+    //console.log(ascendingOrderTrophies);
+  }
 
   var MOCK_LEADERBOARD = [
     {
@@ -133,12 +151,13 @@
   function buildLeaderboardCard(entry, rank) {
     var li = document.createElement('li');
     var interactive = entry.uid && String(entry.uid).indexOf('mock-') !== 0;
+    //var interactive = entry.uid;
     li.className = 'leaderboard-card';
     li.classList.add(interactive ? 'leaderboard-card--interactive' : 'leaderboard-card--static');
     li.setAttribute(
       'aria-label',
       'Rank ' + rank + ': ' + (entry.username || 'Player') + ', ' +
-        Number(entry.trophy || 0).toLocaleString() + ' trophies'
+      Number(entry.trophy || 0).toLocaleString() + ' trophies'
     );
 
     var avatar = document.createElement('div');
@@ -198,7 +217,8 @@
   function render(entries) {
     if (!leaderboardList || !leaderboardLoading || !leaderboardEmpty) return;
 
-    var sorted = (entries || []).slice().sort(compareEntries);
+    //var sorted = (entries || []).slice().sort(compareEntries);
+    var sorted = entries;
 
     leaderboardLoading.classList.add('hidden');
     if (!sorted.length) {
@@ -215,14 +235,21 @@
     });
   }
 
-  function loadLeaderboard() {
+  async function loadLeaderboard() {
+    await getTrophiesList();
+
     leaderboardLoading.classList.remove('hidden');
     leaderboardList.classList.add('hidden');
     leaderboardEmpty.classList.add('hidden');
 
     /* Simulate async fetch — replace with Firestore snapshot when backend exists */
     window.setTimeout(function () {
+      console.log(MOCK_LEADERBOARD);
       render(MOCK_LEADERBOARD);
+    }, 280);
+
+    window.setTimeout(function () {
+      render(ascendingOrderTrophies);
     }, 280);
   }
 
