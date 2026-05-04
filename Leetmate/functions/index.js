@@ -41,38 +41,27 @@ async function verifyFirebaseUser(req) {
 }
 
 // Define catalog of products for checkout session
+// Connected to Stripe by priceId 
 const PREMIUM_PRODUCT = {
   purchaseType: "premium",
-  unitAmount: 399,
-  currency: "usd",
-  name: "LeetMate Premium",
-  description: "Unlock extra XP, coins, themes, and exclusive rewards",
+  priceId: "price_1TR2skKTMSK0DShxuWJrETdF",
 };
 
 const COIN_PACKAGES = {
   coins_100: {
     purchaseType: "coins",
-    coinAmount: 50,
-    unitAmount: 99,
-    currency: "usd",
-    name: "50 LeetMate Coins",
-    description: "Coin pack for LeetMate",
+    priceId: "price_1TTB7ZKTMSK0DShx73uJdwts",
+    coinAmount: 100
   },
-  coins_250: {
+  coins_300: {
     purchaseType: "coins",
-    coinAmount: 150,
-    unitAmount: 199,
-    currency: "usd",
-    name: "150 LeetMate Coins",
-    description: "Coin pack for LeetMate",
+    priceId: "price_1TTB7xKTMSK0DShxalZisV5C",
+    coinAmount: 300
   },
-  coins_700: {
+  coins_1000: {
     purchaseType: "coins",
-    coinAmount: 500,
-    unitAmount: 499,
-    currency: "usd",
-    name: "500 LeetMate Coins",
-    description: "Coin pack for LeetMate",
+    priceId: "price_1TTB8TKTMSK0DShxA7B81oy5",
+    coinAmount: 1000
   },
 };
 
@@ -127,26 +116,28 @@ exports.createCheckoutSession = onRequest(
         metadata.coinAmount = String(product.coinAmount);
       }
 
+      // Set success url based on purchase type 
+      let successUrl;
+      if (product.purchaseType === "premium") {
+        successUrl =
+          "https://leetmate-b4182.web.app/stripe-premium-success.html?session_id={CHECKOUT_SESSION_ID}";
+      } else if (product.purchaseType === "coins") {
+        successUrl =
+          "https://leetmate-b4182.web.app/stripe-coins-success.html?session_id={CHECKOUT_SESSION_ID}";
+      }
+
       // Create a checkout session using Stripe API
       const session = await stripe.checkout.sessions.create({
         mode: "payment", // one-time payment
         customer_email: email,
         line_items: [
           {
-            price_data: {
-              currency: product.currency,
-              product_data: {
-                name: product.name,
-                description: product.description,
-              },
-              unit_amount: product.unitAmount,
-            },
+            price: product.priceId,
             quantity: 1,
           },
         ],
         metadata,
-        success_url:
-          "https://leetmate-b4182.web.app/stripe-success.html?session_id={CHECKOUT_SESSION_ID}",
+        success_url: successUrl,
         cancel_url:
           "https://leetmate-b4182.web.app/stripe-cancel.html",
       });
