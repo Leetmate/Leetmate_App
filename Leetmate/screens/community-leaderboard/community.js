@@ -14,7 +14,13 @@
   let ascendingOrderTrophies = [];
   async function getTrophiesList() {
     try {
+      //works
       const snapshot = await db.collection("trophies").orderBy("trophy", "desc").get();
+
+      /*const snapshot = await db.collection("trophies")
+        .orderBy("lastUpdated", "asc")
+        .orderBy("trophy", "desc")
+        .get();*/
 
       if (snapshot.empty)
       {
@@ -29,7 +35,7 @@
       console.error("Error getting trophy list:", error.message);
     }
 
-    //console.log(ascendingOrderTrophies);
+    console.log(ascendingOrderTrophies);
   }
 
   var MOCK_LEADERBOARD = [
