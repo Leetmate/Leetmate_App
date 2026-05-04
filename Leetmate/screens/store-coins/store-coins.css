@@ -264,6 +264,13 @@ body {
   animation: stone-shine 4s infinite ease-in-out;
 }
 
+/*Text for purchase in progress*/
+.coins-feedback {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 @keyframes stone-shine {
   0% {
     left: -150%;

@@ -52,6 +52,7 @@ const PREMIUM_PRODUCT = {
 const COIN_PACKAGES = {
   coins_100: {
     purchaseType: "coins",
+    //purchaseType: "coinsFifty",
     coinAmount: 50,
     unitAmount: 99,
     currency: "usd",
@@ -60,6 +61,7 @@ const COIN_PACKAGES = {
   },
   coins_250: {
     purchaseType: "coins",
+    //purchaseType: "coinsOneFifty",
     coinAmount: 150,
     unitAmount: 199,
     currency: "usd",
@@ -68,6 +70,7 @@ const COIN_PACKAGES = {
   },
   coins_700: {
     purchaseType: "coins",
+    //purchaseType: "coinsFiveHun",
     coinAmount: 500,
     unitAmount: 499,
     currency: "usd",
