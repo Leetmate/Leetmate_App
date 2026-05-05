@@ -412,3 +412,40 @@
     init();
   }
 })();
+
+// Remove promotion premium banner if user already has premium 
+const storeCard = document.querySelector(".store-card");
+function applyStorePremiumUI(isPremium) {
+  storeCard?.classList.toggle("is-premium", isPremium);
+}
+
+/* Sync logic */
+async function syncPremiumState() {
+  // 1. FAST: show cached value first
+  const localPremium = await window.LeetmatePremium.getLocalPremium();
+  applyStorePremiumUI(localPremium);
+
+  // 2. SLOW: fetch real value from Firestore
+  const firestorePremium = await window.LeetmatePremium.getFirestorePremium();
+  if (firestorePremium === null) return;
+
+  // 3. Update local storage if different 
+  if (localPremium !== firestorePremium) {
+    await window.LeetmatePremium.setLocalPremium(firestorePremium);
+  }
+
+  // 4. Update UI 
+  applyStorePremiumUI(firestorePremium);
+}
+
+/* Run on auth */
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) return;
+  await syncPremiumState();
+});
+
+/* Premium button navigation */
+const premiumBtn = document.getElementById("prem-btn");
+premiumBtn?.addEventListener("click", () => {
+    window.location.href = "../premium/index.html";
+});

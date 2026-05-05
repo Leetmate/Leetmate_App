@@ -11,7 +11,8 @@
 </head>
 <body data-music-zone="evolve">
   <div class="evolution-screen">
-    <div id="top-banner" class="screen-banner evolution-top-banner hidden">      <div class="screen-banner__left"></div>
+    <div id="top-banner" class="screen-banner evolution-top-banner hidden">
+      <div class="screen-banner__left"></div>
       <div class="screen-banner__center">
         <h1 class="screen-banner__title">Your pet evolved!</h1>
       </div>
@@ -47,14 +48,14 @@
       <div id="active-pet" class="home-hero-pet hidden stage-baby"></div>
     </div>
 
-    <div id="bottom-banner" class="evolution-bottom-banner hidden">
-      <button id="home-btn" class="evolution-action-btn evolution-action-btn-secondary">
-        ← Return home
-      </button>
-      <button id="replay-btn" class="evolution-action-btn">
-        <img src="../../assets/icons/replay.png" class="btn-icon" />
-        Replay 
-      </button>
+    <button id="close-btn" class="evolution-close-btn" type="button" aria-label="Return home">
+      ×
+    </button>
+
+    <div id="stats-dialog" class="evolution-stats-dialog hidden">
+      <div class="evolution-dialog__inner evolution-stats-dialog__inner">
+        <div id="stats-grid" class="evolution-stats-grid"></div>
+      </div>
     </div>
   </div>
 
@@ -64,4 +65,5 @@
   <script src="../../features/shared/storage-helper.js"></script>
   <script src="../../features/pet/evolution-notify.js"></script>
   <script src="./evolution.js"></script>
+</body>
 </html>

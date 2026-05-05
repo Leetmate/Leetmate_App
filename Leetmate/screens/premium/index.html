@@ -6,7 +6,7 @@
     <script src="../../features/shared/theme-init.js"></script>
     <title>Leetmate - Premium</title>
     <link rel="stylesheet" href="../../styles/dark-theme.css" />
-    <link rel="stylesheet" href="../../styles/color-theme.css">
+    <link rel="stylesheet" href="../../styles/color-theme.css" />
     <link rel="stylesheet" href="../../styles/layout.css" />
     <link rel="stylesheet" href="../../styles/top-banner.css" />
     <link rel="stylesheet" href="premium.css" />
@@ -16,44 +16,123 @@
     <div class="popup-layout">
       <div class="popup-content">
         <div class="premium-card">
-          <div class="screen-banner">
-            <div class="screen-banner__left">
-              <button
-                type="button"
-                class="menu-btn"
-                id="back-btn"
-                aria-label="Back to previous page"
-              >
-                <img
-                  src="../../assets/icons/back-arrow.png"
-                  class="menu-icon"
-                  alt=""
-                />
+          <header class="premium-header">
+            <div class="header-left">
+              <button class="back-btn" id="back-btn" title="Back">
+                <span class="arrow-icon"></span>
               </button>
             </div>
-
-            <div class="screen-banner__center">
-              <h1 class="screen-banner__title account-title-main">Premium</h1>
-            </div>
-
-            <div class="screen-banner__right">
-              <button
-                type="button"
-                class="menu-btn nav-trigger"
-                id="nav-trigger"
-                aria-expanded="false"
-                aria-controls="nav-drawer"
-                aria-label="Open menu"
-              >
-                <img src="../../assets/icons/menu.png" class="menu-icon" alt="" />
-              </button>
-            </div>
-          </div>
+          
+            <h1 class="premium-title">
+              LeetMate<br />Premium
+            </h1>
+          
+            <div class="header-right"></div>
+          </header>
 
           <div class="premium-content">
-            <button class="premium-btn" id="prem-btn"> Get Premium! </button>
-            <p id="prem-feedback"> </p>
+            <div class="premium-info-box">
+              <div class="premium-text">
+                <div class="premium-header-row">
+                  <h1 id="prem-header">Go Premium & Unlock:</h1>
+
+                  <button
+                    type="button"
+                    class="premium-info-btn"
+                    id="premium-info-btn"
+                    aria-label="Compare free versus premium benefits"
+                  >
+                    <img
+                      src="../../assets/icons/info.svg"
+                      class="premium-info-icon"
+                      width="18"
+                      height="18"
+                      alt=""
+                    />
+                  </button>
+                
+                </div>                <ul>
+                  <li>⚡ More XP & Coins </li>
+                  <li>🎁 Bigger Milestone Rewards</li>
+                  <li>🎨 Color Themes </li>
+                  <li>🐾 Exclusive Pets & Accessories</li>
+                </ul>
+              </div>
+
+              <button class="premium-btn" id="prem-btn">$3.99</button>
+              <p id="prem-feedback" class="premium-feedback"></p>
+            </div>
+
+            <div class="premium-pet pet-left"></div>
+            <div class="premium-pet pet-right"></div>
+            <div class="premium-pet pet-extra pet-extra-left"></div>
+            <div class="premium-pet pet-extra pet-extra-right"></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="premium-info-modal"
+      class="premium-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="premium-info-title"
+      hidden
+    >
+      <div class="premium-modal__backdrop" tabindex="-1" aria-hidden="true"></div>
+
+      <div class="premium-modal__panel">
+        <button
+          type="button"
+          class="premium-modal__close"
+          id="premium-info-close"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <h2 id="premium-info-title" class="premium-modal__title">
+          Free vs Premium
+        </h2>
+
+        <div class="premium-modal__body">
+          <table class="premium-compare-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Free</th>
+                <th class="premium-col">Premium</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>First Daily LeetCode solve</td>
+                <td>🪙 80 coins<br />⚡ 10 XP</td>
+                <td class="premium-col">🪙 100 coins<br />⚡ 20 XP</td>
+              </tr>
+              <tr>
+                <td>Following LeetCode solves</td>
+                <td>🪙 20 coins<br />⚡ 5 XP</td>
+                <td class="premium-col">🪙 30 coins<br />⚡ 10 XP</td>
+              </tr>
+              <tr>
+                <td>Weekly rewards</td>
+                <td>🪙 100 coins<br />⚡ 30 XP</td>
+                <td class="premium-col">🪙 120 coins<br />⚡ 40 XP</td>
+              </tr>
+              <tr>
+                <td>Themes</td>
+                <td>⚪ Default<br>🌑 Dark</td>
+                <td class="premium-col">⚪ Default<br>🌑 Dark<br>🎨 Colors</td>
+              </tr>
+              <tr>
+                <td>Shop items</td>
+                <td>🐾 Standard pets & accessories</td>
+                <td class="premium-col">🌟 Exclusive pets & accessories</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -64,6 +143,7 @@
     <script src="../../scripts/firebase-config.js"></script>
     <script src="../../features/progression/xp.js"></script>
     <script src="../../features/progression/streak.js"></script>
+    <script src="../../features/progression/premium-state.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
     <script src="premium.js"></script>
   </body>
