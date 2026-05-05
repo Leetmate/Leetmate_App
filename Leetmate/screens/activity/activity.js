@@ -544,10 +544,7 @@ function applyPremiumUI(isPremium) {
 
 firebase.auth().onAuthStateChanged(async (user) => {
   if (!user) return;
-  const doc = await firebase.firestore()
-    .collection("users")
-    .doc(user.uid)
-    .get();
-  const isPremium = !!doc.data()?.premium;
+  const isPremium = await window.LeetmatePremium.getFirestorePremium();
+  if (isPremium === null) return;
   applyPremiumUI(isPremium);
 });

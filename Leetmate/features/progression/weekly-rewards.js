@@ -5,6 +5,9 @@ const WEEKLY_STREAK_DAYS = 7;
 const WEEKLY_STREAK_COIN_REWARD = 100;
 const WEEKLY_STREAK_XP_REWARD = 30;
 
+const PREMIUM_WEEKLY_STREAK_COIN_REWARD = 120;
+const PREMIUM_WEEKLY_STREAK_XP_REWARD = 40;
+
 let _weeklyClaimInFlight = false;
 let _weeklyBannerTimer = null;
 let _weeklyBannerHideTimer = null;
@@ -227,12 +230,26 @@ async function claimWeeklyReward(db, uid, dateKey, state) {
     const previousLevel =
       typeof getLocalLevel === "function" ? await getLocalLevel() : null;
 
+    // Select weekly reward value based on premium state
+    let isPremium = false;
+    if (window.LeetmatePremium) {
+      isPremium = (await window.LeetmatePremium.getFirestorePremium()) === true;
+    }
+
+    const weeklyCoinReward = isPremium
+      ? PREMIUM_WEEKLY_STREAK_COIN_REWARD
+      : WEEKLY_STREAK_COIN_REWARD;
+
+    const weeklyXpReward = isPremium
+      ? PREMIUM_WEEKLY_STREAK_XP_REWARD
+      : WEEKLY_STREAK_XP_REWARD;
+
     if (typeof addCoins === "function") {
-      await addCoins(WEEKLY_STREAK_COIN_REWARD);
+      await addCoins(weeklyCoinReward);
     }
 
     if (typeof addXP === "function") {
-      await addXP(WEEKLY_STREAK_XP_REWARD);
+      await addXP(weeklyXpReward);
     }
 
     if (db && uid) {
@@ -279,8 +296,8 @@ async function claimWeeklyReward(db, uid, dateKey, state) {
 
     showWeeklyRewardBanner(
       formatWeeklyRewardBannerMessage(
-        WEEKLY_STREAK_COIN_REWARD,
-        WEEKLY_STREAK_XP_REWARD
+        weeklyCoinReward,
+        weeklyXpReward
       )
     );
 
