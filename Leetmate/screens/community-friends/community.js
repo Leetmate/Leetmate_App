@@ -124,6 +124,43 @@
   var searchDebounce  = null;
   var sentRequestUids = {}; // UIDs we sent a request to this session
   var friendUidSet    = {}; // UIDs that are already friends
+  var SENT_REQUESTS_STORAGE_KEY = 'leetmate_sent_friend_requests';
+
+  function getSentRequestsMap() {
+    try {
+      var raw = window.localStorage.getItem(SENT_REQUESTS_STORAGE_KEY);
+      if (!raw) return {};
+      var parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function markSentRequest(currentUid, targetUid) {
+    if (!currentUid || !targetUid) return;
+    var map = getSentRequestsMap();
+    if (!map[currentUid] || typeof map[currentUid] !== 'object') {
+      map[currentUid] = {};
+    }
+    map[currentUid][targetUid] = true;
+    try {
+      window.localStorage.setItem(SENT_REQUESTS_STORAGE_KEY, JSON.stringify(map));
+    } catch (error) {
+      // Ignore storage failure.
+    }
+  }
+
+  function hydrateSentRequestUids(currentUid) {
+    sentRequestUids = {};
+    if (!currentUid) return;
+    var map = getSentRequestsMap();
+    var mine = map[currentUid];
+    if (!mine || typeof mine !== 'object') return;
+    Object.keys(mine).forEach(function (uid) {
+      if (mine[uid]) sentRequestUids[uid] = true;
+    });
+  }
 
   // ── Navigation ────────────────────────────────────────
   if (backBtn) {
@@ -728,6 +765,7 @@
       })
       .then(function () {
         sentRequestUids[targetData.uid] = true;
+        markSentRequest(currentUid, targetData.uid);
         btn.textContent = 'Requested';
         showAddMsg('Request sent to ' + targetData.username + '!', false);
       })
@@ -758,6 +796,7 @@
         window.location.href = '../start/index.html';
         return;
       }
+      hydrateSentRequestUids(user.uid);
       loadFriends(user.uid);
       loadBadge(user.uid);
     });
