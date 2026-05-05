@@ -9,6 +9,7 @@
     default: "LeetmateBGMusic.mp3",
     community: "communityMusic.mp3",
     evolve: "evolve.mp3",
+    battle: "battleMusic.mp3",
   };
 
   var STORAGE_VOLUME = "leetmate_music_volume";
@@ -24,6 +25,9 @@
   var audio = new Audio(src);
   audio.loop = true;
   audio.preload = "auto";
+  var battleAudio = new Audio(new URL(TRACKS.battle, base).href);
+  battleAudio.loop = true;
+  battleAudio.preload = "auto";
 
   var snapshot = null;
   try {
@@ -60,14 +64,15 @@
     return Math.max(0, Math.min(1, x));
   }
 
-  function applyToAudio(volume01, muted) {
+  function applyToAudio(audioEl, volume01, muted) {
     var v = clamp01(volume01);
-    audio.volume = muted ? 0 : v;
+    audioEl.volume = muted ? 0 : v;
   }
 
   function loadPrefsAndApply(cb) {
     if (typeof chrome === "undefined" || !chrome.storage || !chrome.storage.local) {
-      applyToAudio(DEFAULT_VOLUME, false);
+      applyToAudio(audio, DEFAULT_VOLUME, false);
+      applyToAudio(battleAudio, DEFAULT_VOLUME, false);
       if (cb) cb();
       return;
     }
@@ -77,7 +82,8 @@
           ? items[STORAGE_VOLUME]
           : DEFAULT_VOLUME;
       var muted = !!items[STORAGE_MUTED];
-      applyToAudio(vol, muted);
+      applyToAudio(audio, vol, muted);
+      applyToAudio(battleAudio, vol, muted);
       if (cb) cb();
     });
   }
@@ -112,6 +118,17 @@
   window.LeetmateBGMusic = {
     pause:  function () { audio.pause(); },
     resume: function () { tryPlay(); },
+    startBattle: function () {
+      audio.pause();
+      battleAudio.currentTime = 0;
+      var p = battleAudio.play();
+      if (p && typeof p.catch === "function") p.catch(function () {});
+    },
+    stopBattle: function () {
+      battleAudio.pause();
+      battleAudio.currentTime = 0;
+      tryPlay();
+    },
   };
 
   loadPrefsAndApply(function () {

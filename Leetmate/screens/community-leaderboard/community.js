@@ -24,6 +24,8 @@
   }*/
 
   const db = firebase.firestore();
+  var auth = firebase.auth();
+  var currentUserUid = '';
   let ascendingOrderTrophies = [];
   async function getTrophiesList() {
     let petIndex = 0;
@@ -41,8 +43,9 @@
 
       snapshot.forEach(doc => {
         //console.log(typeof(doc));
-
-        ascendingOrderTrophies.push(doc.data());
+        var userData = doc.data() || {};
+        if (!userData.uid) userData.uid = doc.id;
+        ascendingOrderTrophies.push(userData);
 
         //extract the type of pet the active pet is
         petType = doc.data().activePetId.split("_")[0];
@@ -226,7 +229,9 @@ function resolveSpriteSrc(petRef, equippedItemId) {
   function goToPublicProfile(uid) {
     if (!uid || String(uid).indexOf('mock-') === 0) return;
     window.location.href =
-      '../community-friends-profile/index.html?uid=' + encodeURIComponent(uid);
+      '../community-friends-profile/index.html?uid=' +
+        encodeURIComponent(uid) +
+        '&returnTo=leaderboard';
   }
 
   function buildLeaderboardCard(entry, rank) {
@@ -235,6 +240,9 @@ function resolveSpriteSrc(petRef, equippedItemId) {
     //var interactive = entry.uid;
     li.className = 'leaderboard-card';
     li.classList.add(interactive ? 'leaderboard-card--interactive' : 'leaderboard-card--static');
+    if (currentUserUid && String(entry.uid || '') === String(currentUserUid)) {
+      li.classList.add('leaderboard-card--me');
+    }
     li.setAttribute(
       'aria-label',
       'Rank ' + rank + ': ' + (entry.username || 'Player') + ', ' +
@@ -340,6 +348,9 @@ function resolveSpriteSrc(petRef, equippedItemId) {
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    loadLeaderboard();
+    auth.onAuthStateChanged(function (user) {
+      currentUserUid = user && user.uid ? String(user.uid) : '';
+      loadLeaderboard();
+    });
   });
 })();

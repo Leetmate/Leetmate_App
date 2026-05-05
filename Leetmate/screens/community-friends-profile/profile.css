@@ -95,7 +95,7 @@ body {
   justify-content: flex-start;
   gap: var(--profile-stack-gap);
   min-height: 0;
-  padding: 0 4px 8px;
+  padding: 0 4px 16px;
 }
 
 .friend-profile-loading {
@@ -260,6 +260,29 @@ body {
   color: var(--color-comm-fri-fri-pro-un);
 }
 
+/* Compact mode is used only when the profile shows add-friend actions. */
+.friend-stats-grid--compact {
+  width: 92%;
+  max-width: 320px;
+  gap: 12px;
+}
+
+.friend-stats-grid--compact .friend-stat-tile {
+  border-width: 2px;
+  border-radius: 14px;
+  box-shadow: 0 3px 0 var(--color-comm-fri-body);
+  padding: 8px 8px;
+}
+
+.friend-stats-grid--compact .friend-stat-label {
+  font-size: 12px;
+}
+
+.friend-stats-grid--compact .friend-stat-value {
+  margin-top: 4px;
+  font-size: 24px;
+}
+
 .friend-profile-error {
   margin: 8px 10px 0;
   padding: 10px;
@@ -269,6 +292,73 @@ body {
   border-radius: 14px;
   color: var(--color-comm-fri-fri-pro-err);
   font-weight: 700;
+}
+
+.friend-profile-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: -8px;
+  margin-bottom: 4px;
+}
+
+.friend-profile-add-btn {
+  min-width: 132px;
+  padding: 7px 12px;
+  font-family: "Lilita One", cursive;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  color: #fff;
+  background: linear-gradient(to bottom, #5dba5a 0%, #3d8c3a 100%);
+  border: 3px solid var(--color-comm-fri-body);
+  border-radius: 14px;
+  box-shadow: 0 3px 0 var(--color-comm-fri-body);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.25);
+}
+
+.friend-profile-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--color-comm-fri-body);
+  filter: brightness(1.08);
+}
+
+.friend-profile-add-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--color-comm-fri-body);
+}
+
+.friend-profile-add-btn:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+  box-shadow: 0 2px 0 var(--color-comm-fri-body);
+}
+
+.friend-profile-action-msg {
+  margin: 0;
+  min-height: 32px;
+  max-width: 310px;
+  padding: 0 8px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #76470e;
+  word-break: break-word;
+}
+
+.friend-profile-action-msg--success {
+  color: #1f6b35;
+  font-weight: 600;
+}
+
+.friend-profile-action-msg--error {
+  color: #8b2f2f;
+  font-weight: 600;
 }
 
 .hidden {
