@@ -214,11 +214,6 @@ body {
   overflow: hidden;
 }
 
-/* Hide promo banner when user is premium */
-.store-card.is-premium .promo-banner {
-  display: none;
-}
-
 /* Corner Nails Class-based Positioning */
 .banner-nail {
   position: absolute;
@@ -729,5 +724,90 @@ body {
   color: var(--color-store-acce-store-buy-btn-disabled);
   cursor: not-allowed;
   box-shadow: none;
+}
+
+
+/* Premium banner upgrade */
+.store-card.is-premium .promo-banner {
+  background-image: linear-gradient(
+    rgba(255, 248, 236, 0.55),
+    rgba(255, 248, 236, 0.55)
+    ),
+    url("../../assets/backgrounds/bg_store-banner.jpg");
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sheen overlay */
+.store-card.is-premium .promo-banner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: banner-sheen 6s infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Animation */
+@keyframes banner-sheen {
+  0% {left: -150%;}
+  20% {left: 150%;}
+  100% {left: 150%;}
+}
+
+/* Replace button with two pets */
+.store-card.is-premium .premium-center-pets {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* Make middle pets face each other */
+.store-card.is-premium .premium-center-pets .banner-pet-wrap:first-child .banner-pet {
+  transform: scaleX(-1);
+}
+
+.store-card.is-premium .premium-center-pets .banner-pet-wrap:last-child .banner-pet {
+  transform: scaleX(1);
+}
+
+/* Move center-left pet more left */
+.store-card.is-premium .premium-center-pets .banner-pet-wrap:first-child {
+  margin-left: -10px;
+  margin-right: 10px;
+}
+
+/* Move center-right pet more right */
+.store-card.is-premium .premium-center-pets .banner-pet-wrap:last-child {
+  margin-left: 10px;
+  margin-right: -10px;
+}
+
+/* New pets */
+.CubicGiraffe {
+  background-image: url("../../assets/spritesheets/CubicGiraffe.png");
+}
+
+.CubicLoboGuara {
+  background-image: url("../../assets/spritesheets/CubicLoboGuara.png");
+}
+
+.CubicFlamingo {
+  background-image: url("../../assets/spritesheets/CubicFlamingo.png");
+}
+
+.CubicElephant {
+  background-image: url("../../assets/spritesheets/CubicElephant.png");
 }
 
