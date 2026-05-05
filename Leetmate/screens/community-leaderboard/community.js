@@ -9,18 +9,16 @@
  */
 (function () {
   'use strict';
-
   const db = firebase.firestore();
   let ascendingOrderTrophies = [];
   async function getTrophiesList() {
+    let petIndex = 0;
     try {
-      //works
-      const snapshot = await db.collection("users").orderBy("trophy", "desc").get();
-
-      /*const snapshot = await db.collection("trophies")
-        .orderBy("lastUpdated", "asc")
+      //works. create index first
+      const snapshot = await db.collection("users")
         .orderBy("trophy", "desc")
-        .get();*/
+        .orderBy("username", "asc")
+        .get();
 
       if (snapshot.empty)
       {
@@ -30,6 +28,16 @@
 
       snapshot.forEach(doc => {
         ascendingOrderTrophies.push(doc.data());
+
+        //extract the type of pet the active pet is
+        let petType = doc.data().activePetId.split("_")[0];
+        //let petType = db.collection("users").(doc.data().uid).collection("pets").doc(doc.data().activePetId).petRef;
+        console.log(petType);
+
+        //add the petRef field to the object in the array so following functions work
+        ascendingOrderTrophies[petIndex].petRef = petType;
+        petIndex++;
+        //console.log(typeof(doc.data()));
       });
     } catch (error) {
       console.error("Error getting trophy list:", error.message);
@@ -168,6 +176,8 @@
 
     var avatar = document.createElement('div');
     avatar.className = 'leaderboard-card__avatar';
+    //let petRef = db.collection("users").doc(entry.uid).collection("pets").doc(entry.activePetId).get();
+    //applyAvatarSprite(avatar, entry.petRef, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
     applyAvatarSprite(avatar, entry.petRef, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
 
     var name = document.createElement('span');
