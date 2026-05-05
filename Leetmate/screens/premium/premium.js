@@ -101,7 +101,7 @@ backBtn?.addEventListener("click", () => {
   } else {
     window.location.href = "../home/index.html";
   }
-});
+}); 
 
 // ---- Free v.s. Premium Benefits Info Modal ----
 function initPremiumInfoModal() {

@@ -2,22 +2,25 @@
   'use strict';
 
   // ═══════════════════════════════════════════════════
-  //  BATTLE MUSIC — managed independently of bg-music
+  //  BACKGROUND MUSIC
   // ═══════════════════════════════════════════════════
-  var battleAudio = new Audio('../../assets/audio/battleMusic.mp3');
-  battleAudio.loop    = true;
-  battleAudio.volume  = 0.14;
 
   function startBattleMusic() {
-    if (window.LeetmateBGMusic) window.LeetmateBGMusic.pause();
-    battleAudio.currentTime = 0;
-    battleAudio.play().catch(function () {});
+    if (!window.LeetmateBGMusic) return;
+    if (typeof window.LeetmateBGMusic.startBattle === 'function') {
+      window.LeetmateBGMusic.startBattle();
+      return;
+    }
+    window.LeetmateBGMusic.pause();
   }
 
   function stopBattleMusic() {
-    battleAudio.pause();
-    battleAudio.currentTime = 0;
-    if (window.LeetmateBGMusic) window.LeetmateBGMusic.resume();
+    if (!window.LeetmateBGMusic) return;
+    if (typeof window.LeetmateBGMusic.stopBattle === 'function') {
+      window.LeetmateBGMusic.stopBattle();
+      return;
+    }
+    window.LeetmateBGMusic.resume();
   }
 
   // ═══════════════════════════════════════════════════

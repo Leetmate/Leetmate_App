@@ -6,6 +6,7 @@
   var contentEl = document.querySelector('.friend-profile-content');
   var auth = null;
   var db = null;
+  var SENT_REQUESTS_STORAGE_KEY = 'leetmate_sent_friend_requests';
 
   function deriveLevel(userData) {
     if (!userData) return 1;
@@ -29,7 +30,14 @@
 
   if (backBtn) {
     backBtn.addEventListener('click', function () {
-      window.location.href = '../community-friends/index.html';
+      var params = new URLSearchParams(window.location.search || '');
+      var returnTo = params.get('returnTo');
+      if (returnTo === 'leaderboard') {
+        window.location.href = '../community-leaderboard/index.html';
+      } else {
+        // Default behavior stays as "back to friends".
+        window.location.href = '../community-friends/index.html';
+      }
     });
   }
 
@@ -42,6 +50,62 @@
     }
   }
 
+  function getReturnToFromQuery() {
+    try {
+      var params = new URLSearchParams(window.location.search || '');
+      return params.get('returnTo') || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
+  function getSentRequestsMap() {
+    try {
+      var raw = window.localStorage.getItem(SENT_REQUESTS_STORAGE_KEY);
+      if (!raw) return {};
+      var parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function markSentRequest(currentUid, targetUid) {
+    if (!currentUid || !targetUid) return;
+    var map = getSentRequestsMap();
+    if (!map[currentUid] || typeof map[currentUid] !== 'object') {
+      map[currentUid] = {};
+    }
+    map[currentUid][targetUid] = true;
+    try {
+      window.localStorage.setItem(SENT_REQUESTS_STORAGE_KEY, JSON.stringify(map));
+    } catch (error) {
+      // Ignore storage failures; UI still works for current view.
+    }
+  }
+
+  function clearSentRequest(currentUid, targetUid) {
+    if (!currentUid || !targetUid) return;
+    var map = getSentRequestsMap();
+    if (!map[currentUid] || typeof map[currentUid] !== 'object') return;
+    if (!Object.prototype.hasOwnProperty.call(map[currentUid], targetUid)) return;
+    delete map[currentUid][targetUid];
+    if (Object.keys(map[currentUid]).length === 0) {
+      delete map[currentUid];
+    }
+    try {
+      window.localStorage.setItem(SENT_REQUESTS_STORAGE_KEY, JSON.stringify(map));
+    } catch (error) {
+      // Ignore storage failures.
+    }
+  }
+
+  function hasSentRequest(currentUid, targetUid) {
+    if (!currentUid || !targetUid) return false;
+    var map = getSentRequestsMap();
+    return !!(map[currentUid] && map[currentUid][targetUid]);
+  }
+
   var PET_DEFAULT_NAMES = {
     Bat:             'Cubic Bat',
     Cat:             'Cubic Cat',
@@ -52,6 +116,18 @@
     Wolf:            'Cubic Wolf',
     Giraffe:         'Cubic Giraffe',
     MicoLeaoDourado: 'Mico Leão Dourado'
+  };
+
+  var PET_SPRITES = {
+    Bat:             '../../assets/spritesheets/CubicBatAdult.png',
+    Cat:             '../../assets/spritesheets/CubicCatAdult.png',
+    Fish:            '../../assets/spritesheets/CubicFishAdult.png',
+    Fox:             '../../assets/spritesheets/CubicFoxAdult.png',
+    Frog:            '../../assets/spritesheets/CubicFrogAdult.png',
+    Jaguatirica:     '../../assets/spritesheets/CubicJaguatiricaAdult.png',
+    Wolf:            '../../assets/spritesheets/CubicWolfAdult.png',
+    Giraffe:         '../../assets/spritesheets/CubicGiraffeAdult.png',
+    MicoLeaoDourado: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png',
   };
 
   var SINGLE_ROW_PETS = { Fish: true, Jaguatirica: true };
@@ -109,6 +185,37 @@
     };
   }
 
+  function resolveAdultSpriteSrc(petRef, equippedItemId) {
+    var normalizedRef = normalizePetRef(petRef);
+    var suffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
+    if (suffix) {
+      return '../../assets/spritesheets/Cubic' + normalizedRef + suffix + '.png';
+    }
+    return PET_SPRITES[normalizedRef] || '../../assets/spritesheets/CubicCatAdult.png';
+  }
+
+  function setSpriteBackgroundWithFallback(spriteEl, primarySrc, fallbackSrc) {
+    if (!spriteEl) return;
+
+    var primary = String(primarySrc || '');
+    var fallback = String(fallbackSrc || '');
+    if (!primary) {
+      spriteEl.style.backgroundImage = '';
+      return;
+    }
+
+    var probe = new Image();
+    probe.onload = function () {
+      spriteEl.style.backgroundImage = 'url("' + primary + '")';
+    };
+    probe.onerror = function () {
+      if (fallback) {
+        spriteEl.style.backgroundImage = 'url("' + fallback + '")';
+      }
+    };
+    probe.src = primary;
+  }
+
   function buildStatsGrid(stats) {
     var s = stats || buildStatsFromUser(null, 0);
     var items = [
@@ -163,13 +270,17 @@
     var profileColor = (userData && userData.profileColor) || '#d9d9d9';
     var petRef = (petData && petData.petRef) || 'Cat';
     var petStage = (petData && petData.stage) || 'Adult';
-    var equippedItemId = (petData && petData.equippedItemId) || null;
-    var petInfo = getPetPath(petRef, petStage);
+    var equippedItemId =
+      (petData && petData.equippedItemId) ||
+      (userData && userData.equippedItemId) ||
+      null;
+    var basePetInfo = getPetPath(petRef, petStage);
+    var petInfo = basePetInfo;
 
     // Use hat spritesheet if equipped and it's an adult
-    var hatSuffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
-    if (hatSuffix && normalizePetStage(petStage) === 'adult') {
-      petInfo = { src: '../../assets/spritesheets/Cubic' + petRef + hatSuffix + '.png', isEgg: false };
+    var normalizedStage = normalizePetStage(petStage);
+    if (normalizedStage === 'adult') {
+      petInfo = { src: resolveAdultSpriteSrc(petRef, equippedItemId), isEgg: false };
     }
 
     if (usernameEl) {
@@ -194,8 +305,8 @@
       spriteEl.className = 'friend-profile-avatar-sprite';
       spriteEl.setAttribute('role', 'img');
       spriteEl.setAttribute('aria-label', username + ' active pet');
-      spriteEl.style.backgroundImage = 'url("' + petInfo.src + '")';
-      if (SINGLE_ROW_PETS[petRef] && !hatSuffix) {
+      setSpriteBackgroundWithFallback(spriteEl, petInfo.src, basePetInfo.src);
+      if (SINGLE_ROW_PETS[petRef]) {
         spriteEl.style.backgroundSize     = '700% 100%';
         spriteEl.style.backgroundPosition = '0% 0%';
       }
@@ -217,7 +328,132 @@
     contentEl.appendChild(buildStatsGrid(stats));
   }
 
-  function loadFriendProfile(friendUid) {
+  function buildActionArea() {
+    var wrap = document.createElement('div');
+    wrap.className = 'friend-profile-actions';
+    return wrap;
+  }
+
+  function buildAddFriendButton(disabled, label) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'friend-profile-add-btn';
+    btn.textContent = label || 'Add Friend';
+    if (disabled) btn.disabled = true;
+    return btn;
+  }
+
+  function sendFriendRequest(currentUid, targetUid) {
+    return db.collection('users').doc(currentUid).get()
+      .then(function (meSnap) {
+        var meData = meSnap.exists ? meSnap.data() : {};
+        var myPetPromise = meData.activePetId
+          ? db.collection('users').doc(currentUid).collection('pets').doc(meData.activePetId).get()
+          : Promise.resolve(null);
+
+        return myPetPromise.then(function (petSnap) {
+          var myPetRef = (petSnap && petSnap.exists) ? petSnap.data().petRef : null;
+          var now = firebase.firestore.FieldValue.serverTimestamp();
+
+          return db.collection('users').doc(targetUid).collection('friendRequests').doc(currentUid).set({
+            fromUid: currentUid,
+            username: meData.username || '',
+            trophy: Number(meData.trophy || 0),
+            petRef: myPetRef || null,
+            sentAt: now,
+          });
+        });
+      });
+  }
+
+  function buildFriendActionState(currentUid, friendUid, returnTo) {
+    var fromLeaderboard = returnTo === 'leaderboard';
+    if (!fromLeaderboard || !currentUid || !friendUid || currentUid === friendUid) {
+      return Promise.resolve({
+        showAddButton: false,
+      });
+    }
+
+    return Promise.all([
+      db.collection('users').doc(currentUid).collection('friends').doc(friendUid).get(),
+      db.collection('users').doc(currentUid).collection('friendRequests').doc(friendUid).get(),
+    ]).then(function (snaps) {
+      var friendSnap = snaps[0];
+      var incomingSnap = snaps[1];
+
+      if (friendSnap.exists) {
+        clearSentRequest(currentUid, friendUid);
+        return { showAddButton: false };
+      }
+
+      if (hasSentRequest(currentUid, friendUid)) {
+        return {
+          showAddButton: true,
+          disabled: true,
+          label: 'Requested',
+          helperText: '',
+        };
+      }
+
+      if (incomingSnap.exists) {
+        return {
+          showAddButton: true,
+          disabled: true,
+          label: 'Pending',
+          helperText: 'This user already sent you a request. Check inbox.',
+        };
+      }
+
+      return {
+        showAddButton: true,
+        disabled: false,
+        label: 'Add Friend',
+        helperText: '',
+      };
+    });
+  }
+
+  function renderFriendAction(actionState, currentUid, friendUid) {
+    if (!contentEl || !actionState || !actionState.showAddButton) return;
+
+    var statsGridEl = contentEl.querySelector('.friend-stats-grid');
+    if (statsGridEl) statsGridEl.classList.add('friend-stats-grid--compact');
+
+    var actionWrap = buildActionArea();
+    var helper = document.createElement('p');
+    helper.className = 'friend-profile-action-msg';
+    helper.textContent = actionState.helperText || '';
+
+    var btn = buildAddFriendButton(!!actionState.disabled, actionState.label);
+    btn.addEventListener('click', function () {
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      helper.textContent = '';
+      helper.classList.remove('friend-profile-action-msg--success', 'friend-profile-action-msg--error');
+      sendFriendRequest(currentUid, friendUid)
+        .then(function () {
+          markSentRequest(currentUid, friendUid);
+          btn.textContent = 'Requested';
+          helper.textContent = '';
+          helper.classList.remove('friend-profile-action-msg--error');
+          helper.classList.remove('friend-profile-action-msg--success');
+        })
+        .catch(function (err) {
+          console.error('Send friend request from profile failed:', err);
+          btn.disabled = false;
+          btn.textContent = 'Add Friend';
+          helper.textContent = 'Could not send request right now. Please try again.';
+          helper.classList.remove('friend-profile-action-msg--success');
+          helper.classList.add('friend-profile-action-msg--error');
+        });
+    });
+
+    actionWrap.appendChild(btn);
+    actionWrap.appendChild(helper);
+    contentEl.appendChild(actionWrap);
+  }
+
+  function loadFriendProfile(friendUid, currentUid, returnTo) {
     var userRef = db.collection('users').doc(friendUid);
 
     Promise.all([userRef.get(), userRef.collection('pets').get()])
@@ -234,9 +470,13 @@
         var stats = buildStatsFromUser(userData, petDocCount);
         var activePetId = userData.activePetId;
 
+        var actionPromise = buildFriendActionState(currentUid, friendUid, returnTo);
         if (!activePetId) {
-          renderProfile(userData, null, stats);
-          return null;
+          return actionPromise.then(function (actionState) {
+            renderProfile(userData, null, stats);
+            renderFriendAction(actionState, currentUid, friendUid);
+            return null;
+          });
         }
 
         return userRef
@@ -245,7 +485,10 @@
           .get()
           .then(function (petSnap) {
             var petData = petSnap.exists ? petSnap.data() : null;
-            renderProfile(userData, petData, stats);
+            return actionPromise.then(function (actionState) {
+              renderProfile(userData, petData, stats);
+              renderFriendAction(actionState, currentUid, friendUid);
+            });
           });
       })
       .catch(function (error) {
@@ -264,6 +507,7 @@
     db = firebase.firestore();
 
     var friendUid = getFriendUidFromQuery();
+    var returnTo = getReturnToFromQuery();
     if (!friendUid) {
       showError('Missing friend profile id.');
       return;
@@ -275,7 +519,7 @@
         window.location.href = '../start/index.html';
         return;
       }
-      loadFriendProfile(friendUid);
+      loadFriendProfile(friendUid, user.uid, returnTo);
     });
   });
 })();
