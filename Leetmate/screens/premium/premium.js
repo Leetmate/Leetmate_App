@@ -23,7 +23,7 @@ function applyPremiumUI(isPremium) {
   }
   if (premiumHeader) {
     premiumHeader.textContent = isPremium
-      ? "Congrats! You've Unlocked..."
+      ? "Congrats! You Have..."
       : "Go Premium & Unlock:";
   }
   premiumCard?.classList.toggle("is-premium", isPremium);
@@ -101,4 +101,43 @@ backBtn?.addEventListener("click", () => {
   } else {
     window.location.href = "../home/index.html";
   }
+});
+
+// ---- Free v.s. Premium Benefits Info Modal ----
+function initPremiumInfoModal() {
+  const openBtn = document.getElementById("premium-info-btn");
+  const modal = document.getElementById("premium-info-modal");
+  const closeBtn = document.getElementById("premium-info-close");
+  const backdrop = modal?.querySelector(".premium-modal__backdrop");
+
+  if (!openBtn || !modal || !closeBtn || !backdrop) return;
+
+  function openModal() {
+    modal.hidden = false;
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    openBtn.focus();
+  }
+
+  openBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openModal();
+  });
+
+  closeBtn.addEventListener("click", closeModal);
+  backdrop.addEventListener("click", closeModal);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden) {
+      closeModal();
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initPremiumInfoModal();
 });
