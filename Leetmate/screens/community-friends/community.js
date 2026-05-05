@@ -213,7 +213,8 @@
     var friendUid = friendData && friendData.friendUid ? String(friendData.friendUid) : '';
     var targetUrl = '../community-friends-profile/index.html';
     if (friendUid) {
-      targetUrl += '?uid=' + encodeURIComponent(friendUid);
+      targetUrl +=
+        '?uid=' + encodeURIComponent(friendUid) + '&returnTo=friends';
     }
     window.location.href = targetUrl;
   }

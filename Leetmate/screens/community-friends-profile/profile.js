@@ -29,7 +29,14 @@
 
   if (backBtn) {
     backBtn.addEventListener('click', function () {
-      window.location.href = '../community-friends/index.html';
+      var params = new URLSearchParams(window.location.search || '');
+      var returnTo = params.get('returnTo');
+      if (returnTo === 'leaderboard') {
+        window.location.href = '../community-leaderboard/index.html';
+      } else {
+        // Default behavior stays as "back to friends".
+        window.location.href = '../community-friends/index.html';
+      }
     });
   }
 

@@ -226,7 +226,9 @@ function resolveSpriteSrc(petRef, equippedItemId) {
   function goToPublicProfile(uid) {
     if (!uid || String(uid).indexOf('mock-') === 0) return;
     window.location.href =
-      '../community-friends-profile/index.html?uid=' + encodeURIComponent(uid);
+      '../community-friends-profile/index.html?uid=' +
+        encodeURIComponent(uid) +
+        '&returnTo=leaderboard';
   }
 
   function buildLeaderboardCard(entry, rank) {
