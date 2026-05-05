@@ -118,6 +118,18 @@
     MicoLeaoDourado: 'Mico Leão Dourado'
   };
 
+  var PET_SPRITES = {
+    Bat:             '../../assets/spritesheets/CubicBatAdult.png',
+    Cat:             '../../assets/spritesheets/CubicCatAdult.png',
+    Fish:            '../../assets/spritesheets/CubicFishAdult.png',
+    Fox:             '../../assets/spritesheets/CubicFoxAdult.png',
+    Frog:            '../../assets/spritesheets/CubicFrogAdult.png',
+    Jaguatirica:     '../../assets/spritesheets/CubicJaguatiricaAdult.png',
+    Wolf:            '../../assets/spritesheets/CubicWolfAdult.png',
+    Giraffe:         '../../assets/spritesheets/CubicGiraffeAdult.png',
+    MicoLeaoDourado: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png',
+  };
+
   var SINGLE_ROW_PETS = { Fish: true, Jaguatirica: true };
 
   var ACCESSORY_SUFFIX = {
@@ -171,6 +183,37 @@
       src: base + '/spritesheets/Cubic' + safeRef + 'Adult.png',
       isEgg: false
     };
+  }
+
+  function resolveAdultSpriteSrc(petRef, equippedItemId) {
+    var normalizedRef = normalizePetRef(petRef);
+    var suffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
+    if (suffix) {
+      return '../../assets/spritesheets/Cubic' + normalizedRef + suffix + '.png';
+    }
+    return PET_SPRITES[normalizedRef] || '../../assets/spritesheets/CubicCatAdult.png';
+  }
+
+  function setSpriteBackgroundWithFallback(spriteEl, primarySrc, fallbackSrc) {
+    if (!spriteEl) return;
+
+    var primary = String(primarySrc || '');
+    var fallback = String(fallbackSrc || '');
+    if (!primary) {
+      spriteEl.style.backgroundImage = '';
+      return;
+    }
+
+    var probe = new Image();
+    probe.onload = function () {
+      spriteEl.style.backgroundImage = 'url("' + primary + '")';
+    };
+    probe.onerror = function () {
+      if (fallback) {
+        spriteEl.style.backgroundImage = 'url("' + fallback + '")';
+      }
+    };
+    probe.src = primary;
   }
 
   function buildStatsGrid(stats) {
@@ -227,13 +270,17 @@
     var profileColor = (userData && userData.profileColor) || '#d9d9d9';
     var petRef = (petData && petData.petRef) || 'Cat';
     var petStage = (petData && petData.stage) || 'Adult';
-    var equippedItemId = (petData && petData.equippedItemId) || null;
-    var petInfo = getPetPath(petRef, petStage);
+    var equippedItemId =
+      (petData && petData.equippedItemId) ||
+      (userData && userData.equippedItemId) ||
+      null;
+    var basePetInfo = getPetPath(petRef, petStage);
+    var petInfo = basePetInfo;
 
     // Use hat spritesheet if equipped and it's an adult
-    var hatSuffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
-    if (hatSuffix && normalizePetStage(petStage) === 'adult') {
-      petInfo = { src: '../../assets/spritesheets/Cubic' + petRef + hatSuffix + '.png', isEgg: false };
+    var normalizedStage = normalizePetStage(petStage);
+    if (normalizedStage === 'adult') {
+      petInfo = { src: resolveAdultSpriteSrc(petRef, equippedItemId), isEgg: false };
     }
 
     if (usernameEl) {
@@ -258,8 +305,8 @@
       spriteEl.className = 'friend-profile-avatar-sprite';
       spriteEl.setAttribute('role', 'img');
       spriteEl.setAttribute('aria-label', username + ' active pet');
-      spriteEl.style.backgroundImage = 'url("' + petInfo.src + '")';
-      if (SINGLE_ROW_PETS[petRef] && !hatSuffix) {
+      setSpriteBackgroundWithFallback(spriteEl, petInfo.src, basePetInfo.src);
+      if (SINGLE_ROW_PETS[petRef]) {
         spriteEl.style.backgroundSize     = '700% 100%';
         spriteEl.style.backgroundPosition = '0% 0%';
       }
