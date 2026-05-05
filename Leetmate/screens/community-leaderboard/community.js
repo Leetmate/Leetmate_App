@@ -9,6 +9,20 @@
  */
 (function () {
   'use strict';
+
+  let petType = "";
+  async function fetchPetData(uid, petId) {
+
+    const petDocSnap = await db.collection("users").doc(uid).collection("pets").doc(petId).get();
+
+    if (petDocSnap.empty) {
+      console.log("No matching documents found.");
+      return;
+    }
+
+    return petDocSnap.data();
+  }
+
   const db = firebase.firestore();
   let ascendingOrderTrophies = [];
   async function getTrophiesList() {
@@ -20,25 +34,66 @@
         .orderBy("username", "asc")
         .get();
 
-      if (snapshot.empty)
-      {
+      if (snapshot.empty) {
         console.log("No matching documents found.");
         return;
       }
 
-      snapshot.forEach(doc => {
+      /*snapshot.forEach(doc => {
+        //console.log(typeof(doc));
+
         ascendingOrderTrophies.push(doc.data());
 
         //extract the type of pet the active pet is
-        let petType = doc.data().activePetId.split("_")[0];
-        //let petType = db.collection("users").(doc.data().uid).collection("pets").doc(doc.data().activePetId).petRef;
+        //let petType = doc.data().activePetId.split("_")[0];
+        //let petType = petInfo.petRef;
+        //let petType = doc.collection("pets").data().petRef;
+
+        const petDoc = db.collection("users").doc(doc.data().uid).collection("pets").doc(doc.data().activePetId).get();
+        console.log(typeof(petDoc));
+        console.log(petDoc);
+
+        let petType = petDoc.petRef;
+
         console.log(petType);
 
         //add the petRef field to the object in the array so following functions work
         ascendingOrderTrophies[petIndex].petRef = petType;
         petIndex++;
         //console.log(typeof(doc.data()));
+      });*/
+
+      const userArray = [];
+      snapshot.forEach(doc => {
+        userArray.push(doc);
       });
+
+      for (const doc of userArray) {
+        ascendingOrderTrophies.push(doc.data());
+
+        let petInfo = await fetchPetData(doc.data().uid, doc.data().activePetId);
+        petType = petInfo.petRef;
+        //petType = doc.data().activePetId.split("_")[0];
+
+        //console.log(petType);
+
+        ascendingOrderTrophies[petIndex].petRef = petType;
+        ascendingOrderTrophies[petIndex].petStage = petInfo.stage;
+        petIndex++;
+      }
+
+      /*snapshot.forEach(doc => {
+        //console.log(typeof(doc));
+
+        ascendingOrderTrophies.push(doc.data());
+
+        petRef = await fetchPetData(doc);
+
+        console.log(petType);
+
+        ascendingOrderTrophies[petIndex].petRef = petType;
+        petIndex++;
+      });*/
     } catch (error) {
       console.error("Error getting trophy list:", error.message);
     }
@@ -120,16 +175,26 @@
     'acc-leprechaunhat': 'LeprechaunHat',
   };
 
-  function resolveSpriteSrc(petRef, equippedItemId) {
+  function resolveSpriteSrc(petRef, petStage, equippedItemId) {
     var suffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
     if (suffix && petRef) {
       return '../../assets/spritesheets/Cubic' + petRef + suffix + '.png';
     }
+
+    if (petStage == "Egg")
+    {
+      return '../../assets/eggs/Cubic' + petRef + 'Egg.png';
+    }
+
+    if (petStage == "Baby")
+    {
+      return '../../assets/spritesheets/Cubic' + petRef  + 'Baby.png';
+    }
     return PET_SPRITES[petRef] || null;
   }
 
-  function applyAvatarSprite(el, petRef, equippedItemId, emptyClass) {
-    var sprite = resolveSpriteSrc(petRef, equippedItemId);
+  function applyAvatarSprite(el, petRef, petStage, equippedItemId, emptyClass) {
+    var sprite = resolveSpriteSrc(petRef, petStage, equippedItemId);
     if (!sprite) {
       if (emptyClass) el.classList.add(emptyClass);
       el.textContent = '🥚';
@@ -139,6 +204,13 @@
     if (SINGLE_ROW_PETS[petRef]) {
       el.style.backgroundSize = '700% 100%';
       el.style.backgroundPosition = '0% 0%';
+    }
+
+    if(petStage == "Egg")
+    {
+      //el.style.backgroundSize = "contain";
+      el.style.backgroundSize = '70px 70px';
+      el.style.backgroundPosition = '-5px -5px';
     }
   }
 
@@ -178,7 +250,7 @@
     avatar.className = 'leaderboard-card__avatar';
     //let petRef = db.collection("users").doc(entry.uid).collection("pets").doc(entry.activePetId).get();
     //applyAvatarSprite(avatar, entry.petRef, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
-    applyAvatarSprite(avatar, entry.petRef, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
+    applyAvatarSprite(avatar, entry.petRef, entry.petStage, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
 
     var name = document.createElement('span');
     name.className = 'leaderboard-card__name';
