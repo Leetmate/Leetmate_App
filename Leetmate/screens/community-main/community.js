@@ -6,7 +6,7 @@
 
   var ids = ['multiplayer-btn', 'leaderboard-btn', 'friends-btn'];
   var routes = {
-    'multiplayer-btn': '../community-multiplayer/index.html',
+    'multiplayer-btn': '../community-battle/index.html',
     'leaderboard-btn': '../community-leaderboard/index.html',
     'friends-btn': '../community-friends/index.html'
   };
