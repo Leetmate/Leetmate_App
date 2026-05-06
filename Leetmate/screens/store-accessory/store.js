@@ -413,10 +413,70 @@
   }
 })();
 
-// Remove promotion premium banner if user already has premium 
+
+// Update promotional premium banner for premium user
+const ORIGINAL_PROMO_HTML = `
+  <div class="banner-pet-wrap">
+    <div class="banner-pet CubicFox"></div>
+  </div>
+  <div class="sparkles" aria-hidden="true"></div>
+  <div class="unlock-all-btn shiny-btn" id="prem-btn">
+    Unlock All<br>
+    Pets & Items
+  </div>
+  <div class="banner-pet-wrap">
+    <div class="banner-pet CubicCat"></div>
+  </div>
+`;
+
+function resetPromoBanner() {
+  const promo = document.querySelector(".promo-content");
+  if (!promo) return;
+  promo.innerHTML = ORIGINAL_PROMO_HTML;
+  promo.dataset.enhanced = "";
+
+  const premiumBtn = document.getElementById("prem-btn");
+  premiumBtn?.addEventListener("click", () => {
+    window.location.href = "../premium/index.html";
+  });
+}
+
+function enhancePremiumBanner() {
+  const promo = document.querySelector(".promo-content");
+  const premiumBtn = document.getElementById("prem-btn");
+  if (!promo || !premiumBtn) return;
+  if (promo.dataset.enhanced === "true") return;
+  promo.dataset.enhanced = "true";
+
+  premiumBtn.outerHTML = `
+    <div class="premium-center-pets">
+      <div class="banner-pet-wrap">
+        <div class="banner-pet CubicFox"></div>
+      </div>
+      <div class="banner-pet-wrap">
+        <div class="banner-pet CubicCat"></div>
+      </div>
+    </div>
+  `;
+
+  const pets = ["CubicFlamingo", "CubicElephant", "CubicLoboGuara", "CubicGiraffe"];
+  const petWraps = promo.querySelectorAll(".banner-pet-wrap");
+  petWraps.forEach((wrap, i) => {
+    const pet = wrap.querySelector(".banner-pet");
+    if (pet && pets[i]) {
+      pet.className = `banner-pet ${pets[i]}`;
+    }
+  });
+}
+
 const storeCard = document.querySelector(".store-card");
 function applyStorePremiumUI(isPremium) {
   storeCard?.classList.toggle("is-premium", isPremium);
+  if (isPremium) {
+    enhancePremiumBanner();
+  } else {
+    resetPromoBanner();
+  }
 }
 
 /* Sync logic */
