@@ -32,7 +32,9 @@
     currentCpu: null,
     rematchCpu: null,
     battle: null,
-    battleBusy: false
+    battleBusy: false,
+    lastBattleRewards: null,
+    battleCompleted: false
   };
 
   var HIT_REACTION_MS = 580;
@@ -293,29 +295,54 @@
 
     if (state.currentCpu && state.currentCpu.sprite) {
       applySprite(document.getElementById('cpu-sprite'), state.currentCpu.sprite, true);
+      applySprite(document.getElementById('win-cpu-sprite'), state.currentCpu.sprite, false);
     }
   }
 
-
-  function finishBattleIfNeeded(delayMs) {
-    var logic = window.LeetmateBattle && window.LeetmateBattle.battleLogic;
+  function renderResultRewards(won) {
     var ui = window.LeetmateBattle && window.LeetmateBattle.battleUI;
-    if (!logic || !state.battle || !logic.isBattleOver(state.battle)) return false;
+    if (!ui || !state.lastBattleRewards) return;
+    ui.renderBattleRewards(won ? 'win' : 'lose', state.lastBattleRewards);
+  }
 
+  function persistBattleRewards(rewards) {
+    var helpers = window.LeetmateBattle && window.LeetmateBattle.battleRewardHelpers;
+    if (!helpers || !rewards) {
+      return Promise.resolve(null);
+    }
+
+    return helpers.applyCpuBattleRewards(rewards).catch(function (error) {
+      console.error('Battle reward persistence failed:', error);
+      return null;
+    });
+  }
+
+  function completeBattle(delayMs) {
+    var logic = window.LeetmateBattle && window.LeetmateBattle.battleLogic;
+    var rewards = window.LeetmateBattle && window.LeetmateBattle.battleRewards;
+    var ui = window.LeetmateBattle && window.LeetmateBattle.battleUI;
+    if (!logic || !state.battle || state.battleCompleted) return;
+
+    state.battleCompleted = true;
     state.battleBusy = false;
     if (ui) {
       ui.renderBattleState(state.battle, state.battleBusy, logic.SPECIAL_CHARGE_COST);
     }
 
+    var won = logic.getWinner(state.battle) === 'player';
+    state.lastBattleRewards = rewards
+      ? rewards.getCpuBattleRewards(state.currentCpu.difficulty, won)
+      : null;
+    renderResultRewards(won);
+    persistBattleRewards(state.lastBattleRewards);
+
     window.setTimeout(function () {
-      if (logic.getWinner(state.battle) === 'player') {
+      if (won) {
         showScreen(SCREEN_IDS.win);
       } else {
         showScreen(SCREEN_IDS.lose);
       }
     }, delayMs || 0);
-
-    return true;
   }
 
   function runCpuTurn() {
@@ -335,7 +362,8 @@
       ui.setBattleLog('Enemy turn: ' + result.message);
       ui.renderBattleState(state.battle, state.battleBusy, logic.SPECIAL_CHARGE_COST);
 
-      if (finishBattleIfNeeded(getBattleAnimationDuration(cpuAction, result))) {
+      if (logic.isBattleOver(state.battle)) {
+        completeBattle(getBattleAnimationDuration(cpuAction, result));
         return;
       }
 
@@ -363,7 +391,8 @@
     ui.setBattleLog('Your turn: ' + result.message);
     ui.renderBattleState(state.battle, state.battleBusy, logic.SPECIAL_CHARGE_COST);
 
-    if (finishBattleIfNeeded(getBattleAnimationDuration(action, result))) {
+    if (logic.isBattleOver(state.battle)) {
+      completeBattle(getBattleAnimationDuration(action, result));
       return;
     }
 
@@ -432,7 +461,21 @@
     var ui = window.LeetmateBattle && window.LeetmateBattle.battleUI;
     if (!logic || !ui || !state.playerPet || !state.currentCpu) return;
 
+    state.lastBattleRewards = null;
+    state.battleCompleted = false;
     state.battle = logic.createBattleState(state.playerPet, state.currentCpu);
+    console.log('[Battle] Dodge rates', {
+      player: {
+        name: state.battle.player.name,
+        dodgeRate: (logic.calculateDodgeChance(state.battle.player, state.battle.cpu) * 100).toFixed(2) + '%',
+        spd: state.battle.player.spd
+      },
+      cpu: {
+        name: state.battle.cpu.name,
+        dodgeRate: (logic.calculateDodgeChance(state.battle.cpu, state.battle.player) * 100).toFixed(2) + '%',
+        spd: state.battle.cpu.spd
+      }
+    });
     state.battleBusy = false;
     resetBattleVisualState();
     renderBattleSprites();

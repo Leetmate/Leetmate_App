@@ -2,15 +2,15 @@
   'use strict';
 
   var DIFFICULTIES = [
-    { name: 'Easy', multiplier: .95 },
-    { name: 'Normal', multiplier: 1. },
-    { name: 'Hard', multiplier: 1.1}
+    { name: 'Easy', multiplier: .80 },
+    { name: 'Normal', multiplier: 1 },
+    { name: 'Hard', multiplier: 1.05}
   ];
 
   var ARCHETYPES = {
-    Balanced: { hp: 20, atk: 16, spAtk: 14, def: 15, spDef: 15, spd: 20 },
+    Balanced: { hp: 18, atk: 18, spAtk: 16, def: 15, spDef: 15, spd: 18 },
     Berserker: { hp: 18, atk: 28, spAtk: 10, def: 12, spDef: 12, spd: 20 },
-    Tank: { hp: 24, atk: 10, spAtk: 8, def: 24, spDef: 22, spd: 12 },
+    Tank: { hp: 21, atk: 12, spAtk: 8, def: 27, spDef: 18, spd: 14},
     Mage: { hp: 18, atk: 10, spAtk: 28, def: 12, spDef: 12, spd: 20 }
   };
 

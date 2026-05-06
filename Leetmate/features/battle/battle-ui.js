@@ -111,6 +111,34 @@
     setText('found-spd', statText(cpuPet.spd));
   }
 
+  function formatRewardDelta(value) {
+    var amount = Number(value || 0);
+    if (amount > 0) return '+' + amount;
+    return String(amount);
+  }
+
+  function setRewardValue(id, value) {
+    var el = document.getElementById(id);
+    if (!el) return;
+
+    var amount = Number(value || 0);
+    el.textContent = formatRewardDelta(amount);
+    el.classList.remove('is-positive', 'is-negative');
+
+    if (amount > 0) {
+      el.classList.add('is-positive');
+    } else if (amount < 0) {
+      el.classList.add('is-negative');
+    }
+  }
+
+  function renderBattleRewards(prefix, rewards) {
+    if (!prefix || !rewards) return;
+    setRewardValue(prefix + '-reward-trophy', rewards.trophy);
+    setRewardValue(prefix + '-reward-coins', rewards.coins);
+    setRewardValue(prefix + '-reward-xp', rewards.xp);
+  }
+
   function setBattleActionsEnabled(enabled, battleState, battleBusy, specialChargeCost) {
     var buttons = ['btn-attack', 'btn-special', 'btn-guard', 'btn-buff'];
     var available = battleState && battleState.player
@@ -171,6 +199,7 @@
     renderPlayerLobby: renderPlayerLobby,
     renderLobbyAvailability: renderLobbyAvailability,
     renderFoundMatch: renderFoundMatch,
+    renderBattleRewards: renderBattleRewards,
     setBattleActionsEnabled: setBattleActionsEnabled,
     renderBattleState: renderBattleState
   };

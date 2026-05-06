@@ -24,13 +24,22 @@
   }
 
   function doesAttackMiss(attacker, defender) {
-    return Math.random() < calculateDodgeChance(defender, attacker);
-  }
+    var dodgeChance = calculateDodgeChance(defender, attacker);
+    var roll = Math.random();
+    var dodged = roll < dodgeChance;
 
-	// // pet dodge test
-	// function doesAttackMiss(attacker, defender) {
-  // 	return true;
-	// }
+    console.log('[Battle] Dodge roll', {
+      attacker: attacker ? attacker.name : '-',
+      defender: defender ? defender.name : '-',
+      attackerSpd: attacker ? attacker.spd : 0,
+      defenderSpd: defender ? defender.spd : 0,
+      dodgeChance: (dodgeChance * 100).toFixed(2) + '%',
+      roll: roll.toFixed(4),
+      dodged: dodged
+    });
+
+    return dodged;
+  }
 
 
   function cloneCombatant(source) {
@@ -73,7 +82,7 @@
   }
 
   function calculateSpecialDamage(attacker, defender) {
-    var scaledDamage = attacker.spAtk * Math.sqrt(attacker.spAtk / defender.spDef) * 1.6;
+    var scaledDamage = attacker.spAtk * Math.sqrt(attacker.spAtk / defender.spDef) * 2;
     return Math.max(2, Math.round(scaledDamage * randFactor(DAMAGE_VARIANCE_MIN, DAMAGE_VARIANCE_MAX)));
   }
 
@@ -182,7 +191,7 @@
 
   function chooseCpuAction(cpu, player) {
     var random = Math.random();
-    var guardChance = 0.55;
+    var guardChance = 0.15;
 
     if (cpu.hp < 35) {
       guardChance = 0.3;
