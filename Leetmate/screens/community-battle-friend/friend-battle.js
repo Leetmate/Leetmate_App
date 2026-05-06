@@ -89,7 +89,6 @@
   var SINGLE_ROW_RE = /CubicFish|CubicJaguatirica/;
 
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  function randF(a, b) { return a + Math.random() * (b - a); }
   function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : ''; }
   function setText(id, val) { var e = document.getElementById(id); if (e) e.textContent = val; }
 
@@ -280,6 +279,32 @@
     return '../../assets/spritesheets/Cubic' + ref + 'Adult.png';
   }
 
+  function clampAttackCharges(val) {
+    var logic = window.LeetmateBattle && window.LeetmateBattle.battleLogic;
+    var maxC = logic && logic.MAX_ATTACK_CHARGES != null ? logic.MAX_ATTACK_CHARGES : 2;
+    var n = Math.floor(Number(val) || 0);
+    return Math.max(0, Math.min(maxC, n));
+  }
+
+  /** Align Firestore pet blobs with shared battle-logic combatants (legacy: guarding/superCd). */
+  function normalizeCombatPet(p) {
+    if (!p || typeof p !== 'object') return p;
+
+    if (p.guardActive === undefined && p.guarding !== undefined) {
+      p.guardActive = !!p.guarding;
+    }
+    if (p.guardActive === undefined) p.guardActive = false;
+    if (p.buffActive === undefined) p.buffActive = false;
+    if (p.attackCharges === undefined || p.attackCharges === null) {
+      p.attackCharges = 0;
+    } else {
+      p.attackCharges = clampAttackCharges(p.attackCharges);
+    }
+    if ('guarding' in p) delete p.guarding;
+    if ('superCd' in p) delete p.superCd;
+    return p;
+  }
+
   function battleEntityFromStats(name, sprite, stats, uidTag) {
     var hpBase = stats.hp != null ? stats.hp : 50;
     return {
@@ -293,15 +318,17 @@
       spAtk: stats.spAtk != null ? stats.spAtk : 40,
       spDef: stats.spDef != null ? stats.spDef : 40,
       spd: stats.spd != null ? stats.spd : 45,
-      guarding: false,
-      superCd: 0
+      guardActive: false,
+      buffActive: false,
+      attackCharges: 0
     };
   }
 
   function clonePetMap(petByUid) {
     var out = {};
     Object.keys(petByUid || {}).forEach(function (k) {
-      var p = petByUid[k];
+      var raw = petByUid[k];
+      var p = normalizeCombatPet(JSON.parse(JSON.stringify(raw)));
       out[k] = {
         uid: p.uid,
         name: p.name,
@@ -313,8 +340,9 @@
         spAtk: p.spAtk,
         spDef: p.spDef,
         spd: p.spd,
-        guarding: !!p.guarding,
-        superCd: p.superCd != null ? p.superCd : 0
+        guardActive: !!p.guardActive,
+        buffActive: !!p.buffActive,
+        attackCharges: clampAttackCharges(p.attackCharges)
       };
     });
     return out;
@@ -324,8 +352,9 @@
     var c = clonePetMap(petByUid);
     Object.keys(c).forEach(function (k) {
       c[k].hp = c[k].maxHp;
-      c[k].guarding = false;
-      c[k].superCd = 0;
+      c[k].guardActive = false;
+      c[k].buffActive = false;
+      c[k].attackCharges = 0;
     });
     return c;
   }
@@ -443,43 +472,32 @@
       });
   }
 
-  function calcScratch(atk, def) {
-    return Math.max(1, Math.round(Math.max(2, atk - def * 0.50) * randF(0.85, 1.15)));
-  }
+  var DODGE_REACTION_MS = 900;
 
-  function calcSuper(spA, spD) {
-    return Math.max(2, Math.round(Math.max(3, spA - spD * 0.30) * randF(1.2, 1.5)));
-  }
+  function animateBattleReaction(whoPrefix, reaction) {
+    var wrap = document.getElementById(whoPrefix + '-wrap');
+    if (!wrap) return;
 
-  function applyMoveToPets(pets, actorUid, defenderUid, action) {
-    var attacker = pets[actorUid];
-    var defender = pets[defenderUid];
-    var dmg = 0;
-    var log = '';
+    var hitClass = whoPrefix === 'player' ? 'react-hit-left' : 'react-hit-right';
+    var dodgeClass = whoPrefix === 'player' ? 'react-dodge-left' : 'react-dodge-right';
 
-    if (action === 'scratch') {
-      dmg = calcScratch(attacker.atk, defender.def);
-      if (defender.guarding) {
-        dmg = Math.floor(dmg * 0.5);
-        defender.guarding = false;
-      }
-      defender.hp -= dmg;
-      log = attacker.name + ' scratched for ' + dmg + ' damage!';
-    } else if (action === 'guard') {
-      attacker.guarding = true;
-      log = attacker.name + ' braced for impact!';
-    } else if (action === 'super') {
-      attacker.superCd = 2;
-      dmg = calcSuper(attacker.spAtk, defender.spDef);
-      if (defender.guarding) {
-        dmg = Math.floor(dmg * 0.5);
-        defender.guarding = false;
-      }
-      defender.hp -= dmg;
-      log = attacker.name + ' unleashed Super Attack! (' + dmg + ' dmg)';
+    wrap.classList.remove('react-hit-left', 'react-hit-right', 'react-dodge-left', 'react-dodge-right');
+    void wrap.offsetWidth;
+
+    if (reaction === 'hit') {
+      wrap.classList.add(hitClass);
+      window.setTimeout(function () {
+        wrap.classList.remove(hitClass);
+      }, 430);
+      return;
     }
 
-    return { dmg: dmg, log: log };
+    if (reaction === 'dodge') {
+      wrap.classList.add(dodgeClass);
+      window.setTimeout(function () {
+        wrap.classList.remove(dodgeClass);
+      }, DODGE_REACTION_MS);
+    }
   }
 
   function showFx(who, icon, type) {
@@ -517,66 +535,81 @@
     if (!lastAction || !lastAction.actorUid) return;
     var actor = lastAction.actorUid;
     var isMe = actor === myUid;
+    var defenderPrefix = isMe ? 'cpu' : 'player';
+    var actorPrefix = isMe ? 'player' : 'cpu';
+    var ui = window.LeetmateBattle && window.LeetmateBattle.battleUI;
 
-    if (lastAction.action === 'scratch') {
-      showFx(isMe ? 'cpu' : 'player', '../../assets/icons/scratch.png', 'scratch');
-      flashSprite((isMe ? 'cpu' : 'player') + '-sprite', 'hit');
-    } else if (lastAction.action === 'guard') {
-      showFx(isMe ? 'player' : 'cpu', '../../assets/icons/guard.png', 'guard');
-      flashSprite((isMe ? 'player' : 'cpu') + '-sprite', 'guard');
-    } else if (lastAction.action === 'super') {
-      showFx(isMe ? 'cpu' : 'player', '../../assets/icons/SuperAttack.png', 'super');
-      flashSprite((isMe ? 'cpu' : 'player') + '-sprite', 'super');
-      flashArena();
-    }
-  }
+    var actionFx = lastAction.action;
+    if (actionFx === 'scratch') actionFx = 'attack';
+    if (actionFx === 'super') actionFx = 'special';
 
-  function updateHpBar(who, cur, max) {
-    var pct = Math.max(0, Math.min(1, cur / max)) * 100;
-    var bar = document.getElementById(who + '-hp-bar');
-    var txt = document.getElementById(who + '-hp-text');
-    if (bar) {
-      bar.style.width = pct + '%';
-      bar.style.backgroundColor = pct > 50 ? '#4caf50' : pct > 25 ? '#ff9800' : '#f44336';
+    var dmgVal =
+      typeof lastAction.damage === 'number'
+        ? lastAction.damage
+        : typeof lastAction.dmg === 'number'
+          ? lastAction.dmg
+          : 0;
+
+    if (actionFx === 'buff') return;
+
+    if (lastAction.dodged) {
+      animateBattleReaction(defenderPrefix, 'dodge');
+      return;
     }
-    if (txt) txt.textContent = Math.max(0, Math.round(cur)) + ' / ' + max;
+
+    if (actionFx === 'guard') {
+      showFx(actorPrefix, '../../assets/icons/guard.png', 'guard');
+      flashSprite(actorPrefix + '-sprite', 'guard');
+      return;
+    }
+
+    if (actionFx === 'attack') {
+      showFx(defenderPrefix, '../../assets/icons/battle-hit.png', 'scratch');
+      flashSprite(defenderPrefix + '-sprite', 'hit');
+      if (ui && lastAction.guarded && dmgVal > 0) {
+        ui.holdGuardFx(defenderPrefix, 700);
+      }
+      if (!lastAction.guarded && dmgVal > 0) {
+        animateBattleReaction(defenderPrefix, 'hit');
+      }
+      return;
+    }
+
+    if (actionFx === 'special') {
+      showFx(defenderPrefix, '../../assets/icons/SuperAttack.png', 'super');
+      flashSprite(defenderPrefix + '-sprite', 'super');
+      if (dmgVal > 0) flashArena();
+      if (ui && lastAction.guarded && dmgVal > 0) {
+        ui.holdGuardFx(defenderPrefix, 700);
+      }
+      if (!lastAction.guarded && dmgVal > 0) {
+        animateBattleReaction(defenderPrefix, 'hit');
+      }
+    }
   }
 
   function renderBattleShell(d) {
+    var logic = window.LeetmateBattle && window.LeetmateBattle.battleLogic;
+    var ui = window.LeetmateBattle && window.LeetmateBattle.battleUI;
     var pets = d.petByUid || {};
-    var me = pets[myUid];
-    var opp = pets[opponentUid];
-    if (!me || !opp) return;
+    var me = normalizeCombatPet(JSON.parse(JSON.stringify(pets[myUid] || null)));
+    var opp = normalizeCombatPet(JSON.parse(JSON.stringify(pets[opponentUid] || null)));
+    if (!me || !opp || !logic || !ui) return;
 
     var cpuEl = document.getElementById('cpu-sprite');
     var plEl = document.getElementById('player-sprite');
     if (cpuEl) applySprite(cpuEl, opp.sprite, true);
     if (plEl) applySprite(plEl, me.sprite, true);
 
-    setText('cpu-name', opp.name);
-    setText('player-name', me.name);
-    updateHpBar('cpu', opp.hp, opp.maxHp);
-    updateHpBar('player', me.hp, me.maxHp);
-    setText('battle-log-text', d.battleLog || '—');
+    ui.setBattleLog(d.battleLog || '—');
 
-    var turnMine = d.turnUid === myUid;
-    var sb = document.getElementById('btn-super');
-    var scd = document.getElementById('super-cd-text');
-    document.querySelectorAll('.battle-btn').forEach(function (b) { b.disabled = !turnMine || d.phase !== 'battle'; });
-    if (turnMine && me.superCd > 0 && sb) {
-      sb.disabled = true;
-      sb.classList.add('on-cooldown');
-      if (scd) {
-        scd.textContent = me.superCd;
-        scd.classList.add('visible');
-      }
-    } else if (sb) {
-      sb.classList.remove('on-cooldown');
-      if (scd) {
-        scd.textContent = '';
-        scd.classList.remove('visible');
-      }
-    }
+    var viewState = {
+      player: me,
+      cpu: opp,
+      turn: d.turnUid === myUid ? 'player' : 'cpu'
+    };
+    var busy = d.phase !== 'battle';
+    ui.renderBattleState(viewState, busy, logic.SPECIAL_CHARGE_COST);
   }
 
   function renderInviteAwaitingVsUi() {
@@ -907,7 +940,8 @@
   }
 
   function submitMove(action) {
-    if (!battleRef || moveSubmitBusy) return;
+    var logic = window.LeetmateBattle && window.LeetmateBattle.battleLogic;
+    if (!battleRef || moveSubmitBusy || !logic) return;
     moveSubmitBusy = true;
 
     db.runTransaction(function (t) {
@@ -920,9 +954,10 @@
         var actorUid = myUid;
         var defenderUid = opponentUid;
 
-        if (action === 'super' && pets[actorUid].superCd > 0) return;
+        var avail = logic.getAvailableActions(pets[actorUid]);
+        if (!avail[action]) return;
 
-        var result = applyMoveToPets(pets, actorUid, defenderUid, action);
+        var result = logic.resolveAction(action, pets[actorUid], pets[defenderUid]);
 
         var winnerUid = null;
         if (pets[defenderUid].hp <= 0) {
@@ -932,24 +967,20 @@
 
         var nextTurn = defenderUid;
         var actionCount = (d.actionCount != null ? d.actionCount : 0) + 1;
-        if (actionCount % 2 === 0) {
-          Object.keys(pets).forEach(function (k) {
-            if (pets[k].superCd > 0) pets[k].superCd--;
-          });
-        }
-
         var actionSeq = (d.actionSeq != null ? d.actionSeq : 0) + 1;
 
         var patch = {
           petByUid: pets,
           turnUid: winnerUid ? d.turnUid : nextTurn,
-          battleLog: result.log,
+          battleLog: result.message,
           actionSeq: actionSeq,
           actionCount: actionCount,
           lastAction: {
             actorUid: actorUid,
             action: action,
-            dmg: result.dmg
+            damage: result.damage,
+            dodged: !!result.dodged,
+            guarded: !!result.guarded
           }
         };
 
@@ -1010,9 +1041,10 @@
       });
     });
 
-    document.getElementById('btn-scratch')?.addEventListener('click', function () { submitMove('scratch'); });
+    document.getElementById('btn-attack')?.addEventListener('click', function () { submitMove('attack'); });
+    document.getElementById('btn-special')?.addEventListener('click', function () { submitMove('special'); });
     document.getElementById('btn-guard')?.addEventListener('click', function () { submitMove('guard'); });
-    document.getElementById('btn-super')?.addEventListener('click', function () { submitMove('super'); });
+    document.getElementById('btn-buff')?.addEventListener('click', function () { submitMove('buff'); });
 
     document.getElementById('win-again-btn')?.addEventListener('click', rematch);
     document.getElementById('win-home-btn')?.addEventListener('click', goToFriends);
