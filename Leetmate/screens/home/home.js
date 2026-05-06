@@ -81,12 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
   		const syncedRewardsPromise = syncPendingSubmissionsToFirestore(db, currentUid)
   			.then(() => refreshRewardsCard(db, currentUid));
   		
-  		// just changed to load all these in parallel
   		await Promise.all([
   			loadXPFromFirestore(db, currentUid),
-  			loadCoinsFromFirestore(db, currentUid),
   			loadHappinessFromFirestore(db, currentUid),
   		]);
+      await loadCoinsFromFirestore(db, currentUid);
 
   		if (typeof applyPendingEvolutionCoinsToFirestore === "function") {
   			await applyPendingEvolutionCoinsToFirestore(db, currentUid);

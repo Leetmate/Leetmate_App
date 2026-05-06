@@ -1327,9 +1327,9 @@ body {
 
 .win-cpu-sprite {
   position: absolute;
-  left: 100%;
-  bottom: -32px;
-  width: 114px;
+  left: 95%;
+  bottom: -24px;
+  width: 96px;
   aspect-ratio: 21 / 32;
   background-repeat: no-repeat;
   background-size: 700% 100%;
