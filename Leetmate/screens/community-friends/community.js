@@ -10,12 +10,23 @@
   // Pet spritesheet map (petRef -> asset path)
   var PET_SPRITES = {
     Bat:             '../../assets/spritesheets/CubicBatAdult.png',
+    Bunny:           '../../assets/spritesheets/CubicBunnyAdult.png',
     Cat:             '../../assets/spritesheets/CubicCatAdult.png',
+    Elephant:        '../../assets/spritesheets/CubicElephantAdult.png',
     Fish:            '../../assets/spritesheets/CubicFishAdult.png',
+    Flamingo:        '../../assets/spritesheets/CubicFlamingoAdult.png',
     Fox:             '../../assets/spritesheets/CubicFoxAdult.png',
     Frog:            '../../assets/spritesheets/CubicFrogAdult.png',
+    Grizzly:         '../../assets/spritesheets/CubicGrizzlyAdult.png',
     Jaguatirica:     '../../assets/spritesheets/CubicJaguatiricaAdult.png',
+    Lion:            '../../assets/spritesheets/CubicLionAdult.png',
     Wolf:            '../../assets/spritesheets/CubicWolfAdult.png',
+    Owl:             '../../assets/spritesheets/CubicOwlAdult.png',
+    Penguin:         '../../assets/spritesheets/CubicPenguinAdult.png',
+    Rat:             '../../assets/spritesheets/CubicRatAdult.png',
+    Sheep:           '../../assets/spritesheets/CubicSheepAdult.png',
+    Turtle:          '../../assets/spritesheets/CubicTurtleAdult.png',
+    Unicorn:         '../../assets/spritesheets/CubicUnicornAdult.png',
     Giraffe:         '../../assets/spritesheets/CubicGiraffeAdult.png',
     MicoLeaoDourado: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png',
   };

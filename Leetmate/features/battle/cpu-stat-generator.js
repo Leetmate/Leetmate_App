@@ -80,7 +80,7 @@
 
   function generateCpuFromPlayer(playerStats, playerPetRef) {
     var playerPower = calculatePlayerPower(playerStats);
-    var difficulty = randomItem(DIFFICULTIES);
+    var difficulty = { name: 'Hard', multiplier: 1.2 } //randomItem(DIFFICULTIES);
     var archetypeName = randomKey(ARCHETYPES);
     var archetype = ARCHETYPES[archetypeName];
     var species = randomItem(getEligibleCpuPets(playerPetRef));

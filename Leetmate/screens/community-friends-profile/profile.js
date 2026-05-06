@@ -108,11 +108,22 @@
 
   var PET_DEFAULT_NAMES = {
     Bat:             'Cubic Bat',
+    Bunny:           'Cubic Bunny',
     Cat:             'Cubic Cat',
+    Elephant:        'Cubic Elephant',
     Fish:            'Cubic Fish',
+    Flamingo:        'Cubic Flamingo',
     Fox:             'Cubic Fox',
     Frog:            'Cubic Frog',
+    Grizzly:         'Cubic Grizzly',
     Jaguatirica:     'Cubic Jaguatirica',
+    Lion:            'Cubic Lion',
+    Owl:             'Cubic Owl',
+    Penguin:         'Cubic Penguin',
+    Rat:             'Cubic Rat',
+    Sheep:           'Cubic Sheep',
+    Turtle:          'Cubic Turtle',
+    Unicorn:         'Cubic Unicorn',
     Wolf:            'Cubic Wolf',
     Giraffe:         'Cubic Giraffe',
     MicoLeaoDourado: 'Mico Leão Dourado'
@@ -120,14 +131,48 @@
 
   var PET_SPRITES = {
     Bat:             '../../assets/spritesheets/CubicBatAdult.png',
+    Bunny:           '../../assets/spritesheets/CubicBunnyAdult.png',
     Cat:             '../../assets/spritesheets/CubicCatAdult.png',
+    Elephant:        '../../assets/spritesheets/CubicElephantAdult.png',
     Fish:            '../../assets/spritesheets/CubicFishAdult.png',
+    Flamingo:        '../../assets/spritesheets/CubicFlamingoAdult.png',
     Fox:             '../../assets/spritesheets/CubicFoxAdult.png',
     Frog:            '../../assets/spritesheets/CubicFrogAdult.png',
+    Grizzly:         '../../assets/spritesheets/CubicGrizzlyAdult.png',
     Jaguatirica:     '../../assets/spritesheets/CubicJaguatiricaAdult.png',
+    Lion:            '../../assets/spritesheets/CubicLionAdult.png',
+    Owl:             '../../assets/spritesheets/CubicOwlAdult.png',
+    Penguin:         '../../assets/spritesheets/CubicPenguinAdult.png',
+    Rat:             '../../assets/spritesheets/CubicRatAdult.png',
+    Sheep:           '../../assets/spritesheets/CubicSheepAdult.png',
+    Turtle:          '../../assets/spritesheets/CubicTurtleAdult.png',
+    Unicorn:         '../../assets/spritesheets/CubicUnicornAdult.png',
     Wolf:            '../../assets/spritesheets/CubicWolfAdult.png',
     Giraffe:         '../../assets/spritesheets/CubicGiraffeAdult.png',
     MicoLeaoDourado: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png',
+  };
+
+  var PET_ASSETS = {
+    Bat:             { egg: '../../assets/eggs/CubicBatEgg.png',             baby: '../../assets/spritesheets/CubicBatBaby.png',             adult: '../../assets/spritesheets/CubicBatAdult.png' },
+    Bunny:           { egg: '../../assets/eggs/CubicBunnyEgg.png',           baby: '../../assets/spritesheets/CubicBunnyBaby.png',           adult: '../../assets/spritesheets/CubicBunnyAdult.png' },
+    Cat:             { egg: '../../assets/eggs/CubicCatEgg.png',             baby: '../../assets/spritesheets/CubicCatBaby.png',             adult: '../../assets/spritesheets/CubicCatAdult.png' },
+    Elephant:        { egg: '../../assets/eggs/CubicElephantEgg.png',        baby: '../../assets/spritesheets/CubicElephantBaby.png',        adult: '../../assets/spritesheets/CubicElephantAdult.png' },
+    Fish:            { egg: '../../assets/eggs/CubicFishEgg.png',            baby: '../../assets/spritesheets/CubicFishBaby.png',            adult: '../../assets/spritesheets/CubicFishAdult.png' },
+    Flamingo:        { egg: '../../assets/eggs/CubicFlamingoEgg.png',        baby: '../../assets/spritesheets/CubicFlamingoBaby.png',        adult: '../../assets/spritesheets/CubicFlamingoAdult.png' },
+    Fox:             { egg: '../../assets/eggs/CubicFoxEgg.png',             baby: '../../assets/spritesheets/CubicFoxBaby.png',             adult: '../../assets/spritesheets/CubicFoxAdult.png' },
+    Frog:            { egg: '../../assets/eggs/CubicFrogEgg.png',            baby: '../../assets/spritesheets/CubicFrogBaby.png',            adult: '../../assets/spritesheets/CubicFrogAdult.png' },
+    Giraffe:         { egg: '../../assets/eggs/CubicGiraffeEgg.png',         baby: '../../assets/spritesheets/CubicGiraffeBaby.png',         adult: '../../assets/spritesheets/CubicGiraffeAdult.png' },
+    Grizzly:         { egg: '../../assets/eggs/CubicGrizzlyEgg.png',         baby: '../../assets/spritesheets/CubicGrizzlyBaby.png',          adult: '../../assets/spritesheets/CubicGrizzlyAdult.png' },
+    Jaguatirica:     { egg: '../../assets/eggs/CubicJaguatiricaEgg.png',     baby: '../../assets/spritesheets/CubicJaguatiricaBaby.png',     adult: '../../assets/spritesheets/CubicJaguatiricaAdult.png' },
+    Lion:            { egg: '../../assets/eggs/CubicLionEgg.png',            baby: '../../assets/spritesheets/CubicLionBaby.png',            adult: '../../assets/spritesheets/CubicLionAdult.png' },
+    MicoLeaoDourado: { egg: '../../assets/eggs/CubicMicoLeaoDouradoEgg.png', baby: '../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png', adult: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png' },
+    Owl:             { egg: '../../assets/eggs/CubicOwlEgg.png',             baby: '../../assets/spritesheets/CubicOwlBaby.png',             adult: '../../assets/spritesheets/CubicOwlAdult.png' },
+    Penguin:         { egg: '../../assets/eggs/CubicPenguinEgg.png',         baby: '../../assets/spritesheets/CubicPenguinBaby.png',         adult: '../../assets/spritesheets/CubicPenguinAdult.png' },
+    Rat:             { egg: '../../assets/eggs/CubicRatEgg.png',             baby: '../../assets/spritesheets/CubicRatBaby.png',             adult: '../../assets/spritesheets/CubicRatAdult.png' },
+    Sheep:           { egg: '../../assets/eggs/CubicSheepEgg.png',           baby: '../../assets/spritesheets/CubicSheepBaby.png',           adult: '../../assets/spritesheets/CubicSheepAdult.png' },
+    Turtle:          { egg: '../../assets/eggs/CubicTurtleEgg.png',          baby: '../../assets/spritesheets/CubicTurtleBaby.png',          adult: '../../assets/spritesheets/CubicTurtleAdult.png' },
+    Unicorn:         { egg: '../../assets/eggs/CubicUnicornEgg.png',         baby: '../../assets/spritesheets/CubicUnicornBaby.png',         adult: '../../assets/spritesheets/CubicUnicornAdult.png' },
+    Wolf:            { egg: '../../assets/eggs/CubicWolfEgg.png',            baby: '../../assets/spritesheets/CubicWolfBaby.png',            adult: '../../assets/spritesheets/CubicWolfAdult.png' }
   };
 
   var SINGLE_ROW_PETS = { Fish: true, Jaguatirica: true };
@@ -165,22 +210,29 @@
   function getPetPath(petRef, petStage) {
     var safeRef = normalizePetRef(petRef);
     var stage = normalizePetStage(petStage);
-    var base = '../../assets';
+    var assetSet = PET_ASSETS[safeRef];
+
+    if (!assetSet) {
+      return {
+        src: '../../assets/spritesheets/CubicCatAdult.png',
+        isEgg: false
+      };
+    }
 
     if (stage === 'egg') {
       return {
-        src: base + '/eggs/Cubic' + safeRef + 'Egg.png',
+        src: assetSet.egg,
         isEgg: true
       };
     }
     if (stage === 'baby') {
       return {
-        src: base + '/spritesheets/Cubic' + safeRef + 'Baby.png',
+        src: assetSet.baby,
         isEgg: false
       };
     }
     return {
-      src: base + '/spritesheets/Cubic' + safeRef + 'Adult.png',
+      src: assetSet.adult,
       isEgg: false
     };
   }

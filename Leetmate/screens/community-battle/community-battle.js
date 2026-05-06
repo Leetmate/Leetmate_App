@@ -317,6 +317,21 @@
     });
   }
 
+  function getPremiumForBattleRewards() {
+    if (!window.LeetmatePremium || typeof window.LeetmatePremium.getFirestorePremium !== 'function') {
+      return Promise.resolve(false);
+    }
+
+    return window.LeetmatePremium.getFirestorePremium()
+      .then(function (isPremium) {
+        return isPremium === true;
+      })
+      .catch(function (error) {
+        console.warn('Premium state load failed:', error);
+        return false;
+      });
+  }
+
   function completeBattle(delayMs) {
     var logic = window.LeetmateBattle && window.LeetmateBattle.battleLogic;
     var rewards = window.LeetmateBattle && window.LeetmateBattle.battleRewards;
@@ -330,19 +345,22 @@
     }
 
     var won = logic.getWinner(state.battle) === 'player';
-    state.lastBattleRewards = rewards
-      ? rewards.getCpuBattleRewards(state.currentCpu.difficulty, won)
-      : null;
-    renderResultRewards(won);
-    persistBattleRewards(state.lastBattleRewards);
 
-    window.setTimeout(function () {
-      if (won) {
-        showScreen(SCREEN_IDS.win);
-      } else {
-        showScreen(SCREEN_IDS.lose);
-      }
-    }, delayMs || 0);
+    getPremiumForBattleRewards().then(function (isPremium) {
+      state.lastBattleRewards = rewards
+        ? rewards.getPremiumCpuBattleRewards(state.currentCpu.difficulty, won, isPremium)
+        : null;
+      renderResultRewards(won);
+      persistBattleRewards(state.lastBattleRewards);
+
+      window.setTimeout(function () {
+        if (won) {
+          showScreen(SCREEN_IDS.win);
+        } else {
+          showScreen(SCREEN_IDS.lose);
+        }
+      }, delayMs || 0);
+    });
   }
 
   function runCpuTurn() {

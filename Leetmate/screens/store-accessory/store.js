@@ -13,6 +13,7 @@
   let activeUid = null;
   let selectedItem = null;
   let currentLevel = 1;
+  let currentPremium = false;
 
   function getStoreItems(category) {
     if (!storeCatalog) return [];
@@ -68,13 +69,18 @@
   }
 
   function isItemLocked(item) {
-    return item.category === 'pets'
-      && Number.isFinite(item.requiredLevel)
-      && currentLevel < item.requiredLevel;
+    if (item.category !== 'pets') return false;
+    if (item.premiumRequired) return !currentPremium;
+    return Number.isFinite(item.requiredLevel) && currentLevel < item.requiredLevel;
   }
 
   function getLockedLabel(item) {
+    if (item.premiumRequired) return 'Premium';
     return Number.isFinite(item.requiredLevel) ? `Lv. ${item.requiredLevel}` : 'Locked';
+  }
+
+  function isPremiumLocked(item) {
+    return item.category === 'pets' && !!item.premiumRequired && !currentPremium;
   }
 
   async function updateBuyButtonState() {
@@ -287,9 +293,10 @@
       }
 
       let priceHtml = '';
+      const premiumLocked = isPremiumLocked(item);
       if (isLocked) {
         priceHtml = `
-          <img src="../../assets/icons/lock.png" class="coin-mini" alt="" />
+          <img src="../../assets/icons/lock.png" class="coin-mini ${premiumLocked ? 'coin-mini--premium-lock' : ''}" alt="" />
           <span>${getLockedLabel(item)}</span>
         `;
       } else if (isOwned) {
@@ -306,7 +313,7 @@
 
       card.innerHTML = `
         ${visualHtml}
-        <div class="item-price-tag">
+        <div class="item-price-tag ${premiumLocked ? 'item-price-tag--premium-lock' : ''}">
           ${priceHtml}
         </div>
       `;
@@ -315,6 +322,33 @@
       });
       grid.appendChild(card);
     });
+  }
+
+  function applyStorePremiumUI(isPremium) {
+    currentPremium = !!isPremium;
+    const storeCard = document.querySelector(".store-card");
+    storeCard?.classList.toggle("is-premium", isPremium);
+    if (isPremium) {
+      enhancePremiumBanner();
+    } else {
+      resetPromoBanner();
+    }
+    renderGrid(activeCategory);
+    updateBuyButtonState();
+  }
+
+  async function syncPremiumState() {
+    const localPremium = await window.LeetmatePremium.getLocalPremium();
+    applyStorePremiumUI(localPremium);
+
+    const firestorePremium = await window.LeetmatePremium.getFirestorePremium();
+    if (firestorePremium === null) return;
+
+    if (localPremium !== firestorePremium) {
+      await window.LeetmatePremium.setLocalPremium(firestorePremium);
+    }
+
+    applyStorePremiumUI(firestorePremium);
   }
 
 
@@ -355,6 +389,9 @@
       // Fetch owned pets to mark them in the store
       await fetchOwnedPets(db, activeUid);
       await fetchOwnedAccessories(db, activeUid);
+      if (window.LeetmatePremium) {
+        await syncPremiumState();
+      }
       const activeTab = document.querySelector('.tab-btn.active');
       if (activeTab) {
         renderGrid(activeTab.getAttribute('data-category'));
@@ -387,6 +424,12 @@
 
         if (areaName === 'local' && changes[LEVEL_KEY]) {
           currentLevel = Math.max(1, Number(changes[LEVEL_KEY].newValue ?? 1));
+          renderGrid(activeCategory);
+          updateBuyButtonState();
+        }
+
+        if (areaName === 'local' && Object.prototype.hasOwnProperty.call(changes, 'isPremium')) {
+          currentPremium = !!changes.isPremium.newValue;
           renderGrid(activeCategory);
           updateBuyButtonState();
         }
@@ -468,41 +511,6 @@ function enhancePremiumBanner() {
     }
   });
 }
-
-const storeCard = document.querySelector(".store-card");
-function applyStorePremiumUI(isPremium) {
-  storeCard?.classList.toggle("is-premium", isPremium);
-  if (isPremium) {
-    enhancePremiumBanner();
-  } else {
-    resetPromoBanner();
-  }
-}
-
-/* Sync logic */
-async function syncPremiumState() {
-  // 1. FAST: show cached value first
-  const localPremium = await window.LeetmatePremium.getLocalPremium();
-  applyStorePremiumUI(localPremium);
-
-  // 2. SLOW: fetch real value from Firestore
-  const firestorePremium = await window.LeetmatePremium.getFirestorePremium();
-  if (firestorePremium === null) return;
-
-  // 3. Update local storage if different 
-  if (localPremium !== firestorePremium) {
-    await window.LeetmatePremium.setLocalPremium(firestorePremium);
-  }
-
-  // 4. Update UI 
-  applyStorePremiumUI(firestorePremium);
-}
-
-/* Run on auth */
-firebase.auth().onAuthStateChanged(async (user) => {
-  if (!user) return;
-  await syncPremiumState();
-});
 
 /* Premium button navigation */
 const premiumBtn = document.getElementById("prem-btn");

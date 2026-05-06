@@ -29,9 +29,14 @@
       .set(getBattleRewardUpdate(rewards), { merge: true });
   }
 
+  function applyBattleRewards(rewards) {
+    return applyCpuBattleRewards(rewards);
+  }
+
   window.LeetmateBattle = window.LeetmateBattle || {};
   window.LeetmateBattle.battleRewardHelpers = {
     getBattleRewardUpdate: getBattleRewardUpdate,
-    applyCpuBattleRewards: applyCpuBattleRewards
+    applyCpuBattleRewards: applyCpuBattleRewards,
+    applyBattleRewards: applyBattleRewards
   };
 })();

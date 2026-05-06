@@ -21,6 +21,20 @@
 (function () {
     'use strict';
 
+    function getCachedActivePetSnapshot() {
+        if (typeof storageGet !== 'function') {
+            return Promise.resolve(null);
+        }
+
+        return storageGet(['activePetSnapshot'])
+            .then(function (data) {
+                return data && data.activePetSnapshot ? data.activePetSnapshot : null;
+            })
+            .catch(function () {
+                return null;
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof firebase === 'undefined' || !firebase.auth) {
             console.warn('Firebase Auth is not available for auth gate.');
@@ -44,6 +58,29 @@
                 var isAuthPage = path.indexOf('/auth-') !== -1 || path.indexOf('/start/') !== -1;
                 
                 if (!isAuthPage) {
+                    if (window.location.pathname.indexOf('/home/') === -1) {
+                        getCachedActivePetSnapshot().then(function (cachedPet) {
+                            if (cachedPet && cachedPet.id) {
+                                document.body.classList.remove('hidden-on-load');
+                                return;
+                            }
+
+                            var db = firebase.firestore();
+                            db.collection('users').doc(user.uid).get().then(function(snap) {
+                                var data = snap.exists ? snap.data() : {};
+                                if (!data.activePetId) {
+                                    window.location.replace('../home/index.html');
+                                } else {
+                                    document.body.classList.remove('hidden-on-load');
+                                }
+                            }).catch(function(err) {
+                                console.error('Auth gate firestore error:', err);
+                                document.body.classList.remove('hidden-on-load');
+                            });
+                        });
+                        return;
+                    }
+
                     var db = firebase.firestore();
                     db.collection('users').doc(user.uid).get().then(function(snap) {
                         var data = snap.exists ? snap.data() : {};

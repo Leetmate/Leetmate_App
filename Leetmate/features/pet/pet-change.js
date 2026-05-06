@@ -1,49 +1,25 @@
 (function () {
   "use strict";
 
-  const PET_ASSETS = {
-    Bat: {
-      egg: "../../assets/eggs/CubicBatEgg.png",
-      baby: "../../assets/spritesheets/CubicBatBaby.png",
-      adult: "../../assets/spritesheets/CubicBatAdult.png",
-      defaultName: "Cubic Bat"
-    },
-    Cat: {
-      egg: "../../assets/eggs/CubicCatEgg.png",
-      baby: "../../assets/spritesheets/CubicCatBaby.png",
-      adult: "../../assets/spritesheets/CubicCatAdult.png",
-      defaultName: "Cubic Cat"
-    },
-    Fox: {
-      egg: "../../assets/eggs/CubicFoxEgg.png",
-      baby: "../../assets/spritesheets/CubicFoxBaby.png",
-      adult: "../../assets/spritesheets/CubicFoxAdult.png",
-      defaultName: "Cubic Fox"
-    },
-    Frog: {
-      egg: "../../assets/eggs/CubicFrogEgg.png",
-      baby: "../../assets/spritesheets/CubicFrogBaby.png",
-      adult: "../../assets/spritesheets/CubicFrogAdult.png",
-      defaultName: "Cubic Frog"
-    },
-    Giraffe: {
-      egg: "../../assets/eggs/CubicGiraffeEgg.png",
-      baby: "../../assets/spritesheets/CubicGiraffeBaby.png",
-      adult: "../../assets/spritesheets/CubicGiraffeAdult.png",
-      defaultName: "Cubic Giraffe"
-    },
-    MicoLeaoDourado: {
-      egg: "../../assets/eggs/CubicMicoLeaoDouradoEgg.png",
-      baby: "../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png",
-      adult: "../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png",
-      defaultName: "Golden Tamarin"
-    },
-    Wolf: {
-      egg: "../../assets/eggs/CubicWolfEgg.png",
-      baby: "../../assets/spritesheets/CubicWolfBaby.png",
-      adult: "../../assets/spritesheets/CubicWolfAdult.png",
-      defaultName: "Cubic Wolf"
-    }
+  const PET_DEFAULT_NAMES = {
+    Bat: "Cubic Bat",
+    Bunny: "Cubic Bunny",
+    Cat: "Cubic Cat",
+    Elephant: "Cubic Elephant",
+    Flamingo: "Cubic Flamingo",
+    Fox: "Cubic Fox",
+    Frog: "Cubic Frog",
+    Giraffe: "Cubic Giraffe",
+    Grizzly: "Cubic Grizzly",
+    Lion: "Cubic Lion",
+    MicoLeaoDourado: "Golden Tamarin",
+    Owl: "Cubic Owl",
+    Penguin: "Cubic Penguin",
+    Rat: "Cubic Rat",
+    Sheep: "Cubic Sheep",
+    Turtle: "Cubic Turtle",
+    Unicorn: "Cubic Unicorn",
+    Wolf: "Cubic Wolf"
   };
 
   let auth = null;
@@ -59,16 +35,21 @@
 
   function getActivePetSpritePath(pet) {
     const normalizedStage = (pet?.stage || "").toLowerCase();
+    const petRef = pet?.petRef;
 
-    if (pet?.petRef && normalizedStage === "baby") {
-      return `assets/spritesheets/Cubic${pet.petRef}Baby.png`;
+    if (!petRef) {
+      return null;
     }
 
-    if (pet?.petRef && normalizedStage === "adult") {
-      return `assets/spritesheets/Cubic${pet.petRef}Adult.png`;
+    if (normalizedStage === "egg") {
+      return `assets/eggs/Cubic${petRef}Egg.png`;
     }
 
-    return null;
+    if (normalizedStage === "baby") {
+      return `assets/spritesheets/Cubic${petRef}Baby.png`;
+    }
+
+    return `assets/spritesheets/Cubic${petRef}Adult.png`;
   }
 
   async function resolveSelectedPetSpritePath(pet, equippedItemId) {
@@ -121,8 +102,7 @@
 
   // use the custom name first, then fall back to the default name
   function getDisplayName(pet) {
-    const assetSet = PET_ASSETS[pet.petRef];
-    return (pet.customName || "").trim() || assetSet?.defaultName || pet.petRef || "Pet";
+    return (pet.customName || "").trim() || PET_DEFAULT_NAMES[pet.petRef] || pet.petRef || "Pet";
   }
 
   function getPetAge(pet) {
@@ -148,9 +128,6 @@
 
     if (!pet) return;
 
-    const assetSet = PET_ASSETS[pet.petRef];
-    if (!assetSet) return;
-
     const stage = (pet.stage || "adult").toLowerCase();
     if (isAnimated) {
       // only the center pet gets idle animation
@@ -159,20 +136,20 @@
 
     if (stage === "egg") {
       slotEl.classList.add("stage-egg");
-      eggEl.src = assetSet.egg;
+      eggEl.src = `../../assets/eggs/Cubic${pet.petRef}Egg.png`;
       eggEl.classList.remove("hidden");
       return;
     }
 
     if (stage === "baby") {
       slotEl.classList.add("stage-baby");
-      spriteEl.style.backgroundImage = `url("${assetSet.baby}")`;
+      spriteEl.style.backgroundImage = `url("../../assets/spritesheets/Cubic${pet.petRef}Baby.png")`;
       spriteEl.style.display = "block";
       return;
     }
 
     slotEl.classList.add("stage-adult");
-    spriteEl.style.backgroundImage = `url("${assetSet.adult}")`;
+    spriteEl.style.backgroundImage = `url("../../assets/spritesheets/Cubic${pet.petRef}Adult.png")`;
     spriteEl.style.display = "block";
   }
 

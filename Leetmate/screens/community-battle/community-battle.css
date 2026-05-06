@@ -1340,7 +1340,7 @@ body {
   filter: grayscale(1) brightness(0.52) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.68));
   opacity: 0.92;
   z-index: 1;
-  animation: win-cpu-fall 1.5s 2s ease-out both;
+  animation: win-cpu-fall 1s 2s ease-out both;
 }
 
 .result-rewards {
@@ -1348,7 +1348,7 @@ body {
 }
 
 .result-actions {
-  margin-top: 14px;
+  margin-top: 8px;
 }
 
 @keyframes win-happy-jump-motion {

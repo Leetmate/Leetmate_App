@@ -27,7 +27,7 @@
     };
   }
 
-  function petItem(id, name, price, image, flavorText, description, stats, requiredLevel = null) {
+  function petItem(id, name, price, image, flavorText, description, stats, requiredLevel = null, premiumRequired = false) {
     return {
       id,
       petRef: id,
@@ -39,6 +39,7 @@
       description,
       stats,
       requiredLevel,
+      premiumRequired,
     };
   }
 
@@ -92,13 +93,24 @@
       foodItem("food-chicken", "Chicken", 30, "../../assets/store/food-chicken.png", "A warm meal that always hits the spot.", "Recovers 30 health.", 30),
     ],
     pets: [
-      petItem("Bat", "Bat", 300, "../../assets/spritesheets/CubicBatAdult.png", "Swift and watchful.", "A fast companion that leans into speed and special attack.", { hp: 40, atk: 45, def: 40, spAtk: 60, spDef: 50, spd: 80 }),
-      petItem("Cat", "Cat", 300, "../../assets/spritesheets/CubicCatAdult.png", "Balanced and curious.", "A steady pet with reliable all-around stats and a calm pace.", { hp: 50, atk: 55, def: 50, spAtk: 55, spDef: 55, spd: 65 }),
-      petItem("Fox", "Fox", 300, "../../assets/spritesheets/CubicFoxAdult.png", "Clever and fiery.", "A quick pet with strong special power and sharp instincts.", { hp: 45, atk: 50, def: 45, spAtk: 75, spDef: 60, spd: 70 }),
-      petItem("Frog", "Frog", 800, "../../assets/spritesheets/CubicFrogAdult.png", "Bouncy and lively.", "A nimble pet with good speed and balanced growth.", { hp: 42, atk: 46, def: 42, spAtk: 50, spDef: 48, spd: 72 }),
-			petItem("Wolf", "Wolf", 800, "../../assets/spritesheets/CubicWolfAdult.png", "Fierce and loyal.", "A strong pet built around high attack and solid speed.", { hp: 58, atk: 72, def: 55, spAtk: 42, spDef: 48, spd: 68 }),
-      petItem("Giraffe", "Giraffe", 1000, "../../assets/spritesheets/CubicGiraffeAdult.png", "Tall and steady.", "A sturdy pet with strong defense and solid staying power.", { hp: 60, atk: 45, def: 65, spAtk: 40, spDef: 55, spd: 45 }, 5),
+      petItem("Bat", "Bat", 300, "../../assets/spritesheets/CubicBatAdult.png", "Swift and watchful.", "A fast companion that leans into speed and special attack.", { hp: 40, atk: 45, def: 40, spAtk: 60, spDef: 50, spd: 80 }, 1),
+      petItem("Cat", "Cat", 300, "../../assets/spritesheets/CubicCatAdult.png", "Balanced and curious.", "A steady pet with reliable all-around stats and a calm pace.", { hp: 50, atk: 55, def: 50, spAtk: 55, spDef: 55, spd: 65 }, 1),
+      petItem("Fox", "Fox", 300, "../../assets/spritesheets/CubicFoxAdult.png", "Clever and fiery.", "A quick pet with strong special power and sharp instincts.", { hp: 45, atk: 50, def: 45, spAtk: 75, spDef: 60, spd: 70 }, 1),
+      petItem("Bunny", "Bunny", 500, "../../assets/spritesheets/CubicBunnyAdult.png", "Light on its feet.", "A cheerful companion built around quick reactions and nimble movement.", { hp: 42, atk: 46, def: 42, spAtk: 48, spDef: 46, spd: 84 }, 2),
+      petItem("Frog", "Frog", 800, "../../assets/spritesheets/CubicFrogAdult.png", "Bouncy and lively.", "A nimble pet with good speed and balanced growth.", { hp: 42, atk: 46, def: 42, spAtk: 50, spDef: 48, spd: 72 }, 3),
+      petItem("Rat", "Rat", 800, "../../assets/spritesheets/CubicRatAdult.png", "Tiny and relentless.", "A glass-cannon pick that wins through speed and constant pressure.", { hp: 36, atk: 52, def: 34, spAtk: 46, spDef: 38, spd: 90 }, 4),
+      petItem("Owl", "Owl", 900, "../../assets/spritesheets/CubicOwlAdult.png", "Wise and watchful.", "A sharp special attacker with strong instincts and excellent aerial speed.", { hp: 46, atk: 38, def: 42, spAtk: 78, spDef: 66, spd: 76 }, 5),
+      petItem("Giraffe", "Giraffe", 1000, "../../assets/spritesheets/CubicGiraffeAdult.png", "Tall and steady.", "A sturdy pet with strong defense and solid staying power.", { hp: 60, atk: 45, def: 65, spAtk: 40, spDef: 55, spd: 45 }, 6),
+      petItem("Penguin", "Penguin", 700, "../../assets/spritesheets/CubicPenguinAdult.png", "Cool and composed.", "A sturdy little battler with balanced bulk and solid special defense.", { hp: 58, atk: 46, def: 60, spAtk: 62, spDef: 70, spd: 42 }, 7),
+			petItem("Wolf", "Wolf", 800, "../../assets/spritesheets/CubicWolfAdult.png", "Fierce and loyal.", "A strong pet built around high attack and solid speed.", { hp: 58, atk: 72, def: 55, spAtk: 42, spDef: 48, spd: 68 }, 8),
+			petItem("Elephant", "Elephant", 1000, "../../assets/spritesheets/CubicElephantAdult.png", "Massive and patient.", "A heavy defensive pet with immense endurance and a slow, steady pace.", { hp: 78, atk: 52, def: 82, spAtk: 34, spDef: 68, spd: 24 }, 9),
+      petItem("Flamingo", "Flamingo", 1000, "../../assets/spritesheets/CubicFlamingoAdult.png", "Graceful and flashy.", "A high-speed special striker that thrives on momentum and precise timing.", { hp: 44, atk: 42, def: 40, spAtk: 74, spDef: 58, spd: 82 }, 9),
       petItem("MicoLeaoDourado", "Golden Tamarin", 1300, "../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png", "Rare and radiant.", "A rare pet with high overall growth and strong late-game value.", { hp: 68, atk: 70, def: 62, spAtk: 76, spDef: 68, spd: 78 }, 10),
+			petItem("Grizzly", "Grizzly", 1400, "../../assets/spritesheets/CubicGrizzlyAdult.png", "Brutal and immovable.", "A hulking bruiser with massive attack and enough bulk to stay in the fight.", { hp: 74, atk: 82, def: 64, spAtk: 34, spDef: 48, spd: 36 }, 11),
+      petItem("Sheep", "Sheep", 700, "../../assets/spritesheets/CubicSheepAdult.png", "Soft but dependable.", "A calm pet with even stats and better staying power than it first appears.", { hp: 56, atk: 44, def: 58, spAtk: 50, spDef: 64, spd: 48 }, null, true),
+      petItem("Turtle", "Turtle", 1100, "../../assets/spritesheets/CubicTurtleAdult.png", "Slow and unshakable.", "An ultra-defensive wall that trades speed for extreme staying power.", { hp: 72, atk: 38, def: 78, spAtk: 40, spDef: 82, spd: 22 }, null, true),
+      petItem("Lion", "Lion", 1300, "../../assets/spritesheets/CubicLionAdult.png", "Bold and regal.", "A proud all-round attacker with reliable damage and solid speed.", { hp: 62, atk: 78, def: 58, spAtk: 50, spDef: 52, spd: 66 }, null, true),
+      petItem("Unicorn", "Unicorn", 1800, "../../assets/spritesheets/CubicUnicornAdult.png", "Mythic and radiant.", "A rare premium-tier battler with standout stats across the board.", { hp: 70, atk: 74, def: 68, spAtk: 80, spDef: 76, spd: 74 }, null, true),
     ],
     special: [
 			specialItem("spec-streakfreeze", "Streak Freeze", 200, "../../assets/store/spec-streakfreeze.png", "A little breathing room.", "Prevents your streak from resetting for 1 calendar day.", { effect: "streak-freeze", durationDays: 1 }),
