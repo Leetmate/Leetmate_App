@@ -98,7 +98,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--color-store-coins-back-btn);
+  color: var(--color-store-coins-white);
   font-family: 'Lilita One', sans-serif;
   font-size: 16px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
@@ -145,7 +145,7 @@ body {
   font-family: 'Lilita One', cursive;
   font-size: 20px;
   margin: 0;
-  color: var(--color-store-coins-back-btn);
+  color: var(--color-store-coins-white);
 }
 
 .tier-icon-wrap {
