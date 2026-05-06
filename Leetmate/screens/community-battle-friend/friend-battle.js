@@ -64,6 +64,16 @@
 
   var renderedActionSeq = -1;
   var moveSubmitBusy = false;
+  var rewardedBattleSessionId = null;
+  /** True once this tab has seen an in-progress battle; avoids showing stale `finished` from a prior match when reopening the lobby. */
+  var sawBattlePhaseThisLoad = false;
+
+  var REWARD_WIN_COINS = 20;
+  var REWARD_WIN_XP = 5;
+  var REWARD_WIN_TROPHY = 5;
+  var REWARD_LOSE_COINS = 0;
+  var REWARD_LOSE_XP = 5;
+  var REWARD_LOSE_TROPHY = -4;
 
   var BATTLE_SCREENS = ['screen-matchmaking', 'screen-battle', 'screen-win', 'screen-lose'];
 
@@ -133,11 +143,16 @@
     initLobby();
   }
 
+  function goToFriends() {
+    stopBattleMusic();
+    window.location.href = '../community-friends/index.html';
+  }
+
   function handleBack() {
     var active = document.querySelector('.battle-screen.is-active');
     if (!active || active.id === 'screen-lobby') {
       cancelOutgoingInvite();
-      window.location.href = '../community-friends/index.html';
+      goToFriends();
       return;
     }
     if (active.id === 'screen-battle' || active.id === 'screen-matchmaking') {
@@ -148,7 +163,86 @@
       }
       return;
     }
+    if (active.id === 'screen-win' || active.id === 'screen-lose') {
+      goToFriends();
+      return;
+    }
     goToLobby();
+  }
+
+  function applyFriendBattleOutcomeRewards(won) {
+    if (!db || !myUid) return Promise.resolve();
+    if (typeof addCoins !== 'function' || typeof addXP !== 'function') {
+      console.warn('Friend battle rewards: coins/xp helpers not loaded.');
+      return Promise.resolve();
+    }
+
+    var coinsDelta = won ? REWARD_WIN_COINS : REWARD_LOSE_COINS;
+    var xpDelta = won ? REWARD_WIN_XP : REWARD_LOSE_XP;
+    var trophyDelta = won ? REWARD_WIN_TROPHY : REWARD_LOSE_TROPHY;
+
+    var userRef = db.collection('users').doc(myUid);
+
+    var chain = Promise.resolve();
+    if (coinsDelta > 0) {
+      chain = chain.then(function () { return addCoins(coinsDelta); });
+    }
+    chain = chain.then(function () { return addXP(xpDelta); });
+    chain = chain.then(function () {
+      return Promise.all([
+        typeof getLocalCoins === 'function' ? getLocalCoins() : Promise.resolve(0),
+        typeof getXP === 'function' ? getXP() : Promise.resolve(0),
+        typeof getLevel === 'function' ? getLevel() : Promise.resolve(1),
+        userRef.get()
+      ]);
+    });
+    chain = chain.then(function (tuple) {
+      var coinsVal = Math.max(0, Math.floor(Number(tuple[0]) || 0));
+      var xpVal = Math.max(0, Math.floor(Number(tuple[1]) || 0));
+      var levelVal = Math.max(1, Math.floor(Number(tuple[2]) || 1));
+      var userSnap = tuple[3];
+      var curTrophy = userSnap.exists ? Math.max(0, Math.floor(Number((userSnap.data() || {}).trophy) || 0)) : 0;
+      var nextTrophy = Math.max(0, curTrophy + trophyDelta);
+      return userRef.set({
+        coins: coinsVal,
+        xp: xpVal,
+        level: levelVal,
+        trophy: nextTrophy,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true }).then(function () {
+        return nextTrophy;
+      });
+    });
+    chain = chain.then(function (nextTrophy) {
+      return db.collection('users').doc(myUid).collection('friends').get().then(function (snap) {
+        if (snap.empty) return;
+        var batch = db.batch();
+        var count = 0;
+        snap.forEach(function (doc) {
+          if (doc.id === '_meta') return;
+          var fid = (doc.data() && doc.data().friendUid) ? String(doc.data().friendUid) : doc.id;
+          if (!fid) return;
+          var ref = db.collection('users').doc(fid).collection('friends').doc(myUid);
+          batch.set(ref, { trophy: nextTrophy }, { merge: true });
+          count++;
+        });
+        if (count > 0) return batch.commit();
+      });
+    });
+    chain = chain.catch(function (err) {
+      console.error('Friend battle rewards sync failed:', err);
+    });
+
+    return chain;
+  }
+
+  function maybeGrantFriendBattleRewards(d) {
+    if (!d || d.phase !== 'finished' || !d.winnerUid) return;
+    var sid = d.sessionId != null ? d.sessionId : ('fin_' + String(d.winnerUid) + '_' + String(d.actionSeq != null ? d.actionSeq : 0));
+    if (sid === rewardedBattleSessionId) return;
+    rewardedBattleSessionId = sid;
+    var won = d.winnerUid === myUid;
+    applyFriendBattleOutcomeRewards(won);
   }
 
   function abandonBattleDoc() {
@@ -658,6 +752,7 @@
       }
 
       if (d.phase === 'battle') {
+        sawBattlePhaseThisLoad = true;
         refreshOutgoingInviteUi();
         if (!document.getElementById('screen-battle').classList.contains('is-active')) {
           startBattleMusic();
@@ -676,8 +771,12 @@
       }
 
       if (d.phase === 'finished') {
+        if (!sawBattlePhaseThisLoad) {
+          return;
+        }
         stopBattleMusic();
         var won = d.winnerUid === myUid;
+        maybeGrantFriendBattleRewards(d);
         var elWin = document.getElementById(won ? 'win-sprite' : 'lose-sprite');
         var pets = d.petByUid || {};
         var me = pets[myUid];
@@ -845,9 +944,9 @@
     document.getElementById('btn-super')?.addEventListener('click', function () { submitMove('super'); });
 
     document.getElementById('win-again-btn')?.addEventListener('click', rematch);
-    document.getElementById('win-home-btn')?.addEventListener('click', goToLobby);
+    document.getElementById('win-home-btn')?.addEventListener('click', goToFriends);
     document.getElementById('lose-again-btn')?.addEventListener('click', rematch);
-    document.getElementById('lose-home-btn')?.addEventListener('click', goToLobby);
+    document.getElementById('lose-home-btn')?.addEventListener('click', goToFriends);
 
     auth.onAuthStateChanged(function (user) {
       if (!user) return;
