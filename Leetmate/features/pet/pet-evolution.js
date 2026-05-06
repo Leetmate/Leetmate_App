@@ -60,6 +60,8 @@
     global.LeetmatePetEvolution = {
         BABY_MIN_TOTAL_DAYS: BABY_MIN_TOTAL_DAYS,
         ADULT_MIN_TOTAL_DAYS: ADULT_MIN_TOTAL_DAYS,
+        /** Coins granted per evolution (Egg→Baby or Baby→Adult, per pet). */
+        EVOLUTION_COIN_REWARD: 100,
         effectiveEvolutionAge: effectiveEvolutionAge,
         nextStageFromPet: nextStageFromPet,
         evolvePetStage: evolvePetStage,

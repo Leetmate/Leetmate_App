@@ -849,6 +849,16 @@
     });
 
     if (evolutionResult?.didEvolve && evolutionResult.payload.fromStage && evolutionResult.payload.toStage) {
+      const evolutionReward =
+        typeof window.LeetmatePetEvolution?.EVOLUTION_COIN_REWARD === "number"
+          ? window.LeetmatePetEvolution.EVOLUTION_COIN_REWARD
+          : 100;
+      if (typeof addCoins === "function") {
+        await addCoins(evolutionReward);
+      }
+      if (typeof saveCoinsToFirestore === "function" && activeDb && activeUid) {
+        await saveCoinsToFirestore(activeDb, activeUid);
+      }
       await loadItemInventory(activeDb, activeUid);
       await loadActivePetFromFirestore(activeDb, activeUid);
       await refreshCurrentPetSnapshot();

@@ -30,6 +30,7 @@ async function clearAppStorage() {
       leetmate_pet_age_pending_firestore_sync: false,
       leetmate_pet_age_last_rollover: null,
       leetmate_evolution_queue: [],
+      leetmate_pending_evolution_coins: 0,
     });
     console.log("App storage cleared.");
   }

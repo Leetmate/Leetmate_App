@@ -2,6 +2,7 @@
 // Single source of truth for coin storage, sync, and coin claim animations.
 
 const COINS_KEY = "leetmate_coins";
+const PENDING_EVOLUTION_COINS_KEY = "leetmate_pending_evolution_coins";
 
 // ------------------------------
 // Local storage
@@ -65,6 +66,25 @@ async function saveCoinsToFirestore(db, uid) {
   );
 
   return coins;
+}
+
+/**
+ * Applies coins queued by the service worker after midnight pet evolution,
+ * then syncs to Firestore. Call after loadCoinsFromFirestore on Home so
+ * pending bonuses are not overwritten by the remote coin value.
+ */
+async function applyPendingEvolutionCoinsToFirestore(db, uid) {
+  const snap = await storageGet(PENDING_EVOLUTION_COINS_KEY);
+  const pending = Math.max(
+    0,
+    Math.floor(Number(snap[PENDING_EVOLUTION_COINS_KEY]) || 0)
+  );
+  if (!pending || !db || !uid) return 0;
+
+  await addCoins(pending);
+  await storageSet({ [PENDING_EVOLUTION_COINS_KEY]: 0 });
+  await saveCoinsToFirestore(db, uid);
+  return pending;
 }
 
 // ------------------------------

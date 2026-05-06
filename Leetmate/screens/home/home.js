@@ -88,6 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
   			loadHappinessFromFirestore(db, currentUid),
   		]);
 
+  		if (typeof applyPendingEvolutionCoinsToFirestore === "function") {
+  			await applyPendingEvolutionCoinsToFirestore(db, currentUid);
+  		}
+
   		await Promise.all([
   			updateXPSectionUI(),
   			updateCoinsUI(),

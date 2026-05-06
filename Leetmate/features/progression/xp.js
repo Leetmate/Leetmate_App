@@ -2,6 +2,7 @@
 
 // Max XP is fixed, not scaling
 const MAX_XP = 100;
+const LEVEL_UP_COIN_REWARD = 40;
 
 // local storage keys used to store values
 const XP_KEY = "leetmate_xp";
@@ -33,6 +34,9 @@ async function setLevel(value) {
 async function levelUp() {
   const current = await getLevel();
   await setLevel(current + 1);
+  if (typeof addCoins === "function") {
+    await addCoins(LEVEL_UP_COIN_REWARD);
+  }
 }
 
 async function addXP(amount) {
