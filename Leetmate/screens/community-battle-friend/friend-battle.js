@@ -151,8 +151,9 @@
   function handleBack() {
     var active = document.querySelector('.battle-screen.is-active');
     if (!active || active.id === 'screen-lobby') {
-      cancelOutgoingInvite();
-      goToFriends();
+      cancelOutgoingInvite().finally(function () {
+        goToFriends();
+      });
       return;
     }
     if (active.id === 'screen-battle' || active.id === 'screen-matchmaking') {
@@ -375,14 +376,11 @@
 
   function initLobby() {
     if (typeof storageGet !== 'function') return;
-    var matchBtnPre = document.getElementById('multi-match-btn');
-    if (matchBtnPre) matchBtnPre.disabled = true;
     storageGet(['activePetSnapshot', 'activePetSpritePath']).then(function (data) {
       var pet = data.activePetSnapshot;
       var path = data.activePetSpritePath;
       if (!pet) {
         lobbyPlayerPet = null;
-        if (matchBtnPre) matchBtnPre.disabled = true;
         return;
       }
 
@@ -400,13 +398,11 @@
       setText('multi-pet-name', name);
 
       var statsCard = document.getElementById('multi-stats-card');
-      var matchBtn = document.getElementById('multi-match-btn');
       var lockedEl = document.getElementById('multi-locked');
       var lockedDesc = document.getElementById('multi-locked-desc');
 
       if (isAdult) {
         if (statsCard) statsCard.style.display = '';
-        if (matchBtn) matchBtn.style.display = '';
         if (lockedEl) lockedEl.style.display = 'none';
 
         var stats = pet.stats || {};
@@ -423,13 +419,14 @@
 
         fetchUserPetForBattle(opponentUid).then(function (opp) {
           opponentPreviewPet = opp;
-        }).catch(function () { opponentPreviewPet = null; });
-        if (matchBtn) matchBtn.disabled = false;
+          renderInviteAwaitingVsUi();
+        }).catch(function () {
+          opponentPreviewPet = null;
+          renderInviteAwaitingVsUi();
+        });
       } else {
         lobbyPlayerPet = null;
         if (statsCard) statsCard.style.display = 'none';
-        if (matchBtn) matchBtn.style.display = 'none';
-        if (matchBtn) matchBtn.disabled = true;
         if (lockedEl) lockedEl.style.display = '';
         if (lockedDesc) {
           lockedDesc.textContent = stage === 'egg'
@@ -438,7 +435,12 @@
         }
       }
     }).catch(function (e) { console.warn('Friend battle lobby:', e); })
-      .finally(function () { refreshOutgoingInviteUi(); });
+      .finally(function () {
+        refreshOutgoingInviteUi();
+        if (lobbyPlayerPet && !getAcceptFromQuery()) {
+          sendBattleInvitationFromLobby();
+        }
+      });
   }
 
   function calcScratch(atk, def) {
@@ -577,26 +579,91 @@
     }
   }
 
+  function renderInviteAwaitingVsUi() {
+    var wrap = document.getElementById('friend-invite-vs');
+    if (!wrap || wrap.classList.contains('hidden')) return;
+
+    var youSp = document.getElementById('friend-invite-your-sprite');
+    var oppSp = document.getElementById('friend-invite-opponent-sprite');
+    var youNameEl = document.getElementById('friend-invite-your-name');
+    var oppNameEl = document.getElementById('friend-invite-opponent-name');
+    if (!youSp || !oppSp) return;
+
+    var shadow = 'drop-shadow(0 6px 14px rgba(0, 0, 0, 0.72))';
+
+    if (lobbyPlayerPet && lobbyPlayerPet.sprite) {
+      applySprite(youSp, lobbyPlayerPet.sprite, true);
+      var st = String(lobbyPlayerPet.stage || '').toLowerCase();
+      youSp.style.filter = st !== 'adult'
+        ? 'grayscale(.7) brightness(.7) ' + shadow
+        : '';
+    } else {
+      youSp.style.backgroundImage = '';
+      youSp.classList.remove('is-animated', 'sprite-single');
+      youSp.style.filter = '';
+    }
+
+    oppSp.classList.remove('friend-invite-vs__sprite--pending');
+    if (opponentPreviewPet && opponentPreviewPet.sprite) {
+      applySprite(oppSp, opponentPreviewPet.sprite, true);
+      oppSp.style.filter = '';
+    } else {
+      oppSp.style.backgroundImage = '';
+      oppSp.classList.remove('is-animated', 'sprite-single');
+      oppSp.style.filter = 'none';
+      oppSp.classList.add('friend-invite-vs__sprite--pending');
+    }
+
+    if (youNameEl) {
+      youNameEl.textContent = (lobbyPlayerPet && lobbyPlayerPet.name) ? lobbyPlayerPet.name : 'You';
+    }
+    if (oppNameEl) {
+      oppNameEl.textContent = (opponentPreviewPet && opponentPreviewPet.name)
+        ? opponentPreviewPet.name
+        : friendDisplayName;
+    }
+  }
+
+  function setLobbyInviteAwaitingLayout(waiting) {
+    var vs = document.getElementById('friend-invite-vs');
+    var fighter = document.getElementById('multi-fighter');
+    var label = document.getElementById('friend-battle-opponent-label');
+    var statsCard = document.getElementById('multi-stats-card');
+    if (waiting) {
+      if (vs) {
+        vs.classList.remove('hidden');
+        vs.setAttribute('aria-hidden', 'false');
+      }
+      if (fighter) fighter.classList.add('hidden');
+      if (label) label.classList.add('hidden');
+      if (statsCard) statsCard.classList.add('hidden');
+      renderInviteAwaitingVsUi();
+    } else {
+      if (vs) {
+        vs.classList.add('hidden');
+        vs.setAttribute('aria-hidden', 'true');
+      }
+      if (fighter) fighter.classList.remove('hidden');
+      if (label) label.classList.remove('hidden');
+      if (statsCard) statsCard.classList.remove('hidden');
+    }
+  }
+
   function refreshOutgoingInviteUi() {
     if (!inviteRef || !lobbyPlayerPet) return;
     inviteRef.get().then(function (snap) {
       var d = snap.exists ? snap.data() : null;
       var waiting = !!(d && d.status === 'pending' && d.fromUid === myUid);
-      var matchBtn = document.getElementById('multi-match-btn');
       var cancelBtn = document.getElementById('multi-cancel-invite-btn');
       var hint = document.getElementById('friend-invite-waiting');
+      setLobbyInviteAwaitingLayout(waiting);
       if (waiting) {
-        if (matchBtn) matchBtn.style.display = 'none';
         if (cancelBtn) cancelBtn.classList.remove('hidden');
         if (hint) {
           hint.textContent = 'Waiting for ' + friendDisplayName + ' to accept your invitation…';
           hint.classList.remove('hidden');
         }
       } else {
-        if (matchBtn) {
-          matchBtn.style.display = '';
-          if (lobbyPlayerPet) matchBtn.disabled = false;
-        }
         if (cancelBtn) cancelBtn.classList.add('hidden');
         if (hint) hint.classList.add('hidden');
       }
@@ -604,13 +671,15 @@
   }
 
   function cancelOutgoingInvite() {
-    if (!inviteRef) return;
-    inviteRef.get().then(function (snap) {
+    if (!inviteRef) return Promise.resolve();
+    return inviteRef.get().then(function (snap) {
       var d = snap.exists ? snap.data() : null;
       if (d && d.status === 'pending' && d.fromUid === myUid) {
         return inviteRef.delete();
       }
-    }).catch(function (err) { console.warn('cancelInvite:', err); });
+    }).catch(function (err) {
+      console.warn('cancelInvite:', err);
+    });
   }
 
   function writePendingBattleInvite(fromUsername) {
@@ -654,6 +723,8 @@
         if (d.fromUid === myUid) {
           alert(friendDisplayName + ' declined your battle invitation.');
           inviteRef.delete().catch(function () {});
+          goToFriends();
+          return;
         }
         refreshOutgoingInviteUi();
         return;
@@ -933,10 +1004,10 @@
 
     document.getElementById('community-back-btn')?.addEventListener('click', handleBack);
     document.getElementById('battle-exit-btn')?.addEventListener('click', handleBack);
-    document.getElementById('multi-match-btn')?.addEventListener('click', sendBattleInvitationFromLobby);
     document.getElementById('multi-cancel-invite-btn')?.addEventListener('click', function () {
-      cancelOutgoingInvite();
-      refreshOutgoingInviteUi();
+      cancelOutgoingInvite().finally(function () {
+        goToFriends();
+      });
     });
 
     document.getElementById('btn-scratch')?.addEventListener('click', function () { submitMove('scratch'); });

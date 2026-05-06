@@ -37,7 +37,20 @@
           <div id="screen-lobby" class="battle-screen is-active">
             <div class="multi-content">
               <p class="friend-battle-opponent" id="friend-battle-opponent-label"></p>
-              <div class="multi-fighter">
+              <div class="friend-invite-vs hidden" id="friend-invite-vs" aria-hidden="true">
+                <div class="friend-invite-vs__arena">
+                  <div class="friend-invite-vs__side friend-invite-vs__side--you">
+                    <div class="friend-invite-vs__sprite" id="friend-invite-your-sprite"></div>
+                    <p class="friend-invite-vs__name" id="friend-invite-your-name">You</p>
+                  </div>
+                  <div class="friend-invite-vs__mid" aria-hidden="true">VS</div>
+                  <div class="friend-invite-vs__side friend-invite-vs__side--friend">
+                    <div class="friend-invite-vs__sprite" id="friend-invite-opponent-sprite"></div>
+                    <p class="friend-invite-vs__name" id="friend-invite-opponent-name">Friend</p>
+                  </div>
+                </div>
+              </div>
+              <div class="multi-fighter" id="multi-fighter">
                 <div class="multi-fighter-sprite" id="multi-pet-sprite"></div>
                 <p class="multi-fighter-name" id="multi-pet-name">—</p>
               </div>
@@ -52,10 +65,6 @@
                 </div>
               </div>
               <p class="friend-invite-waiting hidden" id="friend-invite-waiting" aria-live="polite"></p>
-              <button class="multi-match-btn" id="multi-match-btn" type="button" disabled>
-                <img src="../../assets/icons/match-icon.png" class="multi-match-icon" alt="" />
-                <span id="multi-match-btn-label">Send invitation</span>
-              </button>
               <button type="button" class="multi-cancel-invite-btn hidden" id="multi-cancel-invite-btn">Cancel invitation</button>
 
               <div class="multi-locked" id="multi-locked" style="display:none">

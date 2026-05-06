@@ -1,4 +1,117 @@
-@import url("../community-multiplayer/community.css");
+@import url("../community-battle/community-battle.css");
+
+/* Lobby stats: fixed block so layout does not jump when invite hint/buttons show */
+#screen-lobby .multi-stats-card {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  height: 172px;
+  max-height: 172px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+}
+
+#screen-lobby .multi-stats-grid {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+#screen-lobby .multi-stat {
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Awaiting invite: face-off row above stats (does not grow into stats card) */
+#screen-lobby .friend-invite-vs {
+  flex: 0 0 auto;
+  margin-bottom: 20px;
+}
+
+#screen-lobby .friend-invite-vs__arena {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 112px;
+  max-height: 128px;
+  padding: 6px 0;
+  box-sizing: border-box;
+}
+
+#screen-lobby .friend-invite-vs__side {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+#screen-lobby .friend-invite-vs__side--friend {
+  transform: scaleX(-1);
+}
+
+#screen-lobby .friend-invite-vs__side--friend .friend-invite-vs__name {
+  transform: scaleX(-1);
+}
+
+#screen-lobby .friend-invite-vs__sprite {
+  width: 76px;
+  aspect-ratio: 21 / 32;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-size: 700% 100%;
+  background-position: 0% 0%;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.72));
+}
+
+#screen-lobby .friend-invite-vs__sprite.is-animated {
+  animation: sp-idle 0.8s steps(1) infinite;
+}
+
+#screen-lobby .friend-invite-vs__side--you .friend-invite-vs__sprite {
+  transform: scaleX(-1);
+}
+
+#screen-lobby .friend-invite-vs__sprite.friend-invite-vs__sprite--pending {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  filter: none !important;
+  animation: none !important;
+}
+
+#screen-lobby .friend-invite-vs__mid {
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 0 4px;
+  font-family: "Lilita One", cursive;
+  font-size: 1.35rem;
+  color: #f5dc78;
+  text-shadow:
+    0 0 18px rgba(240, 180, 20, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.82);
+  line-height: 1;
+}
+
+#screen-lobby .friend-invite-vs__name {
+  margin: 0;
+  max-width: 100%;
+  padding: 3px 10px 4px;
+  font-family: "Lilita One", cursive;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.48);
+  border-radius: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .friend-battle-opponent {
   margin: 0;
@@ -10,34 +123,47 @@
 }
 
 .friend-invite-waiting {
-  margin: 0 0 8px;
-  padding: 10px 12px;
+  flex: 0 0 auto;
+  margin: 0 0 10px;
+  padding: 12px 14px;
   text-align: center;
   font-family: "Lilita One", cursive;
-  font-size: 0.82rem;
-  line-height: 1.35;
+  font-size: 0.88rem;
+  line-height: 1.4;
   color: #221d17;
   background: linear-gradient(to bottom, #fdf4e7, #edd8a8);
-  border: 3px solid #111;
-  border-radius: 14px;
-  box-shadow: 0 3px 0 #111;
+  border: 4px solid #111;
+  border-radius: 18px;
+  box-shadow: 0 4px 0 #111;
 }
 
 .multi-cancel-invite-btn {
   flex: 0 0 auto;
   width: 100%;
-  margin-top: 8px;
-  padding: 10px 16px;
+  margin-top: 0;
+  padding: 11px 16px;
   font-family: "Lilita One", cursive;
-  font-size: 1rem;
-  color: #221d17;
+  font-size: 0.95rem;
+  color: #3b2b1a;
   background: linear-gradient(to bottom, #e8e0d4, #cfc4b2);
-  border: 3px solid #111;
-  border-radius: 16px;
-  box-shadow: 0 3px 0 #111;
+  border: 4px solid #111;
+  border-radius: 18px;
+  box-shadow: 0 4px 0 #111;
   cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
 }
 
 .multi-cancel-invite-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #111;
   filter: brightness(1.05);
+}
+
+.multi-cancel-invite-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #111;
+}
+
+.hidden {
+  display: none !important;
 }
