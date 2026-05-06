@@ -23,7 +23,7 @@ body {
   padding: 20px;
 }
 
-/* ── Top banner ── */
+/* Top banner - newer gold styling */
 .evolution-top-banner {
   position: absolute;
   top: 23px;
@@ -53,13 +53,14 @@ body {
 }
 
 .screen-banner__title {
-  font-size: 1.55rem;
   font-weight: 900;
-  color: #3b1f00;
-  letter-spacing: 0.01em;
+  font-weight: bold;
+  color: white;
+  -webkit-text-stroke: 0.75px #111;
+  letter-spacing: -0.02em;
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 6px rgba(160, 90, 10, 0.3);
+    0 1px 0 rgba(255,255,255,0.6),
+    0 3px 8px rgba(120, 70, 10, 0.25);
   white-space: nowrap;
 }
 
@@ -74,6 +75,7 @@ body {
   background: linear-gradient(
     120deg,
     transparent,
+    rgba(255, 255, 255, 0.65),
     rgba(255, 255, 255, 0.65),
     transparent
   );
@@ -90,10 +92,10 @@ body {
 
 @keyframes premium-pulse {
   0%, 100% { filter: brightness(1); }
-  50%       { filter: brightness(1.06); }
+  50%      { filter: brightness(1.06); }
 }
 
-/* ── Dialog box ── */
+/* Top text dialog */
 .evolution-dialog {
   position: absolute;
   top: 82px;
@@ -157,13 +159,98 @@ body {
   animation: evolution-caret-blink 0.9s steps(1) infinite;
 }
 
+.evolution-stats-dialog {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 42px;
+  width: 90%;
+  max-width: 600px;
+  z-index: 21;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.evolution-stats-dialog__inner {
+  width: 100%;
+  max-width: 560px;
+  min-height: auto;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 2px solid rgba(255, 210, 90, 0.65);
+  color: #ffe9a0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 40%),
+    rgba(18, 10, 42, 0.82);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 0 1px rgba(255, 200, 70, 0.15),
+    0 4px 18px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.evolution-stats-dialog__inner::before {
+  display: none;
+}
+
+.evolution-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr auto auto 1fr auto auto;
+  column-gap: 10px;
+  row-gap: 8px;
+  align-items: center;
+  font-weight: 800;
+  color: #ffe9a0;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
+}
+
+.stat-label {
+  text-align: left;
+  letter-spacing: -0.02em;
+  color: rgba(255, 230, 160, 0.86);
+}
+
+.stat-value {
+  text-align: right;
+  min-width: 28px;
+  color: #ffe9a0;
+  transform-origin: center;
+  transition: color 220ms ease;
+}
+
+.stat-value-boosted {
+  color: #37e46f;
+  animation: stat-pop 360ms ease both;
+}
+
+.stat-increase {
+  color: #37e46f;
+  margin-left: 2px;
+  font-weight: 900;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.stat-increase-hide {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+@keyframes stat-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.75); }
+  70%  { transform: scale(0.90); }
+  100% { transform: scale(1.24); }
+}
+
 @keyframes evolution-dialog-in {
   from { opacity: 0; transform: translateY(10px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes evolution-caret-blink {
-  0%, 50%    { opacity: 1; }
+  0%, 50%     { opacity: 1; }
   50.01%,100%{ opacity: 0; }
 }
 
@@ -185,10 +272,10 @@ body {
   border-radius: 999px;
   background:
     radial-gradient(circle,
-      rgba(255, 248, 200, 0.98)  0%,
+      rgba(255, 248, 200, 0.98) 0%,
       rgba(255, 220, 130, 0.85) 22%,
-      rgba(255, 180, 70,  0.48) 48%,
-      rgba(255, 130, 30,  0.16) 72%,
+      rgba(255, 180, 70, 0.48) 48%,
+      rgba(255, 130, 30, 0.16) 72%,
       transparent 100%);
   filter: blur(10px);
   opacity: 0.78;
@@ -350,77 +437,43 @@ body {
   100% { opacity: 0; transform: translateY(-16px) scale(1.5, 1.5); filter: brightness(1.9);  }
 }
 
-/* ── Bottom buttons — float over a dark gradient, no solid box ── */
-.evolution-bottom-banner {
+.evolution-close-btn {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 20;
-  display: flex;
-  gap: 12px;
-  padding: 18px 22px 24px;
-  background: linear-gradient(to top, rgba(5, 2, 18, 0.88) 0%, rgba(5, 2, 18, 0.5) 55%, transparent 100%);
-  border: none;
-}
-
-.evolution-action-btn {
+  top: 17px;
+  right: 24px;
+  z-index: 30;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  flex: 1;
-  min-height: 52px;
-  border: 2px solid rgba(255, 210, 90, 0.65);
-  border-radius: 18px;
-  padding: 14px 18px;
-  font-weight: 800;
-  font-size: 1rem;
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  color: #ffe9a0;
+  border: 3px solid black;
+  border-radius: 14px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 40%),
-    rgba(18, 10, 42, 0.82);
-  backdrop-filter: blur(10px);
-  box-shadow:
-    0 0 0 1px rgba(255, 200, 70, 0.15),
-    0 4px 18px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 36%),
+    linear-gradient(135deg, #fff8df 0%, #f2dfaa 52%, #e2c37b 100%);
+  color: #3e2610;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
 
-.evolution-action-btn:hover {
+.evolution-close-btn:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 0 0 1px rgba(255, 210, 90, 0.4),
-    0 6px 22px rgba(0, 0, 0, 0.6),
-    0 0 18px rgba(255, 190, 60, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  filter: brightness(1.08);
+  filter: brightness(1.03);
 }
 
-.evolution-action-btn:active {
-  transform: translateY(1px) scale(0.995);
-  filter: brightness(0.95);
+.evolution-close-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: inset 0 2px 4px rgba(140, 90, 24, 0.14);
 }
 
-.evolution-action-btn:focus-visible {
-  outline: 2px solid rgba(255, 220, 100, 0.7);
-  outline-offset: 3px;
-}
-
-/* Secondary button (Return home) — slightly dimmer gold border */
-.evolution-action-btn-secondary {
-  border-color: rgba(255, 210, 90, 0.4);
-  color: rgba(255, 230, 160, 0.85);
-}
-
-.btn-icon {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  filter: invert(1) sepia(1) saturate(2) hue-rotate(5deg);
+.evolution-close-btn:focus-visible {
+  outline: 3px solid rgba(255, 241, 189, 0.72);
+  outline-offset: 2px;
 }
 
 /* ── Keyframes ── */

@@ -10,6 +10,73 @@
 (function () {
   'use strict';
 
+  let petType = "";
+  /*async function fetchPetData(uid, petId) {
+
+    const petDocSnap = await db.collection("users").doc(uid).collection("pets").doc(petId).get();
+
+    if (petDocSnap.empty) {
+      console.log("No matching documents found.");
+      return;
+    }
+
+    return petDocSnap.data();
+  }*/
+
+  const db = firebase.firestore();
+  var auth = firebase.auth();
+  var currentUserUid = '';
+  let ascendingOrderTrophies = [];
+  async function getTrophiesList() {
+    let petIndex = 0;
+    try {
+      //works. create index first
+      const snapshot = await db.collection("users")
+        .orderBy("trophy", "desc")
+        .orderBy("username", "asc")
+        .get();
+
+      if (snapshot.empty) {
+        console.log("No matching documents found.");
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        //console.log(typeof(doc));
+        var userData = doc.data() || {};
+        if (!userData.uid) userData.uid = doc.id;
+        ascendingOrderTrophies.push(userData);
+
+        //extract the type of pet the active pet is
+        petType = doc.data().activePetId.split("_")[0];
+
+        //add the petRef field to the object in the array so following functions work
+        ascendingOrderTrophies[petIndex].petRef = petType;
+        petIndex++;
+      });
+
+      /*const userArray = [];
+      snapshot.forEach(doc => {
+        userArray.push(doc);
+      });
+
+      for (const doc of userArray) {
+        ascendingOrderTrophies.push(doc.data());
+
+        let petInfo = await fetchPetData(doc.data().uid, doc.data().activePetId);
+        petType = petInfo.petRef;
+
+        ascendingOrderTrophies[petIndex].petRef = petType;
+        ascendingOrderTrophies[petIndex].petStage = petInfo.stage;
+        petIndex++;
+      }*/
+    } catch (error) {
+      console.error("Error getting trophy list:", error.message);
+    }
+
+    console.log(ascendingOrderTrophies);
+  }
+
   var MOCK_LEADERBOARD = [
     {
       uid: 'mock-1',
@@ -84,13 +151,52 @@
     'acc-leprechaunhat': 'LeprechaunHat',
   };
 
-  function resolveSpriteSrc(petRef, equippedItemId) {
+  /*function resolveSpriteSrc(petRef, petStage, equippedItemId) {
     var suffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
     if (suffix && petRef) {
       return '../../assets/spritesheets/Cubic' + petRef + suffix + '.png';
     }
+
+    if (petStage == "Egg")
+    {
+      return '../../assets/eggs/Cubic' + petRef + 'Egg.png';
+    }
+
+    if (petStage == "Baby")
+    {
+      return '../../assets/spritesheets/Cubic' + petRef  + 'Baby.png';
+    }
+    return PET_SPRITES[petRef] || null;
+  }*/
+
+function resolveSpriteSrc(petRef, equippedItemId) {
+    var suffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
+    if (suffix && petRef) {
+      return '../../assets/spritesheets/Cubic' + petRef + suffix + '.png';
+    }
+
     return PET_SPRITES[petRef] || null;
   }
+
+  /*function applyAvatarSprite(el, petRef, petStage, equippedItemId, emptyClass) {
+    var sprite = resolveSpriteSrc(petRef, petStage, equippedItemId);
+    if (!sprite) {
+      if (emptyClass) el.classList.add(emptyClass);
+      el.textContent = '🥚';
+      return;
+    }
+    el.style.backgroundImage = 'url("' + sprite + '")';
+    if (SINGLE_ROW_PETS[petRef]) {
+      el.style.backgroundSize = '700% 100%';
+      el.style.backgroundPosition = '0% 0%';
+    }
+
+    if (petStage == "Egg") {
+      //el.style.backgroundSize = "contain";
+      el.style.backgroundSize = '70px 70px';
+      el.style.backgroundPosition = '-5px -5px';
+    }
+  }*/
 
   function applyAvatarSprite(el, petRef, equippedItemId, emptyClass) {
     var sprite = resolveSpriteSrc(petRef, equippedItemId);
@@ -123,22 +229,33 @@
   function goToPublicProfile(uid) {
     if (!uid || String(uid).indexOf('mock-') === 0) return;
     window.location.href =
-      '../community-friends-profile/index.html?uid=' + encodeURIComponent(uid);
+      '../community-friends-profile/index.html?uid=' +
+        encodeURIComponent(uid) +
+        '&returnTo=leaderboard';
   }
 
   function buildLeaderboardCard(entry, rank) {
     var li = document.createElement('li');
     var interactive = entry.uid && String(entry.uid).indexOf('mock-') !== 0;
+    //var interactive = entry.uid;
     li.className = 'leaderboard-card';
     li.classList.add(interactive ? 'leaderboard-card--interactive' : 'leaderboard-card--static');
+    if (currentUserUid && String(entry.uid || '') === String(currentUserUid)) {
+      li.classList.add('leaderboard-card--me');
+    }
     li.setAttribute(
       'aria-label',
       'Rank ' + rank + ': ' + (entry.username || 'Player') + ', ' +
-        Number(entry.trophy || 0).toLocaleString() + ' trophies'
+      Number(entry.trophy || 0).toLocaleString() + ' trophies'
     );
 
     var avatar = document.createElement('div');
     avatar.className = 'leaderboard-card__avatar';
+    //let petRef = db.collection("users").doc(entry.uid).collection("pets").doc(entry.activePetId).get();
+    //applyAvatarSprite(avatar, entry.petRef, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
+
+    //Uncomment for subcollection
+    //applyAvatarSprite(avatar, entry.petRef, entry.petStage, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
     applyAvatarSprite(avatar, entry.petRef, entry.equippedItemId || null, 'leaderboard-card__avatar--empty');
 
     var name = document.createElement('span');
@@ -194,7 +311,8 @@
   function render(entries) {
     if (!leaderboardList || !leaderboardLoading || !leaderboardEmpty) return;
 
-    var sorted = (entries || []).slice().sort(compareEntries);
+    //var sorted = (entries || []).slice().sort(compareEntries);
+    var sorted = entries;
 
     leaderboardLoading.classList.add('hidden');
     if (!sorted.length) {
@@ -211,18 +329,28 @@
     });
   }
 
-  function loadLeaderboard() {
+  async function loadLeaderboard() {
+    await getTrophiesList();
+
     leaderboardLoading.classList.remove('hidden');
     leaderboardList.classList.add('hidden');
     leaderboardEmpty.classList.add('hidden');
 
     /* Simulate async fetch — replace with Firestore snapshot when backend exists */
     window.setTimeout(function () {
+      console.log(MOCK_LEADERBOARD);
       render(MOCK_LEADERBOARD);
+    }, 280);
+
+    window.setTimeout(function () {
+      render(ascendingOrderTrophies);
     }, 280);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    loadLeaderboard();
+    auth.onAuthStateChanged(function (user) {
+      currentUserUid = user && user.uid ? String(user.uid) : '';
+      loadLeaderboard();
+    });
   });
 })();

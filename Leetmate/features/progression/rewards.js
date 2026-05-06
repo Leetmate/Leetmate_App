@@ -7,8 +7,13 @@
 
 const COINS_PER_SUBMISSION = 20;
 const XP_PER_SUBMISSION = 5;
-const COINS_FIRST_SUBMISSION = 10;
-const XP_FIRST_SUBMISSION = 80;
+const COINS_FIRST_SUBMISSION = 80;
+const XP_FIRST_SUBMISSION = 10;
+
+const PREMIUM_COINS_PER_SUBMISSION = 30;
+const PREMIUM_XP_PER_SUBMISSION = 10;
+const PREMIUM_COINS_FIRST_SUBMISSION = 100;
+const PREMIUM_XP_FIRST_SUBMISSION = 20;
 
 let rewardsState = {
   solved: false,
@@ -36,13 +41,35 @@ async function getRewardsState(db, uid) {
   let claimableCoins = 0;
   let claimableXp = 0;
 
+  // Select reward value based on premium state
+  let isPremium = false;
+  if (window.LeetmatePremium) {
+    isPremium = (await window.LeetmatePremium.getFirestorePremium()) === true;
+  }
+  const coinsFirst = isPremium
+    ? PREMIUM_COINS_FIRST_SUBMISSION
+    : COINS_FIRST_SUBMISSION;
+
+  const xpFirst = isPremium
+    ? PREMIUM_XP_FIRST_SUBMISSION
+    : XP_FIRST_SUBMISSION;
+
+  const coinsPerSubmission = isPremium
+    ? PREMIUM_COINS_PER_SUBMISSION
+    : COINS_PER_SUBMISSION;
+
+  const xpPerSubmission = isPremium
+    ? PREMIUM_XP_PER_SUBMISSION
+    : XP_PER_SUBMISSION;
+
+
   for (const submission of claimable) {
     if (submission.order === 1) {
-      claimableCoins += COINS_FIRST_SUBMISSION;
-      claimableXp += XP_FIRST_SUBMISSION;
+      claimableCoins += coinsFirst;
+      claimableXp += xpFirst;
     } else {
-      claimableCoins += COINS_PER_SUBMISSION;
-      claimableXp += XP_PER_SUBMISSION;
+      claimableCoins += coinsPerSubmission;
+      claimableXp += xpPerSubmission;
     }
   }
 

@@ -225,6 +225,25 @@ body {
   cursor: default;
 }
 
+/* Current user highlight in leaderboard */
+.leaderboard-card--me {
+  position: relative;
+  border-color: #ffd84d;
+  box-shadow:
+    0 4px 0 #111,
+    0 0 0 2px rgba(255, 216, 77, 0.9),
+    0 0 12px rgba(255, 216, 77, 0.65);
+}
+
+.leaderboard-card--me::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgba(255, 246, 180, 0.85);
+}
+
 /* ── EMPTY ──────────────────────────────────────────────────────────────────── */
 .leaderboard-empty {
   flex: 1 1 0;
