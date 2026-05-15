@@ -84,7 +84,34 @@ function saveLeetCodeProgressToFirestore(db, uid, rawSubmissions) {
           });
         });
     })
-    .catch((e) => console.error("saveLeetCodeProgressToFirestore failed:", e));
+    .catch((e) => {
+      console.error("saveLeetCodeProgressToFirestore failed:", e);
+      throw e;
+    });
+}
+
+/**
+ * True if today's Pacific calendar doc has at least one recorded submission row.
+ * Prefers reading the dated doc directly so we don't rely on orderBy(updatedAt),
+ * which can lag behind serverTimestamp() resolution.
+ */
+async function hasFirestoreProgressPacificToday(db, uid) {
+  if (!db || !uid || typeof getTodayString !== "function") return false;
+  const todayKey = getTodayString();
+  try {
+    const snap = await db
+      .collection("users")
+      .doc(uid)
+      .collection("leetcodeProgress")
+      .doc(todayKey)
+      .get();
+    if (!snap.exists) return false;
+    const subs = snap.data().submissions || [];
+    return subs.length > 0;
+  } catch (e) {
+    console.error("hasFirestoreProgressPacificToday failed:", e);
+    return false;
+  }
 }
 
 /**
@@ -172,16 +199,24 @@ function markSubmissionsClaimed(db, uid, submissionIds) {
  */
 function syncPendingSubmissionsToFirestore(db, uid) {
   return new Promise((resolve) => {
-    chrome.storage.local.get(PENDING_SUBMISSIONS_KEY, (items) => {
+    chrome.storage.local.get(PENDING_SUBMISSIONS_KEY, async (items) => {
       const pending = items[PENDING_SUBMISSIONS_KEY];
       if (!pending || !Array.isArray(pending) || pending.length === 0) {
         resolve();
         return;
       }
 
-      saveLeetCodeProgressToFirestore(db, uid, pending).then(() => {
+      try {
+        await saveLeetCodeProgressToFirestore(db, uid, pending);
         chrome.storage.local.remove(PENDING_SUBMISSIONS_KEY, resolve);
-      });
+      } catch (_e) {
+        console.warn(
+          "[Leetmate] Keeping leetcode_pending_submissions; sync will retry:",
+          pending.length,
+          "row(s)."
+        );
+        resolve();
+      }
     });
   });
 }
@@ -206,9 +241,6 @@ async function loadLatestProgressDate(db, uid) {
 
     // The document ID is the date string e.g. "2026-03-15"
     const latestDate = snap.docs[0].id;
-
-    // Sync to chrome storage
-    await storageSet({ leetmate_last_progress_date: latestDate });
     console.log("Latest progress date loaded:", latestDate);
 
     return latestDate;

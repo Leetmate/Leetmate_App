@@ -66,7 +66,22 @@ importScripts(
 	// Queue submissions from content script; Home will sync to Firestore when it loads
 	chrome.runtime.onMessage.addListener((message) => {
 		if (message.type === 'SAVE_LEETCODE_PROGRESS' && Array.isArray(message.payload) && message.payload.length > 0) {
-			chrome.storage.local.set({ leetcode_pending_submissions: message.payload });
+			chrome.storage.local.get(['leetcode_pending_submissions'], (items) => {
+				const prev = items?.leetcode_pending_submissions;
+				const bySlug = new Map();
+				for (const s of Array.isArray(prev) ? prev : []) {
+					const slug = s && s.titleSlug;
+					if (!slug) continue;
+					bySlug.set(slug, s);
+				}
+				for (const s of message.payload) {
+					const slug = s && s.titleSlug;
+					if (!slug) continue;
+					bySlug.set(slug, s);
+				}
+				const merged = [...bySlug.values()];
+				chrome.storage.local.set({ leetcode_pending_submissions: merged });
+			});
 		}
 	});
 
