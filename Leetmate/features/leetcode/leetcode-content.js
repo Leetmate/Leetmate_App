@@ -66,6 +66,15 @@ async function fetchAndSaveSubmissions() {
 // Run on initial load
 fetchAndSaveSubmissions();
 
+// LeetCode is an SPA — AC often lands without URL/history updates, so the background
+// "FETCH_SUBMISSIONS" ping never fires. Poll + tab-visible refresh covers that gap.
+const SUBMISSION_REFRESH_MS = 45_000;
+setInterval(fetchAndSaveSubmissions, SUBMISSION_REFRESH_MS);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible") return;
+  fetchAndSaveSubmissions();
+});
+
 // Run again when background signals navigation (SPA route change)
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.type === "FETCH_SUBMISSIONS") {

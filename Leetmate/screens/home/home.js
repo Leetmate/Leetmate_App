@@ -33,11 +33,50 @@ document.addEventListener("DOMContentLoaded", () => {
   const auth = firebase.auth();
   let currentUid = null;
 
-  async function refreshAfterProgressSync() {
+  /**
+   * Flush pending submissions, refresh rewards from Firestore, then derive solvedToday
+   * and update streak. Must run after sync — reading progress before sync leaves
+   * solvedToday false until the next full reload.
+   *
+   * Prefer reading users/.../leetcodeProgress/{Pacific YYYY-MM-DD} over orderBy(updatedAt),
+   * since server timestamps can reorder the latest-doc query incorrectly right after writes.
+   */
+  async function refreshProgressAndStreak() {
     if (!currentUid) return;
 
     await syncPendingSubmissionsToFirestore(db, currentUid);
     await refreshRewardsCard(db, currentUid);
+
+    const today = getTodayString();
+
+    let solvedToday = await hasFirestoreProgressPacificToday(db, currentUid);
+    let latestRecorded = null;
+    if (!solvedToday && typeof loadLatestProgressDate === "function") {
+      latestRecorded = await loadLatestProgressDate(db, currentUid);
+      solvedToday = latestRecorded === today;
+    }
+
+    if (solvedToday) {
+      await storageSet({ leetmate_last_progress_date: today });
+    } else if (latestRecorded) {
+      await storageSet({ leetmate_last_progress_date: latestRecorded });
+    }
+
+    const { leetmate_last_streak_date } = await storageGet([
+      "leetmate_last_streak_date",
+    ]);
+    if (
+      leetmate_last_streak_date !== today &&
+      typeof runDailyStreakCheck === "function"
+    ) {
+      await runDailyStreakCheck();
+    }
+
+    await updateStreakOnLoad(db, currentUid, solvedToday);
+  }
+
+  async function refreshAfterProgressSync() {
+    await refreshProgressAndStreak();
   }
 
   /** Re-pull pet + happiness from Firestore when the user returns (Firestore edits otherwise stay stale). */
@@ -78,8 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
   		});
 
   		const initalRewardsPromise = refreshRewardsCard(db, currentUid);
-  		const syncedRewardsPromise = syncPendingSubmissionsToFirestore(db, currentUid)
-  			.then(() => refreshRewardsCard(db, currentUid));
   		
   		await Promise.all([
   			loadXPFromFirestore(db, currentUid),
@@ -100,29 +137,8 @@ document.addEventListener("DOMContentLoaded", () => {
       startHappinessDecayTimer();
 
   		await initalRewardsPromise;
-      // Sync submissions before rewards/streak evaluation
 
-      const latestProgressDate = await loadLatestProgressDate(db, currentUid);
-      const today = getTodayString();
-      const solvedToday = latestProgressDate === today;
-
-      if (solvedToday) {
-        await storageSet({ leetmate_last_progress_date: today });
-      }
-
-      const { leetmate_last_streak_date } = await storageGet(["leetmate_last_streak_date"]);
-      if (
-        leetmate_last_streak_date !== today &&
-        typeof runDailyStreakCheck === "function"
-      ) {
-        await runDailyStreakCheck();
-      }
-  		
-  		await Promise.all([
-  			syncedRewardsPromise,
-  			updateStreakOnLoad(db, currentUid, solvedToday)
-  		]);
-  		
+      await refreshProgressAndStreak();
   		// Load active pet (sync any midnight age bumps to Firestore subcollection first)
       if (typeof syncPendingPetAgeToFirestore === "function") {
         await syncPendingPetAgeToFirestore(db, currentUid);
@@ -194,7 +210,24 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
   const streakData = await loadStreakData(db, uid);
   if (!streakData) return;
   const today = getTodayString();
-  const { leetmate_last_progress_date } = await storageGet(["leetmate_last_progress_date"]);
+  const { leetmate_last_progress_date } = await storageGet([
+    "leetmate_last_progress_date",
+  ]);
+
+  /* streakLastUpdated is also written for midnight / missed-day bookkeeping; don't use
+   * it alone to decide whether we credited today's solve (+1 streak). */
+  const rewardedSolveToday =
+    streakData.streakSolveRewardDate != null &&
+    streakData.streakSolveRewardDate === today;
+
+  if (solvedToday && !rewardedSolveToday) {
+    const updated = incrementStreak(streakData);
+    updated.streakLastUpdated = today;
+    updated.streakSolveRewardDate = today;
+    await saveStreakData(db, uid, updated);
+    updateStreakUI(updated);
+    return;
+  }
 
   // If the background daily check already ran, it would have written the new
   // streak values to chrome storage with leetmate_last_streak_date === today.
@@ -204,11 +237,13 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
     leetmate_last_streak_date,
     leetmate_streak_freeze_start,
     leetmate_streak_freeze_end,
+    leetmate_streak_solve_reward_date,
   } = await storageGet([
     "leetmate_streak",
     "leetmate_last_streak_date",
     "leetmate_streak_freeze_start",
     "leetmate_streak_freeze_end",
+    "leetmate_streak_solve_reward_date",
   ]);
 
   const storageUpdatedToday = leetmate_last_streak_date === today;
@@ -218,13 +253,25 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
       streakLastUpdated: leetmate_last_streak_date ?? null,
       streakFreezeStart: leetmate_streak_freeze_start ?? null,
       streakFreezeEnd: leetmate_streak_freeze_end ?? null,
+      streakSolveRewardDate: (() => {
+        const r = leetmate_streak_solve_reward_date;
+        if (
+          typeof r === "string" &&
+          /^\d{4}-\d{2}-\d{2}$/.test(String(r).trim())
+        ) {
+          return String(r).trim();
+        }
+        return streakData.streakSolveRewardDate ?? null;
+      })(),
     };
 
     if (
       fromStorage.streak !== streakData.streak ||
       fromStorage.streakLastUpdated !== streakData.streakLastUpdated ||
       fromStorage.streakFreezeStart !== streakData.streakFreezeStart ||
-      fromStorage.streakFreezeEnd !== streakData.streakFreezeEnd
+      fromStorage.streakFreezeEnd !== streakData.streakFreezeEnd ||
+      (fromStorage.streakSolveRewardDate ?? null) !==
+        (streakData.streakSolveRewardDate ?? null)
     ) {
       await saveStreakData(db, uid, fromStorage);
     }
@@ -259,10 +306,9 @@ async function updateStreakOnLoad(db, uid, solvedToday) {
     return;
   }
 
-  const updated = incrementStreak(streakData);
-  updated.streakLastUpdated = today;
-  await saveStreakData(db, uid, updated);
-  updateStreakUI(updated);
+  /* Solve credit handled at top via streakSolveRewardDate; if we reached here solvedToday
+     is false or already rewarded — should not increment again (defensive fallback). */
+  updateStreakUI(streakData);
 }
 
 /* Minimize window */
