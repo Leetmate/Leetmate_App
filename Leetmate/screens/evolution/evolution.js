@@ -4,10 +4,25 @@ const PET_ASSETS = {
       baby: '../../assets/spritesheets/CubicBatBaby.png',
       adult: '../../assets/spritesheets/CubicBatAdult.png'
     },
+    Bunny: {
+      egg: '../../assets/eggs/CubicBunnyEgg.png',
+      baby: '../../assets/spritesheets/CubicBunnyBaby.png',
+      adult: '../../assets/spritesheets/CubicBunnyAdult.png'
+    },
     Cat: {
       egg: '../../assets/eggs/CubicCatEgg.png',
       baby: '../../assets/spritesheets/CubicCatBaby.png',
       adult: '../../assets/spritesheets/CubicCatAdult.png'
+    },
+    Elephant: {
+      egg: '../../assets/eggs/CubicElephantEgg.png',
+      baby: '../../assets/spritesheets/CubicElephantBaby.png',
+      adult: '../../assets/spritesheets/CubicElephantAdult.png'
+    },
+    Flamingo: {
+      egg: '../../assets/eggs/CubicFlamingoEgg.png',
+      baby: '../../assets/spritesheets/CubicFlamingoBaby.png',
+      adult: '../../assets/spritesheets/CubicFlamingoAdult.png'
     },
     Fox: {
       egg: '../../assets/eggs/CubicFoxEgg.png',
@@ -18,6 +33,11 @@ const PET_ASSETS = {
       egg: '../../assets/eggs/CubicFrogEgg.png',
       baby: '../../assets/spritesheets/CubicFrogBaby.png',
       adult: '../../assets/spritesheets/CubicFrogAdult.png'
+    },
+    Grizzly: {
+      egg: '../../assets/eggs/CubicGrizzlyEgg.png',
+      baby: '../../assets/spritesheets/CubicGrizzyBaby.png',
+      adult: '../../assets/spritesheets/CubicGrizzlyAdult.png'
     },
     Wolf: {
       egg: '../../assets/eggs/CubicWolfEgg.png',
@@ -33,6 +53,41 @@ const PET_ASSETS = {
       egg: '../../assets/eggs/CubicMicoLeaoDouradoEgg.png',
       baby: '../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png',
       adult: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png'
+    },
+    Lion: {
+      egg: '../../assets/eggs/CubicLionEgg.png',
+      baby: '../../assets/spritesheets/CubicLionBaby.png',
+      adult: '../../assets/spritesheets/CubicLionAdult.png'
+    },
+    Owl: {
+      egg: '../../assets/eggs/CubicOwlEgg.png',
+      baby: '../../assets/spritesheets/CubicOwlBaby.png',
+      adult: '../../assets/spritesheets/CubicOwlAdult.png'
+    },
+    Penguin: {
+      egg: '../../assets/eggs/CubicPenguinEgg.png',
+      baby: '../../assets/spritesheets/CubicPenguinBaby.png',
+      adult: '../../assets/spritesheets/CubicPenguinAdult.png'
+    },
+    Rat: {
+      egg: '../../assets/eggs/CubicRatEgg.png',
+      baby: '../../assets/spritesheets/CubicRatBaby.png',
+      adult: '../../assets/spritesheets/CubicRatAdult.png'
+    },
+    Sheep: {
+      egg: '../../assets/eggs/CubicSheepEgg.png',
+      baby: '../../assets/spritesheets/CubicSheepBaby.png',
+      adult: '../../assets/spritesheets/CubicSheepAdult.png'
+    },
+    Turtle: {
+      egg: '../../assets/eggs/CubicTurtleEgg.png',
+      baby: '../../assets/spritesheets/CubicTurtleBaby.png',
+      adult: '../../assets/spritesheets/CubicTurtleAdult.png'
+    },
+    Unicorn: {
+      egg: '../../assets/eggs/CubicUnicornEgg.png',
+      baby: '../../assets/spritesheets/CubicUnicornBaby.png',
+      adult: '../../assets/spritesheets/CubicUnicornAdult.png'
     }
 };
   
@@ -314,14 +369,14 @@ function showStatsDialog(oldStats = {}, newStats = {}) {
   setTimeout(() => {
     grid.querySelectorAll('.stat-value').forEach((valueEl, index) => {
       valueEl.textContent = valueEl.dataset.newValue;
-      valueEl.style.animationDelay = `${index * 60}ms`; // stagger effect
+      valueEl.style.animationDelay = `${index * 120}ms`; // stagger effect
       valueEl.classList.add('stat-value-boosted');
     });
   
     grid.querySelectorAll('.stat-increase').forEach((increaseEl) => {
       increaseEl.classList.add('stat-increase-hide');
     });
-  }, 900);
+  }, 1500);
 }
   
 function playEvolutionAnimation(petType, activeStage = 'egg') {

@@ -37,6 +37,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmPasswordInput = document.getElementById("confirm-password");
   const updatePasswordBtn = document.getElementById("update-password-btn");
 
+  const PET_ASSETS = {
+    Bat: { egg: "../../assets/eggs/CubicBatEgg.png", baby: "../../assets/spritesheets/CubicBatBaby.png", adult: "../../assets/spritesheets/CubicBatAdult.png" },
+    Bunny: { egg: "../../assets/eggs/CubicBunnyEgg.png", baby: "../../assets/spritesheets/CubicBunnyBaby.png", adult: "../../assets/spritesheets/CubicBunnyAdult.png" },
+    Cat: { egg: "../../assets/eggs/CubicCatEgg.png", baby: "../../assets/spritesheets/CubicCatBaby.png", adult: "../../assets/spritesheets/CubicCatAdult.png" },
+    Elephant: { egg: "../../assets/eggs/CubicElephantEgg.png", baby: "../../assets/spritesheets/CubicElephantBaby.png", adult: "../../assets/spritesheets/CubicElephantAdult.png" },
+    Flamingo: { egg: "../../assets/eggs/CubicFlamingoEgg.png", baby: "../../assets/spritesheets/CubicFlamingoBaby.png", adult: "../../assets/spritesheets/CubicFlamingoAdult.png" },
+    Fox: { egg: "../../assets/eggs/CubicFoxEgg.png", baby: "../../assets/spritesheets/CubicFoxBaby.png", adult: "../../assets/spritesheets/CubicFoxAdult.png" },
+    Frog: { egg: "../../assets/eggs/CubicFrogEgg.png", baby: "../../assets/spritesheets/CubicFrogBaby.png", adult: "../../assets/spritesheets/CubicFrogAdult.png" },
+    Giraffe: { egg: "../../assets/eggs/CubicGiraffeEgg.png", baby: "../../assets/spritesheets/CubicGiraffeBaby.png", adult: "../../assets/spritesheets/CubicGiraffeAdult.png" },
+    Grizzly: { egg: "../../assets/eggs/CubicGrizzlyEgg.png", baby: "../../assets/spritesheets/CubicGrizzlyBaby.png", adult: "../../assets/spritesheets/CubicGrizzlyAdult.png" },
+    Lion: { egg: "../../assets/eggs/CubicLionEgg.png", baby: "../../assets/spritesheets/CubicLionBaby.png", adult: "../../assets/spritesheets/CubicLionAdult.png" },
+    MicoLeaoDourado: { egg: "../../assets/eggs/CubicMicoLeaoDouradoEgg.png", baby: "../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png", adult: "../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png" },
+    Owl: { egg: "../../assets/eggs/CubicOwlEgg.png", baby: "../../assets/spritesheets/CubicOwlBaby.png", adult: "../../assets/spritesheets/CubicOwlAdult.png" },
+    Penguin: { egg: "../../assets/eggs/CubicPenguinEgg.png", baby: "../../assets/spritesheets/CubicPenguinBaby.png", adult: "../../assets/spritesheets/CubicPenguinAdult.png" },
+    Rat: { egg: "../../assets/eggs/CubicRatEgg.png", baby: "../../assets/spritesheets/CubicRatBaby.png", adult: "../../assets/spritesheets/CubicRatAdult.png" },
+    Sheep: { egg: "../../assets/eggs/CubicSheepEgg.png", baby: "../../assets/spritesheets/CubicSheepBaby.png", adult: "../../assets/spritesheets/CubicSheepAdult.png" },
+    Turtle: { egg: "../../assets/eggs/CubicTurtleEgg.png", baby: "../../assets/spritesheets/CubicTurtleBaby.png", adult: "../../assets/spritesheets/CubicTurtleAdult.png" },
+    Unicorn: { egg: "../../assets/eggs/CubicUnicornEgg.png", baby: "../../assets/spritesheets/CubicUnicornBaby.png", adult: "../../assets/spritesheets/CubicUnicornAdult.png" },
+    Wolf: { egg: "../../assets/eggs/CubicWolfEgg.png", baby: "../../assets/spritesheets/CubicWolfBaby.png", adult: "../../assets/spritesheets/CubicWolfAdult.png" }
+  };
+
   // ---- User State ----
   // Set values once Firebase confirms who is loged in 
   let currentUser = null;   // Firebase Auth user
@@ -251,11 +272,12 @@ document.addEventListener("DOMContentLoaded", () => {
           const petStage = petData.stage || "Adult";
           const equippedItemId = data.equippedItemId || null;
           let petPath = "../../assets";
+          const assetSet = PET_ASSETS[petRef] || PET_ASSETS.Cat;
 
           //create the path for the pet image
           if (petStage == "Egg" || petStage == "egg") 
             {
-            petPath = "../../assets/eggs/Cubic"+petRef+"Egg.png";
+            petPath = assetSet.egg;
             //"../../assets/spritesheets/CubicFoxAdult.png"
             profileImg.classList.remove("adult");
             profileImg.classList.add("egg");
@@ -264,7 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
           {
             if (petStage == "Baby" || petStage == "baby")
             {
-              petPath = "../../assets/spritesheets/Cubic"+petRef+"Baby.png";
+              petPath = assetSet.baby;
             }
             if (petStage == "Adult" || petStage == "adult")
             {

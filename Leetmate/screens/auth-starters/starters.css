@@ -295,13 +295,14 @@ html, body {
 
 /* Web-Grade Animation Technique */
 .sprite-stage {
-    width: 189px;
-    aspect-ratio: 21 / 16;
+    width: 164px;
+    aspect-ratio: 21 / 32;
     overflow: hidden;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: pixelated !important;
     display: block;
     position: relative;
+		transform: translateY(-30px);
     margin: auto 0; /* DYNAMIC CENTERING IN SPACE-BETWEEN */
     border-radius: 4px;
 }

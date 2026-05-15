@@ -23,16 +23,54 @@
    *     allow read, update, delete: if request.auth != null
    *       && resource.data.uids.hasAny([request.auth.uid]);
    *   }
-   */
+  */
 
   var battleAudio = new Audio('../../assets/audio/battleMusic.mp3');
   battleAudio.loop = true;
-  battleAudio.volume = 0.14;
+  battleAudio.preload = 'auto';
+
+  var STORAGE_VOLUME = 'leetmate_music_volume';
+  var STORAGE_MUTED = 'leetmate_music_muted';
+  var DEFAULT_VOLUME = 0.14;
+
+  function clamp01(x) {
+    if (typeof x !== 'number' || isNaN(x)) return DEFAULT_VOLUME;
+    return Math.max(0, Math.min(1, x));
+  }
+
+  function applyBattleAudioPrefs(volume01, muted) {
+    battleAudio.volume = muted ? 0 : clamp01(volume01);
+  }
+
+  function loadBattleAudioPrefs(cb) {
+    if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) {
+      applyBattleAudioPrefs(DEFAULT_VOLUME, false);
+      if (cb) cb(false);
+      return;
+    }
+
+    chrome.storage.local.get([STORAGE_VOLUME, STORAGE_MUTED], function (items) {
+      var vol =
+        typeof items[STORAGE_VOLUME] === 'number'
+          ? items[STORAGE_VOLUME]
+          : DEFAULT_VOLUME;
+      var muted = !!items[STORAGE_MUTED];
+      applyBattleAudioPrefs(vol, muted);
+      if (cb) cb(muted);
+    });
+  }
 
   function startBattleMusic() {
     if (window.LeetmateBGMusic) window.LeetmateBGMusic.pause();
-    battleAudio.currentTime = 0;
-    battleAudio.play().catch(function () {});
+    /*
+      battleAudio.currentTime = 0;
+      battleAudio.play().catch(function () {});
+    */
+    loadBattleAudioPrefs(function (muted) {
+      battleAudio.currentTime = 0;
+      if (muted) return;
+      battleAudio.play().catch(function () {});
+    });
   }
 
   function stopBattleMusic() {
@@ -65,15 +103,18 @@
   var renderedActionSeq = -1;
   var moveSubmitBusy = false;
   var rewardedBattleSessionId = null;
+  var lastFriendBattleRewards = null;
   /** True once this tab has seen an in-progress battle; avoids showing stale `finished` from a prior match when reopening the lobby. */
   var sawBattlePhaseThisLoad = false;
 
-  var REWARD_WIN_COINS = 20;
-  var REWARD_WIN_XP = 5;
-  var REWARD_WIN_TROPHY = 5;
-  var REWARD_LOSE_COINS = 0;
-  var REWARD_LOSE_XP = 5;
-  var REWARD_LOSE_TROPHY = -4;
+  /*
+    var REWARD_WIN_COINS = 20;
+    var REWARD_WIN_XP = 5;
+    var REWARD_WIN_TROPHY = 5;
+    var REWARD_LOSE_COINS = 0;
+    var REWARD_LOSE_XP = 5;
+    var REWARD_LOSE_TROPHY = -4;
+  */
 
   var BATTLE_SCREENS = ['screen-matchmaking', 'screen-battle', 'screen-win', 'screen-lose'];
 
@@ -84,6 +125,27 @@
     'acc-tophat': 'TopHat',
     'acc-santahat': 'SantaHat',
     'acc-leprechaunhat': 'LeprechaunHat'
+  };
+
+  var PET_ASSETS = {
+    Bat: { egg: '../../assets/eggs/CubicBatEgg.png', baby: '../../assets/spritesheets/CubicBatBaby.png', adult: '../../assets/spritesheets/CubicBatAdult.png' },
+    Bunny: { egg: '../../assets/eggs/CubicBunnyEgg.png', baby: '../../assets/spritesheets/CubicBunnyBaby.png', adult: '../../assets/spritesheets/CubicBunnyAdult.png' },
+    Cat: { egg: '../../assets/eggs/CubicCatEgg.png', baby: '../../assets/spritesheets/CubicCatBaby.png', adult: '../../assets/spritesheets/CubicCatAdult.png' },
+    Elephant: { egg: '../../assets/eggs/CubicElephantEgg.png', baby: '../../assets/spritesheets/CubicElephantBaby.png', adult: '../../assets/spritesheets/CubicElephantAdult.png' },
+    Flamingo: { egg: '../../assets/eggs/CubicFlamingoEgg.png', baby: '../../assets/spritesheets/CubicFlamingoBaby.png', adult: '../../assets/spritesheets/CubicFlamingoAdult.png' },
+    Fox: { egg: '../../assets/eggs/CubicFoxEgg.png', baby: '../../assets/spritesheets/CubicFoxBaby.png', adult: '../../assets/spritesheets/CubicFoxAdult.png' },
+    Frog: { egg: '../../assets/eggs/CubicFrogEgg.png', baby: '../../assets/spritesheets/CubicFrogBaby.png', adult: '../../assets/spritesheets/CubicFrogAdult.png' },
+    Giraffe: { egg: '../../assets/eggs/CubicGiraffeEgg.png', baby: '../../assets/spritesheets/CubicGiraffeBaby.png', adult: '../../assets/spritesheets/CubicGiraffeAdult.png' },
+    Grizzly: { egg: '../../assets/eggs/CubicGrizzlyEgg.png', baby: '../../assets/spritesheets/CubicGrizzlyBaby.png', adult: '../../assets/spritesheets/CubicGrizzlyAdult.png' },
+    Lion: { egg: '../../assets/eggs/CubicLionEgg.png', baby: '../../assets/spritesheets/CubicLionBaby.png', adult: '../../assets/spritesheets/CubicLionAdult.png' },
+    MicoLeaoDourado: { egg: '../../assets/eggs/CubicMicoLeaoDouradoEgg.png', baby: '../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png', adult: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png' },
+    Owl: { egg: '../../assets/eggs/CubicOwlEgg.png', baby: '../../assets/spritesheets/CubicOwlBaby.png', adult: '../../assets/spritesheets/CubicOwlAdult.png' },
+    Penguin: { egg: '../../assets/eggs/CubicPenguinEgg.png', baby: '../../assets/spritesheets/CubicPenguinBaby.png', adult: '../../assets/spritesheets/CubicPenguinAdult.png' },
+    Rat: { egg: '../../assets/eggs/CubicRatEgg.png', baby: '../../assets/spritesheets/CubicRatBaby.png', adult: '../../assets/spritesheets/CubicRatAdult.png' },
+    Sheep: { egg: '../../assets/eggs/CubicSheepEgg.png', baby: '../../assets/spritesheets/CubicSheepBaby.png', adult: '../../assets/spritesheets/CubicSheepAdult.png' },
+    Turtle: { egg: '../../assets/eggs/CubicTurtleEgg.png', baby: '../../assets/spritesheets/CubicTurtleBaby.png', adult: '../../assets/spritesheets/CubicTurtleAdult.png' },
+    Unicorn: { egg: '../../assets/eggs/CubicUnicornEgg.png', baby: '../../assets/spritesheets/CubicUnicornBaby.png', adult: '../../assets/spritesheets/CubicUnicornAdult.png' },
+    Wolf: { egg: '../../assets/eggs/CubicWolfEgg.png', baby: '../../assets/spritesheets/CubicWolfBaby.png', adult: '../../assets/spritesheets/CubicWolfAdult.png' }
   };
 
   var SINGLE_ROW_RE = /CubicFish|CubicJaguatirica/;
@@ -170,70 +232,62 @@
     goToLobby();
   }
 
-  function applyFriendBattleOutcomeRewards(won) {
+  function renderResultRewards(won) {
+    var ui = window.LeetmateBattle && window.LeetmateBattle.battleUI;
+    if (!ui || !lastFriendBattleRewards) return;
+    ui.renderBattleRewards(won ? 'win' : 'lose', lastFriendBattleRewards);
+  }
+
+  function syncFriendTrophyMirror(nextTrophy) {
     if (!db || !myUid) return Promise.resolve();
-    if (typeof addCoins !== 'function' || typeof addXP !== 'function') {
-      console.warn('Friend battle rewards: coins/xp helpers not loaded.');
+
+    return db.collection('users').doc(myUid).collection('friends').get().then(function (snap) {
+      if (snap.empty) return;
+      var batch = db.batch();
+      var count = 0;
+
+      snap.forEach(function (doc) {
+        if (doc.id === '_meta') return;
+        var fid = (doc.data() && doc.data().friendUid) ? String(doc.data().friendUid) : doc.id;
+        if (!fid) return;
+        var ref = db.collection('users').doc(fid).collection('friends').doc(myUid);
+        batch.set(ref, { trophy: nextTrophy }, { merge: true });
+        count++;
+      });
+
+      if (count > 0) return batch.commit();
+    });
+  }
+
+  function applyFriendBattleOutcomeRewards(won) {
+    var rewards = window.LeetmateBattle && window.LeetmateBattle.battleRewards;
+    var helpers = window.LeetmateBattle && window.LeetmateBattle.battleRewardHelpers;
+
+    if (!db || !myUid || !rewards || !helpers) {
+      console.warn('Friend battle rewards: shared battle reward modules not loaded.');
       return Promise.resolve();
     }
 
+    /*
     var coinsDelta = won ? REWARD_WIN_COINS : REWARD_LOSE_COINS;
     var xpDelta = won ? REWARD_WIN_XP : REWARD_LOSE_XP;
     var trophyDelta = won ? REWARD_WIN_TROPHY : REWARD_LOSE_TROPHY;
+    */
+
+    var rewardDeltas = rewards.getFriendBattleRewards(won);
+    lastFriendBattleRewards = rewardDeltas;
 
     var userRef = db.collection('users').doc(myUid);
 
-    var chain = Promise.resolve();
-    if (coinsDelta > 0) {
-      chain = chain.then(function () { return addCoins(coinsDelta); });
-    }
-    chain = chain.then(function () { return addXP(xpDelta); });
-    chain = chain.then(function () {
-      return Promise.all([
-        typeof getLocalCoins === 'function' ? getLocalCoins() : Promise.resolve(0),
-        typeof getXP === 'function' ? getXP() : Promise.resolve(0),
-        typeof getLevel === 'function' ? getLevel() : Promise.resolve(1),
-        userRef.get()
-      ]);
-    });
-    chain = chain.then(function (tuple) {
-      var coinsVal = Math.max(0, Math.floor(Number(tuple[0]) || 0));
-      var xpVal = Math.max(0, Math.floor(Number(tuple[1]) || 0));
-      var levelVal = Math.max(1, Math.floor(Number(tuple[2]) || 1));
-      var userSnap = tuple[3];
-      var curTrophy = userSnap.exists ? Math.max(0, Math.floor(Number((userSnap.data() || {}).trophy) || 0)) : 0;
-      var nextTrophy = Math.max(0, curTrophy + trophyDelta);
-      return userRef.set({
-        coins: coinsVal,
-        xp: xpVal,
-        level: levelVal,
-        trophy: nextTrophy,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true }).then(function () {
-        return nextTrophy;
-      });
-    });
-    chain = chain.then(function (nextTrophy) {
-      return db.collection('users').doc(myUid).collection('friends').get().then(function (snap) {
-        if (snap.empty) return;
-        var batch = db.batch();
-        var count = 0;
-        snap.forEach(function (doc) {
-          if (doc.id === '_meta') return;
-          var fid = (doc.data() && doc.data().friendUid) ? String(doc.data().friendUid) : doc.id;
-          if (!fid) return;
-          var ref = db.collection('users').doc(fid).collection('friends').doc(myUid);
-          batch.set(ref, { trophy: nextTrophy }, { merge: true });
-          count++;
-        });
-        if (count > 0) return batch.commit();
-      });
-    });
-    chain = chain.catch(function (err) {
+    return helpers.applyBattleRewards(rewardDeltas)
+      .then(function () { return userRef.get(); })
+      .then(function (userSnap) {
+        var nextTrophy = userSnap.exists ? Number((userSnap.data() || {}).trophy || 0) : 0;
+        return syncFriendTrophyMirror(nextTrophy);
+      })
+      .catch(function (err) {
       console.error('Friend battle rewards sync failed:', err);
-    });
-
-    return chain;
+      });
   }
 
   function maybeGrantFriendBattleRewards(d) {
@@ -264,19 +318,25 @@
   function buildSpritePathFromPet(pet) {
     if (!pet || !pet.petRef) return null;
     var stage = (pet.stage || 'adult').toLowerCase();
-    return '../../assets/spritesheets/Cubic' + pet.petRef + (stage === 'egg' ? 'Baby' : capitalize(stage)) + '.png';
+    var assetSet = PET_ASSETS[pet.petRef];
+    if (!assetSet) return null;
+    if (stage === 'egg') return assetSet.egg;
+    if (stage === 'baby') return assetSet.baby;
+    return assetSet.adult;
   }
 
   function opponentSpriteFromFirestore(petRef, equippedItemId, stage) {
     var ref = petRef || 'Cat';
     var st = (stage || 'adult').toLowerCase();
+    var assetSet = PET_ASSETS[ref];
     var suffix = equippedItemId && ACCESSORY_SUFFIX[equippedItemId];
     if (suffix && st === 'adult') {
       return '../../assets/spritesheets/Cubic' + ref + suffix + '.png';
     }
-    if (st === 'egg') return '../../assets/eggs/Cubic' + ref + 'Egg.png';
-    if (st === 'baby') return '../../assets/spritesheets/Cubic' + ref + 'Baby.png';
-    return '../../assets/spritesheets/Cubic' + ref + 'Adult.png';
+    if (!assetSet) return null;
+    if (st === 'egg') return assetSet.egg;
+    if (st === 'baby') return assetSet.baby;
+    return assetSet.adult;
   }
 
   function clampAttackCharges(val) {
@@ -284,6 +344,16 @@
     var maxC = logic && logic.MAX_ATTACK_CHARGES != null ? logic.MAX_ATTACK_CHARGES : 2;
     var n = Math.floor(Number(val) || 0);
     return Math.max(0, Math.min(maxC, n));
+  }
+
+  function canBattlePet(pet) {
+    if (!pet) return false;
+    var isAdult = String(pet.stage || '').toLowerCase() === 'adult';
+    var ableToBattle =
+      typeof pet.ableToBattle === 'boolean'
+        ? pet.ableToBattle
+        : isAdult;
+    return isAdult && ableToBattle;
   }
 
   /** Align Firestore pet blobs with shared battle-logic combatants (legacy: guarding/superCd). */
@@ -311,8 +381,12 @@
       uid: uidTag,
       name: name,
       sprite: sprite,
-      maxHp: hpBase * 4,
-      hp: hpBase * 4,
+      /*
+        maxHp: hpBase * 4,
+        hp: hpBase * 4,
+      */
+      maxHp: hpBase,
+      hp: hpBase,
       atk: stats.atk != null ? stats.atk : 45,
       def: stats.def != null ? stats.def : 40,
       spAtk: stats.spAtk != null ? stats.spAtk : 40,
@@ -393,11 +467,16 @@
         if (!petSnap.exists) return null;
         var pd = petSnap.data() || {};
         var stage = (pd.stage || 'adult').toLowerCase();
+        var ableToBattle =
+          typeof pd.ableToBattle === 'boolean'
+            ? pd.ableToBattle
+            : stage === 'adult';
         var name = (pd.customName || '').trim() || ('Cubic ' + (pd.petRef || 'Pet'));
         var sprite = opponentSpriteFromFirestore(pd.petRef, pd.equippedItemId, stage);
         var stats = pd.stats || {};
         var ent = battleEntityFromStats(name, sprite, stats, uid);
         ent.stage = stage;
+        ent.ableToBattle = ableToBattle;
         return ent;
       });
     });
@@ -414,7 +493,7 @@
       }
 
       var stage = (pet.stage || '').toLowerCase();
-      var isAdult = stage === 'adult';
+      var isAdult = canBattlePet(pet);
       var src = path ? ('../../' + path) : buildSpritePathFromPet(pet);
       var name = (pet.customName || '').trim() || ('Cubic ' + (pet.petRef || 'Pet'));
 
@@ -437,6 +516,10 @@
         var stats = pet.stats || {};
         lobbyPlayerPet = battleEntityFromStats(name, src, stats, myUid);
         lobbyPlayerPet.stage = stage;
+        lobbyPlayerPet.ableToBattle =
+          typeof pet.ableToBattle === 'boolean'
+            ? pet.ableToBattle
+            : stage === 'adult';
 
         var m = {
           'stat-hp': stats.hp, 'stat-atk': stats.atk, 'stat-def': stats.def,
@@ -787,10 +870,10 @@
       ]).then(function (pair) {
         var inviterPet = pair[0];
         var accepterPet = pair[1];
-        if (!inviterPet || inviterPet.stage !== 'adult') {
+        if (!canBattlePet(inviterPet)) {
           return Promise.reject(new Error('INVITER_PET'));
         }
-        if (!accepterPet || accepterPet.stage !== 'adult') {
+        if (!canBattlePet(accepterPet)) {
           return Promise.reject(new Error('YOUR_PET'));
         }
         var uidSmall = myUid < opponentUid ? myUid : opponentUid;
@@ -880,11 +963,24 @@
         }
         stopBattleMusic();
         var won = d.winnerUid === myUid;
+        var rewards = window.LeetmateBattle && window.LeetmateBattle.battleRewards;
+        lastFriendBattleRewards = rewards ? rewards.getFriendBattleRewards(won) : null;
         maybeGrantFriendBattleRewards(d);
-        var elWin = document.getElementById(won ? 'win-sprite' : 'lose-sprite');
         var pets = d.petByUid || {};
         var me = pets[myUid];
-        if (elWin && me && me.sprite) applySprite(elWin, me.sprite, false);
+        var opp = pets[opponentUid];
+
+        if (won) {
+          var winSprite = document.getElementById('win-sprite');
+          var winCpuSprite = document.getElementById('win-cpu-sprite');
+          if (winSprite && me && me.sprite) applySprite(winSprite, me.sprite, false);
+          if (winCpuSprite && opp && opp.sprite) applySprite(winCpuSprite, opp.sprite, false);
+        } else {
+          var loseSprite = document.getElementById('lose-sprite');
+          if (loseSprite && me && me.sprite) applySprite(loseSprite, me.sprite, false);
+        }
+
+        renderResultRewards(won);
         showScreen(won ? 'screen-win' : 'screen-lose');
         return;
       }
@@ -913,7 +1009,7 @@
       var meSnap = tri[2];
       var myUsername = (meSnap.exists && meSnap.data()) ? (meSnap.data().username || '') : '';
 
-      if (!theirs || theirs.stage !== 'adult') {
+      if (!canBattlePet(theirs)) {
         alert(friendDisplayName + '\'s pet isn\'t ready for battle (needs an adult pet).');
         return;
       }
@@ -1032,6 +1128,16 @@
 
     auth = firebase.auth();
     db = firebase.firestore();
+    loadBattleAudioPrefs();
+
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {
+      chrome.storage.onChanged.addListener(function (changes, area) {
+        if (area !== 'local') return;
+        if (changes[STORAGE_VOLUME] || changes[STORAGE_MUTED]) {
+          loadBattleAudioPrefs();
+        }
+      });
+    }
 
     document.getElementById('community-back-btn')?.addEventListener('click', handleBack);
     document.getElementById('battle-exit-btn')?.addEventListener('click', handleBack);
@@ -1101,7 +1207,10 @@
   });
 
   window.addEventListener('beforeunload', function () {
+    stopBattleMusic();
     if (unsub) unsub();
     if (unsubInvite) unsubInvite();
   });
+
+  window.addEventListener('pagehide', stopBattleMusic);
 })();

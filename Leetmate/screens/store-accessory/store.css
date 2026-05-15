@@ -537,6 +537,16 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 
+.item-price-tag--premium-lock {
+  background: linear-gradient(180deg, #F7E7A3 0%, #E2B93B 100%) !important;
+  border-color: #A37408 !important;
+  color: #6E4D05 !important;
+}
+
+.coin-mini--premium-lock {
+  filter: sepia(1) saturate(5.5) hue-rotate(2deg) brightness(1.08);
+}
+
 .store-item-card.locked:hover {
   transform: none;
   box-shadow: 2px 4px 0 rgba(0,0,0,0.1);

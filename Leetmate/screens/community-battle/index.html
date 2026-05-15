@@ -205,10 +205,25 @@
               <img src="../../assets/icons/YouWin.png" class="win-title-img" alt="You Win!" />
               <img src="../../assets/icons/winnerCup.png" class="result-trophy" alt="" />
               <div class="win-pet-showcase">
+                <div class="win-cpu-sprite" id="win-cpu-sprite"></div>
                 <div class="win-sprite" id="win-sprite"></div>
               </div>
+              <div class="result-rewards">
+                <div class="result-reward">
+                  <span class="result-reward__label">Trophies</span>
+                  <span class="result-reward__value" id="win-reward-trophy">-</span>
+                </div>
+                <div class="result-reward">
+                  <span class="result-reward__label">Coins</span>
+                  <span class="result-reward__value" id="win-reward-coins">-</span>
+                </div>
+                <div class="result-reward">
+                  <span class="result-reward__label">XP</span>
+                  <span class="result-reward__value" id="win-reward-xp">-</span>
+                </div>
+              </div>
               <div class="result-actions">
-                <button class="result-btn result-btn--again" id="win-again-btn" type="button">Rematch</button>
+                <button class="result-btn result-btn--again" id="win-again-btn" type="button">Same Opponent</button>
                 <button class="result-btn result-btn--home" id="win-home-btn" type="button">Return</button>
               </div>
             </div>
@@ -220,8 +235,22 @@
               <div class="lose-pet-showcase">
                 <div class="lose-sprite" id="lose-sprite"></div>
               </div>
+              <div class="result-rewards">
+                <div class="result-reward">
+                  <span class="result-reward__label">Trophies</span>
+                  <span class="result-reward__value" id="lose-reward-trophy">-</span>
+                </div>
+                <div class="result-reward">
+                  <span class="result-reward__label">Coins</span>
+                  <span class="result-reward__value" id="lose-reward-coins">-</span>
+                </div>
+                <div class="result-reward">
+                  <span class="result-reward__label">XP</span>
+                  <span class="result-reward__value" id="lose-reward-xp">-</span>
+                </div>
+              </div>
               <div class="result-actions">
-                <button class="result-btn result-btn--again" id="lose-again-btn" type="button">Rematch</button>
+                <button class="result-btn result-btn--again" id="lose-again-btn" type="button">Same Opponent</button>
                 <button class="result-btn result-btn--home" id="lose-home-btn" type="button">Return</button>
               </div>
             </div>
@@ -235,10 +264,13 @@
     <script src="../../features/shared/storage-helper.js"></script>
     <script src="../../scripts/firebase-bundle.js"></script>
     <script src="../../scripts/firebase-config.js"></script>
+    <script src="../../features/progression/premium-state.js"></script>
     <script src="../../scripts/auth-gate.js"></script>
     <script src="../../features/battle/battle-loader.js"></script>
     <script src="../../features/battle/cpu-stat-generator.js"></script>
     <script src="../../features/battle/battle-logic.js"></script>
+    <script src="../../features/battle/battle-rewards.js"></script>
+    <script src="../../features/battle/battle-reward-helpers.js"></script>
     <script src="../../features/battle/battle-ui.js"></script>
     <script src="./community-battle.js"></script>
   </body>

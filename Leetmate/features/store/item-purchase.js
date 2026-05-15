@@ -96,9 +96,15 @@
       petsRef.where("petRef", "==", item.petRef || item.id).limit(1).get(),
     ]);
 
-    const currentCoins = Number(userSnap.data()?.coins ?? 0);
+    const userData = userSnap.data() || {};
+    const currentCoins = Number(userData.coins ?? 0);
+    const isPremium = !!userData.premium;
     if (currentCoins < item.price) {
       throw new Error("Not enough coins");
+    }
+
+    if (item.premiumRequired && !isPremium) {
+      throw new Error("Premium required");
     }
 
     if (!petsSnap.empty) {

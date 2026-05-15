@@ -3,44 +3,6 @@
  * Fetches the active pet from Firestore and updates the UI.
  */
 
-const PET_ASSETS = {
-    Bat: {
-        egg: '../../assets/eggs/CubicBatEgg.png',
-        baby: '../../assets/spritesheets/CubicBatBaby.png',
-        adult: '../../assets/spritesheets/CubicBatAdult.png'
-    },
-    Cat: {
-        egg: '../../assets/eggs/CubicCatEgg.png',
-        baby: '../../assets/spritesheets/CubicCatBaby.png',
-        adult: '../../assets/spritesheets/CubicCatAdult.png'
-    },
-    Fox: {
-        egg: '../../assets/eggs/CubicFoxEgg.png',
-        baby: '../../assets/spritesheets/CubicFoxBaby.png',
-        adult: '../../assets/spritesheets/CubicFoxAdult.png'
-    },
-    Frog: {
-        egg: '../../assets/eggs/CubicFrogEgg.png',
-        baby: '../../assets/spritesheets/CubicFrogBaby.png',
-        adult: '../../assets/spritesheets/CubicFrogAdult.png'
-    },
-    Wolf: {
-        egg: '../../assets/eggs/CubicWolfEgg.png',
-        baby: '../../assets/spritesheets/CubicWolfBaby.png',
-        adult: '../../assets/spritesheets/CubicWolfAdult.png'
-    },
-    Giraffe: {
-        egg: '../../assets/eggs/CubicGiraffeEgg.png',
-        baby: '../../assets/spritesheets/CubicGiraffeBaby.png',
-        adult: '../../assets/spritesheets/CubicGiraffeAdult.png'
-    },
-    MicoLeaoDourado: {
-        egg: '../../assets/eggs/CubicMicoLeaoDouradoEgg.png',
-        baby: '../../assets/spritesheets/CubicMicoLeaoDouradoBaby.png',
-        adult: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png'
-    }
-};
-
 let activePetDataCache = null;
 let currentHappinessPercent = 100;
 const ACCESSORY_SPRITE_SUFFIX_BY_ITEM_ID = {
@@ -51,7 +13,6 @@ const ACCESSORY_SPRITE_SUFFIX_BY_ITEM_ID = {
     'acc-santahat': 'SantaHat',
     'acc-leprechaunhat': 'LeprechaunHat'
 };
-const accessorySpriteExistenceCache = new Map();
 
 function getCreatedTimestampMs(petData) {
     return typeof petData.createdTimestamp?.toMillis === 'function'
@@ -61,57 +22,34 @@ function getCreatedTimestampMs(petData) {
 
 function getBaseActivePetSpritePath(petType, petStage) {
     const normalizedStage = (petStage || '').toLowerCase();
+    if (!petType) {
+        return null;
+    }
 
-    if (petType && normalizedStage === 'baby') {
+    if (normalizedStage === 'egg') {
+        return `assets/eggs/Cubic${petType}Egg.png`;
+    }
+
+    if (normalizedStage === 'baby') {
         return `assets/spritesheets/Cubic${petType}Baby.png`;
     }
 
-    if (petType && normalizedStage === 'adult') {
+    if (normalizedStage === 'adult') {
         return `assets/spritesheets/Cubic${petType}Adult.png`;
     }
 
-    return null;
+    return `assets/spritesheets/Cubic${petType}Adult.png`;
 }
 
-function getAccessorySpriteCandidatePath(petType, equippedItemId) {
+function getAccessorySpriteCandidatePath(petType, equippedItemId, petStage) {
     const suffix = ACCESSORY_SPRITE_SUFFIX_BY_ITEM_ID[equippedItemId];
-    if (!petType || !suffix) return null;
+    if (!petType || !suffix || String(petStage || '').toLowerCase() !== 'adult') return null;
     return `assets/spritesheets/Cubic${petType}${suffix}.png`;
-}
-
-async function canLoadAccessorySprite(path) {
-    if (!path || typeof chrome === 'undefined' || !chrome.runtime?.getURL) {
-        return false;
-    }
-
-    if (accessorySpriteExistenceCache.has(path)) {
-        return accessorySpriteExistenceCache.get(path);
-    }
-
-    try {
-        const response = await fetch(chrome.runtime.getURL(path));
-        const exists = response.ok;
-        accessorySpriteExistenceCache.set(path, exists);
-        return exists;
-    } catch (error) {
-        accessorySpriteExistenceCache.set(path, false);
-        return false;
-    }
 }
 
 async function resolveActivePetSpritePath(petType, petStage, equippedItemId = null) {
     const basePath = getBaseActivePetSpritePath(petType, petStage);
-    const normalizedStage = (petStage || '').toLowerCase();
-    if (normalizedStage !== 'adult' || !equippedItemId) {
-        return basePath;
-    }
-
-    const accessoryPath = getAccessorySpriteCandidatePath(petType, equippedItemId);
-    if (!accessoryPath) {
-        return basePath;
-    }
-
-    return (await canLoadAccessorySprite(accessoryPath)) ? accessoryPath : basePath;
+    return getAccessorySpriteCandidatePath(petType, equippedItemId, petStage) || basePath;
 }
 
 function toRenderablePetAssetUrl(path) {
@@ -180,12 +118,14 @@ async function loadActivePetFromFirestore(db, uid) {
     }
 
     let petData = petSnap.data();
+    let cachedOwnedPetsSnapshot = null;
     // Pending midnight job: prefer newer local age and stage until Firestore sync completes.
     if (typeof storageGet === 'function') {
         const { leetmate_pet_age_pending_firestore_sync, ownedPetsSnapshot } = await storageGet([
             'leetmate_pet_age_pending_firestore_sync',
             'ownedPetsSnapshot'
         ]);
+        cachedOwnedPetsSnapshot = Array.isArray(ownedPetsSnapshot) ? ownedPetsSnapshot : null;
         if (leetmate_pet_age_pending_firestore_sync && Array.isArray(ownedPetsSnapshot)) {
             const local = ownedPetsSnapshot.find((p) => p && p.id === activePetId);
             if (local) {
@@ -205,19 +145,26 @@ async function loadActivePetFromFirestore(db, uid) {
     }
 
     if (typeof storageSet === 'function') {
-        const allPetsSnap = await userRef.collection('pets').get();
         const petType = petData?.petRef || null;
         const petStage = petData?.stage || null;
         const resolvedSpritePath = await resolveActivePetSpritePath(petType, petStage, equippedItemId);
+        const nextActiveSnapshot = toCachedPetData({ ...petData, equippedItemId }, activePetId);
+        const nextOwnedPetsSnapshot = Array.isArray(cachedOwnedPetsSnapshot)
+            ? cachedOwnedPetsSnapshot.map((pet) => {
+                if (!pet || pet.id !== activePetId) return pet;
+                return {
+                    ...pet,
+                    ...nextActiveSnapshot
+                };
+            })
+            : null;
         await storageSet({
             activePetId,
             activePetType: petType,
             activePetStage: petStage,
             activePetSpritePath: resolvedSpritePath,
-            activePetSnapshot: toCachedPetData({ ...petData, equippedItemId }, activePetId),
-            ownedPetsSnapshot: allPetsSnap
-                ? allPetsSnap.docs.map((doc) => toCachedPetData(doc.data(), doc.id))
-                : null
+            activePetSnapshot: nextActiveSnapshot,
+            ownedPetsSnapshot: nextOwnedPetsSnapshot
         });
         updatePetUI({
             ...petData,
@@ -277,12 +224,6 @@ function updatePetUI(petData) {
         console.warn('Active pet is missing petRef.');
         return;
     }
-    const assetSet = PET_ASSETS[petType];
-    if (!assetSet) {
-        console.warn(`No asset set found for pet type: ${petType}`);
-        return;
-    }
-
     activePetDataCache = petData;
 
     const petNames = {
@@ -321,17 +262,13 @@ function applyPetVisualState() {
 
     const petType = activePetDataCache.petRef;
     const petStage = (activePetDataCache.stage || 'Adult').toLowerCase();
-    const assetSet = PET_ASSETS[petType];
-    if (!assetSet) return;
-
     const isBaby = petStage === 'baby';
     const isAdult = petStage === 'adult';
     const isDowned = (isBaby || isAdult) && currentHappinessPercent === 0;
     const isEggDowned = petStage === 'egg' && currentHappinessPercent === 0;
     const resolvedSpritePath =
         activePetDataCache._resolvedSpritePath ||
-        getBaseActivePetSpritePath(petType, petStage) ||
-        (isBaby ? assetSet.baby : assetSet.adult);
+        getBaseActivePetSpritePath(petType, petStage);
     const renderableSpritePath = toRenderablePetAssetUrl(resolvedSpritePath);
 
     petSprite.classList.remove('stage-egg', 'stage-baby', 'stage-adult', 'stage-downed');
@@ -345,7 +282,7 @@ function applyPetVisualState() {
 
     if (petStage === 'egg') {
         petSprite.classList.add('hidden');
-        petEgg.src = assetSet.egg;
+        petEgg.src = `../../assets/eggs/Cubic${petType}Egg.png`;
         petEgg.classList.remove('hidden');
         if (isEggDowned) {
             petEgg.classList.add('is-downed');

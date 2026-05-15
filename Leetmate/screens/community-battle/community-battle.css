@@ -451,9 +451,8 @@ body {
             win-title-glow 1.4s .65s ease-in-out infinite alternate;
 }
 
-/* Pet showcase — fills middle space, pet large and centered */
 .win-pet-showcase {
-  position:relative; z-index:1;
+  position:relative; z-index:4;
   flex:1; min-height:0;
   display:flex; align-items:center; justify-content:center;
 }
@@ -472,20 +471,63 @@ body {
   animation:win-pet-drop .7s .1s cubic-bezier(.34,1.56,.64,1) both, sp-idle .8s steps(1) infinite;
 }
 
-/* Trophy — above the pet */
 .result-trophy {
-  position:relative; z-index:1;
+  position:relative; z-index:3;
   width:148px; height:auto; image-rendering:pixelated;
   filter:drop-shadow(0 0 16px rgba(255,200,60,.9));
   animation:result-bounce .6s .12s cubic-bezier(.34,1.56,.64,1) both,
             trophy-wiggle 1.1s .75s ease both;
 }
 
-/* Generic title img (lose screen) */
 .result-title-img {
   max-width:260px; width:92%; height:auto; image-rendering:pixelated;
   filter:drop-shadow(0 4px 16px rgba(0,0,0,.7));
   animation:result-bounce .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+
+.result-rewards {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.result-reward {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  background: linear-gradient(to bottom, rgba(253, 244, 231, 0.94), rgba(240, 213, 174, 0.88));
+  border: 3px solid #111;
+  border-radius: 14px;
+  box-shadow: 0 3px 0 #111;
+}
+
+.result-reward__label {
+  font-family: "Lilita One", cursive;
+  font-size: 0.62rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7a6a55;
+}
+
+.result-reward__value {
+  font-family: "Lilita One", cursive;
+  font-size: 1rem;
+  line-height: 1;
+  color: #221d17;
+}
+
+.result-reward__value.is-positive {
+  color: #1f7f2f;
+}
+
+.result-reward__value.is-negative {
+  color: #b42b24;
 }
 
 .result-actions { display:flex; gap:12px; width:100%; position:relative; z-index:1; }
@@ -623,10 +665,12 @@ body {
 
 .win-sprite {
   width: 118px;
+	z-index: 5;
 }
 
 .lose-sprite {
   width: 102px;
+  background-position: 50% 0%;
 }
 
 @keyframes sp-idle {
@@ -1092,7 +1136,7 @@ body {
 .battle-fx.pop-scratch::before {
   content: '';
   position: absolute;
-  top: calc(50% + 12px);
+  top: calc(50% + 36px);
   left: 50%;
   width: 96px;
   height: 96px;
@@ -1224,6 +1268,166 @@ body {
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+.win-result {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0;
+  padding: 6px 14px 14px;
+}
+
+.win-title-img {
+  width: 92%;
+  max-width: 306px;
+  margin-top: 18px;
+}
+
+.result-trophy {
+  position: absolute;
+  top: 192px;
+  left: 50%;
+  width: 180px;
+  margin: 0 0 0 -90px;
+  z-index: 3;
+}
+
+.win-pet-showcase {
+  position: relative;
+  width: 100%;
+  flex: 0 0 212px;
+  min-height: 212px;
+  margin-top: 0;
+  margin-bottom: -6px;
+  overflow: visible;
+	z-index: 4;
+}
+
+.win-pet-showcase::after {
+  bottom: 24px;
+  left: 54%;
+  width: 172px;
+  height: 22px;
+}
+
+.win-sprite {
+  position: absolute;
+  left: 38%;
+  bottom: 62px;
+  width: 104px;
+  z-index: 4;
+  transform-origin: center bottom;
+  animation:
+    win-player-enter-motion 2.7s 3s linear both,
+    win-player-enter-frames 2.7s 3s steps(1, end) both,
+    win-happy-jump-motion 1.05s 5.75s ease-in-out infinite,
+    win-happy-jump-frame 1.05s 5.75s steps(1, end) infinite;
+}
+
+.win-cpu-sprite {
+  position: absolute;
+  left: 95%;
+  bottom: -24px;
+  width: 96px;
+  aspect-ratio: 21 / 32;
+  background-repeat: no-repeat;
+  background-size: 700% 100%;
+  background-position: 50% 0%;
+  image-rendering: pixelated;
+  transform: translateX(-50%) rotate(90deg);
+  transform-origin: center center;
+  filter: grayscale(1) brightness(0.52) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.68));
+  opacity: 0.92;
+  z-index: 1;
+  animation: win-cpu-fall 1s 2s ease-out both;
+}
+
+.result-rewards {
+  margin-top: auto;
+}
+
+.result-actions {
+  margin-top: 8px;
+}
+
+@keyframes win-happy-jump-motion {
+  0%, 100% {
+    transform: translate(96px, 0);
+  }
+  32% {
+    transform: translate(96px, -28px);
+  }
+  58% {
+    transform: translate(96px, -10px);
+  }
+}
+
+@keyframes win-happy-jump-frame {
+  0%, 24%, 100% {
+    background-position: 0% 0%;
+  }
+  25%, 82% {
+    background-position: 83.33% 0%;
+  }
+}
+
+@keyframes win-cpu-fall {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-520px) rotate(90deg);
+  }
+  100% {
+    opacity: 0.92;
+    transform: translateX(-50%) translateY(0) rotate(90deg);
+  }
+}
+
+@keyframes win-player-enter-motion {
+  0% {
+    transform: scaleX(-1) translate(360px, 38px);
+  }
+  64% {
+    transform: scaleX(-1) translate(0, 38px);
+  }
+  76% {
+    transform: scaleX(-1) translate(0, 38px);
+  }
+  90% {
+    transform: scaleX(-1) translate(-96px, -16px);
+  }
+  100% {
+    transform: scaleX(-1) translate(-96px, 0);
+  }
+}
+
+@keyframes win-player-enter-frames {
+  0%, 10% {
+    background-position: 0% 0%;
+  }
+  11%, 20% {
+    background-position: 33.33% 0%;
+  }
+  21%, 30% {
+    background-position: 0% 0%;
+  }
+  31%, 40% {
+    background-position: 33.33% 0%;
+  }
+  41%, 50% {
+    background-position: 0% 0%;
+  }
+  51%, 60% {
+    background-position: 33.33% 0%;
+  }
+  61%, 70% {
+    background-position: 0% 0%;
+  }
+  71%, 80% {
+    background-position: 33.33% 0%;
+  }
+  81%, 100% {
+    background-position: 83.33% 0%;
   }
 }
 

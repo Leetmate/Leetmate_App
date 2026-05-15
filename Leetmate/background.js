@@ -24,6 +24,39 @@ importScripts(
 	'use strict';
 
 	let notifEnabled = null;
+	const PIP_SESSION_KEYS = [
+		"leetmate_pip_active",
+		"leetmate_pip_tab_id",
+		"leetmate_pip_pet_sprite_url"
+	];
+
+	async function setPipSession(session) {
+		await storageSet(session);
+	}
+
+	async function clearPipSession() {
+		await storageRemove(PIP_SESSION_KEYS);
+	}
+
+	async function getPipSession() {
+		return storageGet(PIP_SESSION_KEYS);
+	}
+
+	async function injectPipIntoTab(tabId, petSpriteUrl, autoOpen = false) {
+		try {
+			await chrome.scripting.executeScript({
+				target: { tabId },
+				files: ["features/pet/pip.js"]
+			});
+			await chrome.tabs.sendMessage(tabId, {
+				type: "loadPip",
+				petSpriteUrl,
+				autoOpen
+			});
+		} catch (error) {
+			console.warn("Leetmate: failed to inject PiP into tab.", error);
+		}
+	}
 
 	//make service worker persistent
 	chrome.runtime.onInstalled.addListener(() => {
@@ -128,21 +161,18 @@ importScripts(
 							? `assets/spritesheets/Cubic${activePetType}Baby.png`
 							: `assets/spritesheets/Cubic${activePetType}Adult.png`);
 					const petSpriteUrl = chrome.runtime.getURL(petSpritePath);
-
-					chrome.scripting.executeScript(
-						{ target: { tabId: activeTab.id }, files: ["features/pet/pip.js"] },
-						() => {
-							chrome.tabs.sendMessage(activeTab.id, {
-								type: "loadPip",
-								petSpriteUrl
-							});
-						}
-					)
+					await setPipSession({
+						leetmate_pip_active: true,
+						leetmate_pip_tab_id: activeTab.id,
+						leetmate_pip_pet_sprite_url: petSpriteUrl
+					});
+					await injectPipIntoTab(activeTab.id, petSpriteUrl, false);
 				}
 			);
 		}
 
 		if (message.type === "restore") {
+			clearPipSession();
 			chrome.windows.getAll({ windowTypes: ["normal"] }, (windows) => {
 				const mainWin = windows[0]; // logic is a bit weird here but it works 
 
@@ -151,7 +181,31 @@ importScripts(
 				})
 			})
 		}
+
+		if (message.type === "pipClosed") {
+			clearPipSession();
+		}
 	})
+
+	chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+		if (changeInfo.status !== "complete") return;
+		const {
+			leetmate_pip_active,
+			leetmate_pip_tab_id,
+			leetmate_pip_pet_sprite_url
+		} = await getPipSession();
+		if (!leetmate_pip_active || leetmate_pip_tab_id !== tabId || !leetmate_pip_pet_sprite_url) {
+			return;
+		}
+		await injectPipIntoTab(tabId, leetmate_pip_pet_sprite_url, true);
+	});
+
+	chrome.tabs.onRemoved.addListener(async (tabId) => {
+		const { leetmate_pip_tab_id } = await getPipSession();
+		if (leetmate_pip_tab_id === tabId) {
+			await clearPipSession();
+		}
+	});
 
 	//------------------------Notifications-------------------------
 	//variables for timers

@@ -2,25 +2,36 @@
   'use strict';
 
   var DIFFICULTIES = [
-    { name: 'Easy', multiplier: .95 },
-    { name: 'Normal', multiplier: 1. },
-    { name: 'Hard', multiplier: 1.1}
+    { name: 'Easy', multiplier: .80 },
+    { name: 'Normal', multiplier: 1 },
+    { name: 'Hard', multiplier: 1.05}
   ];
 
   var ARCHETYPES = {
-    Balanced: { hp: 20, atk: 16, spAtk: 14, def: 15, spDef: 15, spd: 20 },
+    Balanced: { hp: 18, atk: 18, spAtk: 16, def: 15, spDef: 15, spd: 18 },
     Berserker: { hp: 18, atk: 28, spAtk: 10, def: 12, spDef: 12, spd: 20 },
-    Tank: { hp: 24, atk: 10, spAtk: 8, def: 24, spDef: 22, spd: 12 },
+    Tank: { hp: 21, atk: 12, spAtk: 8, def: 27, spDef: 18, spd: 14},
     Mage: { hp: 18, atk: 10, spAtk: 28, def: 12, spDef: 12, spd: 20 }
   };
 
   var CPU_PETS = [
     { petRef: 'Bat', name: 'Cubic Bat', sprite: '../../assets/spritesheets/CubicBatAdult.png' },
+    { petRef: 'Bunny', name: 'Cubic Bunny', sprite: '../../assets/spritesheets/CubicBunnyAdult.png' },
     { petRef: 'Cat', name: 'Cubic Cat', sprite: '../../assets/spritesheets/CubicCatAdult.png' },
+    { petRef: 'Elephant', name: 'Cubic Elephant', sprite: '../../assets/spritesheets/CubicElephantAdult.png' },
+    { petRef: 'Flamingo', name: 'Cubic Flamingo', sprite: '../../assets/spritesheets/CubicFlamingoAdult.png' },
     { petRef: 'Fox', name: 'Cubic Fox', sprite: '../../assets/spritesheets/CubicFoxAdult.png' },
     { petRef: 'Frog', name: 'Cubic Frog', sprite: '../../assets/spritesheets/CubicFrogAdult.png' },
     { petRef: 'Giraffe', name: 'Cubic Giraffe', sprite: '../../assets/spritesheets/CubicGiraffeAdult.png' },
+    { petRef: 'Grizzly', name: 'Cubic Grizzly', sprite: '../../assets/spritesheets/CubicGrizzlyAdult.png' },
+    { petRef: 'Lion', name: 'Cubic Lion', sprite: '../../assets/spritesheets/CubicLionAdult.png' },
     { petRef: 'MicoLeaoDourado', name: 'Golden Tamarin', sprite: '../../assets/spritesheets/CubicMicoLeaoDouradoAdult.png' },
+    { petRef: 'Owl', name: 'Cubic Owl', sprite: '../../assets/spritesheets/CubicOwlAdult.png' },
+    { petRef: 'Penguin', name: 'Cubic Penguin', sprite: '../../assets/spritesheets/CubicPenguinAdult.png' },
+    { petRef: 'Rat', name: 'Cubic Rat', sprite: '../../assets/spritesheets/CubicRatAdult.png' },
+    { petRef: 'Sheep', name: 'Cubic Sheep', sprite: '../../assets/spritesheets/CubicSheepAdult.png' },
+    { petRef: 'Turtle', name: 'Cubic Turtle', sprite: '../../assets/spritesheets/CubicTurtleAdult.png' },
+    { petRef: 'Unicorn', name: 'Cubic Unicorn', sprite: '../../assets/spritesheets/CubicUnicornAdult.png' },
     { petRef: 'Wolf', name: 'Cubic Wolf', sprite: '../../assets/spritesheets/CubicWolfAdult.png' }
   ];
 
